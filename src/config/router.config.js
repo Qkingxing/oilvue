@@ -274,7 +274,64 @@ export const asyncRouterMap = [
             ]
           }
         ]
+      },
+      // em
+      {
+        path: '/em',
+        name: 'em',
+        redirect: '/em/marketing/activity_add',
+        component: RouteView,
+        meta: { title: 'menu.em', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/em/marketing',
+            name: 'marketing',
+            component: () => import('@/views/em/marketing'),
+            meta: { title: 'menu.em.marketing', keepAlive: true },
+            children: [
+              {
+                path: '/em/marketing/activity_add',
+                name: 'activity_add',
+                component: () => import('@/views/em/marketing/activity_add'),
+                meta: { title: 'menu.em.marketing.activity_add' }
+              },
+              {
+                path: '/em/marketing/add',
+                name: 'add',
+                component: () => import('@/views/em/marketing/add'),
+                meta: { title: 'menu.em.marketing.add' }
+              }
+            ]
+          },
+          {
+            path: '/em/list',
+            name: 'Elist',
+            component: () => import('@/views/em/list'),
+            meta: { title: 'menu.em.list', keepAlive: true },
+            children: [
+              {
+                path: '/em/list/list',
+                name: 'EMlist',
+                component: () => import('@/views/em/list/list'),
+                meta: { title: 'menu.em.list.list' }
+              },
+              {
+                path: '/em/list/couponlist',
+                name: 'couponlist',
+                component: () => import('@/views/em/list/couponlist'),
+                meta: { title: 'menu.em.list.couponlist' }
+              },
+              {
+                path: '/em/list/redpacketlist',
+                name: 'redpacketlist',
+                component: () => import('@/views/em/list/redpacketlist'),
+                meta: { title: 'menu.em.list.redpacketlist' }
+              }
+            ]
+          }
+        ]
       }
+
       // dashboard
       // {
       //   path: '/dashboard',
