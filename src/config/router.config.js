@@ -416,6 +416,76 @@ export const asyncRouterMap = [
             ]
           }
         ]
+      },
+      // oil
+      {
+        path: '/oil',
+        name: 'oil',
+        redirect: '/oil/retail/os_install',
+        component: RouteView,
+        meta: { title: 'menu.oil', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/oil/retail',
+            name: 'retail',
+            component: () => import('@/views/oil/retail'),
+            meta: { title: 'menu.oil.retail', keepAlive: true },
+            children: [
+              {
+                path: '/oil/retail/os_install',
+                name: 'os_install',
+                component: () => import('@/views/oil/retail/os_install'),
+                meta: { title: 'menu.oil.retail.os_install' }
+              }
+            ]
+          },
+          {
+            path: '/oil/sale',
+            name: 'sale',
+            component: () => import('@/views/oil/sale'),
+            meta: { title: 'menu.oil.sale', keepAlive: true },
+            children: [
+              {
+                path: '/oil/sale/query',
+                name: 'query',
+                component: () => import('@/views/oil/sale/query'),
+                meta: { title: 'menu.oil.sale.query' }
+              },
+              {
+                path: '/oil/sale/statistics',
+                name: 'Ostatistics',
+                component: () => import('@/views/oil/sale/statistics'),
+                meta: { title: 'menu.oil.sale.statistics' }
+              },
+              {
+                path: '/oil/sale/oscard',
+                name: 'oscard',
+                component: () => import('@/views/oil/sale/oscard'),
+                meta: { title: 'menu.oil.sale.oscard' }
+              }
+            ]
+          },
+          {
+            path: '/oil/reports',
+            name: 'reports',
+            component: () => import('@/views/oil/reports'),
+            meta: { title: 'menu.oil.reports', keepAlive: true },
+            children: [
+              {
+                path: '/oil/reports/sales',
+                name: 'sales',
+                component: () => import('@/views/oil/reports/sales'),
+                meta: { title: 'menu.oil.reports.sales' }
+              },
+              {
+                path: '/oil/reports/oil_return',
+                name: 'oil_return',
+                component: () => import('@/views/oil/reports/oil_return'),
+                meta: { title: 'menu.oil.reports.oil_return' }
+              }
+            ]
+          }
+        ]
       }
       // dashboard
       // {
