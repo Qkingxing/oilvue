@@ -486,6 +486,42 @@ export const asyncRouterMap = [
             ]
           }
         ]
+      },
+      // goods
+      {
+        path: '/goods',
+        name: 'goods',
+        redirect: '/goods/warehouse/my',
+        component: RouteView,
+        meta: { title: 'menu.goods', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/goods/warehouse',
+            name: 'warehouse',
+            component: () => import('@/views/goods/warehouse'),
+            meta: { title: 'menu.goods.warehouse', keepAlive: true },
+            children: [
+              {
+                path: '/goods/warehouse/my',
+                name: 'my',
+                component: () => import('@/views/goods/warehouse/my'),
+                meta: { title: 'menu.goods.warehouse.my' }
+              },
+              {
+                path: '/goods/warehouse/Classification',
+                name: 'Classification',
+                component: () => import('@/views/goods/warehouse/Classification'),
+                meta: { title: 'menu.goods.warehouse.Classification' }
+              },
+              {
+                path: '/goods/warehouse/write_off',
+                name: 'write_off',
+                component: () => import('@/views/goods/warehouse/write_off'),
+                meta: { title: 'menu.goods.warehouse.write_off' }
+              }
+            ]
+          }
+        ]
       }
       // dashboard
       // {

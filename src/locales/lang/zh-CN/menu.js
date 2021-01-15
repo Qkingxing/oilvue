@@ -69,6 +69,11 @@ export default {
     'menu.oil.reports': '报表管理',
     'menu.oil.reports.sales': '销售报表',
     'menu.oil.reports.oil_return': '回罐明细',
+    'menu.goods': '便利店',
+    'menu.goods.warehouse': '商品库',
+    'menu.goods.warehouse.my': '商品管理',
+    'menu.goods.warehouse.Classification': '商品类目',
+    'menu.goods.warehouse.write_off': '核销记录',
     // ---
     'menu.welcome': '欢迎',
     'menu.home': '主页',
