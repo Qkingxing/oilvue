@@ -154,6 +154,126 @@ export const asyncRouterMap = [
             ]
           }
         ]
+      },
+      // crm
+      {
+        path: '/crm',
+        name: 'crm',
+        redirect: '/crm/customer/list',
+        component: RouteView,
+        meta: { title: 'menu.crm', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/crm/customer',
+            name: 'Ccustomer',
+            component: () => import('@/views/crm/customer'),
+            meta: { title: 'menu.crm.customer', keepAlive: true },
+            children: [
+              {
+                path: '/crm/customer/list',
+                name: 'Clist',
+                component: () => import('@/views/crm/customer/list'),
+                meta: { title: 'menu.crm.customer.list' }
+              },
+              {
+                path: '/crm/customer/tag',
+                name: 'tag',
+                component: () => import('@/views/crm/customer/tag'),
+                meta: { title: 'menu.crm.customer.tag' }
+              },
+              {
+                path: '/crm/customer/crowd',
+                name: 'crowd',
+                component: () => import('@/views/crm/customer/crowd'),
+                meta: { title: 'menu.crm.customer.crowd' }
+              },
+              {
+                path: '/crm/customer/import',
+                name: 'import',
+                component: () => import('@/views/crm/customer/import'),
+                meta: { title: 'menu.crm.customer.import' }
+              }
+            ]
+          },
+          {
+            path: '/crm/member',
+            name: 'Cmember',
+            component: () => import('@/views/crm/member'),
+            meta: { title: 'menu.crm.member', keepAlive: true },
+            children: [
+              {
+                path: '/crm/member/foundation',
+                name: 'foundation',
+                component: () => import('@/views/crm/member/foundation'),
+                meta: { title: 'menu.crm.member.foundation' }
+              },
+              {
+                path: '/crm/member/fixed',
+                name: 'fixed',
+                component: () => import('@/views/crm/member/fixed'),
+                meta: { title: 'menu.crm.member.fixed' }
+              },
+              {
+                path: '/crm/member/grow',
+                name: 'grow',
+                component: () => import('@/views/crm/member/grow'),
+                meta: { title: 'menu.crm.member.grow' }
+              }
+            ]
+          },
+          {
+            path: '/crm/credit',
+            name: 'credit',
+            component: () => import('@/views/crm/credit'),
+            meta: { title: 'menu.crm.credit', keepAlive: true },
+            children: [
+              {
+                path: '/crm/credit/setting',
+                name: 'setting',
+                component: () => import('@/views/crm/credit/setting'),
+                meta: { title: 'menu.crm.credit.setting' }
+              },
+              {
+                path: '/crm/credit/rule',
+                name: 'rule',
+                component: () => import('@/views/crm/credit/rule'),
+                meta: { title: 'menu.crm.credit.rule' }
+              },
+              {
+                path: '/crm/credit/record',
+                name: 'record',
+                component: () => import('@/views/crm/credit/record'),
+                meta: { title: 'menu.crm.credit.record' }
+              }
+            ]
+          },
+          {
+            path: '/crm/prepaid',
+            name: 'prepaid',
+            component: () => import('@/views/crm/prepaid'),
+            meta: { title: 'menu.crm.prepaid', keepAlive: true },
+            children: [
+              {
+                path: '/crm/prepaid/list',
+                name: 'Plist',
+                component: () => import('@/views/crm/prepaid/list'),
+                meta: { title: 'menu.crm.prepaid.list' }
+              },
+              {
+                path: '/crm/prepaid/client',
+                name: 'client',
+                component: () => import('@/views/crm/prepaid/client'),
+                meta: { title: 'menu.crm.prepaid.client' }
+              },
+              {
+                path: '/crm/prepaid/fleet',
+                name: 'fleet',
+                component: () => import('@/views/crm/prepaid/fleet'),
+                meta: { title: 'menu.crm.prepaid.fleet' }
+              }
+            ]
+          }
+        ]
       }
       // dashboard
       // {
