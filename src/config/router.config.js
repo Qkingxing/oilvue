@@ -346,8 +346,77 @@ export const asyncRouterMap = [
             meta: { title: 'menu.oms.overview', keepAlive: true }
           }
         ]
+      },
+      // assets
+      {
+        path: '/assets',
+        name: 'assets',
+        redirect: '/assets/money/overview',
+        component: RouteView,
+        meta: { title: 'menu.assets', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/assets/money',
+            name: 'money',
+            component: () => import('@/views/assets/money'),
+            meta: { title: 'menu.assets.money', keepAlive: true },
+            children: [
+              {
+                path: '/assets/money/overview',
+                name: 'Aoverview',
+                component: () => import('@/views/assets/money/overview'),
+                meta: { title: 'menu.assets.money.overview' }
+              },
+              {
+                path: '/assets/money/recharge_list',
+                name: 'recharge_list',
+                component: () => import('@/views/assets/money/recharge_list'),
+                meta: { title: 'menu.assets.money.recharge_list' }
+              }
+            ]
+          },
+          {
+            path: '/assets/compar',
+            name: 'compar',
+            component: () => import('@/views/assets/compar'),
+            meta: { title: 'menu.assets.compar', keepAlive: true },
+            children: [
+              {
+                path: '/assets/compar/detailed',
+                name: 'detailed',
+                component: () => import('@/views/assets/compar/detailed'),
+                meta: { title: 'menu.assets.compar.detailed' }
+              },
+              {
+                path: '/assets/compar/liquidate',
+                name: 'liquidate',
+                component: () => import('@/views/assets/compar/liquidate'),
+                meta: { title: 'menu.assets.compar.liquidate' }
+              }
+            ]
+          },
+          {
+            path: '/assets/balance',
+            name: 'balance',
+            component: () => import('@/views/assets/balance'),
+            meta: { title: 'menu.assets.balance', keepAlive: true }
+          },
+          {
+            path: '/assets/invoice',
+            name: 'invoice',
+            component: () => import('@/views/assets/invoice'),
+            meta: { title: 'menu.assets.invoice', keepAlive: true },
+            children: [
+              {
+                path: '/assets/invoice/list',
+                name: 'Alist',
+                component: () => import('@/views/assets/invoice/list'),
+                meta: { title: 'menu.assets.invoice.list' }
+              }
+            ]
+          }
+        ]
       }
-
       // dashboard
       // {
       //   path: '/dashboard',
