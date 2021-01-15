@@ -47,6 +47,8 @@ export default {
     'menu.em.list.list': '活动列表',
     'menu.em.list.couponlist': '优惠券列表',
     'menu.em.list.redpacketlist': '红包列表',
+    'menu.oms': '订单',
+    'menu.oms.overview': '查询',
     // ---
     'menu.welcome': '欢迎',
     'menu.home': '主页',

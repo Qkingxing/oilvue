@@ -330,6 +330,22 @@ export const asyncRouterMap = [
             ]
           }
         ]
+      },
+      // oms
+      {
+        path: '/oms',
+        name: 'oms',
+        redirect: '/oms/overview',
+        component: RouteView,
+        meta: { title: 'menu.oms', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/oms/overview',
+            name: 'Ooverview',
+            component: () => import('@/views/oms/overview'),
+            meta: { title: 'menu.oms.overview', keepAlive: true }
+          }
+        ]
       }
 
       // dashboard
