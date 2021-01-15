@@ -26,6 +26,7 @@ export const asyncRouterMap = [
           {
             path: '/dmp/overview',
             name: 'overview',
+            redirect: '/dmp/overview/dashboard',
             component: () => import('@/views/dmp/overview'),
             meta: { title: 'menu.dmp.overview', keepAlive: true },
             children: [
@@ -40,6 +41,7 @@ export const asyncRouterMap = [
           {
             path: '/dmp/em',
             name: 'em',
+            redirect: '/dmp/em/coupon',
             component: () => import('@/views/dmp/em'),
             meta: { title: 'menu.dmp.em', keepAlive: true },
             children: [
@@ -66,6 +68,7 @@ export const asyncRouterMap = [
           {
             path: '/dmp/customer',
             name: 'customer',
+            redirect: '/dmp/customer/overview',
             component: () => import('@/views/dmp/customer'),
             meta: { title: 'menu.dmp.customer', keepAlive: true },
             children: [
@@ -104,6 +107,7 @@ export const asyncRouterMap = [
           {
             path: '/dmp/report',
             name: 'report',
+            redirect: '/dmp/report/monthly',
             component: () => import('@/views/dmp/report'),
             meta: { title: 'menu.dmp.report', keepAlive: true },
             children: [
@@ -130,6 +134,7 @@ export const asyncRouterMap = [
           {
             path: '/dmp/performance',
             name: 'performance',
+            redirect: '/dmp/performance/refueling',
             component: () => import('@/views/dmp/performance'),
             meta: { title: 'menu.dmp.performance', keepAlive: true },
             children: [
@@ -166,6 +171,7 @@ export const asyncRouterMap = [
           {
             path: '/crm/customer',
             name: 'Ccustomer',
+            redirect: '/crm/customer/list',
             component: () => import('@/views/crm/customer'),
             meta: { title: 'menu.crm.customer', keepAlive: true },
             children: [
@@ -198,6 +204,7 @@ export const asyncRouterMap = [
           {
             path: '/crm/member',
             name: 'Cmember',
+            redirect: '/dmp/member/foundation',
             component: () => import('@/views/crm/member'),
             meta: { title: 'menu.crm.member', keepAlive: true },
             children: [
@@ -224,6 +231,7 @@ export const asyncRouterMap = [
           {
             path: '/crm/credit',
             name: 'credit',
+            redirect: '/dmp/credit/setting',
             component: () => import('@/views/crm/credit'),
             meta: { title: 'menu.crm.credit', keepAlive: true },
             children: [
@@ -250,6 +258,7 @@ export const asyncRouterMap = [
           {
             path: '/crm/prepaid',
             name: 'prepaid',
+            redirect: '/dmp/prepaid/list',
             component: () => import('@/views/crm/prepaid'),
             meta: { title: 'menu.crm.prepaid', keepAlive: true },
             children: [
@@ -286,6 +295,7 @@ export const asyncRouterMap = [
           {
             path: '/em/marketing',
             name: 'marketing',
+            redirect: '/em/marketing/activity_add',
             component: () => import('@/views/em/marketing'),
             meta: { title: 'menu.em.marketing', keepAlive: true },
             children: [
@@ -306,6 +316,7 @@ export const asyncRouterMap = [
           {
             path: '/em/list',
             name: 'Elist',
+            redirect: '/em/list/list',
             component: () => import('@/views/em/list'),
             meta: { title: 'menu.em.list', keepAlive: true },
             children: [
@@ -358,6 +369,7 @@ export const asyncRouterMap = [
           {
             path: '/assets/money',
             name: 'money',
+            redirect: '/assets/money/overview',
             component: () => import('@/views/assets/money'),
             meta: { title: 'menu.assets.money', keepAlive: true },
             children: [
@@ -378,6 +390,7 @@ export const asyncRouterMap = [
           {
             path: '/assets/compar',
             name: 'compar',
+            redirect: '/assets/compar/detailed',
             component: () => import('@/views/assets/compar'),
             meta: { title: 'menu.assets.compar', keepAlive: true },
             children: [
@@ -404,6 +417,7 @@ export const asyncRouterMap = [
           {
             path: '/assets/invoice',
             name: 'invoice',
+            redirect: '/assets/invoice/list',
             component: () => import('@/views/assets/invoice'),
             meta: { title: 'menu.assets.invoice', keepAlive: true },
             children: [
@@ -428,6 +442,7 @@ export const asyncRouterMap = [
           {
             path: '/oil/retail',
             name: 'retail',
+            redirect: '/oil/retail/os_install',
             component: () => import('@/views/oil/retail'),
             meta: { title: 'menu.oil.retail', keepAlive: true },
             children: [
@@ -442,6 +457,7 @@ export const asyncRouterMap = [
           {
             path: '/oil/sale',
             name: 'sale',
+            redirect: '/oil/sale/query',
             component: () => import('@/views/oil/sale'),
             meta: { title: 'menu.oil.sale', keepAlive: true },
             children: [
@@ -468,6 +484,7 @@ export const asyncRouterMap = [
           {
             path: '/oil/reports',
             name: 'reports',
+            redirect: '/oil/reports/sales',
             component: () => import('@/views/oil/reports'),
             meta: { title: 'menu.oil.reports', keepAlive: true },
             children: [
@@ -498,6 +515,7 @@ export const asyncRouterMap = [
           {
             path: '/goods/warehouse',
             name: 'warehouse',
+            redirect: '/goods/warehouse/my',
             component: () => import('@/views/goods/warehouse'),
             meta: { title: 'menu.goods.warehouse', keepAlive: true },
             children: [
@@ -534,6 +552,7 @@ export const asyncRouterMap = [
           {
             path: '/oa/personal',
             name: 'personal',
+            redirect: '/oa/personal/center',
             component: () => import('@/views/oa/personal'),
             meta: { title: 'menu.oa.personal', keepAlive: true },
             children: [
@@ -548,6 +567,7 @@ export const asyncRouterMap = [
           {
             path: '/oa/staff',
             name: 'staff',
+            redirect: '/oa/staff/account',
             component: () => import('@/views/oa/staff'),
             meta: { title: 'menu.oa.staff', keepAlive: true },
             children: [
@@ -590,6 +610,7 @@ export const asyncRouterMap = [
           {
             path: '/set/trade',
             name: 'trade',
+            redirect: '/set/trade/refund',
             component: () => import('@/views/set/trade'),
             meta: { title: 'menu.set.trade', keepAlive: true },
             children: [
@@ -610,6 +631,7 @@ export const asyncRouterMap = [
           {
             path: '/set/channel',
             name: 'channel',
+            redirect: '/set/channel/wxaccount',
             component: () => import('@/views/set/channel'),
             meta: { title: 'menu.set.channel', keepAlive: true },
             children: [
@@ -630,6 +652,7 @@ export const asyncRouterMap = [
           {
             path: '/set/customer',
             name: 'Scustomer',
+            redirect: '/set/customer/foundation',
             component: () => import('@/views/set/customer'),
             meta: { title: 'menu.set.customer', keepAlive: true },
             children: [
@@ -644,6 +667,7 @@ export const asyncRouterMap = [
           {
             path: '/set/commodity',
             name: 'commodity',
+            redirect: '/set/commodity/oil',
             component: () => import('@/views/set/commodity'),
             meta: { title: 'menu.set.commodity', keepAlive: true },
             children: [
@@ -658,6 +682,7 @@ export const asyncRouterMap = [
           {
             path: '/set/tool',
             name: 'tool',
+            redirect: '/set/tool/invoice',
             component: () => import('@/views/set/tool'),
             meta: { title: 'menu.set.tool', keepAlive: true },
             children: [
@@ -684,6 +709,7 @@ export const asyncRouterMap = [
           {
             path: '/set/hardware',
             name: 'hardware',
+            redirect: '/set/hardware/selfservice',
             component: () => import('@/views/set/hardware'),
             meta: { title: 'menu.set.hardware', keepAlive: true },
             children: [
@@ -710,6 +736,7 @@ export const asyncRouterMap = [
           {
             path: '/set/notice',
             name: 'notice',
+            redirect: '/set/notice/consumption_notice',
             component: () => import('@/views/set/notice'),
             meta: { title: 'menu.set.notice', keepAlive: true },
             children: [
@@ -746,6 +773,7 @@ export const asyncRouterMap = [
           {
             path: '/support/product',
             name: 'product',
+            redirect: '/support/product/software',
             component: () => import('@/views/support/product'),
             meta: { title: 'menu.support.product', keepAlive: true },
             children: [
