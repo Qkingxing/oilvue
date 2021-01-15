@@ -522,6 +522,56 @@ export const asyncRouterMap = [
             ]
           }
         ]
+      },
+      // oa
+      {
+        path: '/oa',
+        name: 'oa',
+        redirect: '/oa/personal/center',
+        component: RouteView,
+        meta: { title: 'menu.oa', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/oa/personal',
+            name: 'personal',
+            component: () => import('@/views/oa/personal'),
+            meta: { title: 'menu.oa.personal', keepAlive: true },
+            children: [
+              {
+                path: '/oa/personal/center',
+                name: 'center',
+                component: () => import('@/views/oa/personal/center'),
+                meta: { title: 'menu.oa.personal.center' }
+              }
+            ]
+          },
+          {
+            path: '/oa/staff',
+            name: 'staff',
+            component: () => import('@/views/oa/staff'),
+            meta: { title: 'menu.oa.staff', keepAlive: true },
+            children: [
+              {
+                path: '/oa/staff/account',
+                name: 'account',
+                component: () => import('@/views/oa/staff/account'),
+                meta: { title: 'menu.oa.staff.account' }
+              },
+              {
+                path: '/oa/staff/performance',
+                name: 'Operformance',
+                component: () => import('@/views/oa/staff/performance'),
+                meta: { title: 'menu.oa.staff.performance' }
+              },
+              {
+                path: '/oa/staff/power',
+                name: 'power',
+                component: () => import('@/views/oa/staff/power'),
+                meta: { title: 'menu.oa.staff.power' }
+              }
+            ]
+          }
+        ]
       }
       // dashboard
       // {

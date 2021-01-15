@@ -74,6 +74,13 @@ export default {
     'menu.goods.warehouse.my': '商品管理',
     'menu.goods.warehouse.Classification': '商品类目',
     'menu.goods.warehouse.write_off': '核销记录',
+    'menu.oa': '办公',
+    'menu.oa.personal': '个人中心',
+    'menu.oa.personal.center': '个人中心',
+    'menu.oa.staff': '员工管理',
+    'menu.oa.staff.account': '员工账号',
+    'menu.oa.staff.performance': '绩效管理',
+    'menu.oa.staff.power': '角色权限',
     // ---
     'menu.welcome': '欢迎',
     'menu.home': '主页',
