@@ -572,6 +572,168 @@ export const asyncRouterMap = [
             ]
           }
         ]
+      },
+      // set
+      {
+        path: '/set',
+        name: 'set',
+        redirect: '/set/basis',
+        component: RouteView,
+        meta: { title: 'menu.set', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/set/basis',
+            name: 'Obasis',
+            component: () => import('@/views/set/basis'),
+            meta: { title: 'menu.set.basis', keepAlive: true }
+          },
+          {
+            path: '/set/trade',
+            name: 'trade',
+            component: () => import('@/views/set/trade'),
+            meta: { title: 'menu.set.trade', keepAlive: true },
+            children: [
+              {
+                path: '/set/trade/refund',
+                name: 'refund',
+                component: () => import('@/views/set/trade/refund'),
+                meta: { title: 'menu.set.trade.refund' }
+              },
+              {
+                path: '/set/trade/business',
+                name: 'business',
+                component: () => import('@/views/set/trade/business'),
+                meta: { title: 'menu.set.trade.business' }
+              }
+            ]
+          },
+          {
+            path: '/set/channel',
+            name: 'channel',
+            component: () => import('@/views/set/channel'),
+            meta: { title: 'menu.set.channel', keepAlive: true },
+            children: [
+              {
+                path: '/set/channel/wxaccount',
+                name: 'wxaccount',
+                component: () => import('@/views/set/channel/wxaccount'),
+                meta: { title: 'menu.set.channel.wxaccount' }
+              },
+              {
+                path: '/set/channel/wxmini',
+                name: 'wxmini',
+                component: () => import('@/views/set/channel/wxmini'),
+                meta: { title: 'menu.set.channel.wxmini' }
+              }
+            ]
+          },
+          {
+            path: '/set/customer',
+            name: 'Scustomer',
+            component: () => import('@/views/set/customer'),
+            meta: { title: 'menu.set.customer', keepAlive: true },
+            children: [
+              {
+                path: '/set/customer/foundation',
+                name: 'Sfoundation',
+                component: () => import('@/views/set/customer/foundation'),
+                meta: { title: 'menu.set.customer.foundation' }
+              }
+            ]
+          },
+          {
+            path: '/set/commodity',
+            name: 'commodity',
+            component: () => import('@/views/set/commodity'),
+            meta: { title: 'menu.set.commodity', keepAlive: true },
+            children: [
+              {
+                path: '/set/commodity/oil',
+                name: 'Soil',
+                component: () => import('@/views/set/commodity/oil'),
+                meta: { title: 'menu.set.commodity.oil' }
+              }
+            ]
+          },
+          {
+            path: '/set/tool',
+            name: 'tool',
+            component: () => import('@/views/set/tool'),
+            meta: { title: 'menu.set.tool', keepAlive: true },
+            children: [
+              {
+                path: '/set/tool/invoice',
+                name: 'Sinvoice',
+                component: () => import('@/views/set/tool/invoice'),
+                meta: { title: 'menu.set.tool.invoice' }
+              },
+              {
+                path: '/set/tool/discount',
+                name: 'discount',
+                component: () => import('@/views/set/tool/discount'),
+                meta: { title: 'menu.set.tool.discount' }
+              },
+              {
+                path: '/set/tool/receipts',
+                name: 'receipts',
+                component: () => import('@/views/set/tool/receipts'),
+                meta: { title: 'menu.set.tool.receipts' }
+              }
+            ]
+          },
+          {
+            path: '/set/hardware',
+            name: 'hardware',
+            component: () => import('@/views/set/hardware'),
+            meta: { title: 'menu.set.hardware', keepAlive: true },
+            children: [
+              {
+                path: '/set/hardware/selfservice',
+                name: 'selfservice',
+                component: () => import('@/views/set/hardware/selfservice'),
+                meta: { title: 'menu.set.hardware.selfservice' }
+              },
+              {
+                path: '/set/hardware/pos',
+                name: 'pos',
+                component: () => import('@/views/set/hardware/pos'),
+                meta: { title: 'menu.set.hardware.pos' }
+              },
+              {
+                path: '/set/hardware/concentrator',
+                name: 'concentrator',
+                component: () => import('@/views/set/hardware/concentrator'),
+                meta: { title: 'menu.set.hardware.concentrator' }
+              }
+            ]
+          },
+          {
+            path: '/set/notice',
+            name: 'notice',
+            component: () => import('@/views/set/notice'),
+            meta: { title: 'menu.set.notice', keepAlive: true },
+            children: [
+              {
+                path: '/set/notice/consumption_notice',
+                name: 'consumption_notice',
+                component: () => import('@/views/set/notice/consumption_notice'),
+                meta: { title: 'menu.set.notice.consumption_notice' }
+              },
+              {
+                path: '/set/notice/events_notice',
+                name: 'events_notice',
+                component: () => import('@/views/set/notice/events_notice'),
+                meta: { title: 'menu.set.notice.events_notice' }
+              },
+              {
+                path: '/set/notice/SMS_manage',
+                name: 'SMS_manage',
+                component: () => import('@/views/set/notice/SMS_manage'),
+                meta: { title: 'menu.set.notice.SMS_manage' }
+              }
+            ]
+          }
+        ]
       }
       // dashboard
       // {
