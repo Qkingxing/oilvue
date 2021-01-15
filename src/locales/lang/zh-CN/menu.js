@@ -105,6 +105,13 @@ export default {
     'menu.set.notice.consumption_notice': '消费通知',
     'menu.set.notice.events_notice': '活动通知',
     'menu.set.notice.SMS_manage': '短信管理',
+    'menu.support': '支持',
+    'menu.support.product': '产品中心',
+    'menu.support.product.software': '软件',
+    'menu.support.product.hardware': '硬件',
+    'menu.support.product.record': '购买记录',
+    'menu.support.product.invoice': '发票列表',
+    'menu.support.help': '帮助中心',
     // ---
     'menu.welcome': '欢迎',
     'menu.home': '主页',

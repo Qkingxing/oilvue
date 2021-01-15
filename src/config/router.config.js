@@ -734,6 +734,54 @@ export const asyncRouterMap = [
             ]
           }
         ]
+      },
+      // support
+      {
+        path: '/support',
+        name: 'support',
+        redirect: '/support/product/software',
+        component: RouteView,
+        meta: { title: 'menu.support', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/support/product',
+            name: 'product',
+            component: () => import('@/views/support/product'),
+            meta: { title: 'menu.support.product', keepAlive: true },
+            children: [
+              {
+                path: '/support/product/software',
+                name: 'software',
+                component: () => import('@/views/support/product/software'),
+                meta: { title: 'menu.support.product.software' }
+              },
+              {
+                path: '/support/product/hardware',
+                name: 'Shardware',
+                component: () => import('@/views/support/product/hardware'),
+                meta: { title: 'menu.support.product.hardware' }
+              },
+              {
+                path: '/support/product/record',
+                name: 'Srecord',
+                component: () => import('@/views/support/product/record'),
+                meta: { title: 'menu.support.product.record' }
+              },
+              {
+                path: '/support/product/invoice',
+                name: 'SUinvoice',
+                component: () => import('@/views/support/product/invoice'),
+                meta: { title: 'menu.support.product.invoice' }
+              }
+            ]
+          },
+          {
+            path: '/support/help',
+            name: 'help',
+            component: () => import('@/views/support/help'),
+            meta: { title: 'menu.support.help', keepAlive: true }
+          }
+        ]
       }
       // dashboard
       // {
