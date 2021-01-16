@@ -230,7 +230,7 @@ export const asyncRouterMap = [
           },
           {
             path: '/crm/credit',
-            name: 'credit',
+            name: 'CrmCredit',
             redirect: '/dmp/credit/setting',
             component: () => import('@/views/crm/credit'),
             meta: { title: 'menu.crm.credit', keepAlive: true },
