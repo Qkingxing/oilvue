@@ -5,6 +5,6 @@
 
 <script>
 export default {
-    name: 'Credit'
+    name: 'CrmCredit'
 }
 </script>

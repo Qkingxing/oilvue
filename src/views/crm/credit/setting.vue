@@ -43,7 +43,7 @@
 const plainOptions = ['优惠券优惠', '会员等级优惠', '价立减优惠', '满减优惠']
 
 export default {
-  name: 'setting',
+  name: 'Setting',
   components: {
 
   },

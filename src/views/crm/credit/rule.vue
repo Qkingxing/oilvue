@@ -65,7 +65,7 @@ import { STable } from '@/components'
 import { getRoleList, getServiceList } from '@/api/manage'
 
 export default {
-  name: 'rule',
+  name: 'Rule',
   components: {
     STable
   },
