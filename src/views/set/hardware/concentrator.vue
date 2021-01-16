@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        concentrator
-    </div>
+  <div>
+    concentrator
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'concentrator'
+    name: 'Concentrator'
 }
 </script>

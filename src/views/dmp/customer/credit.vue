@@ -1,12 +1,12 @@
 
 <template>
   <div>
-      credit
+    credit
   </div>
 </template>
 
 <script>
 export default {
-    name: 'credit'
+    name: 'Credit'
 }
 </script>

@@ -1,10 +1,10 @@
 
 <template>
-    <div>coupon</div>
+  <div>coupon</div>
 </template>
 
 <script>
 export default {
-    name: 'coupon'
+    name: 'Coupon'
 }
 </script>

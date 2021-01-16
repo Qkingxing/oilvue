@@ -1,8 +1,8 @@
 
 <template>
-    <div>
-        performance
-    </div>
+  <div>
+    performance
+  </div>
 </template>
 
 <script>

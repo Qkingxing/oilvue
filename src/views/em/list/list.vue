@@ -1,7 +1,7 @@
 
 <template>
   <div>
-      list
+    list
   </div>
 </template>
 

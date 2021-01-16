@@ -1,8 +1,8 @@
 
 <template>
-    <div>
-        Classification
-    </div>
+  <div>
+    Classification
+  </div>
 </template>
 
 <script>

@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        oil_return
-    </div>
+  <div>
+    oil_return
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'oil_return'
+    name: 'OilReturn'
 }
 </script>

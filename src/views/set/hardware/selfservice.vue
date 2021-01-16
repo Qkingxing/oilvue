@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        selfservice
-    </div>
+  <div>
+    selfservice
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'selfservice'
+    name: 'Selfservice'
 }
 </script>

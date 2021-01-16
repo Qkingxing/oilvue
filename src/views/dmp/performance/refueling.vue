@@ -1,12 +1,12 @@
 
 <template>
   <div>
-      refueling
+    refueling
   </div>
 </template>
 
 <script>
 export default {
-    name: 'refueling'
+    name: 'Refueling'
 }
 </script>

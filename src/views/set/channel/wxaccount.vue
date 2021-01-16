@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        wxaccount
-    </div>
+  <div>
+    wxaccount
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'wxaccount'
+    name: 'Wxaccount'
 }
 </script>

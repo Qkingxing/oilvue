@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        oscard
-    </div>
+  <div>
+    oscard
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'oscard'
+    name: 'Oscard'
 }
 </script>

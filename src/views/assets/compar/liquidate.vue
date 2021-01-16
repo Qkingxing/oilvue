@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        liquidate
-    </div>
+  <div>
+    liquidate
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'liquidate'
+    name: 'Liquidate'
 }
 </script>

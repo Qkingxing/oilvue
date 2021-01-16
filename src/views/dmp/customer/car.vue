@@ -1,12 +1,12 @@
 
 <template>
   <div>
-      car
+    car
   </div>
 </template>
 
 <script>
 export default {
-    name: 'car'
+    name: 'Car'
 }
 </script>

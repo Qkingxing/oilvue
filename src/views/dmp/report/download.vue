@@ -1,12 +1,12 @@
 
 <template>
   <div>
-      download
+    download
   </div>
 </template>
 
 <script>
 export default {
-    name: 'download'
+    name: 'Download'
 }
 </script>

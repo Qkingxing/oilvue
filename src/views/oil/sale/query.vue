@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        query
-    </div>
+  <div>
+    query
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'query'
+    name: 'Query'
 }
 </script>
