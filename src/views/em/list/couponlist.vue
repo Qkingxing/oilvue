@@ -7,6 +7,6 @@
 
 <script>
 export default {
-    name: 'couponlist' 
+    name: 'couponlist'
 }
 </script>
