@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        wxmini
-    </div>
+  <div>
+    wxmini
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'wxmini'
+    name: 'Wxmini'
 }
 </script>

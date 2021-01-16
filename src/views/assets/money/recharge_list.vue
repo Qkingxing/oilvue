@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        recharge_list
-    </div>
+  <div>
+    recharge_list
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'recharge_list'
+    name: 'RechargeList'
 }
 </script>

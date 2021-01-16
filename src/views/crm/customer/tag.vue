@@ -43,7 +43,7 @@ import EditTag from './components/EditTag'
 import { getRoleList, getServiceList } from '@/api/manage'
 
 export default {
-  name: 'tag',
+  name: 'Tag',
   components: {
     STable,
     EditTag

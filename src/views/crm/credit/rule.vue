@@ -1,12 +1,12 @@
 
 <template>
   <div>
-      rule
+    rule
   </div>
 </template>
 
 <script>
 export default {
-    name: 'rule'
+    name: 'Rule'
 }
 </script>

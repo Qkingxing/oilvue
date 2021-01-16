@@ -1,8 +1,8 @@
 
 <template>
-    <div>
-        statistics
-    </div>
+  <div>
+    statistics
+  </div>
 </template>
 
 <script>

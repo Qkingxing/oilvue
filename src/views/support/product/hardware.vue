@@ -1,8 +1,8 @@
 
 <template>
-    <div>
-        hardware
-    </div>
+  <div>
+    hardware
+  </div>
 </template>
 
 <script>

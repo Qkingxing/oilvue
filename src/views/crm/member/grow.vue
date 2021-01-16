@@ -1,12 +1,12 @@
 
 <template>
   <div>
-      grow
+    grow
   </div>
 </template>
 
 <script>
 export default {
-    name: 'grow'
+    name: 'Grow'
 }
 </script>

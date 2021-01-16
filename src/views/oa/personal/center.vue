@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        center
-    </div>
+  <div>
+    center
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'center'
+    name: 'Center'
 }
 </script>

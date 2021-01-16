@@ -42,7 +42,7 @@ import EditTag from './components/EditTag'
 import { getRoleList, getServiceList } from '@/api/manage'
 
 export default {
-  name: 'crowd',
+  name: 'Crowd',
   components: {
     STable,
     EditTag

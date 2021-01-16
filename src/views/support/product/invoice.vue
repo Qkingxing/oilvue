@@ -1,8 +1,8 @@
 
 <template>
-    <div>
-        invoice
-    </div>
+  <div>
+    invoice
+  </div>
 </template>
 
 <script>

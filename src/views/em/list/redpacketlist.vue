@@ -1,12 +1,12 @@
 
 <template>
   <div>
-      redpacketlist
+    redpacketlist
   </div>
 </template>
 
 <script>
 export default {
-    name: 'redpacketlist'
+    name: 'Redpacketlist'
 }
 </script>

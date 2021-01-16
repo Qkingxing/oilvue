@@ -1,8 +1,8 @@
 
 <template>
-    <div>
-        foundation
-    </div>
+  <div>
+    foundation
+  </div>
 </template>
 
 <script>

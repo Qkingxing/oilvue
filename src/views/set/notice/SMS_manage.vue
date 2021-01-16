@@ -1,12 +1,12 @@
 
 <template>
-    <div>
-        SMS_manage
-    </div>
+  <div>
+    SMS_manage
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'SMS_manage'
+    name: 'SMSManage'
 }
 </script>

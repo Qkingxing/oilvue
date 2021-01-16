@@ -1,12 +1,12 @@
 
 <template>
   <div>
-      fixed
+    fixed
   </div>
 </template>
 
 <script>
 export default {
-    name: 'fixed'
+    name: 'Fixed'
 }
 </script>

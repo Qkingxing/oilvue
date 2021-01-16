@@ -1,8 +1,8 @@
 
 <template>
-    <div>
-        record
-    </div>
+  <div>
+    record
+  </div>
 </template>
 
 <script>

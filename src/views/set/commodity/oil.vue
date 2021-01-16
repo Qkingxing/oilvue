@@ -1,8 +1,8 @@
 
 <template>
-    <div>
-        oil
-    </div>
+  <div>
+    oil
+  </div>
 </template>
 
 <script>

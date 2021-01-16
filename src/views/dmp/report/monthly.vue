@@ -1,12 +1,12 @@
 
 <template>
   <div>
-      monthly
+    monthly
   </div>
 </template>
 
 <script>
 export default {
-    name: 'monthly'
+    name: 'Monthly'
 }
 </script>
