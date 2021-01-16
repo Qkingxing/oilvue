@@ -1,12 +1,14 @@
-
 <template>
-<<<<<<< HEAD
-  <div>
-    grow
-  </div>
-=======
   <a-layout>
-    <a-layout-content :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
+    <a-layout-content
+      :style="{
+        margin: '24px 0',
+        padding: '0 24px 24px 24px',
+        background: '#fff',
+        minHeight: '280px',
+        position: 'relative'
+      }"
+    >
       <div class="add-rule">
         <a-button type="primary"> 新增会员规则 </a-button>
       </div>
@@ -40,13 +42,7 @@
             <div class="growth-level">
               <div class="level-title">会员规则设置</div>
               <div class="level-content">
-                <s-table
-                  ref="table"
-                  size="default"
-                  rowKey="key"
-                  :columns="columns"
-                  :data="loadData"
-                >
+                <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
                   <span slot="watch" slot-scope="text, record">
                     <template>
                       <a @click="delTag(record)">认证列表</a>
@@ -68,14 +64,12 @@
             </div>
           </div>
           <div class="page-foot">
-            <a-button > 立即停用 </a-button>
+            <a-button> 立即停用 </a-button>
           </div>
         </div>
       </div>
     </a-layout-content>
-
   </a-layout>
->>>>>>> 65103a03c69bb9da071255bb08d432d87b7c2e32
 </template>
 
 <script>
@@ -84,17 +78,14 @@ import { STable } from '@/components'
 import { getRoleList, getServiceList } from '@/api/manage'
 
 export default {
-<<<<<<< HEAD
-    name: 'Grow'
-=======
-  name: 'grow',
+  name: 'Grow',
   components: {
     STable
   },
   data () {
     return {
       // 查询参数
-      queryParam: { },
+      queryParam: {},
       // 表头
       columns: [
         {
@@ -139,10 +130,9 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
+        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
+          return res.result
+        })
       },
       selectedRowKeys: [],
       selectedRows: [],
@@ -196,16 +186,15 @@ export default {
       this.selectedRows = selectedRows
     }
   }
->>>>>>> 65103a03c69bb9da071255bb08d432d87b7c2e32
 }
 </script>
 <style lang="less" scoped>
 .add-rule {
-    position: absolute;
-    right: 24px;
-    top: 10px;
+  position: absolute;
+  right: 24px;
+  top: 10px;
 }
-.head-title{
+.head-title {
   font-size: 16px;
   font-weight: 700;
   color: #1e1e28;
@@ -214,42 +203,41 @@ export default {
   border-bottom: 1px solid #eaeaf4;
   line-height: 60px;
 }
-.rule-status{
+.rule-status {
   padding-left: 10px;
   color: #1890ff;
 }
-.page-content{
+.page-content {
   margin-top: 30px;
 }
-.growth-setting{
-  .setting-item{
+.growth-setting {
+  .setting-item {
     display: flex;
-    .setting-title{
+    .setting-title {
       line-height: 45px;
       width: 128px;
       margin-right: 20px;
       text-align: right;
     }
-    .setting-content{
+    .setting-content {
       line-height: 45px;
     }
   }
 }
-.growth-level{
+.growth-level {
   margin-top: 15px;
-  .level-title{
+  .level-title {
     font-size: 16px;
     font-weight: 600;
     line-height: 60px;
     color: #1e1e28;
   }
 }
-.page-foot{
+.page-foot {
   text-align: center;
   margin-top: 50px;
-  button{
+  button {
     margin-right: 20px;
   }
 }
-
 </style>

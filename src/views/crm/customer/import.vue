@@ -1,12 +1,8 @@
-
 <template>
-<<<<<<< HEAD
-  <div>
-    import
-  </div>
-=======
   <a-layout>
-    <a-layout-content :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
+    <a-layout-content
+      :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
+    >
       <div class="head-title">
         客户导入
       </div>
@@ -16,13 +12,7 @@
 
       <!-- 表格 -->
       <div class="showDataForTable">
-        <s-table
-          ref="table"
-          size="default"
-          rowKey="key"
-          :columns="columns"
-          :data="loadData"
-        >
+        <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
           <span slot="action" slot-scope="text, record">
             <template>
               <a @click="delTag(record)">撤回</a>
@@ -31,9 +21,7 @@
         </s-table>
       </div>
     </a-layout-content>
-
   </a-layout>
->>>>>>> 65103a03c69bb9da071255bb08d432d87b7c2e32
 </template>
 
 <script>
@@ -42,17 +30,14 @@ import { STable } from '@/components'
 import { getRoleList, getServiceList } from '@/api/manage'
 
 export default {
-<<<<<<< HEAD
-    name: 'Import'
-=======
-  name: 'import',
+  name: 'Import',
   components: {
     STable
   },
   data () {
     return {
       // 查询参数
-      queryParam: { },
+      queryParam: {},
       // 表头
       columns: [
         {
@@ -107,10 +92,9 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
+        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
+          return res.result
+        })
       },
       selectedRowKeys: [],
       selectedRows: [],
@@ -164,11 +148,10 @@ export default {
       this.selectedRows = selectedRows
     }
   }
->>>>>>> 65103a03c69bb9da071255bb08d432d87b7c2e32
 }
 </script>
 <style lang="less" scoped>
-.head-title{
+.head-title {
   font-size: 16px;
   font-weight: 700;
   color: #1e1e28;
@@ -178,60 +161,59 @@ export default {
   line-height: 60px;
 }
 
-.actionBtns{
+.actionBtns {
   display: flex;
   align-items: center;
   margin: 16px 0;
-  button{
+  button {
     margin-right: 8px;
   }
 }
-.screen-box{
+.screen-box {
   padding: 27px 0 24px 0;
-  .screen-item{
+  .screen-item {
     display: flex;
     align-items: center;
     margin-bottom: 16px;
     color: #1e1e28;
   }
 }
-.search-btn{
+.search-btn {
   margin-left: 72px;
   margin-top: 8px;
 }
-.showDataForTable{
+.showDataForTable {
   position: relative;
   display: block;
   width: 100%;
   margin-bottom: 60px;
   overflow: hidden;
-  .showSearchAndTotal{
+  .showSearchAndTotal {
     height: 63px;
     text-align: center;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  .title{
+  .title {
     font-size: 16px;
     font-weight: 500;
     color: #1e1e28;
     line-height: 24px;
     padding: 23px 0 16px 0;
   }
-  .dec{
+  .dec {
     color: #3c3c46;
     margin-left: 8px;
     font-size: 14px;
     font-weight: 400;
   }
 }
-.themeColor{
+.themeColor {
   color: #3b85ff;
 }
-.select-all{
+.select-all {
   margin-left: 16px;
   cursor: pointer;
 }
-
 </style>
