@@ -24,6 +24,7 @@ export default {
     'menu.crm': '客户',
     'menu.crm.customer': '客户管理',
     'menu.crm.customer.list': '客户列表',
+    'menu.crm.customer.list.detail': '客户详情',
     'menu.crm.customer.tag': '客户标签',
     'menu.crm.customer.crowd': '客户分群',
     'menu.crm.customer.import': '客户导入',

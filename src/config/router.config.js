@@ -178,8 +178,18 @@ export const asyncRouterMap = [
               {
                 path: '/crm/customer/list',
                 name: 'Clist',
-                component: () => import('@/views/crm/customer/list'),
-                meta: { title: 'menu.crm.customer.list' }
+                component: () => import('@/views/crm/customer/list/index'),
+                meta: { title: 'menu.crm.customer.list' },
+                hideChildrenInMenu: true,
+                children: [
+                  {
+                    path: '/crm/customer/list/detail',
+                    name: 'CrmDetail',
+                    hidden: true,
+                    component: () => import('@/views/crm/customer/list/detail'),
+                    meta: { title: 'menu.crm.customer.list.detail' }
+                  }
+                ]
               },
               {
                 path: '/crm/customer/tag',

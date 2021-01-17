@@ -272,7 +272,7 @@ export default {
   },
   data () {
     return {
-      radioValue: 'old',
+      radioValue: 'new',
       // 查询参数
       queryParam: {
         keyType: '86'
