@@ -18,54 +18,99 @@
           <div class="head-title">
             客户详情
           </div>
-          <div class="page-content">
-            <div class="growth-setting">
-              <div class="setting-item">
-                <div class="setting-title">生效时间</div>
-                <div class="setting-content">2021-01-14 00:00:00</div>
-              </div>
-              <div class="setting-item">
-                <div class="setting-title">生效油站</div>
-                <div class="setting-content">鹰眼集团</div>
-              </div>
-              <div class="setting-item">
-                <div class="setting-title">成长值累积门槛</div>
-                <div class="setting-content">订单实付金额大于9.90元时，才计算成长值</div>
-              </div>
-              <div class="setting-item">
-                <div class="setting-title">成长值累积规则</div>
-                <div class="setting-content">
-                  <div style="line-height: 1em; padding-top: 16px;">油品不限，每消费1元获得2.00个成长值</div>
-                </div>
+          <div class="base-info" style="border-right: none; border-bottom: none;">
+            <div class="base-item">
+              <div class="base-title">客户编号</div>
+              <div class="base-val">-</div>
+            </div>
+            <div class="base-item">
+              <div class="base-title">客户子编号</div>
+              <div class="base-val">-</div>
+            </div>
+            <div class="base-item">
+              <div class="base-title">手机号</div>
+              <div class="base-val">-</div>
+            </div>
+            <div class="base-item rightBorder">
+              <div class="base-title">昵称</div>
+              <div class="base-val">-</div>
+            </div>
+            <div class="base-item">
+              <div class="base-title">性别</div>
+              <div class="base-val">-</div>
+            </div>
+            <div class="base-item">
+              <div class="base-title">车牌号</div>
+              <div class="base-val">-</div>
+            </div>
+            <div class="base-item">
+              <div class="base-title">油品偏好</div>
+              <div class="base-val">-</div>
+            </div>
+            <div class="base-item rightBorder">
+              <div class="base-title">会员等级</div>
+              <div class="base-val">1张</div>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;">修改</a-button>
+            </div>
+            <div class="base-item">
+              <div class="base-title">客户身份</div>
+              <div class="base-val">-</div>
+            </div>
+            <div class="base-item">
+              <div class="base-title">现有积分</div>
+              <div class="base-val">1张</div>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;">增加</a-button>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;">减少</a-button>
+            </div>
+            <div class="base-item">
+              <div class="base-title">加油卡</div>
+              <div class="base-val">1张</div>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;">查看</a-button>
+            </div>
+            <div class="base-item rightBorder">
+              <div class="base-title">优惠券</div>
+              <div class="base-val">1张</div>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;">查看</a-button>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;">发券</a-button>
+            </div>
+            <div class="base-item rightBorder">
+              <div class="base-title">客户标签</div>
+              <div class="base-val">
+                <div class="label-box"><span>-</span></div>
+                <a>修改</a>
               </div>
             </div>
-            <div class="growth-level">
-              <div class="level-title">会员规则设置</div>
-              <div class="level-content">
-                <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
-                  <span slot="watch" slot-scope="text, record">
-                    <template>
-                      <a @click="delTag(record)">认证列表</a>
-                      <a-divider type="vertical" />
-                      <a @click="delTag(record)">用户列表</a>
-                    </template>
-                  </span>
-                  <span slot="action" slot-scope="text, record">
-                    <template>
-                      <a @click="delTag(record)">编辑</a>
-                      <a-divider type="vertical" />
-                      <a @click="delTag(record)">删除</a>
-                      <a-divider type="vertical" />
-                      <a @click="delTag(record)">下载等级码</a>
-                    </template>
-                  </span>
-                </s-table>
-              </div>
-            </div>
+            <div style="flex: 1 1 25%;"></div>
+            <div style="flex: 1 1 25%;"></div>
+            <div style="flex: 1 1 25%;"></div>
           </div>
-          <div class="page-foot">
-            <a-button> 立即停用 </a-button>
-          </div>
+          <a-tabs default-active-key="1" size="large">
+            <a-tab-pane key="1" tab="Tab 1">
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="Tab 2" force-render>
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="Tab 3">
+            </a-tab-pane>
+          </a-tabs>
+
+          <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
+            <span slot="watch" slot-scope="text, record">
+              <template>
+                <a @click="delTag(record)">认证列表</a>
+                <a-divider type="vertical" />
+                <a @click="delTag(record)">用户列表</a>
+              </template>
+            </span>
+            <span slot="action" slot-scope="text, record">
+              <template>
+                <a @click="delTag(record)">编辑</a>
+                <a-divider type="vertical" />
+                <a @click="delTag(record)">删除</a>
+                <a-divider type="vertical" />
+                <a @click="delTag(record)">下载等级码</a>
+              </template>
+            </span>
+          </s-table>
         </div>
       </div>
     </a-layout-content>
@@ -200,12 +245,60 @@ export default {
   color: #1e1e28;
   height: 55px;
   line-height: 41px;
+  line-height: 24px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  padding: 22px 0 16px 0;
   border-bottom: 1px solid #eaeaf4;
-  line-height: 60px;
 }
-.rule-status {
-  padding-left: 10px;
-  color: #1890ff;
+.base-info{
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid #ededed;
+  margin-bottom: 16px;
+  .base-item{
+    flex: 25%;
+    min-height: 50px;
+    border-bottom: 1px solid #ededed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #1e1e28;
+    .base-title{
+      width: 90px;
+      background-color: #f8f8f9;
+      padding-right: 10px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .base-val{
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      text-align: left;
+      .label-box{
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        padding-top: 4px;
+      }
+      a{
+        display: inline-block;
+        width: 28px;
+        font-size: 14px;
+        margin-right: 16px;
+      }
+    }
+    &.rightBorder{
+      border-right: 1px solid #ededed;
+    }
+  }
 }
 .page-content {
   margin-top: 30px;
