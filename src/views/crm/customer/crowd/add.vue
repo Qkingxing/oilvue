@@ -3,16 +3,45 @@
   <a-layout>
     <a-layout-content :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
       <div class="head-title">
-        客户标签&nbsp;
-        <a-tooltip placement="right" title="标签数据每小时更新一次" overlayClassName="tooltip">
-          <a-icon style="color: rgb(153, 153, 153);" type="question-circle" />
-        </a-tooltip>
+        <span>
+          基础信息
+        </span>
       </div>
-      <div class="actionBtns">
-        <a-button type="primary" @click="showEditTag('add')"> 新增标签 </a-button>
-        <router-link :to="{ name: 'activity_add' }">
-          <a-button> 创建营销活动 </a-button>
-        </router-link>
+      <div class="select-info">
+        <div class="label">客群名称</div>
+        <a-form layout="inline">
+          <a-form-item>
+            <a-input :maxLength="10" placeholder="请输入标签名称" style="width:300px;"/>
+            <span style="margin-left: -45px; color: rgb(199, 199, 199); position: relative;">10/10</span>
+          </a-form-item>
+        </a-form>
+      </div>
+      <div class="select-info">
+        <div class="label">
+          客群类型&nbsp;
+          <a-popover placement="rightTop">
+            <template slot="content">
+              <div>固定人群：创建分群后人群数量固定不变，只有手动刷新才会更新数据（数据截止到昨日24点)</div>
+              <div>条件人群：创建分群后人群数量会自动更新（实时数据）</div>
+            </template>
+            <a-icon style="color: rgb(153, 153, 153);" type="question-circle" />
+          </a-popover>
+        </div>
+        <a-radio-group name="radioGroup" :default-value="1" style="line-height: 40px;">
+          <a-radio :value="1" style="margin-right: 70px;">
+            固定人群
+          </a-radio>
+          <a-radio :value="2">
+            条件人群
+          </a-radio>
+        </a-radio-group>
+      </div>
+
+      <div class="table-header">
+        <div class="sub-title">客群信息</div>
+        <div class="searchBox">
+          <a-input-search placeholder="请输入手机号/客户编号" style="width: 200px" />
+        </div>
       </div>
 
       <!-- 表格 -->
@@ -33,20 +62,17 @@
         </s-table>
       </div>
     </a-layout-content>
-    <EditTag ref="EditTag"></EditTag>
   </a-layout>
 </template>
 
 <script>
 import { STable } from '@/components'
-import EditTag from './components/EditTag'
 import { getRoleList, getServiceList } from '@/api/manage'
 
 export default {
-  name: 'Tag',
+  name: 'CrmCrowdAdd',
   components: {
-    STable,
-    EditTag
+    STable
   },
   data () {
     return {
@@ -122,7 +148,7 @@ export default {
       })
     },
     showEditTag (type) {
-      this.$refs['EditTag'].show(type)
+
     },
     tableOption () {
       if (!this.optionAlertShow) {
@@ -149,36 +175,42 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.head-title{
-  font-size: 16px;
-  font-weight: 700;
-  color: #1e1e28;
-  height: 55px;
-  line-height: 41px;
-  border-bottom: 1px solid #eaeaf4;
-  line-height: 60px;
-}
 
-.actionBtns{
+.head-title{
+  font-size: 14px;
+  line-height: 44px;
+  font-weight: 500;
+  border-bottom: 1px solid #eaeaf4;
+  margin-bottom: 24px;
+  margin-top: 8px;
+}
+.select-info{
+  display: flex;
+  margin-bottom: 16px;
+  .label{
+    width: 120px;
+    height: 40px;
+    line-height: 40px;
+    text-align: right;
+    margin-right: 20px;
+    color: #1e1e28;
+    font-size: 14px;
+  }
+}
+.table-header{
   display: flex;
   align-items: center;
-  margin: 16px 0;
-  button{
-    margin-right: 8px;
+  justify-content: space-between;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  .sub-title{
+    color: #1e1e28;
+    font-weight: 500;
   }
-}
-.screen-box{
-  padding: 27px 0 24px 0;
-  .screen-item{
+  .searchBox{
     display: flex;
     align-items: center;
-    margin-bottom: 16px;
-    color: #1e1e28;
   }
-}
-.search-btn{
-  margin-left: 72px;
-  margin-top: 8px;
 }
 .showDataForTable{
   position: relative;

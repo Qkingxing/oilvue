@@ -194,14 +194,41 @@ export const asyncRouterMap = [
               {
                 path: '/crm/customer/tag',
                 name: 'tag',
-                component: () => import('@/views/crm/customer/tag'),
-                meta: { title: 'menu.crm.customer.tag' }
+                component: () => import('@/views/crm/customer/tag/index'),
+                meta: { title: 'menu.crm.customer.tag' },
+                hideChildrenInMenu: true,
+                children: [
+                  {
+                    path: '/crm/customer/tag/detail',
+                    name: 'CrmTagDetail',
+                    hidden: true,
+                    component: () => import('@/views/crm/customer/tag/detail'),
+                    meta: { title: 'menu.crm.customer.tag.detail' }
+                  }
+                ]
               },
               {
                 path: '/crm/customer/crowd',
                 name: 'crowd',
-                component: () => import('@/views/crm/customer/crowd'),
-                meta: { title: 'menu.crm.customer.crowd' }
+                component: () => import('@/views/crm/customer/crowd/index'),
+                meta: { title: 'menu.crm.customer.crowd' },
+                hideChildrenInMenu: true,
+                children: [
+                  {
+                    path: '/crm/customer/crowd/detail',
+                    name: 'CrmCrowdDetail',
+                    hidden: true,
+                    component: () => import('@/views/crm/customer/crowd/detail'),
+                    meta: { title: 'menu.crm.customer.crowd.detail' }
+                  },
+                  {
+                    path: '/crm/customer/crowd/add',
+                    name: 'CrmCrowdAdd',
+                    hidden: true,
+                    component: () => import('@/views/crm/customer/crowd/add'),
+                    meta: { title: 'menu.crm.customer.crowd.add' }
+                  }
+                ]
               },
               {
                 path: '/crm/customer/import',
