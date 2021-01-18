@@ -37,140 +37,98 @@
         </a-radio-group>
       </div>
       <div class="head-title" style="margin-top: 20px;"><span>筛选条件</span></div>
-
-      <div class="table-header">
-        <div class="sub-title">客群信息</div>
-        <div class="searchBox">
-          <a-input-search placeholder="请输入手机号/客户编号" style="width: 200px" />
-        </div>
-      </div>
-
-      <!-- 表格 -->
-      <div class="showDataForTable">
-        <s-table
-          ref="table"
-          size="default"
-          rowKey="key"
-          :columns="columns"
-          :data="loadData"
-          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-        >
-          <span slot="action" slot-scope="text, record">
-            <template>
-              <a @click="delTag(record)">删除</a>
-            </template>
-          </span>
-        </s-table>
+      <div class="select_wrap">
+        <el-cascader
+          style="width: 700px;"
+          v-model="value"
+          :options="options"
+          :props="{ expandTrigger: 'hover', multiple: true }"
+          @change="handleChange"
+        ></el-cascader>
+        <span class="select_count">已选择{{value.length}}项</span>
       </div>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script>
-import { STable } from '@/components'
-import { getRoleList, getServiceList } from '@/api/manage'
 
 export default {
   name: 'CrmCrowdAdd',
-  components: {
-    STable
-  },
+  components: {},
   data () {
     return {
-      // 查询参数
-      queryParam: { },
-      // 表头
-      columns: [
+      value: [],
+      options: [
         {
-          title: '标签名称',
-          dataIndex: 'no'
+          value: 'zhinan',
+          label: '指南',
+          children: [
+            {
+              value: 'shejiyuanze',
+              label: '设计原则'
+            },
+            {
+              value: 'daohang',
+              label: '导航'
+            }
+          ]
         },
         {
-          title: '人数',
-          dataIndex: 'description'
+          value: 'zujian',
+          label: '组件',
+          children: [
+            {
+              value: 'basic',
+              label: 'Basic'
+            },
+            {
+              value: 'form',
+              label: 'Form'
+            },
+            {
+              value: 'data',
+              label: 'Data'
+            },
+            {
+              value: 'notice',
+              label: 'Notice'
+            },
+            {
+              value: 'navigation',
+              label: 'Navigation'
+            },
+            {
+              value: 'others',
+              label: 'Others'
+            }
+          ]
         },
         {
-          title: '应用活动（次）',
-          dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '创建时间',
-          dataIndex: 'time',
-          needTotal: true
-        },
-        {
-          title: '标签数据更新时间',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
+          value: 'ziyuan',
+          label: '资源',
+          children: [
+            {
+              value: 'axure',
+              label: 'Axure Components'
+            },
+            {
+              value: 'sketch',
+              label: 'Sketch Templates'
+            },
+            {
+              value: 'jiaohu',
+              label: '组件交互文档'
+            }
+          ]
         }
-      ],
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
-      },
-      selectedRowKeys: [],
-      selectedRows: [],
-
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
+      ]
     }
   },
-  created () {
-    this.tableOption()
-    getRoleList({ t: new Date() })
-  },
+  created () {},
   methods: {
-    delTag () {
-      this.$confirm({
-        title: '温馨提示',
-        content: '删除会清除标签全部信息，是否删除？',
-        onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
-        },
-        onCancel () {}
-      })
-    },
-    showEditTag (type) {
-
-    },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
+    handleChange (value) {
+      console.log(value)
     }
   }
 }
@@ -198,54 +156,12 @@ export default {
     font-size: 14px;
   }
 }
-.table-header{
+.select_wrap{
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  .sub-title{
-    color: #1e1e28;
-    font-weight: 500;
-  }
-  .searchBox{
-    display: flex;
-    align-items: center;
-  }
-}
-.showDataForTable{
-  position: relative;
-  display: block;
-  width: 100%;
-  margin-bottom: 60px;
-  overflow: hidden;
-  .showSearchAndTotal{
-    height: 63px;
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .title{
-    font-size: 16px;
-    font-weight: 500;
-    color: #1e1e28;
-    line-height: 24px;
-    padding: 23px 0 16px 0;
-  }
-  .dec{
-    color: #3c3c46;
-    margin-left: 8px;
+  .select_count{
+    margin-left: 20px;
     font-size: 14px;
-    font-weight: 400;
   }
 }
-.themeColor{
-  color: #3b85ff;
-}
-.select-all{
-  margin-left: 16px;
-  cursor: pointer;
-}
-
 </style>

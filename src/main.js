@@ -12,6 +12,9 @@ import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import themePluginConfig from '../config/themePluginConfig'
 // 数字跳动
 import countTo from 'vue-count-to'
+// element-ui
+import { Cascader, CascaderPanel } from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
 import './mock'
@@ -31,6 +34,7 @@ Vue.component('pro-layout', ProLayout)
 Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
 Vue.component('countTo', countTo)
+Vue.use(Cascader).use(CascaderPanel)
 
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
 
