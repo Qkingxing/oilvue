@@ -47,6 +47,14 @@
         ></el-cascader>
         <span class="select_count">已选择{{value.length}}项</span>
       </div>
+      <div class="customer-attr-info">
+        <a-empty />
+      </div>
+      <div class="select-attr-box">
+        <div class="customer-attr-info">
+          <div class="title">基础属性</div>
+        </div>
+      </div>
     </a-layout-content>
   </a-layout>
 </template>
@@ -162,6 +170,31 @@ export default {
   .select_count{
     margin-left: 20px;
     font-size: 14px;
+  }
+}
+.customer-attr-info{
+  width: 100%;
+  height: auto;
+  min-height: 144px;
+  border: 1px solid #eaeaf4;
+  margin-top: 16px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+.select-attr-box{
+  .customer-attr-info{
+    width: 100%;
+    height: auto;
+    min-height: 144px;
+    border: 1px solid #eaeaf4;
+    margin-top: 16px;
+    padding: 24px;
+    box-sizing: border-box;
+    .title{
+      color: #1e1e28;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
   }
 }
 </style>

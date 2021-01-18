@@ -22,6 +22,7 @@ import {
   Badge,
   Popover,
   Dropdown,
+  Empty,
   List,
   Avatar,
   Breadcrumb,
@@ -77,6 +78,7 @@ Vue.use(Icon)
 Vue.use(Badge)
 Vue.use(Popover)
 Vue.use(Dropdown)
+Vue.use(Empty)
 Vue.use(List)
 Vue.use(Avatar)
 Vue.use(Breadcrumb)
