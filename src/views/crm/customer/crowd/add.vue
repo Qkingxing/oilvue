@@ -36,6 +36,7 @@
           </a-radio>
         </a-radio-group>
       </div>
+      <div class="head-title" style="margin-top: 20px;"><span>筛选条件</span></div>
 
       <div class="table-header">
         <div class="sub-title">客群信息</div>

@@ -9,7 +9,13 @@
         <div class="invoice-card-box" v-for="(card,index) in 6" :key="index">
           <div class="box-title"><span>剩余有效积分</span></div>
           <div class="box-content">
-            <span decimals="0" class="value">269,383</span>
+            <!-- <span decimals="0" class="value">269,383</span> -->
+            <countTo
+              class="value"
+              :startVal="0"
+              :endVal="269383"
+              :duration="3000"
+            ></countTo>
             <span class="unit"></span>
           </div>
         </div>
