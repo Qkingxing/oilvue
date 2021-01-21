@@ -3,7 +3,12 @@
     <div class="item">
       <span>销售总收入</span>
       <div class="money">
-        <span class="text">{{ money }}</span>
+         <countTo
+              class="value"
+              :startVal="0"
+              :endVal="269383"
+              :duration="3000"
+            ></countTo>
         <span class="unte">元</span>
       </div>
       <div class="info"><span>周同比 </span><span>降56.65%</span></div>
@@ -27,7 +32,6 @@ export default {
   components: { IconSelector },
   data() {
     return {
-      money: '14971.22',
       data: [],
     }
   },
@@ -50,12 +54,11 @@ export default {
     display: flex;
     align-items: flex-end;
     justify-content: center;
-
-    .text {
-      font-size: 30px;
-      color: #1e1e28;
-      line-height: 34px;
-      margin-right: 5px;
+    .value{
+        font-size: 30px;
+        color: #1e1e28;
+        line-height: 34px;
+        margin-right: 5px;
     }
   }
 

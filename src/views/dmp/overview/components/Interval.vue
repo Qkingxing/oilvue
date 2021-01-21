@@ -1,7 +1,5 @@
 <template>
-  <div id="Interval" ref="echarts">
-      <span>22</span>
-  </div>
+  <div id="Interval" ref="echarts"></div>
 </template>
 
 <script>
