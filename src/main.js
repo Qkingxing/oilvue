@@ -19,7 +19,9 @@ Vue.prototype.$echarts = echarts
 import countTo from 'vue-count-to'
 // element-ui
 import { Cascader, CascaderPanel } from 'element-ui'
+import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI);
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
 import './mock'

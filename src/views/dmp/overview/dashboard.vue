@@ -35,20 +35,29 @@
           </div>
           <div class="head-title">销售总数据</div>
           <a-row>
-            <a-col :span="14">
+            <a-col :span="20">
               <line-charts></line-charts>
             </a-col>
-            <a-col :span="10"></a-col>
+           
           </a-row>
           <div class="head-title">点比分析</div>
-          <a-row>
-            <a-col :span="10">
-              <Interval></Interval>
-            </a-col>
-            <a-col :span="10">
-              <Interval></Interval>
-            </a-col>
-          </a-row>
+          <el-row style="margin:'0 auto'; width:100%;display: flex;flex-wrap: wrap ">
+            <div >
+                <el-col :span="20">
+                  <div class="grid-content bg-purple">
+                    <Interval></Interval> 
+                  </div>
+              </el-col>
+            </div>
+          
+           <div>
+              <el-col :span="15" style="width:600px;height:400px">
+                <div class="grid-content bg-purple-light">
+                  <Interval></Interval> 
+                </div>
+            </el-col>
+           </div>
+          </el-row>
         </a-card>
       </a-card>
     </a-layout-content>
@@ -71,6 +80,7 @@ export default {
 
   data () {
     return {
+      
       tabList: [
         { key: 'quanbu', tab: '全部' },
         { key: 'youpin', tab: '油品' },
@@ -194,5 +204,7 @@ export default {
       max-width: 20%;
     }
   }
+  
+ 
 }
 </style>
