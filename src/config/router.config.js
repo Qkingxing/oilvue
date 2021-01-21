@@ -379,7 +379,6 @@ export const asyncRouterMap = [
           }
         ]
       },
-      // oms
       {
         path: '/oms',
         name: 'oms',
