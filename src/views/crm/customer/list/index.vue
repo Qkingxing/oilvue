@@ -344,12 +344,12 @@ export default {
     this.tableOption()
     getRoleList({ t: new Date() })
 
-    // JavaRequest({
-    //   url: '/customer/queryMemberSpalevel',
-    //   method: 'post',
-    // }).then((res)=>{
-    //   console.log(res)
-    // })
+    JavaRequest({
+      url: '/customer/queryMemberSpalevel',
+      method: 'post',
+    }).then((res)=>{
+      console.log(res)
+    })
   },
   methods: {
     showEditTag (type) {

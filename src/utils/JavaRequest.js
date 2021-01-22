@@ -9,7 +9,7 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 const JavaRequest = axios.create({
   // API 请求的默认前缀
   // baseURL: process.env.VUE_APP_API_BASE_URL,
-  baseURL: 'https://oiljava.ldyxx.com',
+  baseURL: 'https://oiljava.ldyxx.com:4435',
   timeout: 6000 // 请求超时时间
 })
 
@@ -48,7 +48,7 @@ JavaRequest.interceptors.request.use(config => {
   // 如果 token 存在
   // 让每个请求携带自定义 token 请根据实际情况自行修改
   if (token) {
-    config.headers['Access-Token'] = token
+    config.headers['token'] = token
   }
   return config
 }, errorHandler)

@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import JavaRequest from '@/utils/JavaRequest'
 
 const userApi = {
   Login: '/auth/login',
@@ -29,6 +30,14 @@ export function login (parameter) {
     url: userApi.Login,
     method: 'post',
     data: parameter
+  })
+}
+// 登录
+export function _login (data) {
+  return JavaRequest({
+    url: 'user/login',
+    method: 'post',
+    data
   })
 }
 

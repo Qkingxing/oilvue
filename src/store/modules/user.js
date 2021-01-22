@@ -1,5 +1,5 @@
 import storage from 'store'
-import { login, getInfo, logout } from '@/api/login'
+import { login, getInfo, logout, _login } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
@@ -36,14 +36,26 @@ const user = {
     // 登录
     Login ({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
-        login(userInfo).then(response => {
-          const result = response.result
+        // console.log(userInfo)
+        // return
+        _login({account:userInfo.username,password:userInfo.password}).then(response => {
+          const result = response.data
+          console.log(result)
+          // return
           storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
           commit('SET_TOKEN', result.token)
           resolve()
         }).catch(error => {
           reject(error)
         })
+        // login(userInfo).then(response => {
+        //   const result = response.result
+        //   storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
+        //   commit('SET_TOKEN', result.token)
+        //   resolve()
+        // }).catch(error => {
+        //   reject(error)
+        // })
       })
     },
 
