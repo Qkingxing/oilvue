@@ -25,14 +25,14 @@ export const asyncRouterMap = [
         children: [
           {
             path: '/dmp/overview',
-            name: 'overview',
+            name: 'Overview',
             redirect: '/dmp/overview/dashboard',
             component: () => import('@/views/dmp/overview'),
             meta: { title: 'menu.dmp.overview', keepAlive: true },
             children: [
               {
                 path: '/dmp/overview/dashboard',
-                name: 'dashboard',
+                name: 'Dashboard',
                 component: () => import('@/views/dmp/overview/dashboard'),
                 meta: { title: 'menu.dmp.overview.dashboard' }
               }
@@ -40,26 +40,26 @@ export const asyncRouterMap = [
           },
           {
             path: '/dmp/em',
-            name: 'em',
+            name: 'Em',
             redirect: '/dmp/em/coupon',
             component: () => import('@/views/dmp/em'),
             meta: { title: 'menu.dmp.em', keepAlive: true },
             children: [
               {
                 path: '/dmp/em/coupon',
-                name: 'coupon',
+                name: 'Coupon',
                 component: () => import('@/views/dmp/em/coupon'),
                 meta: { title: 'menu.dmp.em.coupon' }
               },
               {
                 path: '/dmp/em/statistics',
-                name: 'statistics',
+                name: 'Statistics',
                 component: () => import('@/views/dmp/em/statistics'),
                 meta: { title: 'menu.dmp.em.statistics' }
               },
               {
                 path: '/dmp/em/analysis',
-                name: 'analysis',
+                name: 'Analysis',
                 component: () => import('@/views/dmp/em/analysis'),
                 meta: { title: 'menu.dmp.em.analysis' }
               }
@@ -67,7 +67,7 @@ export const asyncRouterMap = [
           },
           {
             path: '/dmp/customer',
-            name: 'customer',
+            name: 'Customer',
             redirect: '/dmp/customer/overview',
             component: () => import('@/views/dmp/customer'),
             meta: { title: 'menu.dmp.customer', keepAlive: true },

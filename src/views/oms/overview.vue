@@ -186,7 +186,7 @@
       <div>
         <a-checkbox-group @change="onChangeTableOption" :value="tableOptionChoose">
             <a-row>
-              <a-col :span="6" v-for="item in tableOptions" style="margin-bottom: 10px;">
+              <a-col :span="6" v-for="(item,index) in tableOptions" :key="index" style="margin-bottom: 10px;">
                 <a-checkbox :value="item.value" :disabled="item.disabled">
                   {{item.label}}
                 </a-checkbox>

@@ -56,13 +56,13 @@
     <div class="head-title">点比分析</div>
     <el-row style="width: 100%; display: flex;margin-bottom:20px">
       <el-card style="min-width: 700px;" class="box-card">
-        <G2></G2>
+        <!-- <G2></G2> -->
 		<div class="box">
 			<span class="span">油品销售占比</span>
 		</div>
       </el-card>
       <el-card style="min-width: 700px;margin-left: 20px;" class="box-card"> 
-		<G2></G2>
+		<!-- <G2></G2> -->
 		<div class="box">
 			<!-- <span class="span">加油升数按油品类型占比</span> -->
 		</div>
@@ -71,7 +71,7 @@
     </el-row>
 	<el-row style="width: 100%; display: flex">
       <el-card style="min-width: 700px;" class="box-card">
-        <G2></G2>
+        <!-- <G2></G2> -->
 		<div class="box">
 			<span class="span">油品销售占比</span>
 		</div>
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import G2 from './components/G2'
+// import G2 from './components/G2'
 import times from './times'
 import NumberCard from './components/numberCard'
 import LineCharts from './components/LineCharts'
@@ -96,8 +96,8 @@ export default {
   components: {
     times,
     NumberCard,
-	LineCharts,
-	G2
+    LineCharts,
+    // G2
   },
 
   data() {
