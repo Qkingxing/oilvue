@@ -1,5 +1,5 @@
 <template>
-  <div id="charts"></div>
+  <div id="charts" ref="charts"></div>
 </template>
 
 <script>
@@ -24,7 +24,7 @@ export default {
   methods: {
     init: function () {
       const chart = new Chart({
-        container: 'charts',
+        container: this.$refs.charts,
         autoFit: true,
         height: 300
       })

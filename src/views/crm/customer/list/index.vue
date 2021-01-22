@@ -267,6 +267,8 @@ import { STable } from '@/components'
 import { getRoleList, getServiceList } from '@/api/manage'
 import EditTag from '../components/EditTag'
 
+import JavaRequest from '../../../../utils/JavaRequest'
+
 export default {
   name: 'Clist',
   components: {
@@ -341,6 +343,13 @@ export default {
     console.log(this.$route.name)
     this.tableOption()
     getRoleList({ t: new Date() })
+
+    // JavaRequest({
+    //   url: '/customer/queryMemberSpalevel',
+    //   method: 'post',
+    // }).then((res)=>{
+    //   console.log(res)
+    // })
   },
   methods: {
     showEditTag (type) {

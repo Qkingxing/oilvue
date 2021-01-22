@@ -7,7 +7,7 @@ export default {
   data() {
     return {
       index: 500,
-      charts:''
+      charts: null
     }
   },
   methods: {
