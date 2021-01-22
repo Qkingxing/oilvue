@@ -24,18 +24,17 @@
       </a-layout-content>
     </a-layout>
     <a-modal
-        title="自定义展示"
-        :visible="setVisible"
-        :confirm-loading="setConfirmLoading"
+        title="新增商品类目"
+        :visible="addVisible"
+        :confirm-loading="addConfirmLoading"
         @ok="handleSetOk"
         @cancel="handleSetCancel"
       >
-      <div style="display: flex;">
-        <span style="flex: 1;">可选字段</span>
-        <a style="flex: 0 0 50px;">重置</a>
-        <a style="flex: 0 0 60px;">恢复默认</a>
+      <div style="display: block;text-align: center;">
+        <span style="margin-right: 10px;">商品类目</span>
+        <a-input v-model="addCateName" placeholder="" :maxLength="8" style="width: 200px;" />
+        <span style="position: relative;right: 30px;color: #c7c7c7;">{{addCateName.length}}/8</span>
       </div>
-      <a-divider />
       </a-modal>
     <router-view />
   </div>
@@ -43,7 +42,6 @@
 
 <script>
 import { getGoodsList } from '@/api/goods'
-import moment from 'moment';
 import { STable } from '@/components'
 export default {
   name: 'Classification',
@@ -52,8 +50,9 @@ export default {
   },
   data () {
     return {
-      setVisible:false,
-      setConfirmLoading: false,
+      addCateName:'',
+      addVisible:true,
+      addConfirmLoading: false,
       searchType:'高级搜索',
       diyDate:false,
       orderTime:'',
@@ -61,7 +60,8 @@ export default {
       tableOptionChoose:['优惠金额','实付金额','支付方式','状态时间'],
       value:'',
       // 查询参数
-      queryParam: {},
+      queryParam: {
+      },
       // 表头
       columns: [
         {
@@ -128,22 +128,20 @@ export default {
   created () {
     console.log(this.$route.name)
     this.tableOption()
-    getRoleList({ t: new Date() })
   },
   methods: {
-    moment,
     onChangeTableOption(){
       
     },
     handleSetOk(e) {
-      this.setConfirmLoading = true;
+      this.addConfirmLoading = true;
       setTimeout(() => {
-        this.setVisible = false;
-        this.setConfirmLoading = false;
+        this.addVisible = false;
+        this.addConfirmLoading = false;
       }, 2000);
     },
     handleSetCancel(e) {
-      this.setVisible = false;
+      this.addVisible = false;
     },
     advanceSearchChange(){
       this.searchType == "高级搜索" ? this.searchType="点击收起" :　this.searchType="高级搜索" 
