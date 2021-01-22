@@ -12,7 +12,7 @@ const PhpRequest = axios.create({
   baseURL: 'https://oilphp.ldyxx.com',
   timeout: 6000 // 请求超时时间
 })
-ß
+
 // 异常拦截处理器
 const errorHandler = (error) => {
   if (error.response) {
