@@ -1,6 +1,38 @@
 <template>
   <a-layout>
     <a-layout-content
+      v-if="type=='list'"
+      :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
+    >
+      <div class="head-title">
+        基础设置
+      </div>
+      <div class="actionBtns">
+        <a-button type="primary"> 新增基础设置 </a-button>
+      </div>
+
+      <!-- 表格 -->
+      <div class="showDataForTable">
+        <s-table 
+          ref="table" 
+          size="default" 
+          rowKey="key" 
+          :columns="columns" 
+          :data="loadData">
+
+          <span slot="action" slot-scope="text, record">
+            <template>
+              <a @click="editItem(record)">编辑</a>
+              <a-divider type="vertical" />
+              <a @click="delTag(record)">删除</a>
+            </template>
+          </span>
+          
+        </s-table>
+      </div>
+    </a-layout-content>
+    <a-layout-content
+      v-if="type=='add'"
       :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
     >
       <div class="head-title">
@@ -46,6 +78,7 @@ export default {
   },
   data () {
     return {
+      type: 'list',
       // 表头
       columns: [
         {
@@ -80,19 +113,21 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         // console.log(parameter)
+        // 自定义入参
         let params = {
-          page: parameter.pageNo,
-          size: parameter.pageSize
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize // 每页页数
         }
 
         return getUserBasicslist(Object.assign(params)).then(res=>{
           // console.log(res.data)
+          // 自定义出参
           return {
-            data: res.data.list,
-            pageNo: res.data.pageNo,
-            pageSize: res.data.pageSize,
-            totalCount: res.data.totalCount,
-            totalPage: res.data.per_page
+            data: res.data.list, // 列表数组
+            pageNo: res.data.pageNo,  // 当前页码
+            pageSize: res.data.pageSize,  // 每页页数
+            totalCount: res.data.totalCount, // 列表总条数
+            totalPage: res.data.per_page // 列表总页数
           }
         })
       },
