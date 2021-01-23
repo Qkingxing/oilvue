@@ -46,20 +46,26 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 60%; height: 400px" class="box-card">
-          <!-- <G2></G2> -->
-          <div>
-            <span>销售额</span>
-            <p>0元</p>
-          </div>
-          <div class="box">
-            <span class="span">闪付销售额支付方式占比</span>
-          </div>
-        </el-card>
-      </el-row>
-      <!-- <component :is="vivew"></component> -->
+        <div class="pie-chart-box">
+            <div class="tab_1">
+                <a-tabs>
+                    <a-tab-pane key="1" tab="Tab 1">
+                        <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="2" tab="Tab 2">
+                        <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="3" tab="Tab 3">
+                        <G2></G2>
+                    </a-tab-pane>
+                </a-tabs>
+            </div>
+        </div>
     </div>
+
+
+
+
 
     <div class="time" v-if="dateKey == 'zuotian'">
       <div class="head-title">销售总数据</div>
@@ -97,20 +103,21 @@
       </a-row>
 
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 700px" class="box-card">
-          <G2></G2>
-          <div class="box">
-            <span class="span">油品销售占比</span>
-          </div>
-        </el-card>
-        <el-card style="min-width: 700px; margin-left: 20px" class="box-card">
-          <G2></G2>
-          <div class="box">
-            <!-- <span class="span">加油升数按油品类型占比</span> -->
-          </div>
-        </el-card>
-      </el-row>
+     <div class="pie-chart-box">
+        <div class="tab_1">
+            <a-tabs>
+                <a-tab-pane key="1" tab="Tab 1">
+                    <G2></G2>
+                </a-tab-pane>
+                <a-tab-pane key="2" tab="Tab 2">
+                    <G2></G2>
+                </a-tab-pane>
+                <a-tab-pane key="3" tab="Tab 3">
+                    <G2></G2>
+                </a-tab-pane>
+            </a-tabs>
+        </div>
+    </div>
     </div>
 
     <div v-if="dateKey == 'benzhou'">
@@ -147,19 +154,21 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 60%; height: 400px" class="box-card">
-          <!-- <G2></G2> -->
-          <div>
-            <span>销售额</span>
-            <p>0元</p>
-          </div>
-          <div class="box">
-            <span class="span">闪付销售额支付方式占比</span>
-          </div>
-        </el-card>
-      </el-row>
-      <!-- <component :is="vivew"></component> -->
+        <div class="pie-chart-box">
+            <div class="tab_1">
+                <a-tabs>
+                    <a-tab-pane key="1" tab="Tab 1">
+                        <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="2" tab="Tab 2">
+                        <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="3" tab="Tab 3">
+                        <G2></G2>
+                    </a-tab-pane>
+                </a-tabs>
+            </div>
+        </div>
     </div>
     <div v-if="dateKey == 'benyue'">
       <div class="head-title">销售总数据</div>
@@ -195,19 +204,21 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 60%; height: 400px" class="box-card">
-          <!-- <G2></G2> -->
-          <div>
-            <span>销售额</span>
-            <p>0元</p>
-          </div>
-          <div class="box">
-            <span class="span">闪付销售额支付方式占比</span>
-          </div>
-        </el-card>
-      </el-row>
-      <!-- <component :is="vivew"></component> -->
+        <div class="pie-chart-box">
+            <div class="tab_1">
+                <a-tabs>
+                    <a-tab-pane key="1" tab="Tab 1">
+                        <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="2" tab="Tab 2">
+                        <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="3" tab="Tab 3">
+                        <G2></G2>
+                    </a-tab-pane>
+                </a-tabs>
+            </div>
+        </div>
     </div>
     <div v-if="dateKey == 'zidingyi'">
       <div class="head-title">销售总数据</div>
@@ -243,19 +254,21 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 60%; height: 400px" class="box-card">
-          <!-- <G2></G2> -->
-          <div>
-            <span>销售额</span>
-            <p>0元</p>
-          </div>
-          <div class="box">
-            <span class="span">闪付销售额支付方式占比</span>
-          </div>
-        </el-card>
-      </el-row>
-      <!-- <component :is="vivew"></component> -->
+         <div class="pie-chart-box">
+            <div class="tab_1">
+                <a-tabs>
+                    <a-tab-pane key="1" tab="Tab 1">
+                        <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="2" tab="Tab 2">
+                        <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="3" tab="Tab 3">
+                        <G2></G2>
+                    </a-tab-pane>
+                </a-tabs>
+            </div>
+        </div>
     </div>
   </div>
 </template>
@@ -347,6 +360,18 @@ export default {
   .span {
     color: #1e1e28;
   }
+}
+.pie-chart-box{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+        .tab_1{
+            min-width: 680px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 6px 0 ;
+            border-radius: 2p
+        }
 }
 
 // 销售总数据

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="search" style="margin-top: 15px">
+      <h1>暂无数据</h1>
+    <!-- <div class="search" style="margin-top: 15px">
       <div
         class="search-li"
         :key="item.key"
@@ -11,8 +12,8 @@
         {{ item.name }}
       </div>
       <a-range-picker v-if="dateKey == 'zidingyi'" />
-    </div>
-    <div v-if="dateKey == 'jintian'">
+    </div> -->
+    <!-- <div v-if="dateKey == 'jintian'">
       <div class="head-title">销售总数据</div>
       <div class="saleall">
         <div class="saleall-container">
@@ -216,10 +217,9 @@
           </el-col>
         </div>
       </el-row>
-      <!-- <component :is="vivew"></component> -->
-    </div>
+    </div> -->
 
-    <div class="time" v-if="dateKey == 'zuotian'">
+    <!-- <div class="time" v-if="dateKey == 'zuotian'">
       <div class="head-title">销售总数据</div>
       <div class="saleall">
         <div class="saleall-container">
@@ -425,9 +425,9 @@
           </el-col>
         </div>
       </el-row>
-    </div>
+    </div> -->
 
-    <div v-if="dateKey == 'benzhou'">
+    <!-- <div v-if="dateKey == 'benzhou'">
       <div class="head-title">销售总数据</div>
       <div class="saleall">
         <div class="saleall-container">
@@ -631,9 +631,8 @@
           </el-col>
         </div>
       </el-row>
-      <!-- <component :is="vivew"></component> -->
-    </div>
-    <div v-if="dateKey == 'benyue'">
+    </div> -->
+    <!-- <div v-if="dateKey == 'benyue'">
       <div class="head-title">销售总数据</div>
       <div class="saleall">
         <div class="saleall-container">
@@ -837,9 +836,8 @@
           </el-col>
         </div>
       </el-row>
-      <!-- <component :is="vivew"></component> -->
-    </div>
-    <div v-if="dateKey == 'zidingyi'">
+    </div> -->
+    <!-- <div v-if="dateKey == 'zidingyi'">
       <div class="head-title">销售总数据</div>
       <div class="saleall">
         <div class="saleall-container">
@@ -1043,8 +1041,7 @@
           </el-col>
         </div>
       </el-row>
-      <!-- <component :is="vivew"></component> -->
-    </div>
+    </div> -->
   </div>
 </template>
 

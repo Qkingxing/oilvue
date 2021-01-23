@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <div class="search" style="margin-top: 15px">
       <div
         class="search-li"
@@ -10,7 +10,9 @@
       >
         {{ item.name }}
       </div>
-      <a-range-picker v-if="dateKey == 'zidingyi'" />
+      <div class="zidingyi">
+          <a-range-picker v-if="dateKey == 'zidingyi'" />
+      </div>
     </div>
     <div v-if="dateKey == 'jintian'">
       <component :is="vivew"></component>
@@ -143,7 +145,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .search {
   height: 40px;
   display: flex;

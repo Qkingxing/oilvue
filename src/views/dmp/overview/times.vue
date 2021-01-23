@@ -1,5 +1,5 @@
 <template>
-        <div>
+        <div class="boxs">
           <div class="head-title">销售总数据</div>
           <div class="saleall">
             <div class="saleall-container">
@@ -50,140 +50,103 @@
           </a-row>
 		  
           <div class="head-title">点比分析</div>
-          <el-row style="margin: '0 auto'; width: 100%; display: flex; flex-wrap: wrap">
-            <div class="tab_1">
-              <el-col :span="40" style="width:770px">
-                <div class="grid-content bg-purple">
-                  <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
-                    <el-tab-pane label="全部" name="first">
-                       <G2></G2>
-                       
-                    </el-tab-pane>
-                    <el-tab-pane label="扫呗-微信" name="a">
-                      <G2></G2>
-                      
-                    </el-tab-pane>
-                    <el-tab-pane label="团油 - 微信" name="b">
-                      <G2></G2>
-                    </el-tab-pane>
-                    <el-tab-pane label="团油 - 微信小程序支付" name="c">
+          <div class="pie-chart-box">
+              <div class="tab_1">
+                  <a-tabs>
+                    <a-tab-pane key="1" tab="全部">
                      <G2></G2>
-                    </el-tab-pane>
-                    <el-tab-pane label="团油" name="d">
-                      <G2></G2>
-                    </el-tab-pane>
-                    <el-tab-pane label="加油卡" name="e">
-                      <G2></G2>
-                    </el-tab-pane>
-                  </el-tabs>
-                </div>
-              </el-col>
-            </div>
-
-            <div class="tab_2">
-              <el-col :span="40" style="width: 770px; margin-left: 20px;">
-                <div class="grid-content bg-purple-light">
-                  <el-tabs type="border-card" v-model="activeNames" @tab-click="handleClicks">
-                    <el-tab-pane label="全部" name="first">
-                    <G2></G2>
-                      
-                    </el-tab-pane>
-                    <el-tab-pane label="92#" name="a">
+                    </a-tab-pane>
+                    <a-tab-pane key="2" tab="扫呗-微信">
                      <G2></G2>
-                    </el-tab-pane>
-                    <el-tab-pane label="0#" name="b">
-                      <G2></G2>
-                    </el-tab-pane>
-                    <el-tab-pane label="95#" name="c">
-                    <G2></G2>
-                    </el-tab-pane>
-                  </el-tabs>
-                </div>
-              </el-col>
-            </div>
-          </el-row>
-
-          <el-row style="margin: '0 auto'; width: 100%; display: flex; flex-wrap: wrap">
-            <div class="tab_1">
-              <el-col :span="40" style="width:770px">
-                <div class="grid-content bg-purple">
-                  <el-tabs type="border-card" v-model="activeName3" @tab-click="handleClick3">
-                    <el-tab-pane label="全部" name="first">
+                    </a-tab-pane>
+                    <a-tab-pane key="3" tab="扫呗-微信付款码">
                      <G2></G2>
-                     
-                    </el-tab-pane>
-                    <el-tab-pane label="扫呗-微信" name="a">
+                    </a-tab-pane>
+                     <a-tab-pane key="4" tab="团油 - 微信">
                      <G2></G2>
-                    </el-tab-pane>
-                    <el-tab-pane label="团油 - 微信" name="b">
+                    </a-tab-pane>
+                     <a-tab-pane key="5" tab="团油 - 微信小程序支付">
                      <G2></G2>
-                    </el-tab-pane>
-                    <el-tab-pane label="团油 - 微信小程序支付" name="c">
+                    </a-tab-pane>
+                     <a-tab-pane key="6" tab="团油">
                      <G2></G2>
-                    </el-tab-pane>
-                     <el-tab-pane label="团油" name="d">
+                    </a-tab-pane>
+                     <a-tab-pane key="7" tab="加油卡">
                      <G2></G2>
-                    </el-tab-pane>
-                    <el-tab-pane label="加油卡" name="e">
+                    </a-tab-pane>
+                </a-tabs>
+              </div>
+               <div class="tab_1">
+                  <a-tabs>
+                    <a-tab-pane key="1" tab="全部">
                      <G2></G2>
-                    </el-tab-pane>
-                  </el-tabs>
-                </div>
-              </el-col>
-            </div>
-
-            <div class="tab_2">
-              <el-col :span="20" style="width: 770px;margin-left: 20px;">
-                <div class="grid-content bg-purple-light">
-                  <el-tabs type="border-card" v-model="activeNames4" @tab-click="handleClicks4">
-                    <el-tab-pane label="全部" name="first">
+                    </a-tab-pane>
+                    <a-tab-pane key="2" tab="92#">
                      <G2></G2>
-                    
-                    </el-tab-pane>
-                    <el-tab-pane label="92#" name="a">
+                    </a-tab-pane>
+                    <a-tab-pane key="3" tab="0#">
                      <G2></G2>
-                    </el-tab-pane>
-                    <el-tab-pane label="0#" name="b">
-                      <G2></G2>
-                    </el-tab-pane>
-                    <el-tab-pane label="95#" name="c">
-                      <G2></G2>
-                    </el-tab-pane>
-                  </el-tabs>
-                </div>
-              </el-col>
-            </div>
-          </el-row>
-
-		  <el-row style="margin: '0 auto'; width: 100%; display: flex; flex-wrap: wrap">
-			   <div class="tab_1">
-					<el-col :span="40" style="width:770px">
-						<div class="grid-content bg-purple">
-							<el-tabs type="border-card" v-model="activeName3" @tab-click="handleClick3">
-								<el-tab-pane label="全部" name="first">
-									<G2></G2>
-									
-								</el-tab-pane>
-								<el-tab-pane label="扫呗-微信" name="a">
-									<G2></G2>
-								</el-tab-pane>
-								<el-tab-pane label="团油 - 微信" name="b">
-									<G2></G2>
-								</el-tab-pane>
-								<el-tab-pane label="团油 - 微信小程序支付" name="c">
-									<G2></G2>
-								</el-tab-pane>
-								<el-tab-pane label="团油" name="d">
-									<G2></G2>
-								</el-tab-pane>
-								<el-tab-pane label="加油卡" name="e">
-									<G2></G2>
-								</el-tab-pane>
-							</el-tabs>
-                		</div>
-              	</el-col>
-            </div>
-		  </el-row>
+                    </a-tab-pane>
+                     <a-tab-pane key="4" tab="95#">
+                     <G2></G2>
+                    </a-tab-pane>
+                </a-tabs>
+              </div>
+               <div class="tab_1">
+                  <a-tabs>
+                    <a-tab-pane key="1" tab="全部">
+                     <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="2" tab="扫呗-微信">
+                     <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="3" tab="扫呗-微信付款码">
+                     <G2></G2>
+                    </a-tab-pane>
+                     <a-tab-pane key="4" tab="团油 - 微信">
+                     <G2></G2>
+                    </a-tab-pane>
+                     <a-tab-pane key="5" tab="团油 - 微信小程序支付">
+                     <G2></G2>
+                    </a-tab-pane>
+                     <a-tab-pane key="6" tab="团油">
+                     <G2></G2>
+                    </a-tab-pane>
+                     <a-tab-pane key="7" tab="加油卡">
+                     <G2></G2>
+                    </a-tab-pane>
+                </a-tabs>
+              </div>
+               <div class="tab_1">
+                  <a-tabs>
+                    <a-tab-pane key="1" tab="全部">
+                     <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="2" tab="92#">
+                     <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="3" tab="0#">
+                     <G2></G2>
+                    </a-tab-pane>
+                     <a-tab-pane key="4" tab="95#">
+                     <G2></G2>
+                    </a-tab-pane>
+                </a-tabs>
+              </div>
+               <div class="tab_1">
+                  <a-tabs>
+                    <a-tab-pane key="1" tab="Tab 1">
+                     <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="2" tab="Tab 2">
+                     <G2></G2>
+                    </a-tab-pane>
+                    <a-tab-pane key="3" tab="Tab 3">
+                     <G2></G2>
+                    </a-tab-pane>
+                </a-tabs>
+              </div>
+          </div>
         </div>
 
 </template>
@@ -193,14 +156,12 @@ import G2 from './components/G2'
 import NumberCard from './components/numberCard'
 import Charts from './components/charts'
 import LineCharts from './components/LineCharts'
-// import Interval from './components/Interval'
 export default {
   name: 'Dashboard',
   components: {
     NumberCard,
     Charts,
     LineCharts,
-    // Interval,
     G2
   },
 
@@ -286,7 +247,22 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" >
+
+.boxs{
+    .pie-chart-box{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+            .tab_1{
+                min-width: 680px;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 0 6px 0 ;
+                border-radius: 2px;
+            }
+    }
+}
 
 .head-title {
   font-size: 16px;
@@ -297,6 +273,7 @@ export default {
   line-height: 60px;
   display: flex;
 }
+
 .li{
     float: left;
 }
