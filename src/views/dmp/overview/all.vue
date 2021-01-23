@@ -28,66 +28,70 @@
         </div>
       </div>
 
-		 <div class="sales">
-      <div class="head-title">销售收入趋势</div>
-      <el-popover placement="bottom" width="66" trigger="hover">
-        <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-          <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-          <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-          <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-        </div>
-        <el-button slot="reference">切换</el-button>
-      </el-popover>
-    </div>
-    <a-row>
-      <a-col :span="20" v-if="line == 1">
-        <line-charts></line-charts>
-      </a-col>
-      <a-col :span="20" v-if="line == 2">
-        <line-charts></line-charts>
-        哈哈我出来了
-      </a-col>
-      <a-col :span="20" v-if="line == 3">
-        <line-charts></line-charts>
-        哈哈我也出来了
-      </a-col>
-    </a-row>
+      <div class="sales">
+        <div class="head-title">销售收入趋势</div>
+        <el-popover placement="bottom" width="66" trigger="hover">
+          <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+          </div>
+          <el-button slot="reference">切换</el-button>
+        </el-popover>
+      </div>
+      <a-row>
+        <a-col :span="20" v-if="line == 1">
+          <line-charts></line-charts>
+        </a-col>
+        <a-col :span="20" v-if="line == 2">
+          <line-charts></line-charts>
+          哈哈我出来了
+        </a-col>
+        <a-col :span="20" v-if="line == 3">
+          <line-charts></line-charts>
+          哈哈我也出来了
+        </a-col>
+      </a-row>
 
-    <div class="head-title">点比分析</div>
-    <el-row style="width: 100%; display: flex;margin-bottom:20px">
-      <el-card style="min-width: 700px;" class="box-card">
-        <!-- <G2></G2> -->
-		<div class="box">
-			<span class="span">油品销售占比</span>
-		</div>
-      </el-card>
-      <el-card style="min-width: 700px;margin-left: 20px;" class="box-card"> 
-		<!-- <G2></G2> -->
-		<div class="box">
-			<!-- <span class="span">加油升数按油品类型占比</span> -->
-		</div>
-	  </el-card>
-	   
-    </el-row>
-	<el-row style="width: 100%; display: flex">
-      <el-card style="min-width: 700px;" class="box-card">
-        <!-- <G2></G2> -->
-		<div class="box">
-			<span class="span">油品销售占比</span>
-		</div>
-      </el-card>
-    </el-row>
+      <div class="head-title">点比分析</div>
+      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
+        <el-card style="min-width: 700px" class="box-card">
+          <G2></G2>
+          <div class="box">
+            <span class="span">油品销售占比</span>
+          </div>
+        </el-card>
+        <el-card style="min-width: 700px; margin-left: 20px" class="box-card">
+          <G2></G2>
+          <div class="box">
+            <!-- <span class="span">加油升数按油品类型占比</span> -->
+          </div>
+        </el-card>
+      </el-row>
+      <el-row style="width: 100%; display: flex">
+        <el-card style="min-width: 700px" class="box-card">
+          <G2></G2>
+          <div class="box">
+            <span class="span">油品销售占比</span>
+          </div>
+        </el-card>
+      </el-row>
     </div>
-   
 
-    <div v-if="dateKey == 'benzhou'">33</div>
-    <div v-if="dateKey == 'benyue'">44</div>
-    <div v-if="dateKey == 'zidingyi'">55</div>
+    <div v-if="dateKey == 'benzhou'">
+      <component :is="vivew"></component>
+    </div>
+    <div v-if="dateKey == 'benyue'">
+      <component :is="vivew"></component>
+    </div>
+    <div v-if="dateKey == 'zidingyi'">
+      <component :is="vivew"></component>
+    </div>
   </div>
 </template>
 
 <script>
-// import G2 from './components/G2'
+import G2 from './components/G2'
 import times from './times'
 import NumberCard from './components/numberCard'
 import LineCharts from './components/LineCharts'
@@ -97,7 +101,7 @@ export default {
     times,
     NumberCard,
     LineCharts,
-    // G2
+    G2,
   },
 
   data() {
@@ -114,14 +118,10 @@ export default {
       key: 'quanbu',
       noTitleKey: 'quanbu',
       dateKey: 'jintian',
-      
     }
   },
-  mounted() {
-	  
-  },
+  mounted() {},
   methods: {
-   
     income(index) {
       if (index == 1) {
         this.line = 1
@@ -148,7 +148,7 @@ export default {
   height: 40px;
   display: flex;
   align-items: center;
-	
+
   .search-li {
     width: 48px;
     height: 24px;
@@ -158,7 +158,7 @@ export default {
     color: #1e1e28;
     font-size: 12px;
     cursor: pointer;
-	border-radius: 4px;
+    border-radius: 4px;
 
     &:hover {
       color: #37f;
@@ -171,12 +171,12 @@ export default {
     }
   }
 }
-.box{
-	width: 100px;
-	margin: 0 auto;
-	.span{
-		color: #1e1e28;
-	}
+.box {
+  width: 100px;
+  margin: 0 auto;
+  .span {
+    color: #1e1e28;
+  }
 }
 
 // 销售总数据
@@ -188,8 +188,7 @@ export default {
   .saleall-container {
     margin: -10px;
     display: flex;
-	flex-wrap: wrap;
-	
+    flex-wrap: wrap;
 
     /deep/.number-card {
       display: flex;

@@ -52,34 +52,28 @@
           <div class="head-title">点比分析</div>
           <el-row style="margin: '0 auto'; width: 100%; display: flex; flex-wrap: wrap">
             <div class="tab_1">
-              <el-col :span="40" style="width:680px">
+              <el-col :span="40" style="width:770px">
                 <div class="grid-content bg-purple">
                   <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="全部" name="first">
-                      <Interval></Interval>
-                       <div class="texts">
-                            <span>销售额</span>
-                            <p>6802.89元</p>
-                        </div>
+                       <G2></G2>
+                       
                     </el-tab-pane>
                     <el-tab-pane label="扫呗-微信" name="a">
-                      <Interval></Interval>
-                      <div class="texts">
-                            <span>销售额</span>
-                            <p>6802.89元</p>
-                        </div>
+                      <G2></G2>
+                      
                     </el-tab-pane>
                     <el-tab-pane label="团油 - 微信" name="b">
-                      <Interval></Interval>
+                      <G2></G2>
                     </el-tab-pane>
                     <el-tab-pane label="团油 - 微信小程序支付" name="c">
-                      <Interval></Interval>
+                     <G2></G2>
                     </el-tab-pane>
                     <el-tab-pane label="团油" name="d">
-                      <Interval></Interval>
+                      <G2></G2>
                     </el-tab-pane>
                     <el-tab-pane label="加油卡" name="e">
-                      <Interval></Interval>
+                      <G2></G2>
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -87,24 +81,21 @@
             </div>
 
             <div class="tab_2">
-              <el-col :span="40" style="width: 680px; margin-left: 20px;">
+              <el-col :span="40" style="width: 770px; margin-left: 20px;">
                 <div class="grid-content bg-purple-light">
                   <el-tabs type="border-card" v-model="activeNames" @tab-click="handleClicks">
                     <el-tab-pane label="全部" name="first">
-                      <Interval></Interval>
-                      <div class="texts">
-                            <span>销售额</span>
-                            <p>6802.89元</p>
-                        </div>
+                    <G2></G2>
+                      
                     </el-tab-pane>
                     <el-tab-pane label="92#" name="a">
-                      <Interval></Interval>
+                     <G2></G2>
                     </el-tab-pane>
                     <el-tab-pane label="0#" name="b">
-                      <Interval></Interval>
+                      <G2></G2>
                     </el-tab-pane>
                     <el-tab-pane label="95#" name="c">
-                      <Interval></Interval>
+                    <G2></G2>
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -114,30 +105,27 @@
 
           <el-row style="margin: '0 auto'; width: 100%; display: flex; flex-wrap: wrap">
             <div class="tab_1">
-              <el-col :span="40" style="width:680px">
+              <el-col :span="40" style="width:770px">
                 <div class="grid-content bg-purple">
                   <el-tabs type="border-card" v-model="activeName3" @tab-click="handleClick3">
                     <el-tab-pane label="全部" name="first">
-                      <Interval></Interval>
-                      <div class="texts">
-                            <span>销售额</span>
-                            <p>6802.89元</p>
-                        </div>
+                     <G2></G2>
+                     
                     </el-tab-pane>
                     <el-tab-pane label="扫呗-微信" name="a">
-                      <Interval></Interval>
+                     <G2></G2>
                     </el-tab-pane>
                     <el-tab-pane label="团油 - 微信" name="b">
-                      <Interval></Interval>
+                     <G2></G2>
                     </el-tab-pane>
                     <el-tab-pane label="团油 - 微信小程序支付" name="c">
-                      <Interval></Interval>
+                     <G2></G2>
                     </el-tab-pane>
                      <el-tab-pane label="团油" name="d">
-                      <Interval></Interval>
+                     <G2></G2>
                     </el-tab-pane>
                     <el-tab-pane label="加油卡" name="e">
-                      <Interval></Interval>
+                     <G2></G2>
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -145,24 +133,21 @@
             </div>
 
             <div class="tab_2">
-              <el-col :span="20" style="width: 680px;margin-left: 20px;">
+              <el-col :span="20" style="width: 770px;margin-left: 20px;">
                 <div class="grid-content bg-purple-light">
                   <el-tabs type="border-card" v-model="activeNames4" @tab-click="handleClicks4">
                     <el-tab-pane label="全部" name="first">
-                      <Interval></Interval>
-                      <div class="texts">
-                            <span>销售额</span>
-                            <p>6802.89元</p>
-                        </div>
+                     <G2></G2>
+                    
                     </el-tab-pane>
                     <el-tab-pane label="92#" name="a">
-                      <Interval></Interval>
+                     <G2></G2>
                     </el-tab-pane>
                     <el-tab-pane label="0#" name="b">
-                      <Interval></Interval>
+                      <G2></G2>
                     </el-tab-pane>
                     <el-tab-pane label="95#" name="c">
-                      <Interval></Interval>
+                      <G2></G2>
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -172,30 +157,27 @@
 
 		  <el-row style="margin: '0 auto'; width: 100%; display: flex; flex-wrap: wrap">
 			   <div class="tab_1">
-					<el-col :span="40" style="width:680px">
+					<el-col :span="40" style="width:770px">
 						<div class="grid-content bg-purple">
 							<el-tabs type="border-card" v-model="activeName3" @tab-click="handleClick3">
 								<el-tab-pane label="全部" name="first">
-									<Interval></Interval>
-									<div class="texts">
-										<span>销售额</span>
-										<p>6802.89元</p>
-									</div>
+									<G2></G2>
+									
 								</el-tab-pane>
 								<el-tab-pane label="扫呗-微信" name="a">
-									<Interval></Interval>
+									<G2></G2>
 								</el-tab-pane>
 								<el-tab-pane label="团油 - 微信" name="b">
-									<Interval></Interval>
+									<G2></G2>
 								</el-tab-pane>
 								<el-tab-pane label="团油 - 微信小程序支付" name="c">
-									<Interval></Interval>
+									<G2></G2>
 								</el-tab-pane>
 								<el-tab-pane label="团油" name="d">
-									<Interval></Interval>
+									<G2></G2>
 								</el-tab-pane>
 								<el-tab-pane label="加油卡" name="e">
-									<Interval></Interval>
+									<G2></G2>
 								</el-tab-pane>
 							</el-tabs>
                 		</div>
@@ -207,17 +189,19 @@
 </template>
 
 <script>
+import G2 from './components/G2'
 import NumberCard from './components/numberCard'
 import Charts from './components/charts'
 import LineCharts from './components/LineCharts'
-import Interval from './components/Interval'
+// import Interval from './components/Interval'
 export default {
   name: 'Dashboard',
   components: {
     NumberCard,
     Charts,
     LineCharts,
-    Interval,
+    // Interval,
+    G2
   },
 
   data() {
