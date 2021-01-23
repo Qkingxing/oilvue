@@ -241,9 +241,9 @@ export const asyncRouterMap = [
           {
             path: '/crm/member',
             name: 'Cmember',
-            redirect: '/dmp/member/foundation',
+            redirect: '/crm/member/foundation',
             component: () => import('@/views/crm/member'),
-            meta: { title: 'menu.crm.member', keepAlive: true },
+            meta: { title: 'menu.crm.member' },
             children: [
               {
                 path: '/crm/member/foundation',

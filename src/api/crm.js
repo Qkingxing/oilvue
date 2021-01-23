@@ -10,3 +10,11 @@ export function getUserBasicslist (data) {
     data
   })
 }
+// 固定等级会员列表
+export function queryFixedLevel (data) {
+  return JavaRequest({
+    url: 'customer/queryFixedLevel',
+    method: 'post',
+    data
+  })
+}

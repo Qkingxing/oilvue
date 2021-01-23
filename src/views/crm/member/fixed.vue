@@ -1,83 +1,113 @@
 <template>
   <a-layout>
     <a-layout-content
+      v-if="page=='level_list'"
       :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
     >
       <div class="head-title">
         固定等级会员
       </div>
       <div class="actionBtns">
-        <a-button type="primary"> 新增会员等级 </a-button>
+        <a-button type="primary" @click="page='add'"> 新增会员等级 </a-button>
       </div>
 
       <!-- 表格 -->
       <div class="showDataForTable">
-        <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
+        <s-table 
+          ref="table" 
+          size="default" 
+          rowKey="id" 
+          :showPagination="false"
+          :columns="columns" 
+          :data="loadData">
+
+          <span slot="children" slot-scope="text, record">
+            <template>
+              {{record}}
+            </template>
+          </span>
+
           <span slot="watch" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">认证列表</a>
+              <a @click="openCertificationList(record)">认证列表</a>
               <a-divider type="vertical" />
-              <a @click="delTag(record)">用户列表</a>
+              <a @click="openUserList(record)">用户列表</a>
             </template>
           </span>
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">编辑</a>
+              <a @click="openEdit(record)">编辑</a>
               <a-divider type="vertical" />
               <a @click="delTag(record)">删除</a>
               <a-divider type="vertical" />
               <a @click="delTag(record)">下载等级码</a>
             </template>
           </span>
+
         </s-table>
       </div>
     </a-layout-content>
+
+    <FixedEdit 
+      v-if="page=='add'||page=='edit'"
+      @exit="page='level_list'"
+      :type="page"></FixedEdit>
+
+    <FixedCertificationList 
+      v-if="page=='certification_list'"
+      @exit="page='level_list'"></FixedCertificationList>
+
+    <FixedUserList 
+      v-if="page=='user_list'"
+      @exit="page='level_list'"></FixedUserList>
+
   </a-layout>
 </template>
 
 <script>
 import { STable } from '@/components'
 
-import { getRoleList, getServiceList } from '@/api/manage'
+
+import { queryFixedLevel } from '@/api/crm'
 
 export default {
   name: 'Fixed',
   components: {
-    STable
+    STable,
+    FixedEdit: ()=>import('./components/FixedEdit'),
+    FixedCertificationList: ()=>import('./components/FixedCertificationList'),
+    FixedUserList: ()=>import('./components/FixedUserList'),
   },
   data () {
     return {
+      page: 'level_list',
       // 查询参数
       queryParam: {},
       // 表头
       columns: [
         {
           title: '等级模板',
-          dataIndex: 'no'
+          dataIndex: 'template_icon'
         },
         {
           title: '等级名称',
-          dataIndex: 'description'
+          dataIndex: 'level_name'
         },
         {
           title: '生效油站',
-          dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'group_id',
         },
         {
           title: '等级优惠',
-          dataIndex: 'time',
-          needTotal: true
+          dataIndex: 'children',
         },
         {
           title: '等级有效期',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'level_status',
         },
         {
           title: '最近修改人',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'userId',
         },
         {
           title: '查看',
@@ -92,29 +122,28 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
+        // console.log('loadData.parameter', parameter)
+        return queryFixedLevel({}).then((res)=>{
+          console.log(res.data)
+          return {
+            data: res.data, // 列表数组
+          }
         })
-      },
-      selectedRowKeys: [],
-      selectedRows: [],
 
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
+      }
     }
   },
-  created () {
-    this.tableOption()
-    getRoleList({ t: new Date() })
-  },
+  created () { },
   methods: {
+    openEdit(item){
+      this.page = 'edit'
+    },
+    openUserList(item){
+      this.page = 'user_list'
+    },
+    openCertificationList(item){
+      this.page = 'certification_list'
+    },
     delTag () {
       this.$confirm({
         title: '操作提示',
@@ -127,27 +156,6 @@ export default {
         onCancel () {}
       })
     },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
-    }
   }
 }
 </script>
