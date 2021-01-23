@@ -8,7 +8,7 @@
         基础设置
       </div>
       <div class="actionBtns">
-        <a-button type="primary"> 新增基础设置 </a-button>
+        <a-button type="primary" @click="type='add'"> 新增基础设置 </a-button>
       </div>
 
       <!-- 表格 -->
@@ -31,37 +31,9 @@
         </s-table>
       </div>
     </a-layout-content>
-    <a-layout-content
-      v-if="type=='add'"
-      :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
-    >
-      <div class="head-title">
-        基础设置
-      </div>
-      <div class="actionBtns">
-        <a-button type="primary"> 新增基础设置 </a-button>
-      </div>
 
-      <!-- 表格 -->
-      <div class="showDataForTable">
-        <s-table 
-          ref="table" 
-          size="default" 
-          rowKey="key" 
-          :columns="columns" 
-          :data="loadData">
-
-          <span slot="action" slot-scope="text, record">
-            <template>
-              <a @click="editItem(record)">编辑</a>
-              <a-divider type="vertical" />
-              <a @click="delTag(record)">删除</a>
-            </template>
-          </span>
-          
-        </s-table>
-      </div>
-    </a-layout-content>
+    <FoundationAdd v-if="type=='add'" @exit="type='list'"></FoundationAdd>
+    
   </a-layout>
 </template>
 
@@ -74,7 +46,8 @@ import { getUserBasicslist } from '@/api/crm'
 export default {
   name: 'Foundation',
   components: {
-    STable
+    STable,
+    FoundationAdd: ()=> import('./components/FoundationAdd')
   },
   data () {
     return {
