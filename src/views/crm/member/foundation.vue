@@ -30,6 +30,7 @@
 import { STable } from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
+import { getUserBasicslist } from '@/api/crm'
 
 export default {
   name: 'Foundation',
@@ -94,6 +95,12 @@ export default {
   created () {
     this.tableOption()
     getRoleList({ t: new Date() })
+    getUserBasicslist({
+      page:1,
+      size:10
+    }).then((res)=>{
+      console.log(res)
+    })
   },
   methods: {
     delTag () {
