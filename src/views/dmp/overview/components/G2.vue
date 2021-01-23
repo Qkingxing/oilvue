@@ -1,78 +1,168 @@
 <template>
-  <div>
-    <div style="widtn: 300px;height: 300px;" id="container" ref="container"></div>
-  </div>
+  <div id="charts" style="width: 400px" ref="charts"></div>
 </template>
 
 <script>
-import { Pie } from '@antv/g2plot'
+import { Chart } from '@antv/g2'
+
 export default {
   data() {
     return {
       data: [
-        { type: '92#', value: 27 },
-        { type: '0#', value: 25 },
-        { type: '95#', value: 48 },
+        { item: '事例一', count: 40, percent: 0.4 },
+        { item: '事例二', count: 21, percent: 0.21 },
+        { item: '事例三', count: 17, percent: 0.17 },
+        { item: '事例四', count: 13, percent: 0.13 },
+        { item: '事例五', count: 9, percent: 0.09 },
       ],
     }
   },
-  mounted() {
-      this.G2()
-  },
   methods: {
-    G2() {
-      const piePlot = new Pie(this.$refs.container, {
-        appendPadding: 10,
-        data: this.data,
-        angleField: 'value',
-        colorField: 'type',
-        radius: 1,
-        innerRadius: 0.64,
-        meta: {
-          value: {
-            formatter: (v) => `¥ ${v}`,
-          },
+    init: function () {
+      const chart = new Chart({
+        container: this.$refs.charts,
+        autoFit: true,
+        height: 300,
+      })
+
+      chart.coordinate('theta', {
+        radius: 0.75,
+        innerRadius: 0.5,
+      })
+      chart.data(this.data)
+
+      chart.scale('percent', {
+        formatter: (val) => {
+          val = val * 100 + '%'
+          return val
         },
-        label: {
-          type: 'inner',
-          offset: '-50%',
-          autoRotate: false,
-          style: { textAlign: 'center' },
-          formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+      })
+
+      // 声明需要进行自定义图例字段： 'item'
+      chart.legend('item', {
+        position: 'right', // 配置图例显示位置
+        custom: true, // 关键字段，告诉 G2，要使用自定义的图例
+        items: this.data.map((obj, index) => {
+          return {
+            name: obj.item, // 对应 itemName
+            value: obj.percent, // 对应 itemValue
+            marker: {
+              symbol: 'square', // marker 的形状
+              style: {
+                r: 5, // marker 图形半径
+                fill: chart.getTheme().colors10[index], // marker 颜色，使用默认颜色，同图形对应
+              },
+            }, // marker 配置
+          }
+        }),
+        itemValue: {
+          style: {
+            fill: '#999',
+          }, // 配置 itemValue 样式
+          formatter: (val) => `${val * 100}%`, // 格式化 itemValue 内容
         },
-        statistic: {
-          title: {
-            offsetY: -8,
-          },
-          content: {
-            offsetY: -4,
-          },
-        },
-        // 添加 中心统计文本 交互
-        interactions: [
-          { type: 'element-selected' },
-          { type: 'element-active' },
-          {
-            type: 'pie-statistic-active',
-            cfg: {
-              start: [
-                { trigger: 'element:mouseenter', action: 'pie-statistic:change' },
-                { trigger: 'legend-item:mouseenter', action: 'pie-statistic:change' },
-              ],
-              end: [
-                { trigger: 'element:mouseleave', action: 'pie-statistic:reset' },
-                { trigger: 'legend-item:mouseleave', action: 'pie-statistic:reset' },
-              ],
+      })
+      chart
+        .interval()
+        .adjust('stack')
+        .position('percent')
+        .color('item')
+        .style({
+          fillOpacity: 1,
+        })
+        .state({
+          active: {
+            style: (element) => {
+              const shape = element.shape
+              return {
+                lineWidth: 10,
+                stroke: shape.attr('fill'),
+                strokeOpacity: shape.attr('fillOpacity'),
+              }
             },
           },
-        ],
+        })
+
+      // 移除图例点击过滤交互
+      chart.removeInteraction('legend-filter')
+      chart.interaction('element-active')
+
+      chart.render()
+
+      // 监听 element 上状态的变化来动态更新 Annotation 信息
+      chart.on('element:statechange', (ev) => {
+        const { state, stateStatus, element } = ev.gEvent.originalEvent
+
+        // 本示例只需要监听 active 的状态变化
+        if (state === 'active') {
+          const data = element.getData()
+          if (stateStatus) {
+            // 更新 Annotation
+            updateAnnotation(data)
+          } else {
+            // 隐藏 Annotation
+            clearAnnotation()
+          }
+        }
       })
-      console.log(piePlot)
-      piePlot.render()
+
+      // 绘制 annotation
+      let lastItem
+      function updateAnnotation(data) {
+        if (data.item !== lastItem) {
+          chart.annotation().clear(true)
+          chart
+            .annotation()
+            .text({
+              position: ['50%', '50%'],
+              content: data.item,
+              style: {
+                fontSize: 20,
+                fill: '#8c8c8c',
+                textAlign: 'center',
+              },
+              offsetY: -20,
+            })
+            .text({
+              position: ['50%', '50%'],
+              content: data.count,
+              style: {
+                fontSize: 28,
+                fill: '#8c8c8c',
+                textAlign: 'center',
+              },
+              offsetX: -10,
+              offsetY: 20,
+            })
+            .text({
+              position: ['50%', '50%'],
+              content: '台',
+              style: {
+                fontSize: 20,
+                fill: '#8c8c8c',
+                textAlign: 'center',
+              },
+              offsetY: 20,
+              offsetX: 20,
+            })
+          chart.render(true)
+          lastItem = data.item
+        }
+      }
+
+      // 清空 annotation
+      function clearAnnotation() {
+        chart.annotation().clear(true)
+        chart.render(true)
+        lastItem = null
+      }
     },
+  },
+
+  mounted() {
+    this.init()
   },
 }
 </script>
 
-<style>
-</style>
+<style></style>
