@@ -38,13 +38,20 @@ const user = {
       return new Promise((resolve, reject) => {
         // console.log(userInfo)
         // return
-        _login({account:userInfo.username,password:userInfo.password}).then(response => {
+        _login({
+          account: userInfo.username,
+          password: userInfo.password
+        }).then(response => {
           const result = response.data
           console.log(result)
-          // return
-          storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-          commit('SET_TOKEN', result.token)
-          resolve()
+          if (result.code==200) {
+            // return
+            storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
+            commit('SET_TOKEN', result.token)
+            resolve()
+          }else{
+            reject(result)
+          }
         }).catch(error => {
           reject(error)
         })
