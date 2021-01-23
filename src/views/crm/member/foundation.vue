@@ -12,14 +12,21 @@
 
       <!-- 表格 -->
       <div class="showDataForTable">
-        <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
+        <s-table 
+          ref="table" 
+          size="default" 
+          rowKey="key" 
+          :columns="columns" 
+          :data="loadData">
+
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">编辑</a>
+              <a @click="editItem(record)">编辑</a>
               <a-divider type="vertical" />
               <a @click="delTag(record)">删除</a>
             </template>
           </span>
+          
         </s-table>
       </div>
     </a-layout-content>
@@ -39,31 +46,29 @@ export default {
   },
   data () {
     return {
-      // 查询参数
-      queryParam: {},
       // 表头
       columns: [
         {
           title: '生效油站',
-          dataIndex: 'no'
+          dataIndex: 'group_name'
         },
         {
           title: '会员注册',
-          dataIndex: 'description'
+          dataIndex: 'member_type'
         },
         {
           title: '初始会员等级',
-          dataIndex: 'status',
+          dataIndex: 'level_name',
           needTotal: true
         },
         {
           title: '初始等级有效期',
-          dataIndex: 'time',
+          dataIndex: 'initial_day',
           needTotal: true
         },
         {
           title: '最近修改人',
-          // dataIndex: 'status',
+          dataIndex: 'user_name',
           needTotal: true
         },
         {
@@ -74,34 +79,27 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
+        // console.log(parameter)
+        let params = {
+          page: parameter.pageNo,
+          size: parameter.pageSize
+        }
+
+        return getUserBasicslist(Object.assign(params)).then(res=>{
+          // console.log(res.data)
+          return {
+            data: res.data.list,
+            pageNo: res.data.pageNo,
+            pageSize: res.data.pageSize,
+            totalCount: res.data.totalCount,
+            totalPage: res.data.per_page
+          }
         })
       },
-      selectedRowKeys: [],
-      selectedRows: [],
 
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
     }
   },
-  created () {
-    this.tableOption()
-    getRoleList({ t: new Date() })
-    getUserBasicslist({
-      page:1,
-      size:10
-    }).then((res)=>{
-      console.log(res)
-    })
-  },
+  created () {},
   methods: {
     delTag () {
       this.$confirm({
@@ -115,26 +113,8 @@ export default {
         onCancel () {}
       })
     },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
+    editItem(item){
+      console.log(item)
     }
   }
 }
