@@ -1,28 +1,39 @@
 <template>
   <a-layout>
     <a-layout-content
+      v-if="type=='list'"
       :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
     >
       <div class="head-title">
         基础设置
       </div>
       <div class="actionBtns">
-        <a-button type="primary"> 新增基础设置 </a-button>
+        <a-button type="primary" @click="type='add'"> 新增基础设置 </a-button>
       </div>
 
       <!-- 表格 -->
       <div class="showDataForTable">
-        <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
+        <s-table 
+          ref="table" 
+          size="default" 
+          rowKey="key" 
+          :columns="columns" 
+          :data="loadData">
+
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">编辑</a>
+              <a @click="editItem(record)">编辑</a>
               <a-divider type="vertical" />
               <a @click="delTag(record)">删除</a>
             </template>
           </span>
+          
         </s-table>
       </div>
     </a-layout-content>
+
+    <FoundationAdd v-if="type=='add'" @exit="type='list'"></FoundationAdd>
+    
   </a-layout>
 </template>
 
@@ -30,39 +41,40 @@
 import { STable } from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
+import { getUserBasicslist } from '@/api/crm'
 
 export default {
   name: 'Foundation',
   components: {
-    STable
+    STable,
+    FoundationAdd: ()=> import('./components/FoundationAdd')
   },
   data () {
     return {
-      // 查询参数
-      queryParam: {},
+      type: 'list',
       // 表头
       columns: [
         {
           title: '生效油站',
-          dataIndex: 'no'
+          dataIndex: 'group_name'
         },
         {
           title: '会员注册',
-          dataIndex: 'description'
+          dataIndex: 'member_type'
         },
         {
           title: '初始会员等级',
-          dataIndex: 'status',
+          dataIndex: 'level_name',
           needTotal: true
         },
         {
           title: '初始等级有效期',
-          dataIndex: 'time',
+          dataIndex: 'initial_day',
           needTotal: true
         },
         {
           title: '最近修改人',
-          // dataIndex: 'status',
+          dataIndex: 'user_name',
           needTotal: true
         },
         {
@@ -73,28 +85,29 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
+        // console.log(parameter)
+        // 自定义入参
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize // 每页页数
+        }
+
+        return getUserBasicslist(Object.assign(params)).then(res=>{
+          // console.log(res.data)
+          // 自定义出参
+          return {
+            data: res.data.list, // 列表数组
+            pageNo: res.data.pageNo,  // 当前页码
+            pageSize: res.data.pageSize,  // 每页页数
+            totalCount: res.data.totalCount, // 列表总条数
+            totalPage: res.data.per_page // 列表总页数
+          }
         })
       },
-      selectedRowKeys: [],
-      selectedRows: [],
 
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
     }
   },
-  created () {
-    this.tableOption()
-    getRoleList({ t: new Date() })
-  },
+  created () {},
   methods: {
     delTag () {
       this.$confirm({
@@ -108,26 +121,8 @@ export default {
         onCancel () {}
       })
     },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
+    editItem(item){
+      console.log(item)
     }
   }
 }

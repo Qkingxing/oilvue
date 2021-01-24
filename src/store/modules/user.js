@@ -38,18 +38,24 @@ const user = {
       return new Promise((resolve, reject) => {
         // console.log(userInfo)
         // return
-        _login({account:userInfo.username,password:userInfo.password}).then(response => {
-          const result = response.data
-          console.log(result)
-          // return
-          storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-          commit('SET_TOKEN', result.token)
-          resolve()
+        _login({
+          account: userInfo.username,
+          password: userInfo.password
+        }).then(res => {
+          // console.log(res)
+          if (res.code==200) {
+
+            storage.set(ACCESS_TOKEN, res.data.token, 7 * 24 * 60 * 60 * 1000)
+            commit('SET_TOKEN', res.data.token)
+            resolve()
+          }else{
+            reject(res)
+          }
         }).catch(error => {
           reject(error)
         })
-        // login(userInfo).then(response => {
-        //   const result = response.result
+        // login(userInfo).then(res => {
+        //   const result = res.result
         //   storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
         //   commit('SET_TOKEN', result.token)
         //   resolve()
