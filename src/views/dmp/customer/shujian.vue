@@ -18,28 +18,24 @@
     </div>
 
     <div v-if="dateKey == 'jintian'">
-       <sheet v-if="show == 1"></sheet>
+      
     </div>
     <div v-if="dateKey == 'zuotian'">
-        <sheet v-if="show == 1"></sheet>
+       
     </div>
     <div v-if="dateKey == 'benzhou'">
-        <sheet v-if="show == 1"></sheet>
+        
     </div>
     <div v-if="dateKey == 'benyue'">
-        <sheet v-if="show == 1" :keys='keys'></sheet>
+       
     </div>
   </div>
 </template>
 
 <script>
-import sheet from './sheet'
 export default {
-  components:{sheet},
-  props:['show'],
   data() {
     return {
-      keys:0,
       dateKey: 'jintian',
       dates: [
         { key: 'jintian', name: '今日' },
