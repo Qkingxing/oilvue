@@ -559,7 +559,7 @@ export const asyncRouterMap = [
                 path: '/goods/warehouse/my',
                 name: 'my',
                 component: () => import('@/views/goods/warehouse/my'),
-                meta: { title: 'menu.goods.warehouse.my' }
+                meta: { title: 'menu.goods.warehouse.my' },
               },
               {
                 path: '/goods/warehouse/Classification',

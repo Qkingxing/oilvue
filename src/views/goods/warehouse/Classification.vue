@@ -6,7 +6,7 @@
         <a-divider />
         <a-col :md="24" :sm="24">
           <a-form-item>
-            <a-button type="primary"  style="min-width:82px;"> 新增商品类目 </a-button>
+            <a-button type="primary"  style="min-width:82px;" @click="addVisible=true"> 新增商品类目 </a-button>
           </a-form-item>
         </a-col>
         <!-- 表格 -->
@@ -14,11 +14,20 @@
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            :rowKey="(record) => record.id"
             :columns="columns"
             :data="loadData"
+            :pagination="{ pageSize: 10 }"
             :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           >
+          <span slot="action" slot-scope="text, record">
+            <a @click="modifyCategory(record)" style="margin-right: 10px;">编辑</a>
+            <a-popconfirm title="确定删除吗？" ok-text="确定" cancel-text="取消" @confirm="deleteCategory(record)">
+              <a>删除</a>
+            </a-popconfirm>
+            <a @click="modifyCategorySort(record)" style="margin-left: 10px;">排序</a>
+            <a-divider type="vertical"/>
+          </span>
           </s-table>
         </div>
       </a-layout-content>
@@ -27,8 +36,8 @@
         title="新增商品类目"
         :visible="addVisible"
         :confirm-loading="addConfirmLoading"
-        @ok="handleSetOk"
-        @cancel="handleSetCancel"
+        @ok="handleAddOk"
+        @cancel="handleAddCancel"
       >
       <div style="display: block;text-align: center;">
         <span style="margin-right: 10px;">商品类目</span>
@@ -36,12 +45,37 @@
         <span style="position: relative;right: 30px;color: #c7c7c7;">{{addCateName.length}}/8</span>
       </div>
       </a-modal>
+      <a-modal
+          title="编辑商品类目"
+          :visible="modifyVisible"
+          :confirm-loading="modifyConfirmLoading"
+          @ok="handleModifyOk"
+          @cancel="handleModifyCancel"
+        >
+        <div style="display: block;text-align: center;" v-if="modifyVisible">
+          <span style="margin-right: 10px;">商品类目</span>
+          <a-input v-model="modifyInfo.goods_name" placeholder="" :maxLength="8" style="width: 200px;" />
+          <span style="position: relative;right: 30px;color: #c7c7c7;">{{modifyInfo.goods_name.length}}/8</span>
+        </div>
+      </a-modal>
+      <a-modal
+          title="修改商品类目顺序"
+          :visible="sortVisible"
+          :confirm-loading="sortConfirmLoading"
+          @ok="handleSortOk"
+          @cancel="sortVisible=false"
+        >
+        <div style="display: block;text-align: center;" v-if="sortVisible">
+          <span style="margin-right: 10px;">商品类目排序</span>
+          <a-input-number v-model="sortInfo.sorting" style="width: 200px;" ></a-input-number>
+        </div>
+      </a-modal>
     <router-view />
   </div>
 </template>
 
 <script>
-import { getGoodsList } from '@/api/goods'
+import { getGoodsCategoryList, addGoodsCategory, modifyGoodsCategory, deleteGoodsCategory, modifyGoodsCategorySorting } from '@/api/goods'
 import { STable } from '@/components'
 export default {
   name: 'Classification',
@@ -51,65 +85,55 @@ export default {
   data () {
     return {
       addCateName:'',
-      addVisible:true,
+      addVisible:false,
+      modifyVisible:false,
+      sortVisible:false,
       addConfirmLoading: false,
+      modifyConfirmLoading: false,
+      sortConfirmLoading:false,
       searchType:'高级搜索',
       diyDate:false,
       orderTime:'',
       radioValue: 'new',
       tableOptionChoose:['优惠金额','实付金额','支付方式','状态时间'],
+      modifyInfo:{},
+      sortInfo:{},
       value:'',
       // 查询参数
       queryParam: {
+        site_id:2,
+        page:1,
+        limit:100
       },
       // 表头
       columns: [
         {
-          title: '订单号',
-          dataIndex: 'no'
+          title: '排序',
+          dataIndex: 'sorting'
         },
         {
-          title: '订单状态',
-          dataIndex: 'description'
+          title: '商品类目',
+          dataIndex: 'goods_name'
         },
         {
-          title: '订单类型',
-          dataIndex: 'status',
-          needTotal: true
+          title: '商品数',
+          dataIndex: 'goods_count',
         },
         {
-          title: '应付金额',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '优惠金额',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '实付金额',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '支付方式',
+          table: '操作',
           dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
-        },
-        {
-          title: '状态时间',
-          // dataIndex: 'status',
-          needTotal: true
+          scopedSlots: {customRender: 'action'},
         }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getGoodsList(Object.assign(parameter, this.queryParam))
+        return getGoodsCategoryList(Object.assign(parameter, this.queryParam))
           .then(res => {
-            console.log(res)
-            return res.result
+            return{
+              data:res.data,
+              totalCount:res.countPage,
+              totalPage:res.pageSize
+            }
           })
       },
       selectedRowKeys: [],
@@ -133,15 +157,73 @@ export default {
     onChangeTableOption(){
       
     },
-    handleSetOk(e) {
-      this.addConfirmLoading = true;
-      setTimeout(() => {
+    modifyCategory(item){
+      this.modifyInfo = item
+      this.modifyVisible = true
+    },
+    modifyCategorySort(item){
+      this.sortInfo = item
+      this.sortVisible = true
+    },
+    handleAddOk(e) {
+      if(this.addCateName == ""){
+        this.$message.error('类目名称不能为空')
+        return;
+      }
+       this.addConfirmLoading = true;
+      let _post={
+        goods_name:this.addCateName,
+        site_id:'2'
+      }
+      addGoodsCategory(_post).then(res=>{
+        this.$message.success('添加成功')
         this.addVisible = false;
         this.addConfirmLoading = false;
-      }, 2000);
+        this.$refs.table.refresh()
+      })
     },
-    handleSetCancel(e) {
+    handleModifyOk(){
+      if(this.modify == ""){
+        this.$message.error('类目名称不能为空')
+        return;
+      }
+      this.addConfirmLoading = true;
+      let _post={
+        goods_name:this.modifyInfo.goods_name,
+        id:this.modifyInfo.id
+      }
+      modifyGoodsCategory(_post).then(res=>{
+        this.$message.success('修改成功')
+        this.modifyVisible = false;
+        this.modifyVisibleConfirmLoading = false;
+        this.$refs.table.refresh()
+      })
+    },
+    handleSortOk(){
+      if(this.sortInfo.sorting == ""){
+        this.$message.error('排序不能为空')
+        return;
+      }
+      this.sortConfirmLoading = true;
+      let _post={
+         "up_sorting": [{
+              "id": this.sortInfo.id,
+              "sorting": this.sortInfo.sorting
+          }]
+      }
+      console.log(_post.up_sorting)
+      modifyGoodsCategorySorting(_post).then(res=>{
+        this.$message.success('修改成功')
+        this.sortVisible = false;
+        this.sortVisibleConfirmLoading = false;
+        this.$refs.table.refresh()
+      })
+    },
+    handleAddCancel(e) {
       this.addVisible = false;
+    },
+    handleModifyCancel(){
+      this.modifyVisible = false;
     },
     advanceSearchChange(){
       this.searchType == "高级搜索" ? this.searchType="点击收起" :　this.searchType="高级搜索" 
@@ -162,6 +244,15 @@ export default {
         disabledMinutes: () => this.range(0, 31),
         disabledSeconds: () => [55, 56],
       };
+    },
+    deleteCategory(item){
+      let _post={
+        id:item.id
+      }
+      deleteGoodsCategory(_post).then(res=>{
+        this.$message.success('删除成功')
+        this.$refs.table.refresh()
+      })
     },
     onChange(value){
       value.target.value == 5 ? this.diyDate = true : this.diyDate = false

@@ -4,7 +4,7 @@
     <a-layout v-if="$route.name=='add'">
       <a-layout-content :style="{padding: '24px', minHeight: '280px' }">
        <a-card>
-         <a-steps :current="0">
+         <a-steps :current="step">
              <a-step>
                <!-- <span slot="title">Finished</span> -->
                <template slot="title">
@@ -15,15 +15,225 @@
              <a-step title="完成" />
            </a-steps>
        </a-card>
-       <a-card style="margin-top: 10px;">
-         11
+       <a-card v-show="step == 0" style="margin-top: 10px;">
+             <a-form-item
+               :label-col="formItemLayout.labelCol"
+               :wrapper-col="formItemLayout.wrapperCol"
+               label="优惠券名称"
+             >
+               <a-input
+                v-model="coupons_name"
+                 placeholder="请输入"
+               />
+             </a-form-item>
+             <a-form-item
+               :label-col="formItemLayout.labelCol"
+               :wrapper-col="formItemLayout.wrapperCol"
+               label="活动人群"
+             >
+               <a-radio-group v-model="activity_type" @change="onChangeActivity">
+                 <a-radio :value="1">
+                   所有线上客户
+                 </a-radio>
+                 <a-radio :value="2">
+                   部分可参与
+                 </a-radio>
+                 <a-radio :value="3">
+                   部分不可参与
+                 </a-radio>
+               </a-radio-group>
+               <div v-if="activity_type != 1" style="width: 400px;height: 80px;background-color: #fafafa;"></div>
+             </a-form-item>
+             <a-form-item
+               :label-col="formItemLayout.labelCol"
+               :wrapper-col="formItemLayout.wrapperCol"
+               label="券类型"
+             >
+               <a-radio-group v-model="volume_type" @change="onChangeActivity">
+                 <a-radio :value="1">
+                   油品券
+                 </a-radio>
+                 <a-radio :value="2">
+                   商品券
+                 </a-radio>
+               </a-radio-group>
+             </a-form-item>
+             <a-form-item
+               :label-col="formItemLayout.labelCol"
+               :wrapper-col="formItemLayout.wrapperCol"
+               label="券金额"
+               v-if="volume_type == 1"
+             >
+               <a-radio-group v-model="amount_type" @change="onChangeAmount">
+                 <a-radio :value="1">
+                   固定金额
+                 </a-radio>
+                 <a-radio :value="2">
+                   随机金额
+                 </a-radio>
+                 <a-radio :value="3">
+                   固定折扣
+                 </a-radio>
+               </a-radio-group>
+               <div v-if="amount_type==1" style="width: 500px;height: 80px;line-height: 80px; background-color: #fafafa;text-align: center;">
+                 <span>固定金额</span>
+                 <a-input-number style="margin: 0 10px;" :min="1" :max="1001" :value="gdjeValue" @change="handleGdjeChange" />
+                 <span>元</span>
+                 <span style="color: #c7c7c7;margin-left: 10px;">最多支持一千元与两位小数，例：5.21元</span>
+               </div>
+               <div v-if="amount_type==2" style="width: 500px;height: 80px;line-height: 80px; background-color: #fafafa;text-align: center;">
+                 <span>随机金额</span>
+                 <a-input-number style="margin: 0 10px;"  v-model="sjMin" />
+                 <span>至</span>
+                 <a-input-number style="margin: 0 10px;"  v-model="sjMax" />
+                 <span>元</span>
+               </div>
+               <div v-if="amount_type==3" style="width: 500px;height: 80px;line-height: 80px; background-color: #fafafa;text-align: center;">
+                 <span>固定折扣</span>
+                 <a-input-number style="margin: 0 10px;"  :value="gdzkValue" />
+                 <span>折，最大抵扣金额</span>
+                 <a-input-number style="margin: 0 10px;"  :value="maxdkValue" placeholder="金额(选填)" />
+                 <span>元</span>
+               </div>
+             </a-form-item>
+             <a-form-item
+               :label-col="formItemLayout.labelCol"
+               :wrapper-col="formItemLayout.wrapperCol"
+               label="商品价值"
+               v-if="volume_type == 2"
+             >
+               <a-input-number style="margin: 0 10px;" :min="1" :max="1001" :value="gdjeValue" @change="handleGdjeChange" />
+               <span>元</span>
+               <span style="color: #c7c7c7;margin-left: 10px;">最多支持一千元与两位小数，例：5.21元</span>
+             </a-form-item>
+             <a-form-item
+               :label-col="formItemLayout.labelCol"
+               :wrapper-col="formItemLayout.wrapperCol"
+               label="券有效期"
+             >
+               <a-radio-group v-model="validity_type" @change="onChangeActivity">
+                 <a-radio :value="1">
+                   固定时间段
+                 </a-radio>
+                 <a-radio :value="2">
+                   领取后有效天数
+                 </a-radio>
+               </a-radio-group>
+               <div v-if="validity_type== 1" style="width: 500px;height: 80px;line-height: 80px;text-align: center; background-color: #fafafa;">
+                 <span>有效期</span>
+                 <a-range-picker
+                   style="margin-left: 10px;"
+                   :disabled-date="disabledDate"
+                   :disabled-time="disabledRangeTime"
+                   @change=onPickerChange
+                   :show-time="{
+                       hideDisabledOptions: true,
+                       defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                     }"
+                   format="YYYY-MM-DD HH:mm:ss"
+                  />
+               </div>
+               <div v-if="validity_type== 2" style="width: 500px;height: 80px;line-height: 80px;text-align: center; background-color: #fafafa;">
+                 <span>自领取起</span>
+                 <a-input-number v-model="effective_day" style="margin: 0 10px;"></a-input-number>
+                 <span>天有效</span>
+               </div>
+             </a-form-item>
+             <a-form-item :label-col="formTailLayout.labelCol" :wrapper-col="formTailLayout.wrapperCol">
+               <a-button type="primary" @click="nextOne">
+                 下一步
+               </a-button>
+             </a-form-item>
        </a-card>
+        <a-card v-show="step == 1" style="margin-top: 10px;">
+          <a-form-item
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+            label="使用限制"
+          >
+            <a-checkbox-group v-model="coupons_limit">
+              <a-checkbox value="1">
+                线上支付
+              </a-checkbox>
+              <a-checkbox value="2">
+                线下核销
+              </a-checkbox>
+            </a-checkbox-group>
+          </a-form-item>
+          <a-form-item
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+            label="时间限制"
+          >
+            <a-radio-group v-model="limit_time" @change="onChangeActivity">
+              <a-radio :value="1">
+                不限制
+              </a-radio>
+              <a-radio :value="2">
+                时间内可用
+              </a-radio>
+              <a-radio :value="3">
+                时间内不可用
+              </a-radio>
+            </a-radio-group>
+          </a-form-item>
+          <a-form-item
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+            label="使用门槛"
+          >
+            <span>消费</span>
+            <a-select default-value="lucy" style="width: 200px;margin-left: 10px;" >
+              <a-select-option value="jack">
+                油品1
+              </a-select-option>
+              <a-select-option value="lucy">
+                油品2
+              </a-select-option>
+            </a-select>
+            <a-select default-value="lucy" style="width: 50px;margin-left: 10px;" >
+              <a-select-option value="jack">
+                原价
+              </a-select-option>
+              <a-select-option value="lucy">
+                升数
+              </a-select-option>
+            </a-select>
+            <span style="margin: 0 10px;">满</span>
+            <a-input-number></a-input-number>
+            <span style="margin-left: 10px;">可用</span>
+          </a-form-item>
+          <a-form-item
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+            label="使用须知"
+          >
+            <a-textarea style="width: 300px;height: 150px;" v-model="conditions"></a-textarea>
+          </a-form-item>
+          <a-form-item :label-col="formTailLayout.labelCol" :wrapper-col="formTailLayout.wrapperCol">
+            <a-button  @click="step = 0">
+              上一步
+            </a-button>
+            <a-button type="primary" @click="nextTwo" style="margin-left: 10px;">
+              下一步
+            </a-button>
+          </a-form-item>
+        </a-card>
       </a-layout-content>
     </a-layout>
    </div>
 </template>
 
 <script>
+import moment from 'moment';
+const formItemLayout = {
+  labelCol: { span: 4 },
+  wrapperCol: { span: 10 },
+};
+const formTailLayout = {
+  labelCol: { span: 4 },
+  wrapperCol: { span: 10, offset: 4 },
+};
 import { getRoleList, getServiceList } from '@/api/manage'
 export default {
   name: 'Clist',
@@ -31,19 +241,120 @@ export default {
   },
   data () {
     return {
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
-      },
+      post_obj:{},
+      coupons_name:'',
+      coupons_limit:['1','2'],
+      validity_type:1,
+      limit_time:1,
+      effective_day:7,
+      gdzk:'',
+      maxdkValue:'',
+      sjMin:'',
+      sjMax:'',
+      gdjeValue:'',
+      conditions:'',
+      amount_type:2,
+      activity_type:1,
+      volume_type:1,
+      checkNick: false,
+      formItemLayout,
+      formTailLayout,
+      step:0,
+      yxqValue:[]
     }
   },
-  created () {
-  },
-  methods: {}
+  created () {},
+  methods: {
+    moment,
+    range(start, end) {
+      const result = [];
+      for (let i = start; i < end; i++) {
+        result.push(i);
+      }
+      return result;
+    },
+    handleGdjeChange(){
+      
+    },
+    onChangeAmount(e){
+      console.log(e)
+    },
+    onChangeActivity(e){
+      console.log(e)
+    },
+    //时间改变的方法
+    onPickerChange(date, dateString){
+      this.yxqValue = dateString
+      //这两个参数值antd自带的参数
+    },
+    disabledDate(current) {
+      return current && current < moment().endOf('day');
+    },
+    disabledRangeTime(_, type) {
+      if (type === 'start') {
+        return {
+          disabledHours: () => this.range(0, 60).splice(4, 20),
+          disabledMinutes: () => this.range(30, 60),
+          disabledSeconds: () => [55, 56],
+        };
+      }
+      return {
+        disabledHours: () => this.range(0, 60).splice(20, 4),
+        disabledMinutes: () => this.range(0, 31),
+        disabledSeconds: () => [55, 56],
+      };
+    },
+    yxqChange(value){
+      console.log(value)
+    },
+    nextOne() {
+      if(this.coupons_name == ""){
+        this.$message.error("请输入优惠券名称")
+        return;
+      }
+      this.post_obj.coupons_name = this.coupons_name
+      this.post_obj.activity_type = this.activity_type
+      this.post_obj.volume_type = this.volume_type
+      if(this.amount_type == 2){
+        if(this.sjMin == "" || this.sjMax == ""){
+          this.$message.error("请输入随机金额范围")
+          return;
+        }
+      }
+      this.post_obj.min = this.sjMin
+      this.post_obj.max = this.sjMax
+      // 券有效期
+      this.post_obj.validity_type = this.validity_type 
+      if(this.validity_type == 1 && this.yxqValue.length == 0){
+        this.$message.error("请输入选择有效期")
+        return;
+      }
+      this.post_obj.total_data=[
+        {
+            "tart_time":this.yxqValue[0],//起止时间
+            "end_time":this.yxqValue[1]//结束时间
+        }]
+      console.log(this.post_obj)
+      this.step=1
+      
+    },
+    nextTwo(){
+      
+    },
+    handleChange(e) {
+      this.checkNick = e.target.checked;
+      this.$nextTick(() => {
+        this.form.validateFields(['nickname'], { force: true });
+      });
+    },
+    changeTime(now) {
+      let time = new Date(now._d)
+      console.log(time);
+      let d = new Date(time);
+      let dateValue = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+      return dateValue;
+    }
+  }
 }
 </script>
 <style lang="less" scoped>

@@ -76,6 +76,8 @@ export default {
     'menu.goods': '便利店',
     'menu.goods.warehouse': '商品库',
     'menu.goods.warehouse.my': '商品管理',
+    'menu.goods.warehouse.my.add': '新增商品',
+    'menu.goods.warehouse.my.modify': '修改商品',
     'menu.goods.warehouse.Classification': '商品类目',
     'menu.goods.warehouse.write_off': '核销记录',
     'menu.oa': '办公',
