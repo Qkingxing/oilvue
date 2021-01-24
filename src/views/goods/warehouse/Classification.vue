@@ -100,11 +100,6 @@ export default {
       sortInfo:{},
       value:'',
       // 查询参数
-      queryParam: {
-        site_id:2,
-        page:1,
-        limit:100
-      },
       // 表头
       columns: [
         {
@@ -127,14 +122,21 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        return getGoodsCategoryList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return{
-              data:res.data,
-              totalCount:res.countPage,
-              totalPage:res.pageSize
-            }
-          })
+        let _param = {
+          site_id:2,
+          limit:10,
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize // 每页页数
+        }
+        return getGoodsCategoryList(Object.assign(_param)).then(res=>{
+          return {
+            data: res.data, // 列表数组
+            pageNo: _param.page,  // 当前页码
+            pageSize: _param.limit,  // 每页页数
+            totalCount: res.countPage, // 列表总条数
+            totalPage: res.pageSize // 列表总页数
+          }
+        })
       },
       selectedRowKeys: [],
       selectedRows: [],

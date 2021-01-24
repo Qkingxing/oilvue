@@ -146,7 +146,7 @@
 
 <script>
   import {
-  	getGoodsCategoryList, getGoodsList, getCouponsList, addGoods
+  	getGoodsCategoryList, getGoodsList, getCouponsList, addGoods, modifyGoodsState
   } from '@/api/goods'
   export default{
     data(){
@@ -177,7 +177,7 @@
       // this.$route.meta.title = 'menu.goods.warehouse.Classification'
     },
     methods: {
-      createGoods(){
+      createGoods(type){
         this.form.coupons.length = 0
         this.couponsChooseInfoList.forEach(res=>{
           let _obj={
@@ -211,12 +211,22 @@
           return;
         }
         addGoods(this.form).then(res=>{
-          this.$message.success("添加商品成功")
-          this.$emit("addOver");
+          if(type=="up"){
+            // let _param={
+            //   id:item.id,
+            //   state:item.state==1?2:1
+            // }
+            // modifyGoodsState().then(res=>{
+            //   this.$message.success("上架成功")
+            // })
+          }else{
+            this.$message.success("添加商品成功")
+            this.$emit("addOver");
+          }
         })
       },
       createAndUp(){
-        
+        this.createGoods('up')
       },
       reBack(){
         this.$emit("reBack");

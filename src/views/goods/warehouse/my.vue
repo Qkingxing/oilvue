@@ -140,7 +140,7 @@
           this.$route.meta.title = 'menu.goods.warehouse.my.add'
         }
       },
-      isAdd(value){
+      isModify(value){
         if(value){
           this.$route.meta.title = 'menu.goods.warehouse.my.modify'
         }else{
