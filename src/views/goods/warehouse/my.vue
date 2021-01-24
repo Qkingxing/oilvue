@@ -132,22 +132,6 @@
 			this.loadCategoryList()
       this.loadGoodsList()
 		},
-    watch:{
-      isAdd(value){
-        if(value){
-          this.$route.meta.title = 'menu.goods.warehouse.my.add'
-        }else{
-          this.$route.meta.title = 'menu.goods.warehouse.my.add'
-        }
-      },
-      isModify(value){
-        if(value){
-          this.$route.meta.title = 'menu.goods.warehouse.my.modify'
-        }else{
-          this.$route.meta.title = 'menu.goods.warehouse.my.modify'
-        }
-      }
-    },
 		methods: {
       modifyBack(){
         this.isModify = false

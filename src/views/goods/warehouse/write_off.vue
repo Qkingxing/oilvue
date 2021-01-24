@@ -31,6 +31,7 @@
                     }"
                     format="YYYY-MM-DD HH:mm:ss"
                    />
+                   <a-input placeholder="请输入客户子编号/手机号" style="width: 200px;margin-left: 10px;"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="24" :sm="24">
