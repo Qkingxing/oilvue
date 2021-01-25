@@ -16,7 +16,8 @@
         <s-table 
           ref="table" 
           size="default" 
-          rowKey="key" 
+          rowKey="id" 
+          :showPagination="false"
           :columns="columns" 
           :data="loadData">
 
