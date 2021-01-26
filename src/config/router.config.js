@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import { UserLayout, BasicLayout, BlankLayout } from '@/layouts'
-import { bxAnaalyse } from '@/core/icons'
+import { oil } from '@/core/icons'
 
 const RouteView = {
   name: 'RouteView',
@@ -21,7 +21,7 @@ export const asyncRouterMap = [
         name: 'dmp',
         redirect: '/dmp/overview/dashboard',
         component: RouteView,
-        meta: { title: 'menu.dmp', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: 'menu.dmp', keepAlive: true, icon: 'fund' },
         children: [
           {
             path: '/dmp/overview',
@@ -166,7 +166,7 @@ export const asyncRouterMap = [
         name: 'crm',
         redirect: '/crm/customer/list',
         component: RouteView,
-        meta: { title: 'menu.crm', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: 'menu.crm', keepAlive: true, icon: 'user' },
         children: [
           {
             path: '/crm/customer',
@@ -327,7 +327,7 @@ export const asyncRouterMap = [
         name: 'em',
         redirect: '/em/marketing/activity_add',
         component: RouteView,
-        meta: { title: 'menu.em', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: 'menu.em', keepAlive: true, icon: 'red-envelope' },
         children: [
           {
             path: '/em/marketing',
@@ -385,7 +385,7 @@ export const asyncRouterMap = [
         name: 'oms',
         redirect: '/oms/overview',
         component: RouteView,
-        meta: { title: 'menu.oms', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: 'menu.oms', keepAlive: true, icon: 'profile' },
         children: [
           {
             path: '/oms/overview',
@@ -401,7 +401,7 @@ export const asyncRouterMap = [
         name: 'assets',
         redirect: '/assets/money/overview',
         component: RouteView,
-        meta: { title: 'menu.assets', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: 'menu.assets', keepAlive: true, icon: 'pay-circle' },
         children: [
           {
             path: '/assets/money',
@@ -474,7 +474,7 @@ export const asyncRouterMap = [
         name: 'oil',
         redirect: '/oil/retail/os_install',
         component: RouteView,
-        meta: { title: 'menu.oil', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: 'menu.oil', keepAlive: true, icon: oil },
         children: [
           {
             path: '/oil/retail',
@@ -547,7 +547,7 @@ export const asyncRouterMap = [
         name: 'goods',
         redirect: '/goods/warehouse/my',
         component: RouteView,
-        meta: { title: 'menu.goods', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: 'menu.goods', keepAlive: true, icon: 'shop' },
         children: [
           {
             path: '/goods/warehouse',
@@ -584,7 +584,7 @@ export const asyncRouterMap = [
         name: 'oa',
         redirect: '/oa/personal/center',
         component: RouteView,
-        meta: { title: 'menu.oa', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: 'menu.oa', keepAlive: true, icon: 'folder-open' },
         children: [
           {
             path: '/oa/personal',
@@ -636,7 +636,7 @@ export const asyncRouterMap = [
         name: 'set',
         redirect: '/set/basis',
         component: RouteView,
-        meta: { title: 'menu.set', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: 'menu.set', keepAlive: true, icon: 'setting' },
         children: [
           {
             path: '/set/basis',
@@ -805,7 +805,7 @@ export const asyncRouterMap = [
         name: 'support',
         redirect: '/support/product/software',
         component: RouteView,
-        meta: { title: 'menu.support', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: 'menu.support', keepAlive: true, icon: 'like' },
         children: [
           {
             path: '/support/product',
