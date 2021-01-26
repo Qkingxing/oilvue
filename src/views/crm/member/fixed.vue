@@ -21,11 +21,13 @@
           :columns="columns" 
           :data="loadData">
 
-          <span slot="children" slot-scope="text, record">
+          <div slot="discount_list" slot-scope="discount_list">
             <template>
-              {{record}}
+              <div 
+                v-for="(item,index) in discount_list" 
+                :key="index">{{item.oils_name}}</div>
             </template>
-          </span>
+          </div>
 
           <span slot="watch" slot-scope="text, record">
             <template>
@@ -99,7 +101,9 @@ export default {
         },
         {
           title: '等级优惠',
-          dataIndex: 'children',
+          key: 'discount_list',
+          dataIndex: 'discount_list',
+          scopedSlots: { customRender: 'discount_list' },
         },
         {
           title: '等级有效期',

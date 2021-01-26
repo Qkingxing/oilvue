@@ -42,23 +42,14 @@
             <div class="growth-level">
               <div class="level-title">会员规则设置</div>
               <div class="level-content">
-                <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
-                  <span slot="watch" slot-scope="text, record">
-                    <template>
-                      <a @click="delTag(record)">认证列表</a>
-                      <a-divider type="vertical" />
-                      <a @click="delTag(record)">用户列表</a>
-                    </template>
-                  </span>
-                  <span slot="action" slot-scope="text, record">
-                    <template>
-                      <a @click="delTag(record)">编辑</a>
-                      <a-divider type="vertical" />
-                      <a @click="delTag(record)">删除</a>
-                      <a-divider type="vertical" />
-                      <a @click="delTag(record)">下载等级码</a>
-                    </template>
-                  </span>
+                <s-table 
+                  ref="table" 
+                  size="default" 
+                  rowKey="id" 
+                  :showPagination="false"
+                  :columns="columns" 
+                  :data="loadData">
+
                 </s-table>
               </div>
             </div>
@@ -75,7 +66,8 @@
 <script>
 import { STable } from '@/components'
 
-import { getRoleList, getServiceList } from '@/api/manage'
+
+import { queryMemberSpalevel } from '@/api/crm'
 
 export default {
   name: 'Grow',
@@ -89,68 +81,63 @@ export default {
       // 表头
       columns: [
         {
+          title: '等级',
+          dataIndex: 'level',
+          key: 'level'
+        },
+        {
           title: '等级模板',
-          dataIndex: 'no'
+          dataIndex: 'level_icon',
+          key: 'level_icon'
         },
         {
           title: '等级名称',
-          dataIndex: 'description'
+          dataIndex: 'level_name',
+          key: 'level_name',
         },
         {
-          title: '生效油站',
-          dataIndex: 'status',
-          needTotal: true
+          title: '所需成长值',
+          dataIndex: 'growth_start',
+          key: 'growth_start',
+        },
+        {
+          title: '扣减周期',
+          dataIndex: 'deductions_deductions',
+          key: 'deductions_deductions',
+        },
+        {
+          title: '扣减值',
+          dataIndex: 'deductions',
+          key: 'deductions',
         },
         {
           title: '等级优惠',
-          dataIndex: 'time',
-          needTotal: true
-        },
-        {
-          title: '等级有效期',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
-          title: '最近修改人',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '查看',
-          dataIndex: 'watch',
-          scopedSlots: { customRender: 'watch' }
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
+          title: '操作人',
+          // dataIndex: 'watch',
         }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
+        // console.log('loadData.parameter', parameter)
+        return queryMemberSpalevel({}).then(res=>{
+          console.log(res.data)
+          return {
+            data: res.data, // 列表数组
+            pageNo: 1,  // 当前页码
+            pageSize: 99,  // 每页页数
+            totalCount: 99, // 列表总条数
+            totalPage: 99 // 列表总页数
+          }
+          // return res.data
         })
-      },
-      selectedRowKeys: [],
-      selectedRows: [],
 
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
+      }
     }
   },
-  created () {
-    this.tableOption()
-    getRoleList({ t: new Date() })
-  },
+  created () {},
   methods: {
     delTag () {
       this.$confirm({
@@ -163,27 +150,6 @@ export default {
         },
         onCancel () {}
       })
-    },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
     }
   }
 }

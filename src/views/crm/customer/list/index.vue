@@ -14,19 +14,19 @@
             <a-row :gutter="48">
               <a-col :md="12" :sm="24">
                 <a-form-item label="客户搜索" class="screen-item">
-                  <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
+                  <!-- <a-input v-model="oldqueryParam.keywords" placeholder="请输入搜索内容" /> -->
                   <a-input
                     style="width: 100%"
-                    v-model="queryParam.keywords"
+                    v-model="oldqueryParam.searchNumber"
                     placeholder="请输入搜索内容"
                   >
                     <a-select
                       slot="addonBefore"
                       style="width: 120px"
-                      v-model="queryParam.keyType"
+                      v-model="oldqueryParam.numberType"
                     >
-                      <a-select-option value="86"> 客户子单编号 </a-select-option>
-                      <a-select-option value="87"> 手机号 </a-select-option>
+                      <a-select-option value="sonnumber"> 客户子单编号 </a-select-option>
+                      <a-select-option value="mobile"> 手机号 </a-select-option>
                     </a-select>
                   </a-input>
                 </a-form-item>
@@ -217,7 +217,37 @@
           </a-form>
         </div>
         <!-- 表格 -->
-        <div class="showDataForTable">
+        <div class="showDataForTable" v-if="radioValue=='old'">
+          <div class="showSearchAndTotal">
+            <span class="title">
+              客户列表
+              <span class="dec">
+                符合当前条件客户共「
+                <span class="themeColor">
+                  {{oldTotal}}
+                </span>
+                」位
+              </span>
+            </span>
+            <div>
+              <a-button :disabled="!oldselectedRowKeys.length">发优惠券</a-button>
+              <a-button style="margin-left: 8px;">导出报表</a-button>
+              <a-button style="margin-left: 8px;" icon="setting" @click="openColSetting"/>
+            </div>
+          </div>
+          <s-table
+            ref="table"
+            size="default"
+            rowKey="id"
+            :columns="oldcolumns"
+            :data="oldloadData"
+            :rowSelection="{ selectedRowKeys: oldselectedRowKeys, onChange: oldonSelectChange }"
+          >
+
+          </s-table>
+        </div>
+
+        <div class="showDataForTable" v-else>
           <div class="showSearchAndTotal">
             <span class="title">
               客户列表
@@ -258,29 +288,194 @@
       </a-layout-content>
       <EditTag ref="EditTag"></EditTag>
     </a-layout>
+
+    <ColumnsModal ref="ColumnsModal"></ColumnsModal>
     <router-view />
   </div>
 </template>
 
 <script>
 import { STable } from '@/components'
-import { getRoleList, getServiceList } from '@/api/manage'
+
+import { getServiceList } from '@/api/manage'
+import { getOldUserList } from '@/api/crm'
+
 import EditTag from '../components/EditTag'
 
-import JavaRequest from '../../../../utils/JavaRequest'
 
 export default {
   name: 'Clist',
   components: {
     STable,
-    EditTag
+    EditTag,
+    ColumnsModal: ()=>import('./components/ColumnsModal')
   },
   data () {
     return {
-      radioValue: 'new',
+      radioValue: 'old',
+      
+      oldqueryParam: {
+        numberType: 'sonnumber',
+        searchNumber: null,
+        is_consumption: null,
+      },
+      // 表头
+      oldcolumns: [
+        {
+          title: '客户编号',
+          dataIndex: 'id',
+          key: 'id',
+        },
+        {
+          title: '客户子编号',
+          dataIndex: 'sonnumber',
+          key: 'sonnumber',
+        },
+        {
+          title: '手机号',
+          dataIndex: 'mobile',
+          key: 'mobile',
+        },
+        {
+          title: '偏好油站',
+          dataIndex: 'name',
+          key: 'name',
+        },
+        {
+          title: '昵称',
+          dataIndex: 'nickname',
+          key: 'nickname',
+        },
+        {
+          title: '是否消费油品',
+          dataIndex: 'is_consumption',
+          key: 'is_consumption',
+        },
+        {
+          title: '加油升数',
+          dataIndex: 'l_number',
+          key: 'l_number',
+        },
+        {
+          title: '加油次数',
+          dataIndex: 'l_count',
+          key: 'l_count',
+        },
+        // {
+        //   title: '最近加油时间',
+        //   dataIndex: 'last_time',
+        //   key: 'last_time',
+        // },
+        // {
+        //   title: '偏好油品',
+        //   dataIndex: 'name',
+        //   key: 'name',
+        // },
+        // {
+        //   title: '会员等级',
+        //   dataIndex: 'level_id',
+        //   key: 'level_id',
+        // },
+        // {
+        //   title: '现有积分',
+        //   dataIndex: 'integral',
+        //   key: 'integral',
+        // },
+        // {
+        //   title: '加油卡余额',
+        //   dataIndex: 'money',
+        //   key: 'money',
+        // },
+        // {
+        //   title: '客户身份',
+        //   dataIndex: 'type',
+        //   key: 'type',
+        // },
+        // {
+        //   title: '车牌号',
+        //   dataIndex: 'plate_number',
+        //   key: 'plate_number',
+        // },
+        // {
+        //   title: '近30天消费金额',
+        //   dataIndex: 'plate_number',
+        //   key: 'plate_number',
+        // },
+        // {
+        //   title: '近60天消费金额',
+        //   dataIndex: 'plate_number',
+        //   key: 'plate_number',
+        // },
+        // {
+        //   title: '近30天消费升数',
+        //   dataIndex: 'plate_number',
+        //   key: 'plate_number',
+        // },
+        // {
+        //   title: '近60天消费升数',
+        //   dataIndex: 'plate_number',
+        //   key: 'plate_number',
+        // },
+        // {
+        //   title: '近30天消费次数',
+        //   dataIndex: 'plate_number',
+        //   key: 'plate_number',
+        // },
+        // {
+        //   title: '近60天消费次数',
+        //   dataIndex: 'plate_number',
+        //   key: 'plate_number',
+        // },
+        // {
+        //   title: '注册时间',
+        //   dataIndex: 'plate_number',
+        //   key: 'plate_number',
+        // },
+
+      ],
+      oldTotal: 0,
+      // 加载数据方法 必须为 Promise 对象
+      oldloadData: parameter => {
+        console.log('loadData.parameter', parameter)
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize // 每页页数
+        }
+        return getOldUserList(Object.assign(params))
+        .then((res)=>{
+          // 自定义出参
+          console.log(res.data.list)
+          this.oldTotal = res.data.totalCount
+          return {
+            data: res.data.list, // 列表数组
+            pageNo: res.data.pageNo,  // 当前页码
+            pageSize: res.data.pageSize,  // 每页页数
+            totalCount: res.data.totalCount, // 列表总条数
+            totalPage: res.data.totalPage // 列表总页数
+          }
+        })
+        // return getServiceList(Object.assign(parameter, this.queryParam))
+        //   .then(res => {
+        //     return res.result
+        //   })
+      },
+      oldselectedRowKeys: [],
+      oldselectedRows: [],
+
+      // custom table alert & rowSelection
+      oldoptions: {
+        rowSelection: {
+          selectedRowKeys: this.oldselectedRowKeys,
+          onChange: this.oldonSelectChange
+        }
+      },
+      oldoptionAlertShow: false,
       // 查询参数
       queryParam: {
-        keyType: '86'
+        keyType: '86',
+        numberType: 'sonnumber',
+        sonnumber: '',
+        mobile: '',
       },
       // 表头
       columns: [
@@ -318,7 +513,6 @@ export default {
           scopedSlots: { customRender: 'action' }
         }
       ],
-      // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         console.log('loadData.parameter', parameter)
         return getServiceList(Object.assign(parameter, this.queryParam))
@@ -342,18 +536,40 @@ export default {
   created () {
     console.log(this.$route.name)
     this.tableOption()
-    getRoleList({ t: new Date() })
+    this.oldtableOption()
 
-    JavaRequest({
-      url: '/customer/queryMemberSpalevel',
-      method: 'post',
-    }).then((res)=>{
-      console.log(res)
-    })
+  },
+  mounted(){
+
   },
   methods: {
     showEditTag (type) {
       this.$refs['EditTag'].show(type)
+    },
+    openColSetting(){
+      this.$refs['ColumnsModal'].show()
+    },
+    oldtableOption () {
+      if (!this.oldoptionAlertShow) {
+        this.oldoptions = {
+          rowSelection: {
+            selectedRowKeys: this.oldselectedRowKeys,
+            onChange: this.oldonSelectChange
+          }
+        }
+        this.oldoptionAlertShow = true
+      } else {
+        this.oldoptions = {
+          rowSelection: null
+        }
+        this.oldoptionAlertShow = false
+      }
+    },
+    oldonSelectChange (selectedRowKeys, selectedRows) {
+      // console.log(selectedRowKeys)
+      // console.log(selectedRows)
+      this.oldselectedRowKeys = selectedRowKeys
+      this.oldselectedRows = selectedRows
     },
     tableOption () {
       if (!this.optionAlertShow) {

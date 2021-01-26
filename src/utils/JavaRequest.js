@@ -44,7 +44,7 @@ const errorHandler = (error) => {
 
 // request interceptor
 JavaRequest.interceptors.request.use(config => {
-  console.log(config)
+  // console.log(config)
   const token = storage.get(ACCESS_TOKEN)
   // 如果 token 存在
   // 让每个请求携带自定义 token 请根据实际情况自行修改
