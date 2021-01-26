@@ -35,6 +35,34 @@
             <div class="canvas-box">
                  <canvas_box></canvas_box>
             </div>
+            <div class="ranking-trend">
+                <div class="rankingTrendText">油站消费排行
+                    <i class="more_info anticon anticon-question-circle">
+                        <a-popover title="会员人数" overlayClassName="note">
+                                <template slot="content">
+                                    <div class="" style="width:200px">
+                                        <p>查询时间内的累计会员人数（没有去除查询时间内会员等级失效的人数）</p>
+                                    </div>
+                                </template>
+                                <span class="anticon">
+                                    <a-icon type="question-circle" />
+                                </span>
+                        </a-popover>
+                    </i>
+                </div>
+                <div class="ranking-trend-box public_global_scroll">
+                    <div class="ranking-trend-lists">
+                        <div class="ranking-trend-top">1</div>
+                        <div class="aad">鹰眼第一加油站</div>
+                        <div class="aac">0</div>
+                    </div>
+                    <div class="ranking-trend-lists">
+                        <div class="ranking-trend-top">2</div>
+                        <div class="aad">鹰眼第一加油站</div>
+                        <div class="aac">0</div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="pie-chart-box">
             <div class="a">
@@ -127,28 +155,80 @@ export default {
                 .more_info{
                     font-size: 16px;
                     color: #eaeaf4;
-                    position: absolute;
-                    right: 23px;
-                    top: 23px;
+                    // position: absolute;
+                    // right: 23px;
+                    // top: 23px;
                     cursor: pointer;
                 }
             }
         }
         .trend-box{
-           
+            display: flex;
             box-sizing: border-box;
             .canvas-box{
-                 user-select: none;
+                user-select: none;
                 position: relative;
                 // height: 460px;
-                border: 1px solid #eaeaf4;
-                border-radius: 4px;
-               
+                // border: 1px solid #eaeaf4;
+                // border-radius: 4px;
+
                 .trend{
                     position: absolute;
                     top: 24px;
                     left: 24px;
                 }
+            }
+            .ranking-trend{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-left: 3rem;
+                height: 400px;
+                .ranking-trend-box {
+                    // overflow-y: auto;
+                    .ranking-trend-lists{
+                       font-size: 14px;
+                        color: #3c3c46;
+                        width: 100%;
+                        height: 20px;
+                        display: -webkit-box;
+                        display: -ms-flexbox;
+                        display: flex;
+                        -webkit-box-align: center;
+                        -ms-flex-align: center;
+                        align-items: center;
+                        margin-top: 20px; 
+                        .ranking-trend-top{
+                            margin-right: 20px;
+                            min-width: 20px;
+                            min-height: 20px;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: #fff;
+                            background-color: #37f;
+                        }
+                        .aad{
+                            margin-right: 20px;
+                        }
+                        .aac{
+                             margin-right: 20px;
+                        }
+                    }
+                }
+                .rankingTrendText{
+                    font-size: 20px;
+                    color: #000;
+                    font-weight: 600;
+                }
+                .more_info{
+                    position: relative;
+                    top: -4px;
+                    font-size: 16px;
+                    color: rgb(203, 203, 203);
+                }
+                
             }
         }
         .pie-chart-box{

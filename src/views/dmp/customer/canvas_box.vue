@@ -54,5 +54,13 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-
+    #canvas_box{
+        position: relative;
+        width: 1066px;
+        height: 400px;
+        padding: 0px;
+        margin: 0px;
+        border-width: 0px;
+        cursor: default;
+    }
 </style>
