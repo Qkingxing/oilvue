@@ -7,7 +7,7 @@
                         <span class="">会员总数据</span>
                     </div>
                     <div class="overflow_box">
-                        <biao></biao>
+                        <biao1></biao1>
                     </div>
                 </div>
             </a-tab-pane>
@@ -20,23 +20,14 @@
              <a-tab-pane key="4" tab="30天">
                 30天
             </a-tab-pane>
-             <a-tab-pane key="5" tab="日">
-                日
-            </a-tab-pane>
-             <a-tab-pane key="6" tab="周">
-               周
-            </a-tab-pane>
-             <a-tab-pane key="7" tab="月">
-                月
-            </a-tab-pane>
         </a-tabs>
     </div>
 </template>
 
 <script>
-import biao  from '../customer/biao'
+import biao1  from '../customer/biao1'
 export default {
-    components:{biao},
+    components:{biao1},
     data(){
         return{
 

@@ -3,10 +3,7 @@
   <div class="member">
       <div class="mainContainreBlock">
           <div class="container animated fadeIn">
-              <div class="date-tab-panes">
-                 <datas></datas>
-              </div>
-             
+              <datas></datas>
           </div>
       </div>
   </div>
@@ -22,7 +19,7 @@ export default {
 </script>
 <style lang="scss" scoped>
     .member{
-        padding-top: 54px;
+        margin: 24px 0px;
         .mainContainreBlock{
             padding-left: 24px;
             padding-right: 24px;
@@ -32,11 +29,6 @@ export default {
             overflow: auto;
             .container{
                 padding-top: 24px;
-                .date-tab-panes{
-                    position: relative;
-                    padding-top: 5px;
-                    display: flex;
-                }
             }
         }
     }
