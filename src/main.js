@@ -26,6 +26,8 @@ import {
   Button,
   Select,
   Option,
+  Card,
+  Row,
 } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
@@ -34,6 +36,8 @@ Vue.use(Cascader).use(CascaderPanel)
    .use(Button)
    .use(Select)
    .use(Option)
+   .use(Card)
+   .use(Row)
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
 import './mock'

@@ -26,7 +26,6 @@ export default {
     padding-bottom: 25px;
     background: #fff;
     min-width: 1004px;
-    overflow: auto;
     .container {
       position: relative;
       padding-top: 24px;
