@@ -11,6 +11,15 @@ export function getOldUserList (data) {
     data
   })
 }
+
+// 新增会员基础设置或修改
+export function postBasicsset (data) {
+  return PhpRequest({
+    url: '/user/basicsset',
+    method: 'post',
+    data
+  })
+}
 // 会员基础设置列表
 export function getUserBasicslist (data) {
   return PhpRequest({

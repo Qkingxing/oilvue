@@ -33,7 +33,14 @@
       </div>
     </a-layout-content>
 
-    <FoundationAdd v-if="type=='add'" @exit="type='list'"></FoundationAdd>
+    <FoundationAdd 
+      v-if="type=='add'" 
+      :type="type"
+      @exit="type='list'"></FoundationAdd>
+    <FoundationAdd 
+      v-if="type=='edit'" 
+      :type="type"
+      @exit="type='list'"></FoundationAdd>
     
   </a-layout>
 </template>

@@ -21,7 +21,7 @@
           label="会员注册" 
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
-          <a-radio-group name="radioGroup" :default-value="1">
+          <a-radio-group name="radioGroup" v-model="form.member_type">
             <a-radio :value="1">
               支付即会员
             </a-radio>
@@ -59,7 +59,8 @@
             </a-select>
 
             <div class="tips">没有合适的会员等级？
-              <router-link target="_blank" :to="{path:'/crm/member/grow'}">去创建</router-link>
+              
+              <a type="link" @click="openModal">去创建</a>
             </div>
           </div>
 
@@ -69,7 +70,7 @@
           label="初始等级有效期" 
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
-          <a-radio-group name="radioGroup" :default-value="1">
+          <a-radio-group name="radioGroup" v-model="initial_day_type">
             <a-radio :value="1">
               7天
             </a-radio>
@@ -80,6 +81,11 @@
               自定义
             </a-radio>
           </a-radio-group>
+          
+          <span v-if="initial_day_type==3">
+            <a-input-number v-model="form.initial_day" :min="1"/>
+            <span style="margin-left: 10px;">天</span>
+          </span>
         </a-form-item>
 
         <a-form-item 
@@ -89,7 +95,9 @@
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
 
-          <a-button type="primary" style="margin-right: 10px;"> 新增 </a-button>
+          <a-button type="primary" style="margin-right: 10px;" v-if="type=='add'"> 新增 </a-button>
+          <a-button type="primary" style="margin-right: 10px;" v-else> 编辑 </a-button>
+
           <a-button @click="exit"> 取消 </a-button>
 
         </a-form-item>
@@ -112,12 +120,44 @@ export default {
   },
   data () {
     return {
-      queryParam:{}
+      form:{
+        id: null,	 //[string]		修改的时候使用		
+        group_name: null,
+        //[string]	是	生效油站名称		
+        member_type: 1,
+        //[string]	是	会员注册1是注册即会员 2授权手机号		
+        member_id: null,
+        //[string]	是	初始会员等级		
+        initial_day: null,
+        //[string]	是	初始等级有效期
+      },
+      initial_day_type: 1
 
+    }
+  },
+  props:{
+    type:{
+      type: String
     }
   },
   created () {},
   methods: {
+    openModal(){
+      let routerJump = this.$router.resolve({ path: '/crm/member/grow' });
+      window.open(routerJump.href, '_blank');
+
+      // console.log(this.$confirm)
+      this.$confirm({
+        title: '操作提示',
+        content: '动态等级会员等级是否创建成功？',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            resolve()
+          }).catch(() => console.log('Oops errors!'))
+        },
+        onCancel () {}
+      })
+    },
     exit(){
       this.$emit('exit')
     }
