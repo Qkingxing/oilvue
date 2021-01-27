@@ -17,11 +17,23 @@ Vue.prototype.$echarts = echarts
 
 // 数字跳动
 import countTo from 'vue-count-to'
+Vue.component('countTo', countTo)
 // element-ui
-import { Cascader, CascaderPanel } from 'element-ui'
-import ElementUI from 'element-ui';
+// 禁止全局引入，跟ant冲突
+import { 
+  Cascader, CascaderPanel,
+  Popover,
+  Button,
+  Select,
+  Option,
+} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(ElementUI);
+
+Vue.use(Cascader).use(CascaderPanel)
+   .use(Popover)
+   .use(Button)
+   .use(Select)
+   .use(Option)
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
 import './mock'
@@ -41,8 +53,8 @@ Vue.use(VueAxios)
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
-Vue.component('countTo', countTo)
-Vue.use(Cascader).use(CascaderPanel)
+
+
 
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
 
