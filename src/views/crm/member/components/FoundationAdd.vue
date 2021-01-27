@@ -147,14 +147,15 @@ export default {
       window.open(routerJump.href, '_blank');
 
       // console.log(this.$confirm)
-
-      this.$confirm(
-        '动态等级会员等级是否创建成功？',  // content
-        '温馨提示'                        // title
-      ).then(()=>{                        // 确认回调
-        console.log('ok')
-      }).catch(()=>{                      // 取消回调
-        console.log('cancel')
+      this.$confirm({
+        title: '操作提示',
+        content: '动态等级会员等级是否创建成功？',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            resolve()
+          }).catch(() => console.log('Oops errors!'))
+        },
+        onCancel () {}
       })
     },
     exit(){
