@@ -12,7 +12,7 @@
         <div class="screen-box" v-if="radioValue=='old'">
           <a-form layout="inline" >
             <a-row :gutter="48">
-              <a-col :md="12" :sm="24">
+              <a-col :sm="24" :md="12">
                 <a-form-item label="客户搜索" class="screen-item">
                   <!-- <a-input v-model="oldqueryParam.keywords" placeholder="请输入搜索内容" /> -->
                   <a-input
@@ -33,18 +33,12 @@
               </a-col>
               <a-col :md="12" :sm="24">
                 <a-form-item label="是否消费" class="screen-item">
-                  <a-select default-value="lucy" style="width: 264px">
-                    <a-select-option value="jack">
-                      Jack
-                    </a-select-option>
-                    <a-select-option value="lucy">
-                      Lucy
-                    </a-select-option>
-                    <a-select-option value="disabled" disabled>
-                      Disabled
-                    </a-select-option>
-                    <a-select-option value="Yiminghe">
-                      yiminghe
+                  <a-select v-model="oldqueryParam.is_consumption" style="width: 264px">
+                    <a-select-option 
+                      :value="item.value"
+                      v-for="(item,index) in consumptionOptions"
+                      :key="index">
+                      {{item.label}}
                     </a-select-option>
                   </a-select>
                 </a-form-item>
@@ -135,9 +129,9 @@
               <a-col :md="12" :sm="24">
                 <a-form-item label="加油升数" class="screen-item">
                   <a-input-group compact>
-                    <a-input style="width:88px;" placeholder="数字"/>
+                    <a-input v-model="oldqueryParam.l_number1" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">至</span>
-                    <a-input style="width:88px;" placeholder="数字"/>
+                    <a-input v-model="oldqueryParam.l_number2" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">升</span>
                   </a-input-group>
                 </a-form-item>
@@ -147,9 +141,9 @@
               <a-col :md="12" :sm="24">
                 <a-form-item label="加油次数" class="screen-item">
                   <a-input-group compact>
-                    <a-input style="width:88px;" placeholder="数字"/>
+                    <a-input v-model="oldqueryParam.l_count1" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">至</span>
-                    <a-input style="width:88px;" placeholder="数字"/>
+                    <a-input v-model="oldqueryParam.l_count2" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">次</span>
                   </a-input-group>
                 </a-form-item>
@@ -157,9 +151,9 @@
               <a-col :md="12" :sm="24">
                 <a-form-item label="现有积分" class="screen-item">
                   <a-input-group compact>
-                    <a-input style="width:88px;" placeholder="数字"/>
+                    <a-input v-model="oldqueryParam.integral1" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">至</span>
-                    <a-input style="width:88px;" placeholder="数字"/>
+                    <a-input v-model="oldqueryParam.integral2" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">分</span>
                   </a-input-group>
                 </a-form-item>
@@ -169,9 +163,9 @@
               <a-col :md="12" :sm="24">
                 <a-form-item label="加油卡余额" class="screen-item">
                   <a-input-group compact>
-                    <a-input style="width:88px;" placeholder="数字"/>
+                    <a-input v-model="oldqueryParam.money1" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">至</span>
-                    <a-input style="width:88px;" placeholder="数字"/>
+                    <a-input v-model="oldqueryParam.money2" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">元</span>
                   </a-input-group>
                 </a-form-item>
@@ -317,8 +311,27 @@ export default {
       oldqueryParam: {
         numberType: 'sonnumber',
         searchNumber: null,
-        is_consumption: null,
+        is_consumption: 1,//是否已消费，1是0否 2全部
+        site_id: 0,//站点ID
+        oil_id: 0,//油品ID 0是全部
+        spalevel_id: 0,//动态会员等级 0是全部
+        identity_id: 0,//客户身份 0是全部
+        last_time1: null,//最近加油时间 （小）
+        last_time2: null,//最近加油时间 （大）
+        l_number1: null,//加油升数（小）
+        l_number2: null,//加油升数（大）
+        l_count1: null,//加油次数（小）
+        l_count2: null,//加油次数(大)
+        integral1: null,//积分（小）
+        integral2: null,//积分（大）
+        money1: null,//加油卡余额（小）
+        money2: null,//加油卡余额（大）
       },
+      consumptionOptions: [
+        { label: '全部', value: 2 },
+        { label: '已消费', value: 1 },
+        { label: '未消费', value: 0 }
+      ],
       // 表头
       oldcolumns: [
         {
