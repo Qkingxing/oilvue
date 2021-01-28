@@ -121,7 +121,7 @@ export default {
 </script>
 <style scoped>
   .wrap{
-    margin-top:10px;
+    /* margin-top:10px; */
     padding:20px;
     min-height:100%;
     background:#fff;

@@ -25,7 +25,7 @@ export default {
 
 <style lang="scss" scoped>
     .statistics{
-      	margin: 24px 0px;
+      	margin: 0px 0px;
 	  .mainContainreBlock{
 			 padding-left: 24px;
 			padding-right: 24px;

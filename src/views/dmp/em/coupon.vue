@@ -36,7 +36,6 @@ export default {
 <style lang="scss" scoped>
 .box {
   width: 100%;
-  margin-top: 30px;
   background-color: #fff;
   .box_a {
     width: 95%;

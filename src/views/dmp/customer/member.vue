@@ -19,7 +19,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .member {
-  margin: 24px 0px;
+  margin: 0px 0px;
   .mainContainreBlock {
     padding-left: 24px;
     padding-right: 24px;

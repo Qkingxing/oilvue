@@ -28,7 +28,7 @@ export default {
 
 <style lang="scss" scoped>
     .car{
-		padding-top: 24px;
+		padding-top: 0px;
       .mainContainreBlock{
 		padding-left: 24px;
 		padding-right: 24px;

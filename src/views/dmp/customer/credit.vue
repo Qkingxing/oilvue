@@ -32,7 +32,7 @@ export default {
 </script>
 <style lang="scss" scoped>
     .credit{
-          padding-top: 54px;
+          padding-top: 0px;
 		  .mainContainreBlock{
 			padding-left: 24px;
 			padding-right: 24px;

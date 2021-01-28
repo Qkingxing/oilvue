@@ -34,7 +34,7 @@ export default {
 </script>
 <style lang="scss" scoped>
     .overview{
-       margin: 24px 0px;
+       margin: 0px 0px;
         .overview_a{
             padding-left: 24px;
             padding-right: 24px;
