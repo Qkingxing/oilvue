@@ -1,7 +1,7 @@
 <template>
   <div class="Classification">
     <a-layout v-if="$route.name=='Classification'">
-      <a-layout-content :style="{ margin: '24px 0', padding: '24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
        <h3 class="o-title">商品类目</h3>
         <a-divider />
         <a-col :md="24" :sm="24">

@@ -1,6 +1,6 @@
 <template>
   <a-layout>
-    <a-layout-content :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff' }">
+    <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff' }">
       <div class="head-title">油站月报&nbsp;<span>数据以T + 1 方式进行统计</span></div>
       <a-card :bordered="false" class="monthly">
         <a-form :form="form" :label-col="{ span: 2 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">

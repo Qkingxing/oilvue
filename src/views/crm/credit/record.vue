@@ -1,7 +1,7 @@
 
 <template>
   <a-layout>
-    <a-layout-content :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
+    <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
       <div class="head-title">
         客户积分记录
       </div>

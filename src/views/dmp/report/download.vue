@@ -1,6 +1,6 @@
 <template>
   <a-layout>
-    <a-layout-content :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff' }">
+    <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff' }">
       <div class="head-title">下载列表</div>
       <a-card :bordered="false" class="download">
         <a-form :form="form" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" @submit="handleSubmit">

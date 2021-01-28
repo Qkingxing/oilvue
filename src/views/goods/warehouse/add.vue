@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-layout v-if="$route.name=='my'">
-      <a-layout-content :style="{ margin: '24px 0', padding: '24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
         <span>商品基础信息</span>
         <a-divider />
         <a-form layout="inline" >

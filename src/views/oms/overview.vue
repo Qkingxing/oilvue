@@ -1,7 +1,7 @@
 <template>
   <div class="overview">
     <a-layout v-if="$route.name=='Ooverview'">
-      <a-layout-content :style="{ margin: '24px 0', padding: '24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
        <h3 class="o-title">订单查询</h3>
         <a-divider />
          <div class="screen-box">

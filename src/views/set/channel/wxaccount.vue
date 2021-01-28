@@ -1,7 +1,7 @@
 
 <template>
   <a-layout>
-    <a-layout-content :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
+    <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
 
       <a-tabs default-active-key="1" size="large">
         <a-tab-pane key="1" tab="公众号菜单配置">

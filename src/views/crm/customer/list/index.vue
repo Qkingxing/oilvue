@@ -2,7 +2,7 @@
 <template>
   <div>
     <a-layout v-if="$route.name=='Clist'">
-      <a-layout-content :style="{ margin: '24px 0', padding: '24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
         <div class="client-tab-btns">
           <a-radio-group v-model="radioValue">
             <a-radio-button value="old"> 已有客户 </a-radio-button>

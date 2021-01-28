@@ -1,7 +1,7 @@
 <template>
   <div class="reports">
     <a-layout v-if="$route.name=='os_install'">
-      <a-layout-content :style="{ margin: '24px 0', padding: '24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
         <h3 class="o-title">零管配置</h3>
          <a-divider />
          <h3>班结</h3>
