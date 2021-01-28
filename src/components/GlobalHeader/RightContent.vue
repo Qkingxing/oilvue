@@ -126,10 +126,7 @@
 <script>
 import AvatarDropdown from './AvatarDropdown'
 import SelectLang from '@/components/SelectLang'
-import { Icon } from 'ant-design-vue';
-const IconFont = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2354010_ai3twdbn9da.js',
-});
+
 
 const x = 3;
 const y = 2;
@@ -191,8 +188,7 @@ export default {
   name: 'RightContent',
   components: {
     AvatarDropdown,
-    SelectLang,
-    IconFont,
+    SelectLang
   },
   props: {
     prefixCls: {

@@ -58,6 +58,12 @@ Vue.component('pro-layout', ProLayout)
 Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
 
+// 引入自定义阿里图标库
+import { Icon } from 'ant-design-vue';
+const IconFont = Icon.createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_2354010_t5rzgia7jsm.js',
+});
+Vue.component('icon-font', IconFont)
 
 
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
