@@ -44,10 +44,10 @@
     <div v-if="key === 'tab1' || key === 'tab2' || key === 'tab3' || key === 'tab4' || key === 'tab5' || key === 'tab6' || key === 'tab7'">
       <div class="content">
         <div class="head_title">
-          <span class="">会员总数据</span>
+          <span class="text">加油卡总数据</span>
         </div>
         <div class="overflow_box">
-          <biao1></biao1>
+            <liebiao></liebiao>
         </div>
       </div>
     </div>
@@ -59,9 +59,9 @@
 </template>
 
 <script>
-import biao1 from '../customer/biao1'
+import liebiao from './liebiao'
 export default {
-  components: { biao1 },
+    components:{liebiao},
   data() {
     return {
       tabList: [
@@ -132,7 +132,7 @@ export default {
   .dev {
     position: relative;
     top: -38px;
-    left: 352px;
+    left: 351px;
     height: 0;
     margin-left: 7px;
     font-size: 12px;
@@ -143,7 +143,7 @@ export default {
     position: relative;
     height: 0;
     top: -38px;
-    left: 253px;
+    left: 254px;
     margin-left: 7px;
     font-size: 12px;
     color: #cbcbcb;
@@ -154,9 +154,15 @@ export default {
     .head_title {
       height: 20px;
       margin: 20px 0;
+      .text{
+         font-size: 16px;
+        color: rgba(0,0,0,.85);
+        line-height: 16px;
+        margin-right: 5px;
+      }
     }
     .overflow_box{
-        border: none;
+     border: none;
     }
   }
 }

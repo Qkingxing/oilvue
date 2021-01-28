@@ -199,7 +199,7 @@ export default {
 }
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 .shijian {
     .ant-card{
         border-top: none;
@@ -315,7 +315,7 @@ export default {
     position: relative;
     height: 0;
     top: -38px;
-    left: 253px;
+    left: 252px;
     margin-left: 7px;
     font-size: 12px;
     color: #cbcbcb;
