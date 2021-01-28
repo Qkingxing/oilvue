@@ -1,5 +1,9 @@
 <template>
   <div class="main">
+    <div class="loginContainerMainHeader">
+      <div class="loginContainerMainHeaderText">欢迎来到商户平台</div>
+      <div class="loginContainerMainHeaderTextSub">全球领先的能源零售智慧经营服务商</div>
+    </div>
     <a-form
       id="formLogin"
       class="user-layout-login"
@@ -9,7 +13,12 @@
     >
       <a-tabs
         :activeKey="customActiveKey"
-        :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
+        size="large"
+        :tabBarStyle="{ 
+          textAlign: 'left', 
+          borderBottom: 'unset', 
+          fontWeight: '900'
+        }"
         @change="handleTabClick"
       >
         <a-tab-pane key="tab1" :tab="$t('user.login.tab-login-credentials')">
@@ -71,11 +80,11 @@
 
       <a-form-item>
         <a-checkbox v-decorator="['rememberMe', { valuePropName: 'checked' }]">{{ $t('user.login.remember-me') }}</a-checkbox>
-        <router-link
+        <!-- <router-link
           :to="{ name: 'recover', params: { user: 'aaa'} }"
           class="forge-password"
           style="float: right;"
-        >{{ $t('user.login.forgot-password') }}</router-link>
+        >{{ $t('user.login.forgot-password') }}</router-link> -->
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
@@ -89,7 +98,7 @@
         >{{ $t('user.login.login') }}</a-button>
       </a-form-item>
 
-      <div class="user-login-other">
+      <!-- <div class="user-login-other">
         <span>{{ $t('user.login.sign-in-with') }}</span>
         <a>
           <a-icon class="item-icon" type="alipay-circle"></a-icon>
@@ -101,7 +110,7 @@
           <a-icon class="item-icon" type="weibo-circle"></a-icon>
         </a>
         <router-link class="register" :to="{ name: 'register' }">{{ $t('user.login.signup') }}</router-link>
-      </div>
+      </div> -->
     </a-form>
 
     <two-step-captcha
@@ -283,6 +292,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.main{
+  display: block;
+  width: 100%;
+  padding: 32px 50px 22px;
+  box-sizing: border-box;
+  .loginContainerMainHeader{
+    display: block;
+    width: 100%;
+    padding-bottom: 24px;
+    box-sizing: border-box;
+    .loginContainerMainHeaderText{
+      font-size: 23px;
+      font-weight: 700;
+      color: #1e1e28;
+    }
+    .loginContainerMainHeaderTextSub{
+      font-size: 16px;
+      margin-top: 12px;
+      color: #3e4b6f;
+    }
+  }
+}
 .user-layout-login {
   label {
     font-size: 14px;

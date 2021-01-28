@@ -1,26 +1,26 @@
 <template>
 
   <div id="userLayout" :class="['user-layout-wrapper', isMobile && 'mobile']">
-    <div class="container">
-      <div class="user-layout-lang">
+    <!-- <div class="container"> -->
+      <!-- <div class="user-layout-lang">
         <select-lang class="select-lang-trigger" />
-      </div>
-      <div class="user-layout-content">
-        <div class="top">
-          <div class="header">
+      </div> -->
+      <!-- <div class="user-layout-content"> -->
+        <!-- <div class="top"> -->
+          <!-- <div class="header">
             <a href="/">
               <img src="~@/assets/logo.svg" class="logo" alt="logo">
               <span class="title">Ant Design</span>
             </a>
-          </div>
-          <div class="desc">
+          </div> -->
+          <!-- <div class="desc">
             {{ $t('layouts.userLayout.title') }}
-          </div>
-        </div>
+          </div> -->
+        <!-- </div> -->
 
-        <router-view />
+        <!-- <router-view /> -->
 
-        <div class="footer">
+        <!-- <div class="footer">
           <div class="links">
             <a href="_self">帮助</a>
             <a href="_self">隐私</a>
@@ -29,8 +29,18 @@
           <div class="copyright">
             Copyright &copy; 2018 vueComponent
           </div>
-        </div>
+        </div> -->
+      <!-- </div> -->
+    <!-- </div> -->
+    <div class="loginContainer">
+      <div class="loginContainerSpace"></div>
+      <div class="loginContainerBackground">
+        <img data-v-329ea08f="" src="https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/05/14/16/4b16603e33054b9175912f605785.jpeg">
       </div>
+      <div class="loginContainerMainBox">
+        <router-view />
+      </div>
+      <div class="loginContainerSpace"></div>
     </div>
   </div>
 </template>
@@ -173,6 +183,53 @@ export default {
       text-decoration: none;
     }
 
+  }
+}
+.loginContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  height: 100%;
+  height: 100vh;
+  margin: auto;
+  background: #fff;
+  z-index: 1;
+  .loginContainerSpace{
+    display: flex;
+    flex: 1;
+    max-width: 60px;
+    height: 100%;
+  }
+  .loginContainerBackground{
+    display: flex;
+    flex: 3;
+    flex-shrink: 0;
+    min-width: 636px;
+    max-width: 800px;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 100px;
+    img{
+      display: block;
+      height: 476px;
+    }
+  }
+  .loginContainerMainBox{
+    display: flex;
+    flex: 2;
+    flex-shrink: 0;
+    min-width: 400px;
+    max-width: 400px;
+    justify-content: flex-end;
+    width: 400px;
+    height: 476px;
+    background: #fff;
+    box-shadow: 0 17px 41px 0 rgba(241,242,247,.8);
+    border-radius: 8px;
+    overflow: hidden;
+    line-height: 1;
   }
 }
 </style>
