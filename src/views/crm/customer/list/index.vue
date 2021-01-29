@@ -449,7 +449,7 @@ export default {
       oldTotal: 0,
       // 加载数据方法 必须为 Promise 对象
       oldloadData: parameter => {
-        console.log('loadData.parameter', parameter)
+        // console.log('loadData.parameter', parameter)
         let params = {
           page: parameter.pageNo, // 页码
           size: parameter.pageSize // 每页页数
@@ -457,7 +457,7 @@ export default {
         return getOldUserList(Object.assign(params))
         .then((res)=>{
           // 自定义出参
-          console.log(res.data.list)
+          // console.log(res.data.list)
           this.oldTotal = res.data.totalCount
           return {
             data: res.data.list, // 列表数组
@@ -547,7 +547,7 @@ export default {
     }
   },
   created () {
-    console.log(this.$route.name)
+    // console.log(this.$route.name)
     this.tableOption()
     this.oldtableOption()
 
