@@ -42,11 +42,13 @@ const user = {
           account: userInfo.username,
           password: userInfo.password
         }).then(res => {
-          // console.log(res)
+          // console.log(res.data.user_name)
+          // return
           if (res.code==200) {
 
             storage.set(ACCESS_TOKEN, res.data.token, 7 * 24 * 60 * 60 * 1000)
             commit('SET_TOKEN', res.data.token)
+            commit('SET_NAME', { name: res.data.user_name, welcome: welcome() })
             resolve()
           }else{
             reject(res)
@@ -87,7 +89,7 @@ const user = {
             reject(new Error('getInfo: roles must be a non-null array !'))
           }
 
-          commit('SET_NAME', { name: result.name, welcome: welcome() })
+          // commit('SET_NAME', { name: result.name, welcome: welcome() })
           commit('SET_AVATAR', result.avatar)
 
           resolve(response)

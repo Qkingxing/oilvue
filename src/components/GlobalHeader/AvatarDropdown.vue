@@ -14,7 +14,7 @@
           <a-icon type="setting" />
           {{ $t('menu.account.settings') }}
         </a-menu-item> -->
-        <a-menu-divider v-if="menu" />
+        <!-- <a-menu-divider v-if="menu" /> -->
         <a-menu-item key="logout" @click="handleLogout">
           <a-icon type="logout" />
           {{ $t('menu.account.logout') }}

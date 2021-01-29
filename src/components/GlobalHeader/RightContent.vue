@@ -39,7 +39,7 @@
       </div>
     </a-popover>
     <!-- 客服 -->
-    <a-popover placement="bottomRight" trigger="click">
+    <a-popover placement="bottomRight">
       <template slot="content">
         <a-carousel style="width: 334px;" class="kefu">
           <div class="slider_item" style="width: 334px;"><h3>1</h3></div>
@@ -118,12 +118,14 @@
     </a-tooltip>
     
     <!-- 账号 -->
-    <avatar-dropdown :menu="showMenu" :current-user="currentUser" :class="prefixCls" />
+    <avatar-dropdown :menu="showMenu" :current-user="{name: nickname}" :class="prefixCls" />
     <!-- <select-lang :class="prefixCls" /> -->
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import AvatarDropdown from './AvatarDropdown'
 import SelectLang from '@/components/SelectLang'
 
@@ -211,7 +213,9 @@ export default {
   data () {
     return {
       showMenu: true,
-      currentUser: {},
+      // currentUser: {
+      //   name: this.nickname
+      // },
       visible: false,
       expandedKeys: [],
       searchValue: '',
@@ -221,20 +225,25 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['nickname']),
     wrpCls () {
       return {
         'ant-pro-global-header-index-right': true,
         [`ant-pro-global-header-index-${(this.isMobile || !this.topMenu) ? 'light' : this.theme}`]: true
       }
     }
+    
   },
   mounted () {
     
-    setTimeout(() => {
-      this.currentUser = {
-        name: 'Serati Ma'
-      }
-    }, 1500)
+    // setTimeout(() => {
+      // this.currentUser = {
+      //   name: 'Serati Ma'
+      // }
+      // this.currentUser = {
+        // name: this.nickname
+      // }
+    // }, 1500)
   },
   methods: {
     handleFullScreen(){
