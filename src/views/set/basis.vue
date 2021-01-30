@@ -9,10 +9,12 @@
         <a-form
           :form="form"
           v-bind="formItemLayout"
-          @submit="handleSubmit"
+         
         >
         <a-form-item label="油站名称">
           <a-input
+          
+          v-model="formData.name"
           />
         </a-form-item>
         <a-form-item label="油站简称">
@@ -50,7 +52,8 @@
             </a-form-item>
             <a-form-item label="详细地址">
               <a-input
-            :suffix="lastIndex"
+              v-model="formData.address"
+            :suffix="lastAddress"
               
               />
             </a-form-item>
@@ -100,7 +103,8 @@
                 <img alt="example" style="width: 100%" :src="previewImage" />
               </a-modal>
             </a-form-item>
-            <a-form-item label=" ">
+            <a-form-item  label="提示">
+     
                 可上传5张，图片建议尺寸850像素*350像素，大小不超过1M
                 </a-form-item>
             <a-form-item label="零管系统">
@@ -183,7 +187,7 @@
           />
         </a-form-item>
           <a-form-item :wrapper-col="{ span: 12, offset: 6 }">
-            <a-button type="primary" html-type="submit">
+            <a-button @click="store" type="primary">
               保存
             </a-button>
           </a-form-item>
@@ -197,7 +201,11 @@
 export default {
     name: 'Basis',
      data: () => ({
-       lastIndex:'12/20',
+       formData:{
+         name:'',
+         address:''
+       },
+       lastIndex:'',
       formItemLayout: {
         labelCol: { span: 3 },
         wrapperCol: { span: 12 },
@@ -216,7 +224,16 @@ export default {
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'validate_other' });
   },
+  computed:{
+    lastAddress(){
+      this.formData.address=this.formData.address.slice(0,50)
+      return this.formData.address.length+'/50'
+    }
+  },
   methods: {
+    store(){
+      console.log(this.formData)
+    },
      handleCancel() {
       this.previewVisible = false;
     },

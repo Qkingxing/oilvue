@@ -6,7 +6,7 @@
         支付设置
       </div>
       <div class="form-wrap">
-        <a-tabs type="card">
+        <a-tabs>
           <a-tab-pane key="1" tab="付款限制">
              <a-form
               v-bind="formItemLayout"
@@ -21,9 +21,9 @@
                <a-input-number style="width:100px" :min="8" :max="12" :value="number.value" />
               <span style="padding-left:4px">次</span>
             </a-form-item>
-            <a-button type="primary">
-      保存
-    </a-button>
+            <a-button style="margin:80px 0 0 60px;" type="primary">
+                保存
+              </a-button>
             </a-form>
           </a-tab-pane>
           <a-tab-pane key="2" tab="退款限制">
@@ -77,7 +77,7 @@
                <a-input-number style="width:100px" :min="8" :max="12" :value="number.value" />
               <span style="padding-left:4px">次</span>
             </a-form-item>
-            <a-button type="primary">
+            <a-button style="margin:80px 0 0 60px;" type="primary">
       保存
     </a-button>
             </a-form>
@@ -165,6 +165,7 @@ export default {
   }
   .form-wrap{
     padding:30px 0;
+    padding-left:40px;
   }
 </style>
 
