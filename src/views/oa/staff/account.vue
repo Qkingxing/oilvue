@@ -128,6 +128,7 @@ export default {
 				
 			}
 			.box{
+				width: 100%;
 				.box_1{
 					display: flex;
 					height: 54px;
