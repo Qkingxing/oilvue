@@ -12,6 +12,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                    <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -38,6 +39,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -64,6 +66,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                    <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -91,6 +94,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -118,6 +122,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -145,6 +150,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -173,6 +179,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -201,6 +208,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -227,6 +235,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -252,6 +261,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -278,6 +288,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -304,6 +315,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -330,6 +342,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -358,6 +371,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -384,6 +398,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -411,6 +426,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -437,6 +453,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -464,6 +481,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -490,6 +508,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -516,6 +535,7 @@
                 <div class="trend_info">
                     <span>环比</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 <i class="more_info anticon anticon-question-circle">
                      <a-popover title="消费客户" overlayClassName="note">
@@ -640,6 +660,12 @@ export default {
                     align-items: center;
                     margin: 16px 0 0 24px;
                     font-size: 12px;
+                    .trend{
+                        position: relative;
+                        font-size: 16px;
+                       
+                        color:rgb(72, 198, 114);
+                    }
                     .percente{
                         color: #ff4646;
                         font-weight: 700;

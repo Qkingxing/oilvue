@@ -47,8 +47,8 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 60%; height: 400px" class="box-card">
+      <a-row style="width: 100%; display: flex; margin-bottom: 20px">
+        <a-card style="min-width: 60%; height: 400px" class="box-card">
           <G2></G2>
           <!-- <div>
             <span>销售额</span>
@@ -57,8 +57,8 @@
           <div class="box">
             <span class="span">闪付销售额支付方式占比</span>
           </div> -->
-        </el-card>
-      </el-row>
+        </a-card>
+      </a-row>
       <!-- <component :is="vivew"></component> -->
     </div>
 
@@ -99,20 +99,20 @@
       </a-row>
 
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 700px" class="box-card">
+      <a-row style="width: 100%; display: flex; margin-bottom: 20px">
+        <a-card style="min-width: 700px" class="box-card">
           <G2></G2>
           <div class="box">
             <span class="span">油品销售占比</span>
           </div>
-        </el-card>
-        <el-card style="min-width: 700px; margin-left: 20px" class="box-card">
+        </a-card>
+        <a-card style="min-width: 700px; margin-left: 20px" class="box-card">
           <G2></G2>
           <div class="box">
             <!-- <span class="span">加油升数按油品类型占比</span> -->
           </div>
-        </el-card>
-      </el-row>
+        </a-card>
+      </a-row>
     </div>
 
     <div v-if="dateKey == 'benzhou'">
@@ -150,8 +150,8 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 60%; height: 400px" class="box-card">
+      <a-row style="width: 100%; display: flex; margin-bottom: 20px">
+        <a-card style="min-width: 60%; height: 400px" class="box-card">
           <G2></G2>
           <!-- <div>
             <span>销售额</span>
@@ -160,8 +160,8 @@
           <div class="box">
             <span class="span">闪付销售额支付方式占比</span>
           </div> -->
-        </el-card>
-      </el-row>
+        </a-card>
+      </a-row>
       <!-- <component :is="vivew"></component> -->
     </div>
     <div v-if="dateKey == 'benyue'">
@@ -199,8 +199,8 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 60%; height: 400px" class="box-card">
+      <a-row style="width: 100%; display: flex; margin-bottom: 20px">
+        <a-card style="min-width: 60%; height: 400px" class="box-card">
           <G2></G2>
           <!-- <div>
             <span>销售额</span>
@@ -209,8 +209,8 @@
           <div class="box">
             <span class="span">闪付销售额支付方式占比</span>
           </div> -->
-        </el-card>
-      </el-row>
+        </a-card>
+      </a-row>
       <!-- <component :is="vivew"></component> -->
     </div>
     <div v-if="dateKey == 'zidingyi'">
@@ -248,8 +248,8 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 60%; height: 400px" class="box-card">
+      <a-row style="width: 100%; display: flex; margin-bottom: 20px">
+        <a-card style="min-width: 60%; height: 400px" class="box-card">
           <G2></G2>
           <!-- <div>
             <span>销售额</span>
@@ -258,8 +258,8 @@
           <div class="box">
             <span class="span">闪付销售额支付方式占比</span>
           </div> -->
-        </el-card>
-      </el-row>
+        </a-card>
+      </a-row>
       <!-- <component :is="vivew"></component> -->
     </div>
   </div>

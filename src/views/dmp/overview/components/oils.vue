@@ -54,28 +54,28 @@
       </a-row>
 
       <div class="head-title">点比分析</div>
-      <el-row style="width: 100%; display: flex; margin-bottom: 20px">
-        <el-card style="min-width: 700px" class="box-card">
+      <a-row style="width: 100%; display: flex; margin-bottom: 20px">
+        <a-card style="min-width: 700px" class="box-card">
           <G2></G2>
           <div class="box">
             <span class="span">油品销售占比</span>
           </div>
-        </el-card>
-        <el-card style="min-width: 700px; margin-left: 20px" class="box-card">
+        </a-card>
+        <a-card style="min-width: 700px; margin-left: 20px" class="box-card">
           <G2></G2>
           <div class="box">
             <!-- <span class="span">加油升数按油品类型占比</span> -->
           </div>
-        </el-card>
-      </el-row>
-      <el-row style="width: 100%; display: flex">
-        <el-card style="min-width: 700px" class="box-card">
+        </a-card>
+      </a-row>
+      <a-row style="width: 100%; display: flex">
+        <a-card style="min-width: 700px" class="box-card">
           <G2></G2>
           <div class="box">
             <span class="span">油品销售占比</span>
           </div>
-        </el-card>
-      </el-row>
+        </a-card>
+      </a-row>
     </div>
 
     <div v-if="dateKey == 'benzhou'">

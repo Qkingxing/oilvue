@@ -11,7 +11,8 @@
             ></countTo>
         <span class="unte">元</span>
       </div>
-      <div class="info"><span>周同比 </span><span>降56.65%</span></div>
+      <div class="info"><span>周同比 </span><span>降56.65%</span><i class="trend"><a-icon type="arrow-down"/></i> </div>
+      
       <a-popover title="销售总收入" overlayClassName="note">
         <template slot="content">
           <div class="">
@@ -75,11 +76,19 @@ export default {
     height: 16px;
     margin-left: 10px;
     margin-bottom: 10px;
+    display: flex;
     justify-content: flex-start;
 
     > span {
       font-size: 12px;
       color: #3c3c46;
+    }
+    .trend{
+         position: relative;
+         font-size: 16px;
+         left: 30px;
+         top: -8px;
+         color:rgb(72, 198, 114);
     }
   }
 
