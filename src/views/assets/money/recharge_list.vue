@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-layout v-if="$route.name=='recharge_list'">
-      <a-layout-content :style="{ margin: '24px 0', padding: '24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
          <div class="screen-box">
           <a-form layout="inline" >
             <a-row :gutter="48">

@@ -18,16 +18,17 @@
     </div>
 
     <div v-if="dateKey == 'jintian'">
-       <sheet v-if="show == 1"></sheet>
+      
+       <sheet ></sheet>
     </div>
     <div v-if="dateKey == 'zuotian'">
-        <sheet v-if="show == 1"></sheet>
+        <sheet ></sheet>
     </div>
     <div v-if="dateKey == 'benzhou'">
-        <sheet v-if="show == 1"></sheet>
+        <sheet ></sheet>
     </div>
     <div v-if="dateKey == 'benyue'">
-        <sheet v-if="show == 1" :keys='keys'></sheet>
+        <sheet :keys='keys'></sheet>
     </div>
   </div>
 </template>

@@ -2,9 +2,9 @@
 <template>
   <div>
     <a-layout v-if="$route.name=='tag'">
-      <a-layout-content :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
         <div class="head-title">
-          客户标签&nbsp;
+          <span style="margin-right:5px;">客户标签</span>
           <a-popover placement="rightTop">
             <template slot="content">
               <div>标签数据每小时更新一次)</div>
@@ -160,9 +160,9 @@ export default {
   font-weight: 700;
   color: #1e1e28;
   height: 55px;
-  line-height: 41px;
   border-bottom: 1px solid #eaeaf4;
-  line-height: 60px;
+  display: flex;
+  align-items: center;
 }
 
 .actionBtns{

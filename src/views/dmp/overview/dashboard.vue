@@ -1,6 +1,6 @@
 <template>
   <a-layout>
-    <a-layout-content :style="{ margin: '24px 0', padding: '0 0 0 24px', background: '#fff' }">
+    <a-layout-content :style="{ padding: '0 0 0 24px', background: '#fff' }">
       <a-card :bordered="false" class="dashboard">
             <a-card
             :tabList="tabList"

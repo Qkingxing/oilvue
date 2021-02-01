@@ -269,7 +269,7 @@ export default {
   .set-common-wrap{
     background:#fff;
     padding:10px 20px;
-    margin:20px auto;
+    margin:0px auto;
   }
   .header{
     height:80px;

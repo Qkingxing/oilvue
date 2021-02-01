@@ -69,8 +69,8 @@
             <span>图表分析</span>
         </div>
         <div class="trend-box">
-            <div class="canvas-box">
-                 <canvas_box></canvas_box>
+            <div class="canvas-boxs" >
+                 <canvas_box ></canvas_box>
             </div>
         </div>
         <div class="pie-chart-box">
@@ -178,19 +178,20 @@ export default {
         }
         .trend-box{
            
-            box-sizing: border-box;
-            .canvas-box{
-                 user-select: none;
+            // box-sizing: border-box;
+            .canvas-boxs{
+                user-select: none;
                 position: relative;
                 // height: 460px;
-                border: 1px solid #eaeaf4;
-                border-radius: 4px;
+                // border: 1px solid #eaeaf4;
+                // border-radius: 4px;
                
-                .trend{
-                    position: absolute;
-                    top: 24px;
-                    left: 24px;
-                }
+                // .trend{
+                //     position: absolute;
+                //     top: 24px;
+                //     left: 24px;
+                // }
+                border: none;
             }
         }
         .pie-chart-box{

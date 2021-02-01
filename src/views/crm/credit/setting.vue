@@ -1,7 +1,7 @@
 
 <template>
   <a-layout>
-    <a-layout-content :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
+    <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
       <div class="list">
         <div class="page-block">
           <div class="head-title">
