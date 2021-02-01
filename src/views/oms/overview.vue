@@ -8,15 +8,9 @@
           <a-form layout="inline" >
             <a-row :gutter="48">
               <a-col :md="24" :sm="24">
-                <a-form-item label="订单搜索" class="screen-item">
-                  <a-input  style="width: 100%"  v-model="queryParam.keywords"  placeholder="请输入搜索内容">
-                  </a-input>
-                </a-form-item>
-              </a-col>
-              <a-col :md="24" :sm="24">
                 <a-form-item label="订单时间" class="screen-item">
                   <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
-                  <a-radio-group v-model="orderTime" @change="onChange">
+                  <a-radio-group v-model="form.time_type" @change="onChange">
                     <a-radio :value="1">
                       今日
                     </a-radio>
@@ -47,14 +41,14 @@
               </a-col>
               <a-col :md="24" :sm="24">
                 <a-form-item label="应付金额" class="screen-item-inline">
-                  <a-input-number id="inputNumber" placeholder="数字" v-model="value" :min="1" :max="10" @change="onChange" />
+                  <a-input-number id="inputNumber" placeholder="数字" v-model="form.handle_starting" @change="onChange" />
                   <span style="margin: 0 10px;">至</span>
-                  <a-input-number id="inputNumber" placeholder="数字" v-model="value" :min="1" :max="10" @change="onChange" />
+                  <a-input-number id="inputNumber" placeholder="数字" v-model="form.handle_end" @change="onChange" />
                 </a-form-item>
                 <a-form-item label="实付金额" class="screen-item-inline">
-                  <a-input-number id="inputNumber" placeholder="数字" v-model="value" :min="1" :max="10" @change="onChange" />
+                  <a-input-number id="inputNumber" placeholder="数字" v-model="form.paid_starting" @change="onChange" />
                   <span style="margin: 0 10px;">至</span>
-                  <a-input-number id="inputNumber" placeholder="数字" v-model="value" :min="1" :max="10" @change="onChange" />
+                  <a-input-number id="inputNumber" placeholder="数字" v-model="form.paid_end" @change="onChange" />
                 </a-form-item>
               </a-col>
               <div v-show="searchType != '高级搜索'">
@@ -82,12 +76,15 @@
                 </a-col>
                 <a-col :md="24" :sm="24">
                   <a-form-item label="订单状态" class="screen-item-inline">
-                    <a-select default-value="lucy" style="width: 200px">
-                      <a-select-option value="jack">
-                        Jack
+                    <a-select default-value="1" style="width: 200px">
+                      <a-select-option value="1">
+                        交易成功
                       </a-select-option>
-                      <a-select-option value="lucy">
-                        Lucy
+                      <a-select-option value="2">
+                        待支付
+                      </a-select-option>
+                      <a-select-option value="3">
+                        支付失败
                       </a-select-option>
                     </a-select>
                   </a-form-item>
@@ -114,12 +111,15 @@
                 </a-col>
                 <a-col :md="24" :sm="24">
                   <a-form-item label="支付方式" class="screen-item-inline">
-                    <a-select default-value="lucy" style="width: 200px">
-                      <a-select-option value="jack">
-                        Jack
+                    <a-select default-value="1" style="width: 200px">
+                      <a-select-option value="1">
+                        微信
                       </a-select-option>
-                      <a-select-option value="lucy">
-                        Lucy
+                      <a-select-option value="2">
+                        支付宝
+                      </a-select-option>
+                      <a-select-option value="3">
+                        对公转账
                       </a-select-option>
                     </a-select>
                   </a-form-item>
@@ -137,7 +137,7 @@
               </div>
               <a-col :md="24" :sm="24">
                 <a-form-item>
-                  <a-button type="primary" class="search-btn" style="min-width:82px;"> 搜索 </a-button>
+                  <a-button type="primary" class="search-btn" style="min-width:82px;" @click="toSearch()"> 搜索 </a-button>
                 </a-form-item>
                 <a-form-item>
                   <span @click="advanceSearchChange" style="cursor: pointer;vertical-align: middle;color: #1890ff;">{{searchType}}</span>
@@ -199,9 +199,10 @@
 </template>
 
 <script>
+import { deleteNullAttr } from '@/utils/lzz.js'
 import moment from 'moment';
 import { STable } from '@/components'
-import { getRoleList, getServiceList } from '@/api/manage'
+import { getOrderList } from '@/api/order'
 const tableOptions = [
   { label: '订单号', value: '订单号', disabled: true },
   { label: '订单状态', value: '订单状态', disabled: true },
@@ -226,7 +227,15 @@ export default {
       setConfirmLoading: false,
       searchType:'高级搜索',
       diyDate:false,
-      orderTime:'',
+      form:{
+        handle_starting:'',
+        handle_end:'',
+        paid_starting:'',
+        paid_end:'',
+        page:1,
+        limit:10,
+        time_type:''
+      },
       radioValue: 'new',
       tableOptionChoose:['优惠金额','实付金额','支付方式','状态时间'],
       value:'',
@@ -238,49 +247,51 @@ export default {
       columns: [
         {
           title: '订单号',
-          dataIndex: 'no'
+          dataIndex: 'oils_id'
         },
         {
           title: '订单状态',
-          dataIndex: 'description'
+          dataIndex: 'order_status'
         },
         {
           title: '订单类型',
-          dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'order_type',
         },
         {
           title: '应付金额',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'order_total',
         },
         {
           title: '优惠金额',
-          // dataIndex: 'status',
+          dataIndex: 'original_amount',
           needTotal: true
         },
         {
           title: '实付金额',
-          // dataIndex: 'status',
+          dataIndex: 'actually_paid',
           needTotal: true
         },
         {
           title: '支付方式',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
+          dataIndex: 'oils_gunName',
         },
         {
           title: '状态时间',
-          // dataIndex: 'status',
+          dataIndex: 'zf_number',
           needTotal: true
         }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
+        return getOrderList(deleteNullAttr(this.form))
           .then(res => {
-            return res.result
+            return {
+              data: res.data, // 列表数组
+              pageNo: this.form.page,  // 当前页码
+              pageSize:  this.form.limit,  // 每页页数
+              totalCount: res.countPage, // 列表总条数
+              totalPage: res.pageSize // 列表总页数
+            }
           })
       },
       selectedRowKeys: [],
@@ -297,9 +308,7 @@ export default {
     }
   },
   created () {
-    console.log(this.$route.name)
-    this.tableOption()
-    getRoleList({ t: new Date() })
+    // this.tableOption()
   },
   methods: {
     moment,
@@ -312,6 +321,11 @@ export default {
     },
     onChangeTableOption(){
       
+    },
+    toSearch(){
+      getOrderList(deleteNullAttr(this.form)).then(res=>{
+        console.log(res)
+      })
     },
     handleSetOk(e) {
       this.setConfirmLoading = true;
@@ -366,7 +380,6 @@ export default {
       }
     },
     onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     }
