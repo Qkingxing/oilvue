@@ -12,6 +12,7 @@
                 <div class="trend_info">
                     <span>较前一天</span>
                     <span class="percente percent-up">0.00%</span>
+                    <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 
             </div>
@@ -32,6 +33,7 @@
                 <div class="trend_info">
                     <span>较前一天</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 
             </div>
@@ -48,6 +50,7 @@
                 <div class="trend_info">
                     <span>较前一天</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 
             </div>
@@ -64,6 +67,7 @@
                 <div class="trend_info">
                     <span>较前一天</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 
             </div>
@@ -81,6 +85,7 @@
                 <div class="trend_info">
                     <span>较前一天</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                
             </div>
@@ -98,6 +103,7 @@
                 <div class="trend_info">
                     <span>较前一天</span>
                     <span class="percente percent-up">0.00%</span>
+                     <i class="trend"><a-icon type="arrow-up" /></i>
                 </div>
                 
             </div>
@@ -201,6 +207,11 @@ export default {
                     .percente{
                         color: #ff4646;
                         font-weight: 700;
+                    }
+                    .trend{
+                        position: relative;
+                        font-size: 16px;
+                        color:rgb(72, 198, 114);
                     }
                 }
                 .more_info{

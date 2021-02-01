@@ -21,6 +21,7 @@
                         <div class="con-foo-caption">
                             较前一天
                         </div>
+                        
                         <div class="con-foo-percentage">
                              <countTo
                             class="value"
@@ -29,7 +30,9 @@
                             :duration="3000"
                             ></countTo>
                             %
+                            
                         </div>
+                        
                     </div>
                     </div>
                     <div class="box">
@@ -45,6 +48,7 @@
                         <div class="con-foo-percentage">
                             0%
                         </div>
+                       
                     </div>
                     </div>
                     <div class="box">
