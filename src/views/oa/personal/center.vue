@@ -13,15 +13,15 @@
                 <span class="a">登录账号</span>
                 <span class="b">openUser</span>
                 <!-- <span class="c">修改登陆密码</span> -->
-                <span class="text" type="primary" @click="() => setModal1Visible(true)"> 修改登陆密码 </span>
+                <span class="text" type="primary" @click="bba"> 修改登陆密码 </span>
                 <div class="password">
                   <a-modal
                     class="aaa"
                     title="修改密码"
                      :dialog-style="{ top: '20px',witdh:'600' }"
                     :visible="modal1Visible"
-                    @ok="() => setModal1Visible(false)"
-                    @cancel="() => setModal1Visible(false)"
+                    @ok="yes"
+                    @cancel="no"
                   >
                     <p class="tips-title">* 密码由英文与数字混合组成，并且不短于8位</p>
                     <div class="inp">
@@ -127,6 +127,16 @@ export default {
     }
   },
   methods: {
+    bba(){
+      this.setModal1Visible(true)
+    },
+    yes(){
+      
+       this.setModal1Visible(false)
+    },
+    no(){
+      this.setModal1Visible(false)
+    },
     setModal1Visible(modal1Visible) {
       this.modal1Visible = modal1Visible
     },
