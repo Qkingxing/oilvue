@@ -13,7 +13,7 @@
       广告代码 真实项目中请移除
       production remove this Ads
     -->
-    <ads v-if="isProPreviewSite && !collapsed"/>
+    <!-- <ads v-if="isProPreviewSite && !collapsed"/> -->
     <!-- Ads end -->
 
     <!-- 1.0.0+ 版本 pro-layout 提供 API，
@@ -36,11 +36,11 @@
       </div>
     </template> -->
 
-    <setting-drawer :settings="settings" @change="handleSettingChange">
+    <!-- <setting-drawer :settings="settings" @change="handleSettingChange">
       <div style="margin: 12px 0;">
         This is SettingDrawer custom footer content.
       </div>
-    </setting-drawer>
+    </setting-drawer> -->
     <!-- 增加 Header 右侧内容区自定义 -->
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
