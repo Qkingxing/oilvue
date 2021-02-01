@@ -1,6 +1,5 @@
 <template>
   <div class="shijian">
-      
     <a-card
       style="width: 100%"
       :tab-list="tabList"
@@ -8,41 +7,50 @@
       loading
       @tabChange="(key) => onTabChange(key, 'key')"
     >
-    
-      <span slot="customRender" slot-scope="item"> 
-          {{ item.key }} 
+      <span slot="customRender" slot-scope="item">
+        {{ item.key }}
       </span>
     </a-card>
     <div class="dev1">
-         <i class="more_info anticon anticon-question-circle">
-            <a-popover  overlayClassName="note">
-                <template slot="content">
-                    <div class="" style="width: 200px">
-                    <p>往前7天（不包含今日）</p>
-                    </div>
-                </template>
-                <span class="anticon">
-                    <a-icon type="question-circle" />
-                </span>
-            </a-popover>
-        </i>
+      <i class="more_info anticon anticon-question-circle">
+        <a-popover overlayClassName="note">
+          <template slot="content">
+            <div class="" style="width: 200px">
+              <p>往前7天（不包含今日）</p>
+            </div>
+          </template>
+          <span class="anticon">
+            <a-icon type="question-circle" />
+          </span>
+        </a-popover>
+      </i>
     </div>
     <div class="dev">
-         <i class="more_info anticon anticon-question-circle">
-            <a-popover  overlayClassName="note">
-                <template slot="content">
-                    <div class="" style="width: 200px">
-                    <p>往前30天（不包含今日）</p>
-                    </div>
-                </template>
-                <span class="anticon">
-                    <a-icon type="question-circle" />
-                </span>
-            </a-popover>
-        </i>
+      <i class="more_info anticon anticon-question-circle">
+        <a-popover overlayClassName="note">
+          <template slot="content">
+            <div class="" style="width: 200px">
+              <p>往前30天（不包含今日）</p>
+            </div>
+          </template>
+          <span class="anticon">
+            <a-icon type="question-circle" />
+          </span>
+        </a-popover>
+      </i>
     </div>
 
-    <div v-if="key === 'tab1' || key === 'tab2' || key === 'tab3' || key === 'tab4' || key === 'tab5' || key === 'tab6' || key === 'tab7'">
+    <div
+      v-if="
+        key === 'tab1' ||
+        key === 'tab2' ||
+        key === 'tab3' ||
+        key === 'tab4' ||
+        key === 'tab5' ||
+        key === 'tab6' ||
+        key === 'tab7'
+      "
+    >
       <div class="headr_char">
         <div class="chart_treema_box">
           <span class="span">认证类型占比</span>
@@ -54,19 +62,21 @@
         </div>
       </div>
       <div class="head_title">
-        <div class="title_top_size"> 消费人数趋势</div>
+        <div class="title_top_size">消费人数趋势</div>
         <div class="xiaofei">
-            <el-popover placement="bottom" width="66" trigger="hover">
-                <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-                    <span @click="income" style="cursor: pointer">消费金额趋势</span>
-                </div>
-                <a style="display: inline-block; width: 30px;" slot="reference">切换</a>
-            </el-popover>
+          <a-popover placement="bottom">
+            <template slot="content">
+              <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+                
+                <span style="cursor: pointer">消费金额趋势</span>
+              </div>
+            </template>
+
+            <a-button>切换</a-button>
+          </a-popover>
         </div>
       </div>
-      <div class="draw_chart_line_center">
-          这是图
-      </div>
+      <div class="draw_chart_line_center">这是图</div>
       <div class="head_title">
         <div class="title_top_size">
           <div class="">
@@ -103,7 +113,7 @@ export default {
       tabList: [
         {
           key: 'tab1',
-          tab:'今日',
+          tab: '今日',
           scopedSlots: { tab: 'customRender' },
         },
         {
@@ -122,16 +132,16 @@ export default {
           key: 'tab5',
           tab: '日',
         },
-         {
+        {
           key: 'tab6',
           tab: '周',
         },
-         {
+        {
           key: 'tab7',
           tab: '月',
         },
       ],
-       key: 'tab1',
+      key: 'tab1',
       style: { width: '200px' },
       columns: [
         {
@@ -192,22 +202,42 @@ export default {
       console.log(key, type)
       this[type] = key
     },
-    income(){
-
-    }
+    income() {},
   },
 }
 </script>
 
 <style lang='scss' scoped>
-.shijian {
-    .ant-card{
-        border-top: none;
-        border-right: none;
-        border-left: none;
-        border-bottom: 1px solid #e8e8e8;
-        overflow: hidden;
+  .ant-btn {
+    border: 1px solid transparent; //自定义边框
+    outline: none; //消除默认点击蓝色边框效果
+    color: #37f;
+    margin: 0;
+    padding: 0;
+    line-height: 59px;
+  }
+  .ant-btn:hover {
+    background-color: #fff;
+    border-color: #ffffff !important;
+    color: #ffffff;
+  }
+  .a-popper {
+    margin-top: 0;
+    .text {
+      color: red;
+      margin-bottom: 3px;
+      text-align: center;
+      cursor: pointer;
     }
+  }
+.shijian {
+  .ant-card {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #e8e8e8;
+    overflow: hidden;
+  }
   .headr_char {
     width: 100%;
     height: 400px;
@@ -260,12 +290,11 @@ export default {
       font-size: 16px;
       color: #1e1e28;
       padding-bottom: 20px;
-        
     }
-    .xiaofei{
-        position: absolute;
-        left: 97px;
-        top: 2px;
+    .xiaofei {
+      position: absolute;
+      left: 97px;
+      top: -18px;
     }
     .title_top_size {
       width: 100%;

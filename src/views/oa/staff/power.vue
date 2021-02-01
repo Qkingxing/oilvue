@@ -6,6 +6,13 @@
               <div class="group">
                   <div class="title_model">
                        <div class="main_label">员工角色操作权限管理</div>
+                       <span>根据员工的职能为账号赋予角色属性，根据角色进行权限设置，点击可查看</span>
+                       <a href="https://mp.nlsaas.com/oa/staff/account">员工列表</a>
+                  </div>
+                  <div class="content">
+                      <div class="contentBlock">
+                          <div class="contentMain"></div>
+                      </div>
                   </div>
               </div>
           </div>
@@ -54,8 +61,26 @@ export default {
                             margin-right: 16px;
                             font-weight: 700;
                             color: #1e1e28;
+                            span{
+                                font-size: 14px;
+                                color: #9696a0;
+                                margin-left: 20px;
+                            }
                         }
                         
+                    }
+                    .content{
+                        padding: 3rem 2rem;
+                        display: flex;
+                        .contentBlock{
+                            display: block;
+                             width: 100%;
+                             .contentMain{
+                                    display: flex;
+                                    flex-wrap: wrap;
+                                    width: calc(100% + 21px);
+                             }
+                        }
                     }
                 }
             }

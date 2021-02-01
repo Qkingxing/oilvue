@@ -32,21 +32,24 @@
 
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
+        <a-popover placement="bottom">
+        <template slot="content">
           <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-          </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
-        11
+          <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+          <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+          <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+        </div>
+        </template>
+       
+        <a-button>切换</a-button>
+      </a-popover>
+        
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
           <line-charts></line-charts>
         </a-col>
-        11
+        
         <a-col :span="20" v-if="line == 2">
           <line-charts></line-charts>
           哈哈我出来了

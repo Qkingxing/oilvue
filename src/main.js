@@ -21,19 +21,13 @@ Vue.component('countTo', countTo)
 // element-ui
 // 禁止全局引入，跟ant冲突
 import { 
-  Cascader, CascaderPanel,
-  Popover,
-  Button,
-  Select,
-  Option,
+  Cascader, CascaderPanel,Select,Option
+ 
 } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-Vue.use(Cascader).use(CascaderPanel)
-   .use(Popover)
-   .use(Button)
-   .use(Select)
-   .use(Option)
+Vue.use(Cascader).use(CascaderPanel).use(Select).use(Option)
+ 
 
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
