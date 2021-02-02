@@ -89,7 +89,7 @@ export default {
     height: 40px;
     line-height: 40px;
     text-align: center;
-    color: #1e1e28;
+    color: #040a46;
     font-size: 16px;
     cursor: pointer;
 

@@ -338,7 +338,7 @@ export default {
     line-height: 24px;
     margin-right: 20px;
     text-align: center;
-    color: #1e1e28;
+    color: #040a46;
     font-size: 12px;
     cursor: pointer;
     border-radius: 4px;
@@ -358,7 +358,7 @@ export default {
   width: 300px;
   margin: 0 auto;
   .span {
-    color: #1e1e28;
+    color: #040a46;
   }
 }
 .pie-chart-box{

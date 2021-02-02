@@ -156,7 +156,7 @@ export default {
             }
             span{
                 font-size: 16px;
-                color: #1e1e28;
+                color: #040a46;
                 font-weight: 500;
                 margin-right: 14px;
             }
@@ -180,7 +180,7 @@ export default {
                 .title{
                     margin: 24px 0 16px 24px;
                     font-size: 14px;
-                    color: #1e1e28;
+                    color: #040a46;
                     letter-spacing: 0;
                     line-height: 14px;
                 }
@@ -196,7 +196,7 @@ export default {
                     }
                     .unit{
                         font-size: 14px;
-                        color: #1e1e28;
+                        color: #040a46;
                     }
                 }
                 .trend_info{

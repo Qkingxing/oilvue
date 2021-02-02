@@ -327,7 +327,7 @@ export default {
 					>span{
 						font-size: 16px;
 						font-weight: 500;
-						color: #1e1e28;
+						color: #040a46;
 					}
 				}
 				.condition-bar{
@@ -350,7 +350,7 @@ export default {
 								font-size: 14px;
 								font-family: PingFangSC-Regular,PingFang SC;
 								font-weight: 400;
-								color: #1e1e28;
+								color: #040a46;
 							}
 							.content{
 								margin-left: 16px;
@@ -364,7 +364,7 @@ export default {
 								font-size: 14px;
 								font-family: PingFangSC-Regular,PingFang SC;
 								font-weight: 400;
-								color: #1e1e28;
+								color: #040a46;
 							}
 							.content{
 								margin-left: 16px;
@@ -380,7 +380,7 @@ export default {
 							font-size: 14px;
 							font-family: PingFangSC-Regular,PingFang SC;
 							font-weight: 400;
-							color: #1e1e28;
+							color: #040a46;
 						}
 						.assembly{
 							display: flex;
@@ -405,7 +405,7 @@ export default {
 						font-size: 14px;
 						font-family: PingFangSC-Medium,PingFang SC;
 						font-weight: 500;
-						color: #1e1e28;
+						color: #040a46;
 						.dev{
 							margin-left: 5px;
 							margin-top: -2px;
@@ -440,7 +440,7 @@ export default {
 								font-size: 14px;
 								font-family: PingFangSC-Medium,PingFang SC;
 								font-weight: 500;
-								color: #1e1e28;
+								color: #040a46;
 								margin: 25px 0 16px 0;
 							}
 							.pie-is-null{

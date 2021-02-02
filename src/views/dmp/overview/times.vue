@@ -265,7 +265,7 @@ export default {
 .head-title {
   font-size: 16px;
   //   font-weight: 700;
-  color: #1e1e28;
+  color: #040a46;
   height: 55px;
   line-height: 41px;
   line-height: 60px;
@@ -286,7 +286,7 @@ export default {
     line-height: 24px;
     margin-right: 20px;
     text-align: center;
-    color: #1e1e28;
+    color: #040a46;
     font-size: 12px;
     cursor: pointer;
     border-radius: 4px;

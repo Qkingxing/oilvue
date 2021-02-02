@@ -264,7 +264,7 @@ export default {
             font-size: 16px;
             margin-right: 16px;
             font-weight: 700;
-            color: #1e1e28;
+            color: #040a46;
           }
         }
         .group-body {

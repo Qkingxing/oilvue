@@ -336,7 +336,7 @@ export default {
                         overflow: hidden;
                             .sale-ratio-name{
                                 font-size: 14px;
-                                color: #1e1e28;
+                                color: #040a46;
                                 margin-top: -6px;
                             }
                             .sheet_c1_a{
@@ -358,7 +358,7 @@ export default {
             overflow: hidden;
                 .sheet_b1{
                     font-size: 14px;
-                    color: #1e1e28;
+                    color: #040a46;
                     margin-top: -6px;
                 }
                 .sheet_b2{
@@ -401,7 +401,7 @@ export default {
                                 .con-title{
                                     font-size: 14px;
                                     font-weight: 400;
-                                    color: #1e1e28;
+                                    color: #040a46;
                                 }
                                 .con-article{
                                     display: flex;
@@ -415,7 +415,7 @@ export default {
                                             font-size: 14px;
                                             margin: 7px 0 0 3px;
                                             font-weight: 400;
-                                            color: #1e1e28;
+                                            color: #040a46;
                                         }
                                 }
                                 .con-footer{

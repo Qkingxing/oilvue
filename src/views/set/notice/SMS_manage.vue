@@ -141,7 +141,7 @@ export default {
 .head-title {
     font-size: 16px;
     font-weight: 700;
-    color: #1e1e28;
+    color: #040a46;
     height: 55px;
     line-height: 41px;
     border-bottom: 1px solid #eaeaf4;
@@ -261,7 +261,7 @@ export default {
     padding: 24px;
 }
 .box_one .left_box .sms_total_wrap .sms_total_item_top {
-  color: #1e1e28;
+  color: #040a46;
   font-size: 14px;
 }
 .box_one .left_box .sms_total_wrap .sms_total_item_bottom {

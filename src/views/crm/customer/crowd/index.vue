@@ -162,7 +162,7 @@ export default {
 .head-title{
   font-size: 16px;
   font-weight: 700;
-  color: #1e1e28;
+  color: #040a46;
   height: 55px;
   line-height: 41px;
   border-bottom: 1px solid #eaeaf4;
@@ -183,7 +183,7 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 16px;
-    color: #1e1e28;
+    color: #040a46;
   }
 }
 .search-btn{
@@ -206,7 +206,7 @@ export default {
   .title{
     font-size: 16px;
     font-weight: 500;
-    color: #1e1e28;
+    color: #040a46;
     line-height: 24px;
     padding: 23px 0 16px 0;
   }

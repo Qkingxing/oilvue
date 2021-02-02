@@ -312,7 +312,7 @@ export default {
   text-align: center;
   cursor: pointer;
   font-size: 20px;
-  color: #1e1e28;
+  color: #040a46;
   .header-notice{
     display: inline-block;
     padding: 0 14px 0 20px;

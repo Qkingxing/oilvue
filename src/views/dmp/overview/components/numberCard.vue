@@ -57,7 +57,7 @@ export default {
     justify-content: center;
     .value{
         font-size: 30px;
-        color: #1e1e28;
+        color: #040a46;
         line-height: 34px;
         margin-right: 5px;
     }

@@ -257,7 +257,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         font-size: 16px;
-        color: #1e1e28;
+        color: #040a46;
         padding-bottom: 20px;
       }
     }
@@ -274,7 +274,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         font-size: 16px;
-        color: #1e1e28;
+        color: #040a46;
         padding-bottom: 20px;
       }
     }
@@ -288,7 +288,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       font-size: 16px;
-      color: #1e1e28;
+      color: #040a46;
       padding-bottom: 20px;
     }
     .xiaofei {
@@ -302,7 +302,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       font-size: 16px;
-      color: #1e1e28;
+      color: #040a46;
       padding-bottom: 20px;
       .more_info {
         margin-left: 7px;

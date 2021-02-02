@@ -169,7 +169,7 @@ export default {
 .head-title{
   font-size: 16px;
   font-weight: 700;
-  color: #1e1e28;
+  color: #040a46;
   height: 55px;
   line-height: 41px;
   border-bottom: 1px solid #eaeaf4;
@@ -192,14 +192,14 @@ export default {
       margin-right: 24px;
     }
     .content{
-      color: #1e1e28;
+      color: #040a46;
       margin-right: 24px;
     }
   }
 }
 .table-title{
   font-size: 16px;
-  color: #1e1e28;
+  color: #040a46;
   margin-bottom: 16px;
 }
 
@@ -219,7 +219,7 @@ export default {
   .title{
     font-size: 16px;
     font-weight: 500;
-    color: #1e1e28;
+    color: #040a46;
     line-height: 24px;
     padding: 23px 0 16px 0;
   }

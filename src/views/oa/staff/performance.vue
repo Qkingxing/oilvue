@@ -382,7 +382,7 @@ export default {
             font-size: 16px;
             margin-right: 16px;
             font-weight: 700;
-            color: #1e1e28;
+            color: #040a46;
           }
         }
         .guild_block {
@@ -424,7 +424,7 @@ export default {
                 line-height: 14px;
                 .text_title {
                   font-weight: 700;
-                  color: #1e1e28;
+                  color: #040a46;
                 }
                 .text_dec {
                   margin-top: 8px;
@@ -511,7 +511,7 @@ export default {
                     }
                     span:nth-of-type(1) {
                       font-weight: 700;
-                      color: #1e1e28;
+                      color: #040a46;
                     }
                     span:nth-of-type(2) {
                       color: #9696a0;

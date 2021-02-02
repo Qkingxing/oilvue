@@ -173,7 +173,7 @@ export default {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    color: #1e1e28;
+    color: #040a46;
     font-size: 14px;
     font-variant: tabular-nums;
     line-height: 1.5;
@@ -207,7 +207,7 @@ export default {
     background-color: #f8f8f9;
     font-size: 14px;
     font-weight: 500;
-    color: #1e1e28;
+    color: #040a46;
     line-height: 50px;
     height: 50px;
     padding-left: 24px;
@@ -237,7 +237,7 @@ export default {
     text-align: right;
     margin-right: 2%;
     font-size: 14px;
-    color: #1e1e28;
+    color: #040a46;
     line-height: 1em;
 }
 .category-content-item .config-item-head .config-tips{

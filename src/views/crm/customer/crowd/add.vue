@@ -160,7 +160,7 @@ export default {
     line-height: 40px;
     text-align: right;
     margin-right: 20px;
-    color: #1e1e28;
+    color: #040a46;
     font-size: 14px;
   }
 }
@@ -191,7 +191,7 @@ export default {
     padding: 24px;
     box-sizing: border-box;
     .title{
-      color: #1e1e28;
+      color: #040a46;
       font-weight: 500;
       margin-bottom: 16px;
     }

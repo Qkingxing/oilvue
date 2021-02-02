@@ -28,7 +28,7 @@ export default {
       font-size: 52px;
       font-family: Helvetica-Bold,Helvetica;
       font-weight: 700;
-      color: #1e1e28;
+      color: #040a46;
       line-height: 52px;
       height: 40px;
       display: inline-block;
