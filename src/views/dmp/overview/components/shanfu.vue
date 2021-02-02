@@ -24,14 +24,17 @@
       </div>
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
+        <a-popover placement="bottom">
+        <template slot="content">
           <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-          </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
+          <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+          <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+          <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+        </div>
+        </template>
+       
+        <a-button>切换</a-button>
+      </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
@@ -75,14 +78,17 @@
 
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
+         <a-popover placement="bottom">
+        <template slot="content">
           <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-          </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
+          <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+          <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+          <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+        </div>
+        </template>
+       
+        <a-button>切换</a-button>
+      </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
@@ -127,14 +133,17 @@
       </div>
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
+        <a-popover placement="bottom">
+        <template slot="content">
           <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-          </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
+          <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+          <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+          <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+        </div>
+        </template>
+       
+        <a-button>切换</a-button>
+      </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
@@ -176,14 +185,14 @@
       </div>
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
+       <a-popover placement="bottom">
           <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
             <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
             <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
             <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
           </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
+           <a-button>切换</a-button>
+         </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
@@ -225,14 +234,14 @@
       </div>
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
+        <a-popover placement="bottom">
           <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
             <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
             <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
             <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
           </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
+           <a-button>切换</a-button>
+        </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
@@ -351,6 +360,34 @@ export default {
   margin: 0 auto;
   .span {
     color: #040a46;
+  }
+}
+.sales {
+  display: flex;
+  width: 200px;
+  height: 55px;
+
+  .ant-btn {
+    border: 1px solid transparent; //自定义边框
+    outline: none; //消除默认点击蓝色边框效果
+    color: #37f;
+    margin: 0;
+    padding: 0;
+    line-height: 59px;
+  }
+  .ant-btn:hover {
+    background-color: #fff;
+    border-color: #ffffff !important;
+    color: #ffffff;
+  }
+  .a-popper {
+    margin-top: 0;
+    .text {
+      color: red;
+      margin-bottom: 3px;
+      text-align: center;
+      cursor: pointer;
+    }
   }
 }
 

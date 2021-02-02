@@ -87,6 +87,7 @@
     </div>
 
     <div v-if="dateKey == 'benzhou'">
+        
       <component :is="vivew"></component>
     </div>
     <div v-if="dateKey == 'benyue'">
@@ -202,6 +203,9 @@ export default {
       display: flex;
       flex: 1 1 20%;
       max-width: 20%;
+        background-image: url('./img/bei.png');
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
     }
   }
 }

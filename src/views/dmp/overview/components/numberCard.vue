@@ -11,17 +11,26 @@
             ></countTo>
         <span class="unte">元</span>
       </div>
-      <div class="info"><span>周同比 </span><span>降56.65%</span><i class="trend"><a-icon type="arrow-down"/></i> </div>
+      <div class="info">
+          <span>周同比 </span>   
+          <span>降56.65%</span>
+          <i class="trend">
+              <a-icon type="arrow-down"/>
+        </i> 
+    </div>
       
-      <a-popover title="销售总收入" overlayClassName="note">
-        <template slot="content">
-          <div class="">
-            <p>销售总收入：今天截止此时的销售总收入周同比：与上周同一天截止此时的销售总收入对比</p>
-            <span>注：此数据实时更新</span>
-          </div>
-        </template>
-        <span class="anticon">i</span>
-      </a-popover>
+      <i class="more_info anticon anticon-question-circle">
+            <a-popover title="消费客户" overlayClassName="note">
+              <template slot="content">
+                <div class="" style="width: 200px">
+                  <p>统计时间内，已消费人数合计</p>
+                </div>
+              </template>
+              <span class="anticon">
+                <a-icon type="question-circle" />
+              </span>
+            </a-popover>
+      </i>
     </div>
   </div>
 </template>
@@ -49,7 +58,8 @@ export default {
   position: relative;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+  
+
 
   .money {
     display: flex;
@@ -67,6 +77,7 @@ export default {
     margin-top: 20px;
     font-size: 14px;
     color: #3c3c46;
+    font-weight: bold;
     letter-spacing: 0;
     line-height: 14px;
     text-align: center;
@@ -74,30 +85,33 @@ export default {
 
   .info {
     height: 16px;
-    margin-left: 10px;
-    margin-bottom: 10px;
+    margin-left: 30px;
+    margin-bottom: 18px;
     display: flex;
     justify-content: flex-start;
 
     > span {
       font-size: 12px;
+       padding-left: 10px;
       color: #3c3c46;
     }
     .trend{
          position: relative;
          font-size: 16px;
-         left: 30px;
-         top: -8px;
+         left: 10px;
+         top: -3px;
          color:rgb(72, 198, 114);
     }
   }
 
-  .anticon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-  }
+     .more_info {
+          font-size: 16px;
+          color: #eaeaf4;
+          position: absolute;
+          right: 38px;
+          top: 18px;
+          cursor: pointer;
+        }
 }
 
 // 卡片类名

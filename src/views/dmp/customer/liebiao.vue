@@ -1,543 +1,35 @@
 <template>
   <div class="biao">
-    <div class="overflow_box">
-      <div class="overflow_li">
-        <div class="title">
-          <span>充值订单</span>
+    <div class="box">
+      <div class="overflow_box" v-for="(a, index) in 6" :key="index">
+        <div class="overflow_li">
+          <div class="title">
+            <span>消费客户</span>
+          </div>
+          <div class="price_info">
+            <span class="price">100</span>
+            <span class="unit">人</span>
+          </div>
+          <div class="trend_info">
+            <span>较上一周期</span>
+            <span class="percente percent-up">0.00%</span>
+            <i class="trend">
+              <a-icon type="arrow-down" />
+            </i>
+          </div>
+          <i class="more_info anticon anticon-question-circle">
+            <a-popover title="消费客户" overlayClassName="note">
+              <template slot="content">
+                <div class="" style="width: 200px">
+                  <p>统计时间内，已消费人数合计</p>
+                </div>
+              </template>
+              <span class="anticon">
+                <a-icon type="question-circle" />
+              </span>
+            </a-popover>
+          </i>
         </div>
-        <div class="price_info">
-          <span class="price">0</span>
-          <span class="unit">笔</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>充值订单</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0</span>
-          <span class="unit">笔</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>充值会员数</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0</span>
-          <span class="unit">人</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>充值金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0.00</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>消费金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0.00</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>赠送金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0.00</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>消费退款金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0.00</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>充值退款</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0.00</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>非当天消费退款金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0.00</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-      <div class="overflow_li">
-        <div class="title">
-          <span>充值金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0.00</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>消费订单</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0</span>
-          <span class="unit">笔</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>消费人数</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0</span>
-          <span class="unit">人</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>销户金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">0.00</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>剩余充值金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">36,150.51</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>累计赠送金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">2,372.99</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>累计赠送金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">6,993.75</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>累计充值金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">64</span>
-          <span class="unit">笔</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>累计消费退额金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">562.50</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>累计充值退款</span>
-        </div>
-        <div class="price_info">
-          <span class="price">12.91</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
-      </div>
-
-      <div class="overflow_li">
-        <div class="title">
-          <span>累计销户金额</span>
-        </div>
-        <div class="price_info">
-          <span class="price">613.91</span>
-          <span class="unit">元</span>
-        </div>
-        <div class="trend_info">
-          <span>环比</span>
-          <span class="percente percent-up">0.00%</span>
-          <i class="trend"><a-icon type="arrow-up" /></i>
-        </div>
-        <i class="more_info anticon anticon-question-circle">
-          <a-popover title="消费客户" overlayClassName="note">
-            <template slot="content">
-              <div class="" style="width: 200px">
-                <p>统计时间内，已消费人数合计</p>
-              </div>
-            </template>
-            <span class="anticon">
-              <a-icon type="question-circle" />
-            </span>
-          </a-popover>
-        </i>
       </div>
     </div>
 
@@ -580,28 +72,28 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-  .ant-btn {
-    border: 1px solid transparent; //自定义边框
-    outline: none; //消除默认点击蓝色边框效果
-    color: #37f;
-    margin: 0;
-    padding: 0;
-    line-height: 59px;
+.ant-btn {
+  border: 1px solid transparent; //自定义边框
+  outline: none; //消除默认点击蓝色边框效果
+  color: #37f;
+  margin: 0;
+  padding: 0;
+  line-height: 59px;
+}
+.ant-btn:hover {
+  background-color: #fff;
+  border-color: #ffffff !important;
+  color: #ffffff;
+}
+.a-popper {
+  margin-top: 0;
+  .text {
+    color: red;
+    margin-bottom: 3px;
+    text-align: center;
+    cursor: pointer;
   }
-  .ant-btn:hover {
-    background-color: #fff;
-    border-color: #ffffff !important;
-    color: #ffffff;
-  }
-  .a-popper {
-    margin-top: 0;
-    .text {
-      color: red;
-      margin-bottom: 3px;
-      text-align: center;
-      cursor: pointer;
-    }
-  }
+}
 .biao {
   .head_title {
     height: 16px;
@@ -610,7 +102,7 @@ export default {
     display: flex;
     position: relative;
     .xiaofei {
-         position: absolute;
+      position: absolute;
       left: 97px;
       top: -22px;
       span {
@@ -632,18 +124,26 @@ export default {
       margin: 0;
     }
   }
+  .box {
+       width: 100%;
+    display: flex;
+    position: relative;
+  }
   .overflow_box {
-    display: grid;
-    grid-gap: 8px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 300px;
+    height: 180px;
+    background-image: url('./img/bei.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     .overflow_li {
+      width: 100%;
       height: 138px;
       text-align: left;
       position: relative;
-      border: 1px solid #eaeaf4;
+
       border-radius: 4px;
       .title {
-        margin: 24px 0 16px 24px;
+        margin: 41px 0 21px 41px;
         font-size: 14px;
         color: #040a46;
         letter-spacing: 0;
@@ -651,7 +151,7 @@ export default {
       }
       .price_info {
         white-space: nowrap;
-        margin-left: 22px;
+        margin-left: 35px;
         .price {
           font-size: 32px;
           font-weight: 700;
@@ -667,25 +167,27 @@ export default {
       .trend_info {
         display: flex;
         align-items: center;
-        margin: 16px 0 0 24px;
+        margin: 17px 0 0 41px;
         font-size: 12px;
-        .trend {
-          position: relative;
-          font-size: 16px;
 
-          color: rgb(72, 198, 114);
-        }
         .percente {
           color: #ff4646;
           font-weight: 700;
+        }
+        .trend {
+          position: relative;
+          font-size: 16px;
+          left: 5px;
+          top: 0;
+          color: rgb(72, 198, 114);
         }
       }
       .more_info {
         font-size: 16px;
         color: #eaeaf4;
         position: absolute;
-        right: 23px;
-        top: 23px;
+        right: 44px;
+        top: 0;
         cursor: pointer;
       }
     }

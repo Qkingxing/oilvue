@@ -132,7 +132,7 @@ export default {
   .dev {
     position: relative;
     top: -38px;
-    left: 329px;
+    left: 349px;
     height: 0;
     margin-left: 7px;
     font-size: 12px;
@@ -143,7 +143,7 @@ export default {
     position: relative;
     height: 0;
     top: -38px;
-    left: 237px;
+    left: 253px;
     margin-left: 7px;
     font-size: 12px;
     color: #cbcbcb;

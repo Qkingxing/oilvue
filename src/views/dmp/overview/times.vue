@@ -3,6 +3,7 @@
     <div class="head-title">销售总数据</div>
     <div class="saleall">
       <div class="saleall-container">
+         
         <number-card></number-card>
         <number-card></number-card>
         <number-card></number-card>
@@ -14,7 +15,7 @@
         <number-card></number-card>
         <number-card></number-card>
         <number-card></number-card>
-        <number-card> </number-card>
+        <number-card></number-card>
         <number-card></number-card>
       </div>
     </div>
@@ -318,6 +319,9 @@ export default {
       display: flex;
       flex: 1 1 20%;
       max-width: 20%;
+       background-image: url('./img/bei.png');
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
     }
   }
 }
