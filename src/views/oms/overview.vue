@@ -251,11 +251,22 @@ export default {
         },
         {
           title: '订单状态',
-          dataIndex: 'order_status'
+          dataIndex: 'order_status',
+          customRender:function(text){
+            if(text==1){
+              return "交易成功"
+            }else if(text==2){
+              return "待支付"
+            }else if(text==3){
+              return "支付失败"
+            }
+          }
         },
         {
           title: '订单类型',
-          dataIndex: 'order_type',
+          customRender:function(){
+            return "未找到"
+          }
         },
         {
           title: '应付金额',
@@ -263,7 +274,7 @@ export default {
         },
         {
           title: '优惠金额',
-          dataIndex: 'original_amount',
+          dataIndex: 'count_discount',
           needTotal: true
         },
         {
@@ -273,7 +284,15 @@ export default {
         },
         {
           title: '支付方式',
-          dataIndex: 'oils_gunName',
+          customRender:function(text){
+            if(text.order_type==1){
+              return "微信"
+            }else if(text.order_type==2){
+              return "支付宝"
+            }else if(text.order_type==3){
+              return "对公转账"
+            }
+          }
         },
         {
           title: '状态时间',
