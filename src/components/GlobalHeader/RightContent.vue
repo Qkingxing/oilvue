@@ -300,6 +300,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.header_right_wrap{
+  display: flex;
+  align-items: center;
+}
 .box-item{
   height: 55px;
   display: inline-block;

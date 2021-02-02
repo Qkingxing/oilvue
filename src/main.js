@@ -54,7 +54,7 @@ Vue.component('page-header-wrapper', PageHeaderWrapper)
 // 引入自定义阿里图标库
 import { Icon } from 'ant-design-vue';
 const IconFont = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2354010_t5rzgia7jsm.js',
+  scriptUrl: '//at.alicdn.com/t/font_2354010_4avtv0xexi5.js',
 });
 Vue.component('icon-font', IconFont)
 

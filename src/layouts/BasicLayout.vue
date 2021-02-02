@@ -1,6 +1,7 @@
 <template>
   <pro-layout
     :menus="menus"
+    :siderWidth="siderWidth"
     :collapsed="collapsed"
     :mediaQuery="query"
     :isMobile="isMobile"
@@ -19,11 +20,16 @@
     <!-- 1.0.0+ 版本 pro-layout 提供 API，
           我们推荐使用这种方式进行 LOGO 和 title 自定义
     -->
-    <template v-slot:menuHeaderRender>
+    <!-- <template v-slot:menuHeaderRender>
       <div>
         <logo-svg />
         <h1>{{ title }}</h1>
       </div>
+    </template> -->
+    <!-- 自定义菜单 -->
+    <template v-slot:menuRender>
+      <MenuSlider
+        :menus="menus"></MenuSlider>
     </template>
     <!-- 1.0.0+ 版本 pro-layout 提供 API,
           增加 Header 左侧内容区自定义
@@ -41,6 +47,7 @@
         This is SettingDrawer custom footer content.
       </div>
     </setting-drawer> -->
+    
     <!-- 增加 Header 右侧内容区自定义 -->
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
@@ -50,7 +57,9 @@
     <template v-slot:footerRender>
       <global-footer />
     </template>
+    <!-- 面包屑 -->
     <page-header-wrapper :title="false" :ghost="false"></page-header-wrapper>
+    <!-- 主体窗口 -->
     <router-view />
   </pro-layout>
 </template>
@@ -63,6 +72,7 @@ import { CONTENT_WIDTH_TYPE, SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mu
 
 import defaultSettings from '@/config/defaultSettings'
 import RightContent from '@/components/GlobalHeader/RightContent'
+import MenuSlider from '@/components/GlobalHeader/MenuSlider'
 import GlobalFooter from '@/components/GlobalFooter'
 import Ads from '@/components/Other/CarbonAds'
 import LogoSvg from '../assets/logo.svg?inline'
@@ -72,6 +82,7 @@ export default {
   components: {
     SettingDrawer,
     RightContent,
+    MenuSlider,
     GlobalFooter,
     LogoSvg,
     Ads
@@ -86,6 +97,7 @@ export default {
       menus: [],
       // 侧栏收起状态
       collapsed: false,
+      siderWidth: 252,
       title: defaultSettings.title,
       settings: {
         // 布局类型
@@ -160,29 +172,34 @@ export default {
       }
     },
     handleCollapse (val) {
-      this.collapsed = val
+      // this.collapsed = val
+      // console.log(val)
+      this.siderWidth = this.siderWidth===120 ? 252 : 120
     },
-    handleSettingChange ({ type, value }) {
-      console.log('type', type, value)
-      type && (this.settings[type] = value)
-      switch (type) {
-        case 'contentWidth':
-          this.settings[type] = value
-          break
-        case 'layout':
-          if (value === 'sidemenu') {
-            this.settings.contentWidth = CONTENT_WIDTH_TYPE.Fluid
-          } else {
-            this.settings.fixSiderbar = false
-            this.settings.contentWidth = CONTENT_WIDTH_TYPE.Fixed
-          }
-          break
-      }
-    }
+    // handleSettingChange ({ type, value }) {
+    //   console.log('type', type, value)
+    //   type && (this.settings[type] = value)
+    //   switch (type) {
+    //     case 'contentWidth':
+    //       this.settings[type] = value
+    //       break
+    //     case 'layout':
+    //       if (value === 'sidemenu') {
+    //         this.settings.contentWidth = CONTENT_WIDTH_TYPE.Fluid
+    //       } else {
+    //         this.settings.fixSiderbar = false
+    //         this.settings.contentWidth = CONTENT_WIDTH_TYPE.Fixed
+    //       }
+    //       break
+    //   }
+    // }
   }
 }
 </script>
 
 <style lang="less">
 @import "./BasicLayout.less";
+#logo{
+  display: none;
+}
 </style>
