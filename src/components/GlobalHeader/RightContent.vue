@@ -306,6 +306,7 @@ export default {
 }
 .box-item{
   height: 55px;
+  line-height: 55px;
   display: inline-block;
   width: 50px;
   text-align: center;

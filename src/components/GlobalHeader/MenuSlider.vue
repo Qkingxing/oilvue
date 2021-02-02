@@ -2,7 +2,7 @@
     <div class="main-menu-sider-top">
         <div class="main-menu-sider">
             <div class="global_logo">
-                <img data-v-2e680234="" src="https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/mp/logo/mp-logo.png">
+                <img data-v-2e680234="" src="@/assets/logo.png">
             </div>
             <div class="main-custom-menu">
                 <div class="main-custom-menu_container public_global_scrollHidden">
@@ -210,7 +210,7 @@ export default {
                             }
                             &[linkactive="1"]{
                                 font-weight: 500;
-                                background-color: #e31937;
+                                background-color: #7c7ee2;
                             }
                             .menu-icon{
                                 width: 20px;
@@ -251,7 +251,7 @@ export default {
             align-items: center;
             font-size: 16px;
             font-weight: 500;
-            color: #1e1e28;
+            color: #040a46;
             height: 55px;
             border-bottom: 1px solid #eaeaea;
         }
@@ -288,27 +288,27 @@ export default {
         font-weight: 500;
         margin: 0;
         height: 52px;
-        color: #1e1e28;
+        color: #040a46;
         &:hover{
-            color: #e31937;
+            color: #7c7ee2;
         }
     }
     .ant-menu-submenu-inline>.ant-menu-submenu-title:hover .ant-menu-submenu-arrow::after, .ant-menu-submenu-inline>.ant-menu-submenu-title:hover .ant-menu-submenu-arrow::before{
-        background: linear-gradient(90deg,#e31937,#e31937);
+        background: linear-gradient(90deg,#7c7ee2,#7c7ee2);
     }
     .ant-menu-item-selected{
         font-weight: 500;
         background-color: transparent;
         a{
-            color: #1e1e28;
+            color: #040a46;
 
             &.router-link-exact-active{
-                color: #e31937;
-                background: #fff5f5;
+                color: #7c7ee2;
+                background: #e7e7ff;
             }
             &.router-link-active{
-                color: #e31937;
-                background: #fff5f5;
+                color: #7c7ee2;
+                background: #e7e7ff;
             }
             
         }
@@ -330,28 +330,28 @@ export default {
         }
         a{
             &:hover{
-                color: #e31937;
+                color: #7c7ee2;
             }
             &.router-link-exact-active{
-                color: #e31937;
-                background: #fff5f5;
+                color: #7c7ee2;
+                background: #e7e7ff;
             }
             &.router-link-active{
-                color: #e31937;
-                background: #fff5f5;
+                color: #7c7ee2;
+                background: #e7e7ff;
             }
         }
 
     }
     a{
-        color: #1e1e28;
+        color: #040a46;
         &.router-link-exact-active{
-            color: #e31937;
-            background: #fff5f5;
+            color: #7c7ee2;
+            background: #e7e7ff;
         }
         &.router-link-active{
-            color: #e31937;
-            background: #fff5f5;
+            color: #7c7ee2;
+            background: #e7e7ff;
         }
     }
 }
