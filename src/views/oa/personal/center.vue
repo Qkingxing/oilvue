@@ -18,28 +18,31 @@
                   <a-modal
                     class="aaa"
                     title="修改密码"
-                     :dialog-style="{ top: '20px',witdh:'600' }"
+                    :dialog-style="{ top: '20px', witdh: '600' }"
                     :visible="modal1Visible"
                     @ok="yes"
                     @cancel="no"
                   >
                     <p class="tips-title">* 密码由英文与数字混合组成，并且不短于8位</p>
                     <div class="inp">
-                        <p>输入原密码</p>
-                         <a-input-password v-model="input1" />
-                        
+                      <p>输入原密码</p>
+                      <a-input-password v-model="input1" />
                     </div>
-                    <span class="text1" v-show="show1" style="padding-left:185px">密码不能为空</span>
-                     <div class="inp">
-                        <p>输入新密码</p>
-                         <a-input-password v-model="input2" />
+                    <span class="text1" v-show="show1" style="padding-left: 185px">密码不能为空</span>
+                    <div class="inp">
+                      <p>输入新密码</p>
+                      <a-input-password v-model="input2" />
                     </div>
-                     <span class="text1" v-show="show2" style="padding-left:185px">长度为8-14个字符，字母/数字至少包含2种</span>
-                     <div class="inp">
-                        <p>重复新密码</p>
-                         <a-input-password v-model="input3"  />
+                    <span class="text1" v-show="show2" style="padding-left: 185px"
+                      >长度为8-14个字符，字母/数字至少包含2种</span
+                    >
+                    <div class="inp">
+                      <p>重复新密码</p>
+                      <a-input-password v-model="input3" />
                     </div>
-                     <span class="text1" v-show="show3" style="padding-left:185px">长度为8-14个字符，字母/数字至少包含2种</span>
+                    <span class="text1" v-show="show3" style="padding-left: 185px"
+                      >长度为8-14个字符，字母/数字至少包含2种</span
+                    >
                   </a-modal>
                 </div>
               </div>
@@ -106,6 +109,7 @@
 </template>
 
 <script>
+import { personage } from '@/api/work'
 function getBase64(img, callback) {
   const reader = new FileReader()
   reader.addEventListener('load', () => callback(reader.result))
@@ -118,23 +122,25 @@ export default {
       loading: false,
       imageUrl: '',
       modal1Visible: false,
-      input1:'',
-      input2:'',
-      input3:'',
-      show1:false,
-      show2:false,
-      show3:false,
+      input1: '',
+      input2: '',
+      input3: '',
+      show1: false,
+      show2: false,
+      show3: false,
     }
   },
   methods: {
-    bba(){
+    bba() {
       this.setModal1Visible(true)
     },
-    yes(){
-      
-       this.setModal1Visible(false)
+    yes() {
+      return personage().then((res) => {
+        console.log(res.data)
+        this.setModal1Visible(false)
+      })
     },
-    no(){
+    no() {
       this.setModal1Visible(false)
     },
     setModal1Visible(modal1Visible) {
@@ -185,51 +191,50 @@ export default {
   color: #666;
 }
 /deep/ .ant-modal-header {
-    background-color: #fafafa;
-    border: none;
+  background-color: #fafafa;
+  border: none;
 }
-/deep/  .ant-modal-title{
-    text-align: center;
+/deep/ .ant-modal-title {
+  text-align: center;
 }
-/deep/ .ant-modal-content{
-    width: 600px;
+/deep/ .ant-modal-content {
+  width: 600px;
 }
 /deep/ .tips-title {
-    color: #9696a0;
-    font-size: 12px;
-    line-height: 17px;
-    text-align: center;
-    margin-top: 24px;
+  color: #9696a0;
+  font-size: 12px;
+  line-height: 17px;
+  text-align: center;
+  margin-top: 24px;
 }
-/deep/ .inp{
-    display: flex;
-    p{
+/deep/ .inp {
+  display: flex;
+  p {
     display: block;
     box-sizing: border-box;
     width: 25%;
-    }
-    .ant-input-password{
-        display: block;
+  }
+  .ant-input-password {
+    display: block;
     box-sizing: border-box;
     width: 75%;
-    }
+  }
 
-    padding: 26px 100px 0;
+  padding: 26px 100px 0;
 }
-/deep/ .ant-modal-footer{
-   text-align: center;
-   border: none;
-   margin-bottom: 40px;
-   .ant-btn{
-           min-width: 82px;
+/deep/ .ant-modal-footer {
+  text-align: center;
+  border: none;
+  margin-bottom: 40px;
+  .ant-btn {
+    min-width: 82px;
     font-size: 14px;
     padding: 0 19px;
     height: 40px;
-    line-height: 40px
-   }
+    line-height: 40px;
+  }
 }
 
- 
 .mainContainreBox {
   position: relative;
   display: flex;
