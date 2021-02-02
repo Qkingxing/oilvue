@@ -17,6 +17,8 @@
           <router-link :to="{ name: 'activity_add' }">
             <a-button> 创建营销活动 </a-button>
           </router-link>
+          <a-button icon="export" v-if="selectedRows.length>0"> 导出数据 </a-button>
+          <a-button v-if="selectedRows.length>0"> 删除 </a-button>
         </div>
 
         <!-- 表格 -->
@@ -29,6 +31,13 @@
             :data="loadData"
             :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           >
+
+            <span slot="name" slot-scope="text, record">
+              <template>
+                <router-link :to="{name:'CrmTagDetail',query:{id:record.id}}">{{text}}</router-link>
+              </template>
+            </span>
+
             <span slot="action" slot-scope="text, record">
               <template>
                 <a @click="delTag(record)">删除</a>
@@ -46,7 +55,8 @@
 <script>
 import { STable } from '@/components'
 import EditTag from '../components/EditTag'
-import { getRoleList, getServiceList } from '@/api/manage'
+
+import { getlabellist } from '@/api/crm'
 
 export default {
   name: 'Tag',
@@ -62,40 +72,59 @@ export default {
       columns: [
         {
           title: '标签名称',
-          dataIndex: 'no'
+          key: 'name',
+          dataIndex: 'name',
+          scopedSlots: { customRender: 'name' }
         },
         {
           title: '人数',
-          dataIndex: 'description'
+          dataIndex: 'count',
+          key: 'count',
         },
         {
           title: '应用活动（次）',
           dataIndex: 'status',
-          needTotal: true
+          key: 'status',
         },
         {
           title: '创建时间',
-          dataIndex: 'time',
-          needTotal: true
+          dataIndex: 'create_time',
+          key: 'create_time',
         },
         {
           title: '标签数据更新时间',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'update_time',
+          key: 'update_time',
         },
         {
           title: '操作',
           dataIndex: 'action',
+          key: 'action',
           scopedSlots: { customRender: 'action' }
         }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
+        // console.log('loadData.parameter', parameter)
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+          site_id:1
+        }
+        return getlabellist(Object.assign(params)).then((res)=>{
+          console.log(res)
+          // 自定义出参
+          // console.log(res.data.list)
+          this.oldTotal = res.data.total
+          return {
+            data: res.data.data, // 列表数组
+            pageNo: res.data.current_page,  // 当前页码
+            pageSize: res.data.per_page,  // 每页页数
+            totalCount: res.data.total, // 列表总条数
+            // totalPage: res.data.totalPage // 列表总页数
+          }
+        })
+
       },
       selectedRowKeys: [],
       selectedRows: [],
@@ -112,7 +141,6 @@ export default {
   },
   created () {
     this.tableOption()
-    getRoleList({ t: new Date() })
   },
   methods: {
     delTag () {

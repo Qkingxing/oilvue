@@ -11,6 +11,22 @@ export function getOldUserList (data) {
     data
   })
 }
+// 获取获取标签列表
+export function getlabellist (data) {
+  return PhpRequest({
+    url: '/user/labellist',
+    method: 'post',
+    data
+  })
+}
+// 获取客户分群列表
+export function getGroupinglist (data) {
+  return JavaRequest({
+    url: '/customer/getGrouping',
+    method: 'post',
+    data
+  })
+}
 
 // 新增会员基础设置或修改
 export function postBasicsset (data) {

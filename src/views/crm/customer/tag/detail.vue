@@ -12,7 +12,7 @@
             <a-icon style="color: rgb(153, 153, 153);" type="question-circle" />
           </a-popover>
         </span>
-        <a-button> 返回上一页 </a-button>
+        <a-button @click="$router.go(-1)"> 返回上一页 </a-button>
       </div>
       <div class="label-info">
         <div class="info-item">

@@ -6,7 +6,7 @@
         <span>
           客群详情
         </span>
-        <a-button> 返回上一页 </a-button>
+        <a-button @click="$router.go(-1)"> 返回上一页 </a-button>
       </div>
       <div class="label-info">
         <div class="info-item">

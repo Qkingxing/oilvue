@@ -103,11 +103,11 @@ export default {
     },
     computed:{
         childMenu(){
-            console.log(this.menus[this.fatherIndex])
+            // console.log(this.menus[this.fatherIndex])
             let arr = this.menus[this.fatherIndex].children.map((e,i)=>{
                 return e.name
             })
-            console.log(arr)
+            // console.log(arr)
             this.openKeys = arr
             return this.menus[this.fatherIndex]
         }
@@ -121,8 +121,8 @@ export default {
         this.findFatherIndex()
     },
     mounted(){
-        console.log(this.menus)
-        console.log(this.$route)
+        // console.log(this.menus)
+        // console.log(this.$route)
     },
     methods:{
         i18nRender,
