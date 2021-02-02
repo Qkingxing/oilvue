@@ -289,15 +289,19 @@ export default {
         margin: 0;
         height: 52px;
         color: #1e1e28;
+        &:hover{
+            color: #e31937;
+        }
+    }
+    .ant-menu-submenu-inline>.ant-menu-submenu-title:hover .ant-menu-submenu-arrow::after, .ant-menu-submenu-inline>.ant-menu-submenu-title:hover .ant-menu-submenu-arrow::before{
+        background: linear-gradient(90deg,#e31937,#e31937);
     }
     .ant-menu-item-selected{
         font-weight: 500;
         background-color: transparent;
         a{
-            &:first-of-type{
-                color: #e31937;
-                background: #fff5f5;
-            }
+            color: #1e1e28;
+
             &.router-link-exact-active{
                 color: #e31937;
                 background: #fff5f5;
@@ -340,6 +344,7 @@ export default {
 
     }
     a{
+        color: #1e1e28;
         &.router-link-exact-active{
             color: #e31937;
             background: #fff5f5;
