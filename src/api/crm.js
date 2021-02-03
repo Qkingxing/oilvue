@@ -1,6 +1,7 @@
 
 import JavaRequest from '@/utils/JavaRequest'
 import PhpRequest from '@/utils/PhpRequest'
+import store from '@/store'
 
 
 // 获取已有客户列表
@@ -13,10 +14,14 @@ export function getOldUserList (data) {
 }
 // 获取获取标签列表
 export function getlabellist (data) {
+  console.log(store)
   return PhpRequest({
     url: '/user/labellist',
     method: 'post',
-    data
+    data: {
+      site_id: store.getters.site_id,
+      ...data
+    }
   })
 }
 // 新增或修改客户标签

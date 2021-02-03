@@ -72,34 +72,28 @@ export default {
       columns: [
         {
           title: '标签名称',
-          // key: 'name',
           dataIndex: 'name',
           scopedSlots: { customRender: 'name' }
         },
         {
           title: '人数',
-          // dataIndex: 'count',
-          key: 'count',
+          dataIndex: 'count',
         },
         {
           title: '应用活动（次）',
           // dataIndex: 'status',
-          // key: 'status',
         },
         {
           title: '创建时间',
           dataIndex: 'create_time',
-          // key: 'create_time',
         },
         {
           title: '标签数据更新时间',
           dataIndex: 'update_time',
-          // key: 'update_time',
         },
         {
           title: '操作',
           dataIndex: 'action',
-          // key: 'action',
           scopedSlots: { customRender: 'action' }
         }
       ],
@@ -109,7 +103,6 @@ export default {
         let params = {
           page: parameter.pageNo, // 页码
           size: parameter.pageSize, // 每页页数
-          site_id:1
         }
         return getlabellist(Object.assign(params)).then((res)=>{
           console.log(res)

@@ -1,6 +1,6 @@
 import storage from 'store'
 import { login, getInfo, logout, _login } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { ACCESS_TOKEN, SITE_ID } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
 const user = {
@@ -11,7 +11,7 @@ const user = {
     avatar: '',
     roles: [],
     info: {},
-    site_id: undefined,// 站点id
+    site_id: storage.get(SITE_ID),// 站点id
   },
 
   mutations: {
@@ -52,6 +52,8 @@ const user = {
 
             storage.set(ACCESS_TOKEN, res.data.token, 7 * 24 * 60 * 60 * 1000)
             commit('SET_TOKEN', res.data.token)
+
+            storage.set(SITE_ID, res.data.site_id, 7 * 24 * 60 * 60 * 1000)
             commit('SET_SITE_ID', res.data.site_id)
             commit('SET_NAME', { name: res.data.user_name, welcome: welcome() })
             resolve()
@@ -111,6 +113,7 @@ const user = {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           storage.remove(ACCESS_TOKEN)
+          storage.remove(SITE_ID)
           resolve()
         }).catch(() => {
           resolve()

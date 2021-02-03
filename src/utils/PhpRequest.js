@@ -17,8 +17,15 @@ const PhpRequest = axios.create({
 const errorHandler = (error) => {
   if (error.response) {
     const data = error.response.data
+    // console.log(data)
     // 从 localstorage 获取 token
     const token = storage.get(ACCESS_TOKEN)
+    if (error.response.status === 500) {
+      notification.error({
+        message: 'Forbidden',
+        description: data.message
+      })
+    }
     if (error.response.status === 403) {
       notification.error({
         message: 'Forbidden',
@@ -61,7 +68,8 @@ PhpRequest.interceptors.response.use((response) => {
     return res
   }else{
     notification.error({
-      message: res.msg
+      message: 'Forbidden',
+      description: res.msg
     })
     store.dispatch('Logout').then(() => {
       setTimeout(() => {
