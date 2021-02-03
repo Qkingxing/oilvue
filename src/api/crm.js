@@ -14,7 +14,6 @@ export function getOldUserList (data) {
 }
 // 获取获取标签列表
 export function getlabellist (data) {
-  console.log(store)
   return PhpRequest({
     url: '/user/labellist',
     method: 'post',
@@ -28,6 +27,14 @@ export function getlabellist (data) {
 export function labelsave (data) {
   return PhpRequest({
     url: '/user/labelsave',
+    method: 'post',
+    data
+  })
+}
+// 客户标签详情
+export function getLabeldetails (data) {
+  return PhpRequest({
+    url: '/user/labeldetails',
     method: 'post',
     data
   })

@@ -48,7 +48,6 @@
 <script>
 import { STable } from '@/components'
 
-import { getRoleList, getServiceList } from '@/api/manage'
 import { getUserBasicslist } from '@/api/crm'
 
 export default {

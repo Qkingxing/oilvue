@@ -17,46 +17,49 @@
       <div class="label-info">
         <div class="info-item">
           <div class="title">标签名称</div>
-          <div class="content">测试</div>
-          <a>修改名称</a>
+          <div class="content">{{name}}</div>
+          <a @click="showEditTag('editTag')">修改名称</a>
         </div>
         <div class="info-item">
           <div class="title">客户人数</div>
-          <div class="content">0</div>
+          <div class="content">{{count}}</div>
         </div>
         <div class="info-item">
           <div class="title">应用活动</div>
-          <div class="content">-</div>
+          <div class="content">开发中...</div>
         </div>
       </div>
       <div class="table-title">客户列表</div>
 
       <!-- 表格 -->
-      <div class="showDataForTable">
+      <div class="showDataForTable tag_detail">
         <s-table
           ref="table"
           size="default"
-          rowKey="key"
+          rowKey="id"
           :columns="columns"
           :data="loadData"
-          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         >
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">删除</a>
+              <a @click="delTag(record)">修改</a>
+              <a-divider type="vertical" />
+              <a @click="delTag(record)">移除</a>
             </template>
           </span>
         </s-table>
       </div>
     </a-layout-content>
-    <EditTag ref="EditTag"></EditTag>
+    <EditTag ref="EditTag" @save="resetList"></EditTag>
   </a-layout>
 </template>
 
 <script>
 import { STable } from '@/components'
 import EditTag from '../components/EditTag'
-import { getRoleList, getServiceList } from '@/api/manage'
+
+import { getServiceList } from '@/api/manage'
+import { getLabeldetails } from '@/api/crm'
 
 export default {
   name: 'CrmTagDetail',
@@ -66,33 +69,52 @@ export default {
   },
   data () {
     return {
-      // 查询参数
-      queryParam: { },
+      name: '',
+      count: 0,
       // 表头
       columns: [
         {
-          title: '标签名称',
-          dataIndex: 'no'
+          title: '客户子编号',
+          dataIndex: 'sonnumber'
         },
         {
-          title: '人数',
-          dataIndex: 'description'
+          title: '手机号',
+          dataIndex: 'mobile'
         },
         {
-          title: '应用活动（次）',
-          dataIndex: 'status',
-          needTotal: true
+          title: '会员等级',
+          dataIndex: 'level_name'
         },
         {
-          title: '创建时间',
-          dataIndex: 'time',
-          needTotal: true
+          title: '客户身份',
+          // dataIndex: 'level_name'
         },
         {
-          title: '标签数据更新时间',
-          // dataIndex: 'status',
-          needTotal: true
+          title: '油品偏好',
+          dataIndex: 'oils_name'
         },
+        {
+          title: '车牌号',
+          // dataIndex: 'level_name'
+        },
+        {
+          title: '最近加油时间',
+          dataIndex: 'last_time'
+        },
+        {
+          title: '近30天加油（升）',
+          // dataIndex: 'level_name'
+        },
+        {
+          title: '偏好油站',
+          dataIndex: 'site_name'
+        },
+        // {
+        //   title: '应用活动（次）',
+        //   dataIndex: 'status',
+        //   needTotal: true
+        // },
+
         {
           title: '操作',
           dataIndex: 'action',
@@ -101,30 +123,39 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
-      },
-      selectedRowKeys: [],
-      selectedRows: [],
-
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
+        // console.log('loadData.parameter', parameter)
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+          id: this.$route.query.id
         }
+        return getLabeldetails(Object.assign(params)).then(res => {
+          console.log(res.data)
+          let { name, count } = res.data
+          this.name = name
+          this.count = count
+          // 自定义出参
+          // console.log(res.data.list)
+          this.oldTotal = res.data.userinfo.total
+          return {
+            data: res.data.userinfo.data, // 列表数组
+            pageNo: res.data.userinfo.current_page,  // 当前页码
+            pageSize: res.data.userinfo.per_page,  // 每页页数
+            totalCount: res.data.userinfo.total, // 列表总条数
+            // totalPage: res.data.totalPage // 列表总页数
+          }
+        })
       },
-      optionAlertShow: false
     }
   },
   created () {
-    this.tableOption()
-    getRoleList({ t: new Date() })
+    console.log(this.$route.query.id)
+
   },
   methods: {
+    resetList(){
+      this.$refs.table.refresh(true)
+    },
     delTag () {
       this.$confirm({
         title: '温馨提示',
@@ -138,29 +169,8 @@ export default {
       })
     },
     showEditTag (type) {
-      this.$refs['EditTag'].show(type)
+      this.$refs['EditTag'].show(type, this.$route.query.id, this.name)
     },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
-    }
   }
 }
 </script>
@@ -238,4 +248,14 @@ export default {
   cursor: pointer;
 }
 
+</style>
+<style lang="less">
+.showDataForTable{
+  &.tag_detail{
+    .ant-table{
+      font-size: 12px;
+    }
+  }
+  
+}
 </style>

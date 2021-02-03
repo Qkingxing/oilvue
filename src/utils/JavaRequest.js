@@ -71,11 +71,11 @@ JavaRequest.interceptors.response.use((response) => {
       message: 'Forbidden',
       description: res.msg
     })
-    store.dispatch('Logout').then(() => {
-      setTimeout(() => {
-        window.location.reload()
-      }, 1500)
-    })
+    // store.dispatch('Logout').then(() => {
+    //   setTimeout(() => {
+    //     window.location.reload()
+    //   }, 1500)
+    // })
   }
   return res
 }, errorHandler)

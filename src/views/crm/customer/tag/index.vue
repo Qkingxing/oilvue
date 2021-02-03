@@ -79,10 +79,11 @@ export default {
           title: '人数',
           dataIndex: 'count',
         },
-        {
-          title: '应用活动（次）',
+        // 暂时不做
+        // {
+          // title: '应用活动（次）',
           // dataIndex: 'status',
-        },
+        // },
         {
           title: '创建时间',
           dataIndex: 'create_time',
@@ -105,7 +106,7 @@ export default {
           size: parameter.pageSize, // 每页页数
         }
         return getlabellist(Object.assign(params)).then((res)=>{
-          console.log(res)
+          console.log(res.data.data)
           // 自定义出参
           // console.log(res.data.list)
           this.oldTotal = res.data.total

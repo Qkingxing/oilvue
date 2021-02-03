@@ -23,7 +23,7 @@
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
             :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
@@ -54,7 +54,6 @@
 <script>
 import { STable } from '@/components'
 
-import { getServiceList } from '@/api/manage'
 import { getGroupinglist } from '@/api/crm'
 
 export default {
@@ -89,11 +88,12 @@ export default {
           dataIndex: 'grouping_type',
           key: 'grouping_type',
         },
-        {
-          title: '应用活动次数',
-          dataIndex: 'status',
-          key: 'status',
-        },
+        // 暂时不做
+        // {
+        //   title: '应用活动次数',
+        //   dataIndex: 'status',
+        //   key: 'status',
+        // },
         {
           title: '客户群创建时间',
           dataIndex: 'create_time',
