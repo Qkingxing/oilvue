@@ -13,7 +13,7 @@
                 <span class="a">登录账号</span>
                 <span class="b">openUser</span>
                 <!-- <span class="c">修改登陆密码</span> -->
-                <span class="text" type="primary" @click="bba"> 修改登陆密码 </span>
+                <span class="text" type="primary" @click="amend"> 修改登陆密码 </span>
                 <div class="password">
                   <a-modal
                     class="aaa"
@@ -26,23 +26,28 @@
                     <p class="tips-title">* 密码由英文与数字混合组成，并且不短于8位</p>
                     <div class="inp">
                       <p>输入原密码</p>
-                      <a-input-password v-model="input1" />
+                      <a-input-password @change="inp" v-model="input1" />
                     </div>
-                    <span class="text1" v-show="show1" style="padding-left: 185px">密码不能为空</span>
+                    <span class="text1" v-show="show1 == 1" style="padding-left: 185px">密码不能为空</span>
                     <div class="inp">
                       <p>输入新密码</p>
-                      <a-input-password v-model="input2" />
+                      <a-input-password @input="inp1" v-model="input2" />
                     </div>
-                    <span class="text1" v-show="show2" style="padding-left: 185px"
-                      >长度为8-14个字符，字母/数字至少包含2种</span
+                    <span class="text1" v-show="show2 == 1" style="padding-left: 185px"
+                      >长度为1-8个字符，字母或数字</span
                     >
+
+                    <span class="text1" v-show="show4 == 1" style="padding-left: 185px">请输入账户登录密码</span>
+
                     <div class="inp">
                       <p>重复新密码</p>
-                      <a-input-password v-model="input3" />
+                      <a-input-password @input="inp2" v-model="input3" />
                     </div>
-                    <span class="text1" v-show="show3" style="padding-left: 185px"
-                      >长度为8-14个字符，字母/数字至少包含2种</span
+                    <span class="text1" v-show="show5 == 1" style="padding-left: 185px"
+                      >长度为1-8个字符，字母或数字</span
                     >
+
+                    <span class="text1" v-show="show7 == 1" style="padding-left: 185px">请输入账户登录密码</span>
                   </a-modal>
                 </div>
               </div>
@@ -125,20 +130,67 @@ export default {
       input1: '',
       input2: '',
       input3: '',
-      show1: false,
-      show2: false,
-      show3: false,
+      show1: null,
+      show2: null,
+
+      show4: null,
+      show5: null,
+
+      show7: null,
     }
   },
   methods: {
-    bba() {
+    inp() {
+      if (!this.input1) {
+        this.show1 = 1
+      } else {
+        this.show1 = null
+      }
+    },
+    inp1() {
+      if (!this.input2) {
+        this.show4 = 1
+      } else {
+        this.show4 = null
+      }
+      this.input2 = this.input2.replace(/[^\a-\z\A-\Z0-9]/g, '')
+      if (this.input2.length < 8 && this.input2) {
+        this.show2 = 1
+      } else {
+        this.show2 = null
+      }
+    },
+    inp2() {
+      this.input3 = this.input3.replace(/[^\a-\z\A-\Z0-9]/g, '')
+      if (!this.input3) {
+        this.show7 = 1
+      } else {
+        this.show7 = null
+      }
+      if (this.input3.length < 8 && this.input3) {
+        this.show5 = 1
+      } else {
+        this.show5 = null
+      }
+    },
+    amend() {
       this.setModal1Visible(true)
     },
     yes() {
-      return personage().then((res) => {
-        console.log(res.data)
-        this.setModal1Visible(false)
-      })
+      if (this.input2 != this.input3 && this.input2.length != this.input3.length) {
+        this.$message.error('密码不一致')
+      } else if (!this.input1) {
+        this.$message.error('原密码不能为空')
+      } else if (this.input1.length < 8) {
+        this.$message.error('原密码不能小于8位数')
+      } else if (this.input2.length < 8 && this.input3.length < 8) {
+        this.$message.error('新密码长度长度为1-8个字符，字母或数字')
+      } else {
+        return personage({ oldpassword: this.input1, newpassword: this.input2 }).then((res) => {
+          console.log(res.data)
+          this.setModal1Visible(false)
+        })
+      }
     },
     no() {
       this.setModal1Visible(false)
@@ -220,7 +272,7 @@ export default {
     width: 75%;
   }
 
-  padding: 26px 100px 0;
+  padding: 13px 100px 0;
 }
 /deep/ .ant-modal-footer {
   text-align: center;
@@ -234,7 +286,9 @@ export default {
     line-height: 40px;
   }
 }
-
+.text1 {
+  color: red;
+}
 .mainContainreBox {
   position: relative;
   display: flex;
