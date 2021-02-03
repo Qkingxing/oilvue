@@ -6,7 +6,7 @@
          <countTo
               class="value"
               :startVal="0"
-              :endVal="269383"
+              :endVal="list.order_total"
               :duration="3000"
             ></countTo>
         <span class="unte">元</span>
@@ -39,11 +39,15 @@
 import IconSelector from '@/components/IconSelector'
 
 export default {
+  props:['list'],
   components: { IconSelector },
   data() {
     return {
       data: [],
     }
+  },
+  created(){
+    console.log(this.list)
   },
   methods: {},
 }

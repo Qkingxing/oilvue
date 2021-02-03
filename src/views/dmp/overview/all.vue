@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <div class="search" style="margin-top: 15px">
       <div
         class="search-li"
@@ -11,45 +11,39 @@
         {{ item.name }}
       </div>
       <div class="zidingyi">
-          <a-range-picker v-if="dateKey == 'zidingyi'" />
+        <a-range-picker @change="onChange" v-if="dateKey == '5'" />
       </div>
     </div>
-    <div v-if="dateKey == 'jintian'">
-      <component :is="vivew"></component>
+    <div v-if="dateKey == '1'">
+      <component :lists='lists' v-if="Object.keys(lists).length > 0" :is="vivew"></component>
     </div>
-    <div class="time" v-if="dateKey == 'zuotian'">
+    <div class="time" v-if="dateKey == '2'">
       <div class="head-title">销售总数据</div>
-      <div class="saleall">
+      <div class="saleall" v-for="(list, index) in lists" :key="index">
         <div class="saleall-container">
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
+          <number-card :list='list'></number-card>
         </div>
       </div>
 
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
         <a-popover placement="bottom">
-        <template slot="content">
-          <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-          <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-          <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-          <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-        </div>
-        </template>
-       
-        <a-button>切换</a-button>
-      </a-popover>
-        
+          <template slot="content">
+            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+            </div>
+          </template>
+
+          <a-button>切换</a-button>
+        </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
           <line-charts></line-charts>
         </a-col>
-        
+
         <a-col :span="20" v-if="line == 2">
           <line-charts></line-charts>
           哈哈我出来了
@@ -58,7 +52,6 @@
           <line-charts></line-charts>
           哈哈我也出来了
         </a-col>
-        
       </a-row>
 
       <div class="head-title">点比分析</div>
@@ -86,15 +79,14 @@
       </a-row>
     </div>
 
-    <div v-if="dateKey == 'benzhou'">
-        
-      <component :is="vivew"></component>
+    <div v-if="dateKey == '3'">
+      <component :lists='lists' v-if="Object.keys(lists).length > 0" :is="vivew"></component>
     </div>
-    <div v-if="dateKey == 'benyue'">
-      <component :is="vivew"></component>
+    <div v-if="dateKey == '4'">
+<component :lists='lists' v-if="Object.keys(lists).length > 0" :is="vivew"></component>
     </div>
-    <div v-if="dateKey == 'zidingyi'">
-      <component :is="vivew"></component>
+    <div v-if="dateKey == '5'">
+      <component :lists='lists' v-if="Object.keys(lists).length > 0" :is="vivew"></component>
     </div>
   </div>
 </template>
@@ -104,6 +96,7 @@ import G2 from './components/G2'
 import times from './times'
 import NumberCard from './components/numberCard'
 import LineCharts from './components/LineCharts'
+import { dashboard } from '@/api/data'
 export default {
   name: 'Dashboard',
   components: {
@@ -118,19 +111,40 @@ export default {
       line: 1,
       vivew: 'times',
       dates: [
-        { key: 'jintian', name: '今天' },
-        { key: 'zuotian', name: '昨天' },
-        { key: 'benzhou', name: '本周' },
-        { key: 'benyue', name: '本月' },
-        { key: 'zidingyi', name: '自定义' },
+        { key: '1', name: '今天' },
+        { key: '2', name: '昨天' },
+        { key: '3', name: '本周' },
+        { key: '4', name: '本月' },
+        { key: '5', name: '自定义' },
       ],
-      key: 'quanbu',
+      key: '1',
       noTitleKey: 'quanbu',
-      dateKey: 'jintian',
+	  dateKey: '1',
+	  lists:{}
     }
   },
   mounted() {},
+  created() {
+    this.setData()
+  },
   methods: {
+    onChange(date, dateString) {
+      this.setData(dateString, 1)
+    },
+    setData(index, time) {
+      if (time == 1) {
+        let starting_time = index[0]
+        let end_time = index[1]
+        return dashboard({ starting_time: starting_time, end_time: end_time }).then((res) => {
+          console.log(res.data)
+        })
+      } else {
+        return dashboard({ time_type: index }).then((res) => {
+		  console.log(res.data)
+		  this.lists = res.data
+        })
+      }
+    },
     income(index) {
       if (index == 1) {
         this.line = 1
@@ -147,6 +161,17 @@ export default {
     },
     changeDate(key) {
       this.dateKey = key
+      if (this.dateKey == '1') {
+        this.setData(this.dateKey)
+      } else if (this.dateKey == '2') {
+        this.setData(this.dateKey)
+      } else if (this.dateKey == '3') {
+        this.setData(this.dateKey)
+      } else if (this.dateKey == '4') {
+        this.setData(this.dateKey)
+      } else if (this.dateKey == '5') {
+        this.setData(this.dateKey)
+      }
     },
   },
 }
@@ -203,9 +228,9 @@ export default {
       display: flex;
       flex: 1 1 20%;
       max-width: 20%;
-        background-image: url('./img/bei.png');
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
+      background-image: url('./img/bei.png');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
     }
   }
 }

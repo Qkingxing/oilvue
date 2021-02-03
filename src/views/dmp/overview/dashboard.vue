@@ -2,20 +2,17 @@
   <a-layout>
     <a-layout-content :style="{ padding: '0 0 0 24px', background: '#fff' }">
       <a-card :bordered="false" class="dashboard">
-            <a-card
-            :tabList="tabList"
-            :bordered="false"
-            :active-tab-key="key"
-            @tabChange="(key) => onTabChange(key, 'key')"
-            >
-            
-            </a-card>
-         
-        
-         <div>
-            <component :is="view"></component>
+        <a-card
+          :tabList="tabList"
+          :bordered="false"
+          :active-tab-key="key"
+          @tabChange="(key) => onTabChange(key, 'key')"
+        >
+        </a-card>
+
+        <div>
+          <component :is="view"></component>
         </div>
-        
       </a-card>
     </a-layout-content>
   </a-layout>
@@ -34,27 +31,21 @@ export default {
     oils,
     bianlidian,
     shanfu,
-    tuanyou
+    tuanyou,
   },
 
   data() {
     return {
-      view:'all',
-     
+      view: 'all',
+
       tabList: [
         { key: 'quanbu', tab: '全部' },
-        { key: 'youpin', tab: '油品'},
+        { key: 'youpin', tab: '油品' },
         { key: 'shanfu', tab: '闪付' },
         { key: 'tuanyou', tab: '团油' },
         { key: 'bianlidian', tab: '便利店' },
       ],
-      dates: [
-        { key: 'jintian', name: '今天' },
-        { key: 'zuotian', name: '昨天' },
-        { key: 'benzhou', name: '本周' },
-        { key: 'benyue', name: '本月' },
-        { key: 'zidingyi', name: '自定义' },
-      ],
+
       lineData: [
         { year: '10/20', value: 30 },
         {
@@ -95,30 +86,32 @@ export default {
       dateKey: 'jintian',
     }
   },
-
+  created(){
+  },
   methods: {
+   
     onTabChange(key, type) {
-        switch(key){
-            case 'quanbu':
-                this.view = 'all'
-                break
-            case 'youpin':
-                this.view = 'oils'
-                break
-            case 'shanfu':
-                this.view = 'shanfu'
-                break
-            case 'tuanyou':
-                this.view = 'tuanyou'
-                break
-            case 'bianlidian':
-                this.view = 'bianlidian'
-                break
-            default:
-                this.view = 'all'
-        }
-       
-        this[type] = key
+      switch (key) {
+        case 'quanbu':
+          this.view = 'all'
+          break
+        case 'youpin':
+          this.view = 'oils'
+          break
+        case 'shanfu':
+          this.view = 'shanfu'
+          break
+        case 'tuanyou':
+          this.view = 'tuanyou'
+          break
+        case 'bianlidian':
+          this.view = 'bianlidian'
+          break
+        default:
+          this.view = 'all'
+      }
+
+      this[type] = key
     },
 
     changeDate(key) {
@@ -141,8 +134,8 @@ export default {
 </script>
 
 <style lang="less">
-.ant-card-head{
-    padding: 0;
+.ant-card-head {
+  padding: 0;
 }
 
 .head-title {
@@ -154,5 +147,4 @@ export default {
   line-height: 60px;
   display: flex;
 }
-
 </style>

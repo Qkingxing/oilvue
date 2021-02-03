@@ -1,22 +1,9 @@
 <template>
   <div class="boxs">
     <div class="head-title">销售总数据</div>
-    <div class="saleall">
+    <div class="saleall" v-for="(list,index) in lists" :key="index">
       <div class="saleall-container">
-         
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
-        <number-card></number-card>
+        <number-card :list='list'></number-card>
       </div>
     </div>
 
@@ -157,6 +144,7 @@ import NumberCard from './components/numberCard'
 import Charts from './components/charts'
 import LineCharts from './components/LineCharts'
 export default {
+	props:['lists'],
   name: 'Dashboard',
   components: {
     NumberCard,
@@ -215,7 +203,9 @@ export default {
       dateKey: 'jintian',
     }
   },
-
+	created(){
+		console.log(this.lists)
+	},
   methods: {
     income(index) {
       if (index == 1) {

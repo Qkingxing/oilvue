@@ -31,7 +31,8 @@ export function getServiceList (parameter) {
   return request({
     url: api.service,
     method: 'get',
-    params: parameter
+    params: parameter,
+    
   })
 }
 
