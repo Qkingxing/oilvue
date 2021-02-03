@@ -26,7 +26,7 @@
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
             :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
@@ -46,7 +46,7 @@
           </s-table>
         </div>
       </a-layout-content>
-      <EditTag ref="EditTag"></EditTag>
+      <EditTag ref="EditTag" @save="resetList"></EditTag>
     </a-layout>
     <router-view />
   </div>
@@ -72,34 +72,34 @@ export default {
       columns: [
         {
           title: '标签名称',
-          key: 'name',
+          // key: 'name',
           dataIndex: 'name',
           scopedSlots: { customRender: 'name' }
         },
         {
           title: '人数',
-          dataIndex: 'count',
+          // dataIndex: 'count',
           key: 'count',
         },
         {
           title: '应用活动（次）',
-          dataIndex: 'status',
-          key: 'status',
+          // dataIndex: 'status',
+          // key: 'status',
         },
         {
           title: '创建时间',
           dataIndex: 'create_time',
-          key: 'create_time',
+          // key: 'create_time',
         },
         {
           title: '标签数据更新时间',
           dataIndex: 'update_time',
-          key: 'update_time',
+          // key: 'update_time',
         },
         {
           title: '操作',
           dataIndex: 'action',
-          key: 'action',
+          // key: 'action',
           scopedSlots: { customRender: 'action' }
         }
       ],
@@ -143,6 +143,9 @@ export default {
     this.tableOption()
   },
   methods: {
+    resetList(){
+      this.$refs.table.refresh(true)
+    },
     delTag () {
       this.$confirm({
         title: '温馨提示',

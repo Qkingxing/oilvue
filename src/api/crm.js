@@ -19,6 +19,14 @@ export function getlabellist (data) {
     data
   })
 }
+// 新增或修改客户标签
+export function labelsave (data) {
+  return PhpRequest({
+    url: '/user/labelsave',
+    method: 'post',
+    data
+  })
+}
 // 获取客户分群列表
 export function getGroupinglist (data) {
   return JavaRequest({

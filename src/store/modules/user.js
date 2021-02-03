@@ -10,7 +10,8 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
-    info: {}
+    info: {},
+    site_id: undefined,// 站点id
   },
 
   mutations: {
@@ -29,6 +30,9 @@ const user = {
     },
     SET_INFO: (state, info) => {
       state.info = info
+    },
+    SET_SITE_ID: (state, site_id) => {
+      state.site_id = site_id
     }
   },
 
@@ -48,6 +52,7 @@ const user = {
 
             storage.set(ACCESS_TOKEN, res.data.token, 7 * 24 * 60 * 60 * 1000)
             commit('SET_TOKEN', res.data.token)
+            commit('SET_SITE_ID', res.data.site_id)
             commit('SET_NAME', { name: res.data.user_name, welcome: welcome() })
             resolve()
           }else{
