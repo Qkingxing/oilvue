@@ -12,7 +12,7 @@
             <a-radio-group v-model="time_type">
               <a-radio :style="radioStyle" :value="2">
                 统一过期，每年&nbsp;&nbsp;
-                <a-date-picker />
+                <a-date-picker @change="onChangeTime"/>
               </a-radio>
               <a-radio :style="radioStyle" :value="1">
                 永久有效
@@ -92,6 +92,10 @@ export default {
       console.log(res.data)
       
 
+    },
+    onChangeTime(date, dateString){
+      console.log(date)
+      console.log(dateString)
     },
     onChangeRadio(){
       console.log(this.checkboxValue)
