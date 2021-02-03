@@ -80,3 +80,21 @@ export function queryMemberSpalevel (data) {
     data
   })
 }
+// 获取积分设置
+export function getIntegrallist () {
+  return PhpRequest({
+    url: '/user/integrallist',
+    method: 'post',
+    data: {
+      group_id: store.getters.group_id,
+      site_id: store.getters.site_id
+    }
+  })
+}
+// 享受优惠不可获积分列表
+export function getCannotintegral () {
+  return PhpRequest({
+    url: '/user/cannotintegral',
+    method: 'post'
+  })
+}

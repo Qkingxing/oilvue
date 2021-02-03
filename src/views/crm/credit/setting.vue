@@ -9,12 +9,12 @@
           </div>
           <div class="deploy-item">
             <div class="label">积分过期</div>
-            <a-radio-group v-model="value">
-              <a-radio :style="radioStyle" :value="1">
+            <a-radio-group v-model="time_type">
+              <a-radio :style="radioStyle" :value="2">
                 统一过期，每年&nbsp;&nbsp;
                 <a-date-picker />
               </a-radio>
-              <a-radio :style="radioStyle" :value="2">
+              <a-radio :style="radioStyle" :value="1">
                 永久有效
               </a-radio>
 
@@ -26,6 +26,7 @@
               v-model="checkboxValue"
               name="checkboxgroup"
               :options="plainOptions"
+              @change="onChangeRadio"
             />
           </div>
           <div class="btn-box">
@@ -40,7 +41,9 @@
 
 <script>
 
-const plainOptions = ['优惠券优惠', '会员等级优惠', '价立减优惠', '满减优惠']
+// const plainOptions = ['优惠券优惠', '会员等级优惠', '价立减优惠', '满减优惠']
+
+import { getIntegrallist, getCannotintegral } from '@/api/crm'
 
 export default {
   name: 'Setting',
@@ -49,21 +52,50 @@ export default {
   },
   data () {
     return {
-      value: 1,
-      plainOptions,
-      checkboxValue: plainOptions,
+      time_type: 1,
+      plainOptions: [],
+      checkboxValue: [],
       radioStyle: {
         display: 'block',
         height: '40px',
         lineHeight: '40px',
         marginBottom: '20px'
+      },
+      form:{
+        expiration_time: undefined,
+        //[string]	是	过期时间 如果前端传递的是1的话，那么就是永久		
+        cannot_cause: undefined,
+        //[string]	是	享受优惠不可获积分		
+        id: undefined, //复制
+        //[string]		修改的时候使用
       }
     }
   },
   created () {
+    this.init()
+    
 
   },
   methods: {
+    async init(){
+      let options = await getCannotintegral()
+
+      this.plainOptions = options.data.map(e=>{
+        return {
+          label: e.name,
+          value: e.id
+        }
+      })
+
+    // getIntegrallist().then(res=>{
+    //   console.log(res)
+    // })
+      
+
+    },
+    onChangeRadio(){
+      console.log(this.checkboxValue)
+    }
   }
 }
 </script>
