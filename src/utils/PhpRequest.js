@@ -55,7 +55,20 @@ PhpRequest.interceptors.request.use(config => {
 
 // response interceptor
 PhpRequest.interceptors.response.use((response) => {
-  return response.data
+  let res = response.data
+
+  if (res.code==200) {
+    return res
+  }else{
+    notification.error({
+      message: res.msg
+    })
+    store.dispatch('Logout').then(() => {
+      setTimeout(() => {
+        window.location.reload()
+      }, 1500)
+    })
+  }
 }, errorHandler)
 
 const installer = {
