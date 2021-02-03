@@ -37,6 +37,11 @@
 <script>
 export default {
   name: 'notPermission',
+  data(){
+    return {
+      
+    }
+  }
 }
 </script>
 

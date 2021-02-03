@@ -1176,7 +1176,7 @@ export const asyncRouterMap = [
   },
   {
     path: '*',
-    redirect: '/404',
+    redirect: '/notPermission',
     hidden: true
   }
 ]
