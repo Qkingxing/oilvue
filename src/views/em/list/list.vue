@@ -1,14 +1,15 @@
 
 <template>
-  <a-layout>
+  <div>开发中...</div>
+  <!-- <a-layout>
     <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
 
       <a-tabs default-active-key="1" size="large">
         <a-tab-pane key="1" tab="积分变动记录">
           <div class="filterContentContainer">
-            <div class="screen">
+            <div class="screen"> -->
               <!-- <a-range-picker show-time></a-range-picker> -->
-            </div>
+            <!-- </div>
             <div>
               <a-input-search placeholder="请输入活动id/活动名称" style="width: 200px" />
             </div>
@@ -62,7 +63,7 @@
       </a-tabs>
     </a-layout-content>
 
-  </a-layout>
+  </a-layout> -->
 </template>
 
 <script>
