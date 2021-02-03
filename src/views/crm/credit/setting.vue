@@ -87,9 +87,9 @@ export default {
         }
       })
 
-    // getIntegrallist().then(res=>{
-    //   console.log(res)
-    // })
+      let res = await getIntegrallist()
+
+      console.log(res.data)
       
 
     },
