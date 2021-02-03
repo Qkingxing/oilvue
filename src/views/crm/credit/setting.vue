@@ -99,6 +99,7 @@ export default {
     },
     onChangeRadio(){
       console.log(this.checkboxValue)
+      // 数组转字符串
     }
   }
 }
