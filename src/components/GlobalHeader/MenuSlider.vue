@@ -7,11 +7,13 @@
             <div class="main-custom-menu">
                 <div class="main-custom-menu_container public_global_scrollHidden">
                     <div class="custom-menuContainer custom-menu">
+                        <!-- 一级 -->
                         <div 
                             class="menu-master"
                             v-for="(item,index) in menus"
                             :key="index">
                             <div 
+                                v-if="!item.hidden"
                                 class="menu-master-box" 
                                 :linkactive="$route.meta.title.includes(item.meta.title)?'1':''"
                                 @click="fatharLink(item)"
@@ -30,7 +32,7 @@
         </div>
 
 
-        <div class="main-menu-sider-children" @mouseleave="leave()">
+        <div class="main-menu-sider-children" @mouseleave="leave()" v-if="!childMenu.hidden">
             <div class="main-menu-sider-children-header">
                 {{i18nRender(childMenu.meta.title)}}
             </div>
@@ -41,18 +43,12 @@
                         mode="inline"
                         :open-keys.sync="openKeys"
                         >
-                        <template v-if="childMenu.children.length==1">
-                            <a-menu-item
-                                v-for="item in childMenu.children"
-                                :key="item.name">
-                                <router-link
-                                    :to="{ name: item.name }">{{i18nRender(item.meta.title)}}</router-link>
-                            </a-menu-item>
-                        </template>
 
-                        <template v-else>
+
+                        <template v-for="item in childMenu.children">
+                            <!-- 二级有子 -->
                             <a-sub-menu
-                                v-for="item in childMenu.children"
+                                v-if="item.children"
                                 :key="item.name">
                                 <span slot="title" style="padding-left: 5px;">
                                     {{i18nRender(item.meta.title)}}
@@ -60,6 +56,7 @@
 
                                 <template
                                     v-for="it in item.children">
+                                    <!-- 三级 -->
                                     <a-menu-item
                                         :key="it.name"
                                         >
@@ -68,7 +65,18 @@
                                     </a-menu-item>
                                 </template>
                             </a-sub-menu>
-                            
+
+                            <!-- 二级无子 -->
+                            <a-menu-item
+                                v-else
+                                :key="item.name">
+                                <router-link
+                                    style="text-indent: 22px;"
+                                    :to="{ name: item.name }">{{i18nRender(item.meta.title)}}</router-link>
+                            </a-menu-item>
+
+
+
                         </template>
                         
                     </a-menu>
@@ -104,9 +112,13 @@ export default {
     computed:{
         childMenu(){
             // console.log(this.menus[this.fatherIndex])
-            let arr = this.menus[this.fatherIndex].children.map((e,i)=>{
-                return e.name
-            })
+            let arr = []
+            if (this.menus[this.fatherIndex].children) {
+                arr = this.menus[this.fatherIndex].children.map((e,i)=>{
+                    return e.name
+                })
+            }
+            
             // console.log(arr)
             this.openKeys = arr
             return this.menus[this.fatherIndex]
@@ -128,9 +140,13 @@ export default {
         i18nRender,
         enter(index){
             this.fatherIndex = index
+            this.$emit('open')
         },
         leave(){
             this.fatherIndex = oldIndex
+            if (this.$route.name == 'notPermission') {
+                this.$emit('close')
+            }
         },
         findFatherIndex(){
             let index = this.menus.findIndex((e)=>{

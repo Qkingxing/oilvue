@@ -551,7 +551,7 @@ export const asyncRouterMap = [
         children: [
           {
             path: '/goods/warehouse',
-            name: 'warehouse',
+            name: 'Warehouse',
             redirect: '/goods/warehouse/my',
             component: () => import('@/views/goods/warehouse'),
             meta: { title: 'menu.goods.warehouse', keepAlive: true },
@@ -847,6 +847,14 @@ export const asyncRouterMap = [
             meta: { title: 'menu.support.help', keepAlive: true }
           }
         ]
+      },
+      // notPermission
+      {
+        path: '/notPermission',
+        name: 'notPermission',
+        component: () => import('@/views/notPermission'),
+        hidden: true,
+        meta: { title: 'menu.notPermission', hidden: true},
       }
       // dashboard
       // {

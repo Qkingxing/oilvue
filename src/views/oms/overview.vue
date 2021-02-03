@@ -216,7 +216,7 @@ const tableOptions = [
   { label: '会员等级', value: '会员等级' },
 ];
 export default {
-  name: 'Clist',
+  name: 'Ooverview',
   components: {
     STable
   },

@@ -29,6 +29,8 @@
     <!-- 自定义菜单 -->
     <template v-slot:menuRender>
       <MenuSlider
+        @open="openSilder"
+        @close="closeSlider"
         :menus="menus"></MenuSlider>
     </template>
     <!-- 1.0.0+ 版本 pro-layout 提供 API,
@@ -138,6 +140,10 @@ export default {
     this.$watch('isMobile', () => {
       this.$store.commit(TOGGLE_MOBILE_TYPE, this.isMobile)
     })
+    // console.log(this.$route)
+    if (this.$route.name == 'notPermission') {
+      this.closeSlider()
+    }
   },
   mounted () {
     const userAgent = navigator.userAgent
@@ -176,6 +182,12 @@ export default {
       // console.log(val)
       this.siderWidth = this.siderWidth===120 ? 252 : 120
     },
+    openSilder(){
+      this.siderWidth = 252
+    },
+    closeSlider(){
+      this.siderWidth = 120
+    }
     // handleSettingChange ({ type, value }) {
     //   console.log('type', type, value)
     //   type && (this.settings[type] = value)
