@@ -77,6 +77,7 @@ PhpRequest.interceptors.response.use((response) => {
       }, 1500)
     })
   }
+  return res
 }, errorHandler)
 
 const installer = {
