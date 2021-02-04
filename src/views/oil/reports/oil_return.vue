@@ -7,6 +7,6 @@
 
 <script>
 export default {
-    name: 'OilReturn'
+    name: 'oil_return'
 }
 </script>
