@@ -9,3 +9,12 @@ export function personage(data){
     })
 
 }
+
+// 员工查询
+export function userinfolist(data){
+    return PhpRequest({
+        url:'work/userinfolist',
+        method: 'post',
+        data
+    })
+}

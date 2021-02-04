@@ -139,6 +139,7 @@ export default {
   methods: {
     resetList(){
       this.$refs.table.refresh(true)
+      
     },
     delTag () {
       this.$confirm({
