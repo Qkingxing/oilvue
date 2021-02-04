@@ -18,7 +18,7 @@
             <a-button> 创建营销活动 </a-button>
           </router-link>
           <a-button icon="export" v-if="selectedRows.length>0"> 导出数据 </a-button>
-          <a-button v-if="selectedRows.length>0"> 删除 </a-button>
+          <a-button v-if="selectedRows.length>0" @click="delAll"> 删除 </a-button>
         </div>
 
         <!-- 表格 -->
@@ -56,7 +56,7 @@
 import { STable } from '@/components'
 import EditTag from '../components/EditTag'
 
-import { getlabellist } from '@/api/crm'
+import { getlabellist, labeldel } from '@/api/crm'
 
 export default {
   name: 'Tag',
@@ -140,14 +140,42 @@ export default {
     resetList(){
       this.$refs.table.refresh(true)
     },
-    delTag () {
+    delAll(){
+      let that = this
+      // console.log(this.selectedRows)
+      let id = this.selectedRows.map(e=>{
+        return e.id
+      })
+      // console.log(id)
       this.$confirm({
         title: '温馨提示',
         content: '删除会清除标签全部信息，是否删除？',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          // console.log(item)
+          labeldel(id).then(res=>{
+            // console.log(res)
+            that.selectedRowKeys = []
+            that.selectedRows = []
+            that.$message.success('删除成功')
+            that.resetList()
+          })
+        },
+        onCancel () {}
+      })
+
+    },
+    delTag (item) {
+      let that = this
+      this.$confirm({
+        title: '温馨提示',
+        content: '删除会清除标签全部信息，是否删除？',
+        onOk () {
+          // console.log(item)
+          labeldel([item.id]).then(res=>{
+            // console.log(res)
+            that.$message.success('删除成功')
+            that.resetList()
+          })
         },
         onCancel () {}
       })

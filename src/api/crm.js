@@ -31,6 +31,14 @@ export function labelsave (data) {
     data
   })
 }
+// 删除客户标签，可批量
+export function labeldel (id) {
+  return PhpRequest({
+    url: '/user/labeldel',
+    method: 'post',
+    data:{id}
+  })
+}
 // 客户标签详情
 export function getLabeldetails (data) {
   return PhpRequest({
