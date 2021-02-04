@@ -7,7 +7,7 @@
           新增积分规则
         </a-button>
       </div>
-      <a-tabs default-active-key="1" size="large">
+      <a-tabs default-active-key="1" size="large" @change="onChangeTab">
         <a-tab-pane key="1" tab="进行中">
           <s-table
             ref="table"
@@ -62,7 +62,8 @@
 <script>
 import { STable } from '@/components'
 
-import { getRoleList, getServiceList } from '@/api/manage'
+import { getServiceList } from '@/api/manage'
+import { getIntegralrulelist } from '@/api/crm'
 
 export default {
   name: 'Rule',
@@ -71,6 +72,7 @@ export default {
   },
   data () {
     return {
+      type: 1,
       // 表头
       columns: [
         {
@@ -124,46 +126,36 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
-      },
-      selectedRowKeys: [],
-      selectedRows: [],
-
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+          type: this.type
         }
+        return getIntegralrulelist(Object.assign(params)).then(res=>{
+          console.log(res)
+          // 自定义出参
+          // console.log(res.data.list)
+          this.oldTotal = res.data.totalCount
+          return {
+            data: res.data.list, // 列表数组
+            pageNo: res.data.pageNo,  // 当前页码
+            pageSize: res.data.pageSize,  // 每页页数
+            totalCount: res.data.totalCount, // 列表总条数
+            totalPage: res.data.totalPage // 列表总页数
+          }
+        })
       },
-      optionAlertShow: false
+
     }
   },
   created () {
-    this.tableOption()
-    getRoleList({ t: new Date() })
+
   },
   methods: {
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    }
+    onChangeTab(type){
+      console.log(type)
+    },
+
   }
 }
 </script>
