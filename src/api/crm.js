@@ -98,3 +98,11 @@ export function getCannotintegral () {
     method: 'post'
   })
 }
+// 提交积分设置
+export function postIntegralset (data) {
+  return PhpRequest({
+    url: '/user/integralset',
+    method: 'post',
+    data
+  })
+}
