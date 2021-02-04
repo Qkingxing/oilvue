@@ -4,6 +4,23 @@ import PhpRequest from '@/utils/PhpRequest'
 import store from '@/store'
 
 
+// 获取偏爱的油品下拉
+export function getSonoillist () {
+  return PhpRequest({
+    url: '/user/sonoillist',
+    method: 'post',
+    data: {
+      site_id: store.getters.site_id,
+    }
+  })
+}
+// 获取偏爱油站下拉
+export function getSonsitelist () {
+  return PhpRequest({
+    url: '/user/sonsitelist',
+    method: 'post'
+  })
+}
 // 获取已有客户列表
 export function getOldUserList (data) {
   return PhpRequest({
