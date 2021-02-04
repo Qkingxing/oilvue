@@ -131,3 +131,11 @@ export function postIntegralset (data) {
     data
   })
 }
+// 积分规则列表
+export function getIntegralrulelist (data) {
+  return PhpRequest({
+    url: '/user/integralrulelist',
+    method: 'post',
+    data
+  })
+}
