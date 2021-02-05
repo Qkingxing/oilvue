@@ -2,8 +2,8 @@
   <div class="boxs">
     <div class="head-title">销售总数据</div>
     <div class="saleall_4">
-      <div class="saleall-container"  v-for="(list,index) in lists" :key="index">
-        <number-card :list='list'></number-card>
+      <div class="saleall-container" v-for="(list, index) in lists" :key="index">
+        <number-card :list="list"></number-card>
       </div>
     </div>
 
@@ -12,15 +12,14 @@
       <a-popover placement="bottom">
         <template slot="content">
           <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-          <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-          <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-          <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-        </div>
+            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+          </div>
         </template>
-       
+
         <a-button>切换</a-button>
       </a-popover>
-    
     </div>
 
     <a-row>
@@ -42,95 +41,95 @@
       <div class="tab_1">
         <a-tabs>
           <a-tab-pane key="1" tab="全部">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="2" tab="扫呗-微信">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="3" tab="扫呗-微信付款码">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="4" tab="团油 - 微信">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="5" tab="团油 - 微信小程序支付">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="6" tab="团油">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="7" tab="加油卡">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
       <div class="tab_1">
         <a-tabs>
           <a-tab-pane key="1" tab="全部">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="2" tab="92#">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="3" tab="0#">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="4" tab="95#">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
       <div class="tab_1">
         <a-tabs>
           <a-tab-pane key="1" tab="全部">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="2" tab="扫呗-微信">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="3" tab="扫呗-微信付款码">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="4" tab="团油 - 微信">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="5" tab="团油 - 微信小程序支付">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="6" tab="团油">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="7" tab="加油卡">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
       <div class="tab_1">
         <a-tabs>
           <a-tab-pane key="1" tab="全部">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="2" tab="92#">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="3" tab="0#">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="4" tab="95#">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
       <div class="tab_1">
         <a-tabs>
           <a-tab-pane key="1" tab="Tab 1">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="2" tab="Tab 2">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
           <a-tab-pane key="3" tab="Tab 3">
-            <G2></G2>
+            <G2 :nums='nums'></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
@@ -143,8 +142,9 @@ import G2 from './components/G2'
 import NumberCard from './components/numberCard'
 import Charts from './components/charts'
 import LineCharts from './components/LineCharts'
+import {analysiss} from '@/api/data'
 export default {
-	props:['lists'],
+  props: ['lists'],
   name: 'Dashboard',
   components: {
     NumberCard,
@@ -166,16 +166,23 @@ export default {
 
       key: 'quanbu',
       noTitleKey: 'quanbu',
-      dateKey: 'jintian',
+	  dateKey: 'jintian',
+	  nums:{}
     }
   },
-	created(){
-		console.log(this.lists)
-	},
+  created() {
+	  this.analysis()
+  },
   methods: {
-	  aisc(){
-		
-	  },
+	 analysis(){
+		 return analysiss({}).then(res=>{
+			res.data.map(item =>{
+				this.nums = item;
+				
+			})
+			console.log(this.nums)
+		 })
+	 },
     income(index) {
       if (index == 1) {
         this.line = 1
@@ -187,7 +194,7 @@ export default {
       }
       if (index == 3) {
         this.line = 3
-        return
+        returny
       }
     },
     handleClick(tab, event) {
@@ -267,7 +274,7 @@ export default {
 .saleall_4 {
   display: flex;
   // flex-direction: column;
-  flex-wrap:wrap !important;
+  flex-wrap: wrap !important;
   padding-bottom: 10px;
 
   .saleall-container {

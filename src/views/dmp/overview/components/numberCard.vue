@@ -6,7 +6,7 @@
          <countTo
               class="value"
               :startVal="0"
-              :endVal="list.number"
+              :endVal="Number(list.number)"
               :duration="3000"
             ></countTo>
         <span class="unte">元</span>

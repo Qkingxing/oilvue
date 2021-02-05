@@ -9,3 +9,12 @@ export function dashboard(data){
         data
     })
 }
+// 占比分析
+
+export function analysiss(data){
+    return JavaRequest({
+        url:'/data/get_sale_ratio',
+        method:'post',
+        data
+    })
+}
