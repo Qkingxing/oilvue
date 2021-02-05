@@ -13,18 +13,18 @@
       <a-range-picker v-if="dateKey == 'zidingyi'" />
     </div>
     <div v-if="dateKey == 'jintian'">
-      <component :is="vivew"></component>
+      <component :lists='lists' :is="vivew"></component>
     </div>
     <div class="time" v-if="dateKey == 'zuotian'">
       <div class="head-title">销售总数据</div>
-      <div class="saleall">
-        <div class="saleall-container">
+      <div class="saleall_2">
+        <div class="saleall-container" v-for="(list,index) in lists" :key="index">
+          <number-card :list='list'></number-card>
+          <!-- <number-card></number-card>
           <number-card></number-card>
           <number-card></number-card>
           <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
+          <number-card></number-card> -->
         </div>
       </div>
 
@@ -82,13 +82,13 @@
     </div>
 
     <div v-if="dateKey == 'benzhou'">
-         <component :is="vivew"></component>
+         <component :lists='lists' :is="vivew"></component>
     </div>
     <div v-if="dateKey == 'benyue'">
-         <component :is="vivew"></component>
+         <component :lists='lists' :is="vivew"></component>
     </div>
     <div v-if="dateKey == 'zidingyi'">
-         <component :is="vivew"></component>
+         <component :lists='lists' :is="vivew"></component>
     </div>
   </div>
 </template>
@@ -99,6 +99,7 @@ import times from '../times'
 import NumberCard from '../components/numberCard'
 import LineCharts from '../components/LineCharts'
 export default {
+  props:['lists'],
   name: 'Dashboard',
   components: {
     times,
@@ -183,20 +184,25 @@ export default {
 }
 
 // 销售总数据
-.saleall {
+.saleall_2 {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
+   flex-wrap: wrap;
   padding-bottom: 10px;
 
   .saleall-container {
     margin: -10px;
-    display: flex;
-    flex-wrap: wrap;
+    // display: flex;
+    // flex-wrap: wrap;
+     width: 20%;
 
     /deep/.number-card {
       display: flex;
-      flex: 1 1 20%;
-      max-width: 20%;
+      // flex: 1 1 20%;
+      // max-width: 20%;
+       background-image: url('./img/bei.png');
+        background-size: 100% 100%;
+      background-repeat: no-repeat;
     }
   }
 }

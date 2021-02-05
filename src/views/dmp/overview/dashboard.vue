@@ -25,7 +25,7 @@ import bianlidian from './components/bianlidian'
 import shanfu from './components/shanfu'
 import tuanyou from './components/tuanyou'
 import { dashboard } from '@/api/data'
-import { ElFooter } from 'node_modules/_element-ui@2.15.0@element-ui/types/footer'
+// import { ElFooter } from 'node_modules/_element-ui@2.15.0@element-ui/types/footer'
 export default {
   name: 'Dashboard',
   components: {
@@ -59,20 +59,20 @@ export default {
   methods: {
     setData() {
       return dashboard({}).then((res) => {
-        this.lists = res.data
+        // this.lists = res.data
        
-        let arr = res.data.map(e=>{
+        this.lists = res.data.map(e=>{
           let object = e
           for (const key in object) {
-            if (Object.hasOwnProperty.call(object, key)) {
-              const element = object[key];
-              if(key != 'Compared'){
-                object.number = element;
-                break;
-              }
+            console.log(object[key])
+            if(key != 'orderName' && key != 'comparedName' && key != 'Compared'){
+              object.number = object[key];
+              break
             }
           }
+          return object
         })
+        console.log(this.lists)
       })
     },
     onTabChange(key, type) {
@@ -132,7 +132,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .ant-card-head {
   padding: 0;
 }

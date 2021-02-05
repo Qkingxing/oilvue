@@ -1,8 +1,8 @@
 <template>
   <div class="boxs">
     <div class="head-title">销售总数据</div>
-    <div class="saleall" >
-      <div class="saleall-container">
+    <div class="saleall_4">
+      <div class="saleall-container"  v-for="(list,index) in lists" :key="index">
         <number-card :list='list'></number-card>
       </div>
     </div>
@@ -144,7 +144,7 @@ import NumberCard from './components/numberCard'
 import Charts from './components/charts'
 import LineCharts from './components/LineCharts'
 export default {
-	props:['list'],
+	props:['lists'],
   name: 'Dashboard',
   components: {
     NumberCard,
@@ -264,23 +264,25 @@ export default {
 }
 
 // 销售总数据
-.saleall {
+.saleall_4 {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
+  flex-wrap:wrap !important;
   padding-bottom: 10px;
 
   .saleall-container {
     margin: -10px;
-    display: flex;
-    flex-wrap: wrap;
+    width: 20%;
+    // flex-wrap: wrap;
 
     /deep/.number-card {
+      width: 100%；;
       display: flex;
-      flex: 1 1 20%;
-      max-width: 20%;
-       background-image: url('./img/bei.png');
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
+      // flex: 1 1 20%;
+      // max-width: 20%;
+      background-image: url('./img/bei.png');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
     }
   }
 }

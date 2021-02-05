@@ -1,19 +1,19 @@
 <template>
   <div class="number-card">
     <div class="item" >
-      <span>销售总收入</span>
+      <span>{{list.orderName}}</span>
       <div class="money">
          <countTo
               class="value"
               :startVal="0"
-              :endVal="11"
+              :endVal="list.number"
               :duration="3000"
             ></countTo>
         <span class="unte">元</span>
       </div>
       <div class="info">
-          <span>周同比 </span>   
-          <span>降%</span>
+          <span>{{list.comparedName}} </span>   
+          <span>降{{list.Compared}}%</span>
           <i class="trend">
               <a-icon type="arrow-down"/>
         </i> 

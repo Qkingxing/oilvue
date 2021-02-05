@@ -15,7 +15,7 @@
       </div>
     </div>
     <div v-if="dateKey == '1'">
-      <component :is="vivew"></component>
+      <component :lists='lists' :is="vivew"></component>
     </div>
     <div class="time" v-if="dateKey == '2'">
       <div class="head-title">销售总数据</div>
@@ -81,13 +81,13 @@
     </div>
 
     <div v-if="dateKey == '3'">
-      <component :is="vivew"></component>
+      <component :lists='lists' :is="vivew"></component>
     </div>
     <div v-if="dateKey == '4'">
-      <component :is="vivew"></component>
+      <component :lists='lists' :is="vivew"></component>
     </div>
     <div v-if="dateKey == '5'">
-      <component :is="vivew"></component>
+      <component :lists='lists' :is="vivew"></component>
     </div>
   </div>
 </template>
