@@ -24,7 +24,7 @@
               <template>
                 <p v-if="record.account_type == 0">集团账户</p>
 				<p v-if="record.account_type == 1">单站账户</p>
-				<p v-if="record.account_type == 2">片区账户</p>
+				<p v-if="record.account_type == 2">片区账户</p> 
               </template>
             </span>
 			

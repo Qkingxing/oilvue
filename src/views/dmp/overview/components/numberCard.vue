@@ -1,19 +1,19 @@
 <template>
   <div class="number-card">
-    <div class="item">
+    <div class="item" >
       <span>销售总收入</span>
       <div class="money">
          <countTo
               class="value"
               :startVal="0"
-              :endVal="list.order_total"
+              :endVal="11"
               :duration="3000"
             ></countTo>
         <span class="unte">元</span>
       </div>
       <div class="info">
           <span>周同比 </span>   
-          <span>降56.65%</span>
+          <span>降%</span>
           <i class="trend">
               <a-icon type="arrow-down"/>
         </i> 
@@ -47,9 +47,13 @@ export default {
     }
   },
   created(){
-    console.log(this.list)
+    this.mapDate()
   },
-  methods: {},
+  methods: {
+    mapDate(){
+      console.log(this.list)
+    }
+  },
 }
 </script>
 

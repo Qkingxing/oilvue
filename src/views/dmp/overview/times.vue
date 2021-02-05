@@ -1,7 +1,7 @@
 <template>
   <div class="boxs">
     <div class="head-title">销售总数据</div>
-    <div class="saleall" v-for="(list,index) in lists" :key="index">
+    <div class="saleall" >
       <div class="saleall-container">
         <number-card :list='list'></number-card>
       </div>
@@ -144,7 +144,7 @@ import NumberCard from './components/numberCard'
 import Charts from './components/charts'
 import LineCharts from './components/LineCharts'
 export default {
-	props:['lists'],
+	props:['list'],
   name: 'Dashboard',
   components: {
     NumberCard,
@@ -163,41 +163,7 @@ export default {
       text1: '销售收入趋势',
       text2: '订单趋势',
       text3: '客单价趋势',
-      lineData: [
-        { year: '10/20', value: 30 },
-        {
-          year: '10/21',
-          value: 40,
-        },
-        {
-          year: '10/22',
-          value: 30.5,
-        },
-        {
-          year: '10/23',
-          value: 50,
-        },
-        {
-          year: '10/24',
-          value: 40.9,
-        },
-        {
-          year: '10/25',
-          value: 60,
-        },
-        {
-          year: '10/26',
-          value: 70,
-        },
-        {
-          year: '10/27',
-          value: 90,
-        },
-        {
-          year: '10/28',
-          value: 63,
-        },
-      ],
+
       key: 'quanbu',
       noTitleKey: 'quanbu',
       dateKey: 'jintian',
@@ -207,6 +173,9 @@ export default {
 		console.log(this.lists)
 	},
   methods: {
+	  aisc(){
+		
+	  },
     income(index) {
       if (index == 1) {
         this.line = 1

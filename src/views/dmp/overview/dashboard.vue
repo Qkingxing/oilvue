@@ -11,7 +11,7 @@
         </a-card>
 
         <div>
-          <component :is="view"></component>
+          <component :lists="lists" :is="view"></component>
         </div>
       </a-card>
     </a-layout-content>
@@ -24,6 +24,8 @@ import oils from './components/oils'
 import bianlidian from './components/bianlidian'
 import shanfu from './components/shanfu'
 import tuanyou from './components/tuanyou'
+import { dashboard } from '@/api/data'
+import { ElFooter } from 'node_modules/_element-ui@2.15.0@element-ui/types/footer'
 export default {
   name: 'Dashboard',
   components: {
@@ -46,70 +48,67 @@ export default {
         { key: 'bianlidian', tab: '便利店' },
       ],
 
-      lineData: [
-        { year: '10/20', value: 30 },
-        {
-          year: '10/21',
-          value: 40,
-        },
-        {
-          year: '10/22',
-          value: 30.5,
-        },
-        {
-          year: '10/23',
-          value: 50,
-        },
-        {
-          year: '10/24',
-          value: 40.9,
-        },
-        {
-          year: '10/25',
-          value: 60,
-        },
-        {
-          year: '10/26',
-          value: 70,
-        },
-        {
-          year: '10/27',
-          value: 90,
-        },
-        {
-          year: '10/28',
-          value: 63,
-        },
-      ],
       key: 'quanbu',
-      noTitleKey: 'quanbu',
       dateKey: 'jintian',
+      lists: {},
     }
   },
-  created(){
+  created() {
+    this.setData()
   },
   methods: {
-   
+    setData() {
+      return dashboard({}).then((res) => {
+        this.lists = res.data
+       
+        let arr = res.data.map(e=>{
+          let object = e
+          for (const key in object) {
+            if (Object.hasOwnProperty.call(object, key)) {
+              const element = object[key];
+              if(key != 'Compared'){
+                object.number = element;
+                break;
+              }
+            }
+          }
+        })
+      })
+    },
     onTabChange(key, type) {
-      switch (key) {
-        case 'quanbu':
-          this.view = 'all'
-          break
-        case 'youpin':
-          this.view = 'oils'
-          break
-        case 'shanfu':
-          this.view = 'shanfu'
-          break
-        case 'tuanyou':
-          this.view = 'tuanyou'
-          break
-        case 'bianlidian':
-          this.view = 'bianlidian'
-          break
-        default:
-          this.view = 'all'
+      if (key == 'quanbu') {
+        this.view = 'all'
+      } else if (key == 'youpin') {
+        this.view = 'oils'
+      } else if (key == 'shanfu') {
+        this.view = 'shanfu'
+      } else if (key == 'tuanyou') {
+        this.view = 'tuanyou'
+      } else if (key == 'bianlidian') {
+        this.view = 'bianlidian'
+      } else {
+        this.view = 'all'
       }
+      //   switch (key) {
+      //     case 'quanbu':
+      // 	  this.view = 'all'
+
+      //       break
+      //     case 'youpin':
+      //       this.view = 'oils'
+      //       break
+      //     case 'shanfu':
+      //       this.view = 'shanfu'
+      //       break
+      //     case 'tuanyou':
+      //       this.view = 'tuanyou'
+      //       break
+      //     case 'bianlidian':
+      //       this.view = 'bianlidian'
+      //       break
+      //     default:
+      //       this.view = 'all'
+      //   }
 
       this[type] = key
     },

@@ -15,13 +15,14 @@
       </div>
     </div>
     <div v-if="dateKey == '1'">
-      <component :lists='lists' v-if="Object.keys(lists).length > 0" :is="vivew"></component>
+      <component :is="vivew"></component>
     </div>
     <div class="time" v-if="dateKey == '2'">
       <div class="head-title">销售总数据</div>
-      <div class="saleall" v-for="(list, index) in lists" :key="index">
-        <div class="saleall-container">
+      <div class="saleall_1" >
+        <div class="saleall-container" v-for='(list,index) in lists' :key="index">
           <number-card :list='list'></number-card>
+         
         </div>
       </div>
 
@@ -80,13 +81,13 @@
     </div>
 
     <div v-if="dateKey == '3'">
-      <component :lists='lists' v-if="Object.keys(lists).length > 0" :is="vivew"></component>
+      <component :is="vivew"></component>
     </div>
     <div v-if="dateKey == '4'">
-<component :lists='lists' v-if="Object.keys(lists).length > 0" :is="vivew"></component>
+      <component :is="vivew"></component>
     </div>
     <div v-if="dateKey == '5'">
-      <component :lists='lists' v-if="Object.keys(lists).length > 0" :is="vivew"></component>
+      <component :is="vivew"></component>
     </div>
   </div>
 </template>
@@ -96,8 +97,9 @@ import G2 from './components/G2'
 import times from './times'
 import NumberCard from './components/numberCard'
 import LineCharts from './components/LineCharts'
-import { dashboard } from '@/api/data'
+
 export default {
+  props:['lists'],
   name: 'Dashboard',
   components: {
     times,
@@ -119,32 +121,38 @@ export default {
       ],
       key: '1',
       noTitleKey: 'quanbu',
-	  dateKey: '1',
-	  lists:{}
+      dateKey: '1',
+     
+      // lists: {},
     }
   },
-  mounted() {},
+ 
+  mounted() {
+
+  },
   created() {
-    this.setData()
+
+    // this.mapData()
   },
   methods: {
     onChange(date, dateString) {
-      this.setData(dateString, 1)
+      // this.setData(dateString, 1)
     },
-    setData(index, time) {
-      if (time == 1) {
-        let starting_time = index[0]
-        let end_time = index[1]
-        return dashboard({ starting_time: starting_time, end_time: end_time }).then((res) => {
-          console.log(res.data)
-        })
-      } else {
-        return dashboard({ time_type: index }).then((res) => {
-		  console.log(res.data)
-		  this.lists = res.data
-        })
-      }
-    },
+    
+    // setData(index, time) {
+    //   if (time == 1) {
+    //     let starting_time = index[0]
+    //     let end_time = index[1]
+    //     return dashboard({ starting_time: starting_time, end_time: end_time }).then((res) => {
+    //       console.log(res.data)
+    //     })
+    //   } else {
+    //     return dashboard({ time_type: index }).then((res) => {
+    //   console.log(res.data)
+    //   this.lists = res.data
+    //     })
+    //   }
+    // },
     income(index) {
       if (index == 1) {
         this.line = 1
@@ -161,17 +169,17 @@ export default {
     },
     changeDate(key) {
       this.dateKey = key
-      if (this.dateKey == '1') {
-        this.setData(this.dateKey)
-      } else if (this.dateKey == '2') {
-        this.setData(this.dateKey)
-      } else if (this.dateKey == '3') {
-        this.setData(this.dateKey)
-      } else if (this.dateKey == '4') {
-        this.setData(this.dateKey)
-      } else if (this.dateKey == '5') {
-        this.setData(this.dateKey)
-      }
+      // if (this.dateKey == '1') {
+      //   this.setData(this.dateKey)
+      // } else if (this.dateKey == '2') {
+      //   this.setData(this.dateKey)
+      // } else if (this.dateKey == '3') {
+      //   this.setData(this.dateKey)
+      // } else if (this.dateKey == '4') {
+      //   this.setData(this.dateKey)
+      // } else if (this.dateKey == '5') {
+      //   this.setData(this.dateKey)
+      // }
     },
   },
 }
@@ -214,20 +222,22 @@ export default {
 }
 
 // 销售总数据
-.saleall {
+.saleall_1 {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
+  flex-wrap: wrap;
   padding-bottom: 10px;
 
   .saleall-container {
     margin: -10px;
-    display: flex;
-    flex-wrap: wrap;
+    width: 20%;
+    // flex-wrap: wrap;
 
     /deep/.number-card {
+      width: 100%；;
       display: flex;
-      flex: 1 1 20%;
-      max-width: 20%;
+      // flex: 1 1 20%;
+      // max-width: 20%;
       background-image: url('./img/bei.png');
       background-size: 100% 100%;
       background-repeat: no-repeat;
