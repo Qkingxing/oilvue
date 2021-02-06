@@ -52,13 +52,13 @@
         <div class="tab_1">
           <a-tabs>
             <a-tab-pane key="1" tab="Tab 1">
-              <G2></G2>
+              <G2 v-if="show" :nums='nums'></G2>
             </a-tab-pane>
             <a-tab-pane key="2" tab="Tab 2">
-              <G2></G2>
+              <G2 v-if="show" :nums='nums'></G2>
             </a-tab-pane>
             <a-tab-pane key="3" tab="Tab 3">
-              <G2></G2>
+              <G2 v-if="show" :nums='nums'></G2>
             </a-tab-pane>
           </a-tabs>
         </div>
@@ -106,13 +106,13 @@
         <div class="tab_1">
           <a-tabs>
             <a-tab-pane key="1" tab="Tab 1">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
             <a-tab-pane key="2" tab="Tab 2">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
             <a-tab-pane key="3" tab="Tab 3">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
           </a-tabs>
         </div>
@@ -160,13 +160,13 @@
         <div class="tab_1">
           <a-tabs>
             <a-tab-pane key="1" tab="Tab 1">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
             <a-tab-pane key="2" tab="Tab 2">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
             <a-tab-pane key="3" tab="Tab 3">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
           </a-tabs>
         </div>
@@ -212,13 +212,13 @@
         <div class="tab_1">
           <a-tabs>
             <a-tab-pane key="1" tab="Tab 1">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
             <a-tab-pane key="2" tab="Tab 2">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
             <a-tab-pane key="3" tab="Tab 3">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
           </a-tabs>
         </div>
@@ -264,13 +264,13 @@
         <div class="tab_1">
           <a-tabs>
             <a-tab-pane key="1" tab="Tab 1">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
             <a-tab-pane key="2" tab="Tab 2">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
             <a-tab-pane key="3" tab="Tab 3">
-              <G2></G2>
+              <G2 :nums='nums'></G2>
             </a-tab-pane>
           </a-tabs>
         </div>
@@ -284,6 +284,7 @@ import G2 from '../components/G2'
 import times from '../times'
 import NumberCard from '../components/numberCard'
 import LineCharts from '../components/LineCharts'
+import {analysiss} from '@/api/data'
 export default {
   props: ['lists'],
   name: 'Dashboard',
@@ -308,10 +309,22 @@ export default {
       key: 'quanbu',
       noTitleKey: 'quanbu',
       dateKey: 'jintian',
+      show:false
     }
   },
-  mounted() {},
+  created() {
+      this.analysis()
+  },
   methods: {
+      analysis(){
+		 return analysiss({}).then(res=>{
+			res.data.map(item =>{
+                this.nums = item;
+                
+            })
+            this.show = true
+		 })
+	 },
     income(index) {
       if (index == 1) {
         this.line = 1

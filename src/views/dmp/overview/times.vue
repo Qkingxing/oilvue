@@ -41,95 +41,95 @@
       <div class="tab_1">
         <a-tabs>
           <a-tab-pane key="1" tab="全部">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums' v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="2" tab="扫呗-微信">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums' ></G2>
           </a-tab-pane>
           <a-tab-pane key="3" tab="扫呗-微信付款码">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  ></G2>
           </a-tab-pane>
           <a-tab-pane key="4" tab="团油 - 微信">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  ></G2>
           </a-tab-pane>
           <a-tab-pane key="5" tab="团油 - 微信小程序支付">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums' ></G2>
           </a-tab-pane>
           <a-tab-pane key="6" tab="团油">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums' ></G2>
           </a-tab-pane>
           <a-tab-pane key="7" tab="加油卡">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums' ></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
       <div class="tab_1">
         <a-tabs>
           <a-tab-pane key="1" tab="全部">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="2" tab="92#">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="3" tab="0#">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="4" tab="95#">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
       <div class="tab_1">
         <a-tabs>
           <a-tab-pane key="1" tab="全部">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="2" tab="扫呗-微信">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="3" tab="扫呗-微信付款码">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="4" tab="团油 - 微信">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="5" tab="团油 - 微信小程序支付">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="6" tab="团油">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="7" tab="加油卡">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums' v-if="show"></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
       <div class="tab_1">
         <a-tabs>
           <a-tab-pane key="1" tab="全部">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="2" tab="92#">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="3" tab="0#">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="4" tab="95#">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
       <div class="tab_1">
         <a-tabs>
           <a-tab-pane key="1" tab="Tab 1">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="2" tab="Tab 2">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums'  v-if="show"></G2>
           </a-tab-pane>
           <a-tab-pane key="3" tab="Tab 3">
-            <G2 :nums='nums'></G2>
+            <G2 :nums='nums' v-if="show"></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
@@ -142,9 +142,9 @@ import G2 from './components/G2'
 import NumberCard from './components/numberCard'
 import Charts from './components/charts'
 import LineCharts from './components/LineCharts'
-import {analysiss} from '@/api/data'
+// import {analysiss} from '@/api/data'
 export default {
-  props: ['lists'],
+  props: ['lists','nums'],
   name: 'Dashboard',
   components: {
     NumberCard,
@@ -155,8 +155,8 @@ export default {
 
   data() {
     return {
-        a:'',
       line: 1,
+      show:false,
       activeName: 'first',
       activeNames: 'first',
       activeName3: 'first',
@@ -167,21 +167,36 @@ export default {
 
       key: 'quanbu',
       noTitleKey: 'quanbu',
-	  dateKey: 'jintian',
-	  nums:{}
+      dateKey: 'jintian',
+      num:{}
+	//   nums:{}
     }
   },
   created() {
-	  this.analysis()
+    //   this.analysis()
+    console.log(this.nums)
+  },
+  watch:{
+      nums:{
+          handler(value){
+            //   this.num = value
+              this.show = true
+          },
+          deep:true,
+          immediate:true
+      }
   },
   methods: {
-	 analysis(){
-		 return analysiss({}).then(res=>{
-			res.data.map(item =>{
-				this.nums = item;
-            })
-		 })
-	 },
+	//  analysis(){
+
+	// 	//  return analysiss({}).then(res=>{
+	// 	// 	res.data.map(item =>{
+    //     //         this.nums = item;
+                
+    //     //     })
+    //     //     this.show = true
+	// 	//  })
+	//  },
     income(index) {
       if (index == 1) {
         this.line = 1

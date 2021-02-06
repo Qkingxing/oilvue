@@ -1,7 +1,7 @@
 <template>
   
   <div>
-<div id="charts" style="width: 400px" ref="charts"></div>
+        <div id="charts" style="width: 400px" ref="charts"></div>
   </div>
 </template>
 
@@ -22,14 +22,7 @@ export default {
   created(){
       console.log(this.nums)
   },
-  watch:{
-      nums:{
-          handler(value){
-              return this.nums = value
-          },
-          deep:true,
-      }
-  },
+  
   methods: {
       
     init: function () {

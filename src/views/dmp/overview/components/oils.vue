@@ -13,7 +13,7 @@
       <a-range-picker v-if="dateKey == 'zidingyi'" />
     </div>
     <div v-if="dateKey == 'jintian'">
-      <component :lists='lists' :is="vivew"></component>
+      <component v-if="show" :nums='nums' :lists='lists' :is="vivew"></component>
     </div>
     <div class="time" v-if="dateKey == 'zuotian'">
       <div class="head-title">销售总数据</div>
@@ -59,13 +59,13 @@
       <div class="head-title">点比分析</div>
       <a-row style="width: 100%; display: flex; margin-bottom: 20px">
         <a-card style="min-width: 700px" class="box-card">
-          <G2></G2>
+          <G2 :nums='nums'></G2>
           <div class="box">
             <span class="span">油品销售占比</span>
           </div>
         </a-card>
         <a-card style="min-width: 700px; margin-left: 20px" class="box-card">
-          <G2></G2>
+          <G2 :nums='nums'></G2>
           <div class="box">
             <!-- <span class="span">加油升数按油品类型占比</span> -->
           </div>
@@ -73,7 +73,7 @@
       </a-row>
       <a-row style="width: 100%; display: flex">
         <a-card style="min-width: 700px" class="box-card">
-          <G2></G2>
+          <G2 :nums='nums'></G2>
           <div class="box">
             <span class="span">油品销售占比</span>
           </div>
@@ -82,13 +82,13 @@
     </div>
 
     <div v-if="dateKey == 'benzhou'">
-         <component :lists='lists' :is="vivew"></component>
+         <component v-if="show" :nums='nums' :lists='lists' :is="vivew"></component>
     </div>
     <div v-if="dateKey == 'benyue'">
-         <component :lists='lists' :is="vivew"></component>
+         <component v-if="show" :nums='nums' :lists='lists' :is="vivew"></component>
     </div>
     <div v-if="dateKey == 'zidingyi'">
-         <component :lists='lists' :is="vivew"></component>
+         <component v-if="show" :nums='nums' :lists='lists' :is="vivew"></component>
     </div>
   </div>
 </template>
@@ -98,6 +98,7 @@ import G2 from '../components/G2'
 import times from '../times'
 import NumberCard from '../components/numberCard'
 import LineCharts from '../components/LineCharts'
+import {analysiss} from '@/api/data'
 export default {
   props:['lists'],
   name: 'Dashboard',
@@ -122,10 +123,22 @@ export default {
       key: 'quanbu',
       noTitleKey: 'quanbu',
       dateKey: 'jintian',
+      show:false
     }
   },
-  mounted() {},
+  created() {
+      this.analysis()
+  },
   methods: {
+       analysis(){
+		 return analysiss({}).then(res=>{
+			res.data.map(item =>{
+                this.nums = item;
+                
+            })
+            this.show = true
+		 })
+	 },
     income(index) {
       if (index == 1) {
         this.line = 1
@@ -142,6 +155,7 @@ export default {
     },
     changeDate(key) {
       this.dateKey = key
+      
     },
   },
 }

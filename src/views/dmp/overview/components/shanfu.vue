@@ -49,17 +49,9 @@
       <div class="head-title">点比分析</div>
       <a-row style="width: 100%; display: flex; margin-bottom: 20px">
         <a-card style="min-width: 60%; height: 400px" class="box-card">
-          <G2></G2>
-          <!-- <div>
-            <span>销售额</span>
-            <p>0元</p>
-          </div>
-          <div class="box">
-            <span class="span">闪付销售额支付方式占比</span>
-          </div> -->
+          <G2 v-if="show" :nums='nums'></G2>
         </a-card>
       </a-row>
-      <!-- <component :is="vivew"></component> -->
     </div>
 
     <div class="time" v-if="dateKey == 'zuotian'">
@@ -101,13 +93,13 @@
       <div class="head-title">点比分析</div>
       <a-row style="width: 100%; display: flex; margin-bottom: 20px">
         <a-card style="min-width: 700px" class="box-card">
-          <G2></G2>
+          <G2 :nums='nums'></G2>
           <div class="box">
             <span class="span">油品销售占比</span>
           </div>
         </a-card>
         <a-card style="min-width: 700px; margin-left: 20px" class="box-card">
-          <G2></G2>
+          <G2 :nums='nums'></G2>
           <div class="box">
             <!-- <span class="span">加油升数按油品类型占比</span> -->
           </div>
@@ -152,7 +144,7 @@
       <div class="head-title">点比分析</div>
       <a-row style="width: 100%; display: flex; margin-bottom: 20px">
         <a-card style="min-width: 60%; height: 400px" class="box-card">
-          <G2></G2>
+          <G2 :nums='nums'></G2>
           <!-- <div>
             <span>销售额</span>
             <p>0元</p>
@@ -201,7 +193,7 @@
       <div class="head-title">点比分析</div>
       <a-row style="width: 100%; display: flex; margin-bottom: 20px">
         <a-card style="min-width: 60%; height: 400px" class="box-card">
-          <G2></G2>
+          <G2 :nums='nums'></G2>
           <!-- <div>
             <span>销售额</span>
             <p>0元</p>
@@ -250,7 +242,7 @@
       <div class="head-title">点比分析</div>
       <a-row style="width: 100%; display: flex; margin-bottom: 20px">
         <a-card style="min-width: 60%; height: 400px" class="box-card">
-          <G2></G2>
+          <G2 :nums='nums'></G2>
           <!-- <div>
             <span>销售额</span>
             <p>0元</p>
@@ -270,6 +262,7 @@ import G2 from '../components/G2'
 import times from '../times'
 import NumberCard from '../components/numberCard'
 import LineCharts from '../components/LineCharts'
+import {analysiss} from '@/api/data'
 export default {
   name: 'Dashboard',
   props:['lists'],
@@ -294,10 +287,22 @@ export default {
       key: 'quanbu',
       noTitleKey: 'quanbu',
       dateKey: 'jintian',
+      show:false
     }
   },
-  mounted() {},
+  created() {
+       this.analysis()
+  },
   methods: {
+      analysis(){
+		 return analysiss({}).then(res=>{
+			res.data.map(item =>{
+                this.nums = item;
+                
+            })
+            this.show = true
+		 })
+	 },
     income(index) {
       if (index == 1) {
         this.line = 1
