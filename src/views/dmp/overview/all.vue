@@ -139,20 +139,6 @@ export default {
       // this.setData(dateString, 1)
     },
     
-    // setData(index, time) {
-    //   if (time == 1) {
-    //     let starting_time = index[0]
-    //     let end_time = index[1]
-    //     return dashboard({ starting_time: starting_time, end_time: end_time }).then((res) => {
-    //       console.log(res.data)
-    //     })
-    //   } else {
-    //     return dashboard({ time_type: index }).then((res) => {
-    //   console.log(res.data)
-    //   this.lists = res.data
-    //     })
-    //   }
-    // },
     income(index) {
       if (index == 1) {
         this.line = 1

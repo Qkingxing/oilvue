@@ -1,5 +1,8 @@
 <template>
-  <div id="charts" style="width: 400px" ref="charts"></div>
+  
+  <div>
+<div id="charts" style="width: 400px" ref="charts"></div>
+  </div>
 </template>
 
 <script>
@@ -10,22 +13,32 @@ export default {
   data() {
     return {
       data: [
-        { item: '92#', count: this.nums.fives_oils_actually_paid, d: 0.4  },
+        { item: '92#', count: this.nums.fives_oils_actually_paid, d: 0.4 , },
         { item: '0#', count: this.nums.zero_oils_actually_paid, d: 0.21 },
         { item: '95#', count: this.nums.two_oils_actually_paid, d: 0.17 },
       ],
     }
   },
   created(){
-    console.log(this.nums)
+      console.log(this.nums)
+  },
+  watch:{
+      nums:{
+          handler(value){
+              return this.nums = value
+          },
+          deep:true,
+      }
   },
   methods: {
+      
     init: function () {
+        let thit = this
       const chart = new Chart({
         container: this.$refs.charts,
-        autoFit: true,
+        autoFit: false,
         height: 300,
-        width:100,
+        width:600,
       })
 
       chart.coordinate('theta', {
@@ -44,7 +57,8 @@ export default {
       chart.legend('item', {
         position: 'right', // 配置图例显示位置
         custom: true, // 关键字段，告诉 G2，要使用自定义的图例
-        items: this.data.map((obj, index) => {
+        items: thit.data.map((obj, index) => {
+            console.log(thit)
           return {
             name: obj.item, // 对应 itemName
             value: obj, // 对应 itemValue
@@ -61,7 +75,7 @@ export default {
           style: {
             fill: '#999',
           }, // 配置 itemValue 样式
-          formatter: (val) => `${val.d * 100}%  ${val.count}元`, // 格式化 itemValue 内容
+          formatter: (val) => `${val.d * 100}%  ${val.count} 元`, // 格式化 itemValue 内容
         },
       })
       chart

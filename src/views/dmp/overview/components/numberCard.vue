@@ -47,12 +47,12 @@ export default {
     }
   },
   created(){
-    this.mapDate()
+    // this.mapDate()
   },
   methods: {
-    mapDate(){
-      console.log(this.list)
-    }
+    // mapDate(){
+    //   console.log(this.list)
+    // }
   },
 }
 </script>

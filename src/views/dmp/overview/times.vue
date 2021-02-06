@@ -155,6 +155,7 @@ export default {
 
   data() {
     return {
+        a:'',
       line: 1,
       activeName: 'first',
       activeNames: 'first',
@@ -178,9 +179,7 @@ export default {
 		 return analysiss({}).then(res=>{
 			res.data.map(item =>{
 				this.nums = item;
-				
-			})
-			console.log(this.nums)
+            })
 		 })
 	 },
     income(index) {
