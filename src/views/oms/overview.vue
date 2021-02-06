@@ -2,15 +2,15 @@
   <div class="overview">
     <a-layout v-if="$route.name=='Ooverview'">
       <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
-       <h3 class="o-title">订单查询</h3>
+        <h3 class="o-title">订单查询</h3>
         <a-divider />
-         <div class="screen-box">
+        <div class="screen-box">
           <a-form layout="inline" >
             <a-row :gutter="48">
               <a-col :md="24" :sm="24">
                 <a-form-item label="订单时间" class="screen-item">
                   <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
-                  <a-radio-group v-model="form.time_type" @change="onChange">
+                  <a-radio-group v-model="form.time_type" @change="timeRadioChange">
                     <a-radio :value="1">
                       今日
                     </a-radio>
@@ -35,20 +35,22 @@
                       hideDisabledOptions: true,
                       defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
                     }"
+                    v-model="diyTime"
+                    @change="timeChange()"
                     format="YYYY-MM-DD HH:mm:ss"
-                   />
+                  />
                 </a-form-item>
               </a-col>
               <a-col :md="24" :sm="24">
                 <a-form-item label="应付金额" class="screen-item-inline">
-                  <a-input-number id="inputNumber" placeholder="数字" v-model="form.handle_starting" @change="onChange" />
+                  <a-input-number placeholder="数字" v-model="form.handle_starting" />
                   <span style="margin: 0 10px;">至</span>
-                  <a-input-number id="inputNumber" placeholder="数字" v-model="form.handle_end" @change="onChange" />
+                  <a-input-number placeholder="数字" v-model="form.handle_end" />
                 </a-form-item>
                 <a-form-item label="实付金额" class="screen-item-inline">
-                  <a-input-number id="inputNumber" placeholder="数字" v-model="form.paid_starting" @change="onChange" />
+                  <a-input-number placeholder="数字" v-model="form.paid_starting" />
                   <span style="margin: 0 10px;">至</span>
-                  <a-input-number id="inputNumber" placeholder="数字" v-model="form.paid_end" @change="onChange" />
+                  <a-input-number placeholder="数字" v-model="form.paid_end" />
                 </a-form-item>
               </a-col>
               <div v-show="searchType != '高级搜索'">
@@ -140,7 +142,7 @@
                   <a-button type="primary" class="search-btn" style="min-width:82px;" @click="toSearch()"> 搜索 </a-button>
                 </a-form-item>
                 <a-form-item>
-                  <span @click="advanceSearchChange" style="cursor: pointer;vertical-align: middle;color: #1890ff;">{{searchType}}</span>
+                  <span @click="advanceSearchChange" style="cursor: pointer;vertical-align: middle;color: #1890ff;">{{ searchType }}</span>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -154,13 +156,12 @@
             </span>
             <div>
               <a-button style="margin-left: 8px;">导出报表</a-button>
-              <a-button style="margin-left: 8px;" @click="setVisible=true" icon="setting"/>
             </div>
           </div>
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
             :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
@@ -169,52 +170,15 @@
         </div>
       </a-layout-content>
     </a-layout>
-    <a-modal
-        title="自定义展示"
-        :visible="setVisible"
-        :confirm-loading="setConfirmLoading"
-        @ok="handleSetOk"
-        @cancel="handleSetCancel"
-      >
-      <div style="display: flex;">
-        <span style="flex: 1;">可选字段</span>
-        <a style="flex: 0 0 50px;">重置</a>
-        <a style="flex: 0 0 60px;">恢复默认</a>
-      </div>
-      <a-divider />
-      <div>
-        <a-checkbox-group @change="onChangeTableOption" :value="tableOptionChoose">
-            <a-row>
-              <a-col :span="6" v-for="(item,index) in tableOptions" :key="index" style="margin-bottom: 10px;">
-                <a-checkbox :value="item.value" :disabled="item.disabled">
-                  {{item.label}}
-                </a-checkbox>
-              </a-col>
-            </a-row>
-          </a-checkbox-group>
-      </div>
-      </a-modal>
     <router-view />
   </div>
 </template>
 
 <script>
 import { deleteNullAttr } from '@/utils/lzz.js'
-import moment from 'moment';
+import moment from 'moment'
 import { STable } from '@/components'
 import { getOrderList } from '@/api/order'
-const tableOptions = [
-  { label: '订单号', value: '订单号', disabled: true },
-  { label: '订单状态', value: '订单状态', disabled: true },
-  { label: '订单类型', value: '订单类型', disabled: true },
-  { label: '应付金额', value: '应付金额', disabled: true },
-  { label: '优惠金额', value: '优惠金额' },
-  { label: '实付金额', value: '实付金额' },
-  { label: '支付方式', value: '支付方式' },
-  { label: '状态时间', value: '状态时间' },
-  { label: '手机号', value: '手机号' },
-  { label: '会员等级', value: '会员等级' },
-];
 export default {
   name: 'Ooverview',
   components: {
@@ -222,23 +186,22 @@ export default {
   },
   data () {
     return {
-      tableOptions,
-      setVisible:false,
-      setConfirmLoading: false,
-      searchType:'高级搜索',
-      diyDate:false,
-      form:{
-        handle_starting:'',
-        handle_end:'',
-        paid_starting:'',
-        paid_end:'',
-        page:1,
-        limit:10,
-        time_type:''
+      searchType: '高级搜索',
+      diyDate: false,
+      diyTime: null,
+      form: {
+        handle_starting: '',
+        handle_end: '',
+        paid_starting: '',
+        paid_end: '',
+        page: 1,
+        limit: 10,
+        time_type: 1,
+        starting_time: '',
+        end_time: ''
       },
       radioValue: 'new',
-      tableOptionChoose:['优惠金额','实付金额','支付方式','状态时间'],
-      value:'',
+      value: '',
       // 查询参数
       queryParam: {
         keyType: '86'
@@ -252,25 +215,25 @@ export default {
         {
           title: '订单状态',
           dataIndex: 'order_status',
-          customRender:function(text){
-            if(text==1){
-              return "交易成功"
-            }else if(text==2){
-              return "待支付"
-            }else if(text==3){
-              return "支付失败"
+          customRender: function (text) {
+            if (text == 1) {
+              return '交易成功'
+            } else if (text == 2) {
+              return '待支付'
+            } else if (text == 3) {
+              return '支付失败'
             }
           }
         },
         {
           title: '订单类型',
-          customRender:function(){
-            return "未找到"
+          customRender: function () {
+            return '未找到'
           }
         },
         {
           title: '应付金额',
-          dataIndex: 'order_total',
+          dataIndex: 'order_total'
         },
         {
           title: '优惠金额',
@@ -284,13 +247,13 @@ export default {
         },
         {
           title: '支付方式',
-          customRender:function(text){
-            if(text.order_type==1){
-              return "微信"
-            }else if(text.order_type==2){
-              return "支付宝"
-            }else if(text.order_type==3){
-              return "对公转账"
+          customRender: function (text) {
+            if (text.order_type == 1) {
+              return '微信'
+            } else if (text.order_type == 2) {
+              return '支付宝'
+            } else if (text.order_type == 3) {
+              return '对公转账'
             }
           }
         },
@@ -306,8 +269,8 @@ export default {
           .then(res => {
             return {
               data: res.data, // 列表数组
-              pageNo: this.form.page,  // 当前页码
-              pageSize:  this.form.limit,  // 每页页数
+              pageNo: this.form.page, // 当前页码
+              pageSize: this.form.limit, // 每页页数
               totalCount: res.countPage, // 列表总条数
               totalPage: res.pageSize // 列表总页数
             }
@@ -326,77 +289,61 @@ export default {
       optionAlertShow: false
     }
   },
-  created () {
-    // this.tableOption()
-  },
   methods: {
     moment,
-    range(start, end) {
-      const result = [];
+    range (start, end) {
+      const result = []
       for (let i = start; i < end; i++) {
-        result.push(i);
+        result.push(i)
       }
-      return result;
+      return result
     },
-    onChangeTableOption(){
-      
+    timeChange (value, dateString) {
+      this.form.starting_time = moment(this.diyTime[0]._d).format('YYYY-MM-DD')
+      this.form.end_time = moment(this.diyTime[1]._d).format('YYYY-MM-DD')
     },
-    toSearch(){
-      getOrderList(deleteNullAttr(this.form)).then(res=>{
-        console.log(res)
-      })
+    async toSearch () {
+      if (this.form.time_type != 5) {
+        this.form.starting_time = ''
+        this.form.end_time = ''
+      }
+      this.$refs.table.refresh(true)
     },
-    handleSetOk(e) {
-      this.setConfirmLoading = true;
+    handleSetOk (e) {
+      this.setConfirmLoading = true
       setTimeout(() => {
-        this.setVisible = false;
-        this.setConfirmLoading = false;
-      }, 2000);
+        this.setVisible = false
+        this.setConfirmLoading = false
+      }, 2000)
     },
-    handleSetCancel(e) {
-      this.setVisible = false;
+    handleSetCancel (e) {
+      this.setVisible = false
     },
-    advanceSearchChange(){
-      this.searchType == "高级搜索" ? this.searchType="点击收起" :　this.searchType="高级搜索" 
+    advanceSearchChange () {
+      this.searchType == '高级搜索' ? this.searchType = '点击收起' :　this.searchType = '高级搜索'
     },
-    disabledDate(current) {
-      return current && current < moment().endOf('day');
+    disabledDate (current) {
+      return current && current < moment().endOf('day')
     },
-    disabledRangeTime(_, type) {
+    disabledRangeTime (_, type) {
       if (type === 'start') {
         return {
           disabledHours: () => this.range(0, 60).splice(4, 20),
           disabledMinutes: () => this.range(30, 60),
-          disabledSeconds: () => [55, 56],
-        };
+          disabledSeconds: () => [55, 56]
+        }
       }
       return {
         disabledHours: () => this.range(0, 60).splice(20, 4),
         disabledMinutes: () => this.range(0, 31),
-        disabledSeconds: () => [55, 56],
-      };
+        disabledSeconds: () => [55, 56]
+      }
     },
-    onChange(value){
+    timeRadioChange (value) {
       value.target.value == 5 ? this.diyDate = true : this.diyDate = false
     },
     showEditTag (type) {
       this.$refs['EditTag'].show(type)
-    },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
     },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys

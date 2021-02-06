@@ -379,7 +379,7 @@ export const asyncRouterMap = [
           }
         ]
       },
-      //oms
+      // oms
       {
         path: '/oms',
         name: 'oms',
@@ -560,7 +560,7 @@ export const asyncRouterMap = [
                 path: '/goods/warehouse/my',
                 name: 'my',
                 component: () => import('@/views/goods/warehouse/my'),
-                meta: { title: 'menu.goods.warehouse.my' },
+                meta: { title: 'menu.goods.warehouse.my' }
               },
               {
                 path: '/goods/warehouse/Classification',
@@ -854,7 +854,7 @@ export const asyncRouterMap = [
         name: 'notPermission',
         component: () => import('@/views/notPermission'),
         hidden: true,
-        meta: { title: 'menu.notPermission', hidden: true},
+        meta: { title: 'menu.notPermission', hidden: true }
       }
       // dashboard
       // {
