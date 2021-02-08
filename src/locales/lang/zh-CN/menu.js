@@ -116,6 +116,8 @@ export default {
     'menu.support.product.record': '购买记录',
     'menu.support.product.invoice': '发票列表',
     'menu.support.help': '帮助中心',
+    'menu.system': '系统',
+    'menu.system.role': '角色',
     'menu.notPermission': '权限管理',
     // ---
     'menu.welcome': '欢迎',
