@@ -10,7 +10,75 @@
           </div>
           <div class="content">
             <div class="contentBlock">
-              <div class="contentMain"></div>
+              <div class="contentMain">
+                <div class="roles">
+                  <div class="item">
+                    <div class="itemContent">
+                      <a class="setpower">修改权限</a>
+                      <img src="" alt="" srcset="" />
+                      <span class="powername">加油员</span>
+                      <p>权限说明: 拥有油站下的部分数据查看及编辑的权限</p>
+                      <p>该角色目前已经配置12个账号</p>
+                      <div class="buttons">
+                        <p>角色权限<a>详情</a></p>
+                        <p>角色列表<a>详情</a></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="itemContent">
+                      <a class="setpower">修改权限</a>
+                      <img src="" alt="" srcset="" />
+                      <span class="powername">加油员</span>
+                      <p>权限说明: 拥有油站下的部分数据查看及编辑的权限</p>
+                      <p>该角色目前已经配置12个账号</p>
+                      <div class="buttons">
+                        <p>角色权限<a>详情</a></p>
+                        <p>角色列表<a>详情</a></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="itemContent">
+                      <a class="setpower">修改权限</a>
+                      <img src="" alt="" srcset="" />
+                      <span class="powername">加油员</span>
+                      <p>权限说明: 拥有油站下的部分数据查看及编辑的权限</p>
+                      <p>该角色目前已经配置12个账号</p>
+                      <div class="buttons">
+                        <p>角色权限<a>详情</a></p>
+                        <p>角色列表<a>详情</a></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="itemContent">
+                      <a class="setpower">修改权限</a>
+                      <img src="" alt="" srcset="" />
+                      <span class="powername">加油员</span>
+                      <p>权限说明: 拥有油站下的部分数据查看及编辑的权限</p>
+                      <p>该角色目前已经配置12个账号</p>
+                      <div class="buttons">
+                        <p>角色权限<a>详情</a></p>
+                        <p>角色列表<a>详情</a></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="itemContent">
+                      <a class="setpower">修改权限</a>
+                      <img src="" alt="" srcset="" />
+                      <span class="powername">加油员</span>
+                      <p>权限说明: 拥有油站下的部分数据查看及编辑的权限</p>
+                      <p>该角色目前已经配置12个账号</p>
+                      <div class="buttons">
+                        <p>角色权限<a>详情</a></p>
+                        <p>角色列表<a>详情</a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -41,7 +109,7 @@ export default {
     padding-bottom: 25px;
     background: #fff;
     min-width: 1004px;
-    height: 787px;
+    min-height: 787px;
     .container {
       box-sizing: border-box;
       .group {
@@ -78,6 +146,73 @@ export default {
             }
           }
         }
+      }
+    }
+  }
+}
+.roles {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  margin: -10px;
+
+  .item {
+    height: 400px;
+    width: 33%;
+    display: flex;
+  }
+
+  .itemContent {
+    display: flex;
+    flex: 1;
+    margin: 10px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 0 14px #eee;
+    position: relative;
+
+    > * {
+      margin: 0;
+      margin-bottom: 10px;
+    }
+
+    .setpower {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .powername {
+      margin-bottom: 20px;
+      color: 16px;
+      font-weight: bold;
+    }
+
+    img {
+      border: 1px solid red;
+      width: 50px;
+      height: 50px;
+      border-radius: 50px;
+    }
+
+    > p {
+      width: 70%;
+      text-align: left;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 10px;
+
+      p {
+        margin: 0;
       }
     }
   }
