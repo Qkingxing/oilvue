@@ -847,6 +847,22 @@ export const asyncRouterMap = [
             meta: { title: 'menu.support.help', keepAlive: true }
           }
         ]
+      },
+      // system
+      {
+        path: '/system',
+        name: 'system',
+        redirect: '/system/role',
+        component: RouteView,
+        meta: { title: 'menu.system', keepAlive: true, icon: 'like' },
+        children: [
+          {
+            path: '/system/role',
+            name: 'role',
+            component: () => import('@/views/support/product'),
+            meta: { title: 'menu.system.role', keepAlive: true }
+          }
+        ]
       }
       // dashboard
       // {
