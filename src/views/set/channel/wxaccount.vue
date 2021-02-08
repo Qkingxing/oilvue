@@ -1,68 +1,43 @@
 
 <template>
   <a-layout>
-    <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
-
+    <a-layout-content :style="{ margin: '24px 0', padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
       <a-tabs default-active-key="1" size="large">
         <a-tab-pane key="1" tab="公众号菜单配置">
-         <!-- <div class="main">
-           <div class="left-wrap">
-             <img src="https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/20191114/17/abc9ca8e715fbf65cc4dc2dba169.png" style="width: 293px;">
-             <p class="mobile-title">全球能数</p>
-           </div>
-           <div class="right-wrap">
-             right
-           </div>
-         </div> -->
         <div class="main">
           <div class="main-item item-left">
             <div class="mobile-view">
               <img src="https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/20191114/17/abc9ca8e715fbf65cc4dc2dba169.png" style="width: 293px;">
               <p class="mobile-title">全球能数</p>
               <div class="submenu-view">
-                <div class="btn-wrap">
-                  <a-button>订单详情</a-button>
-                  <a-button>一键加油</a-button>
-                  <a-button>幸运抽奖</a-button>
-                  <a-button>闪付</a-button>
+                <div class="btn-wrap" v-for="(item,index) in tabList" :key="index" :class="{'hide-bg':selBTab.index!=item.index}">
+                  <a-button @click="menuClick(itemData,item)" :icon="itemData.icon" v-for="(itemData,index) in item.children" :key="index">{{itemData.icon?'':itemData.content}}</a-button>
+                 
                 </div>
-                <div class="btn-wrap hide-bg">
-                  <a-button>个人中心</a-button>
-                  <a-button>发送消息</a-button>
-                  <a-button>油卡充值</a-button>
-                  <a-button>优惠券</a-button>
-                  <a-button>大转盘</a-button>
-                </div>
-                <div class="btn-wrap hide-bg">
-                  <a-button>优惠券</a-button>
-                  <a-button>百元红包</a-button>
-                  <a-button>今日油价</a-button>
-                  <a-button>积分商城</a-button>
-                  <a-button>好友邀请</a-button>
-                  
-                </div>
+                
+               
               </div>
               <div class="btn-view">
                 <img src="https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/20191114/17/22fdd022ba69f333980405c24c14.png" style="width: 20px; height: 20px; margin: 0px 10px;">
-                <a-button>一键加油</a-button>
-                <a-button>会员中心</a-button>
-                <a-button>优惠活动</a-button>
+                <a-button @click="clickTabBar(item)"  :icon="item.icon" :key="index" v-for="(item,index) in tabList">
+                  {{item.icon?'':item.content}}
+                </a-button>
+               
               </div>
             </div>
           </div>
-          <div class="main-item item-right menu-edit-tips" style="display: none;">
+          <div v-show="!showRight" class="main-item item-right menu-edit-tips">
             <p>点击左侧菜单进行编辑操作</p>
           </div>
-          <div class="main-item item-right">
+          <div v-show="showRight" class="main-item item-right">
             <div class="menu-title"><span>菜单名称</span>
-           <a-button>删除菜单</a-button>
+           <a-button @click="delmenu">删除菜单</a-button>
            </div>
            <div class="menu-content">
             <div class="content-item">
               <span class="content-item-title" style="line-height: 40px;">菜单名称</span>
               <div class="content-item-main">
                 <a-input placeholder="请输入菜单名称" />
-               
                 <span class="name-edit-tips">
                   仅支持中英文和数字,字数不超过4个汉字或8个字母</span>
               </div>
@@ -199,6 +174,12 @@ export default {
   },
   data () {
     return {
+      showRight:false,
+      selTopBtns:[],
+      tabList:[{
+        icon:'plus',
+        content:'新增'
+      }],
       loading:'loading',
       imageUrl:'',
       radioType:1,
@@ -258,7 +239,10 @@ export default {
           onChange: this.onSelectChange
         }
       },
-      optionAlertShow: false
+      optionAlertShow: false,
+      selBTab:{},
+      selTTab:{},
+      linkItem:{}
     }
   },
   created () {
@@ -266,6 +250,164 @@ export default {
     getRoleList({ t: new Date() })
   },
   methods: {
+    delmenu(){
+      let that=this
+      this.$confirm({
+        title: '操作提示',
+        content: '删除后，该菜单下设置的内容将被删除',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk() {
+          
+          if(that.linkItem.children){
+           
+            that.tabList=that.tabList.filter(item=>{
+              return item.index!=that.linkItem.index
+            })
+            let arr=that.tabList.filter(item=>{
+              return item.index
+            })
+            if(arr.length===that.tabList.length){
+              switch(arr.length){
+                case 2:
+                that.tabList[0].index=1
+                that.tabList[1].index=2
+                that.tabList.push({
+                  icon:'plus',
+                  content:'新增'
+                })
+                break;
+            }
+            }
+          }else{
+          
+            that.selBTab.children=that.selBTab.children.filter(item=>{
+              return item.index!=that.linkItem.index
+            })
+           
+            let arr=that.selBTab.children.filter(item=>{
+              return item.index
+            })
+            switch(arr.length){
+                case 0:
+                that.selBTab.children=[]
+                that.selBTab.children.push({
+                  icon:'plus',
+                  content:'新增'
+                })
+                break;
+                case 2:
+                that.selBTab.children[0].index=1
+                that.selBTab.children[1].index=2
+                that.selBTab.children.push({
+                  icon:'plus',
+                  content:'新增'
+                })
+                break;
+            }
+             that.showRight=false
+     
+          }
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
+    },
+    menuClick(item,wrapItem){
+      if(item.icon){
+         let obj=null
+         switch(wrapItem.children.length){
+            case 1:
+              obj={
+                content:'添加菜单',
+                icon:'',
+                index:1
+              }
+              this.linkItem=obj
+           
+            wrapItem.children.unshift(obj)
+                break;
+                case 2:
+                obj={
+                  content:'添加菜单',
+                  icon:'',
+                  index:2
+                }
+                 this.linkItem=obj
+            
+            wrapItem.children.splice(1,0,obj)
+                break;
+              case 3:
+                 this.linkItem=item
+                item.content='添加菜单'
+                item.icon=''
+                item.index=3
+               
+                this.selTTab=item
+                break;
+            }
+      }else{
+         this.linkItem=item
+      }
+      this.selBTab=wrapItem
+      this.showRight=true
+      //selTTab:{}
+    },
+    clickTabBar(item){
+      if(item.icon){
+        let obj=null
+          switch(this.tabList.length){
+            case 1:
+              obj={
+                content:'添加菜单',
+                icon:'',
+                index:1,
+                children:[{
+                  icon:'plus',
+                  content:'添加菜单'
+                }]
+              }
+            this.selBTab=obj
+            this.linkItem=obj
+            this.tabList.unshift(obj)
+                break;
+                case 2:
+                obj={
+                  content:'添加菜单',
+                  icon:'',
+                  index:2,
+                  children:[{
+                    icon:'plus',
+                    content:'添加菜单'
+                  }]
+                }
+            this.selBTab=obj
+            this.linkItem=obj
+            this.tabList.splice(1,0,obj)
+                break;
+              case 3:
+                item.content='添加菜单'
+                item.icon=''
+                item.index=3
+                item.children=[{
+                    icon:'plus',
+                    content:'添加菜单'
+                  }]
+                  this.linkItem=item
+                this.selBTab=item
+                break;
+            }
+        }else{
+          this.selBTab=item
+         
+           this.linkItem=item
+        }
+         this.showRight=true
+        this.selTopBtns=this.selBTab.children
+        
+    },
     tableOption () {
       if (!this.optionAlertShow) {
         this.options = {
@@ -288,6 +430,12 @@ export default {
 <style  scoped>
 .main{
   display:flex;
+}
+.menu-edit-tips{
+  display:flex;
+  justify-content: center!important;
+  align-items: center!important;
+  background:#fff!important;
 }
 /* .main .left-wrap{
     margin-left: 20px;

@@ -14,7 +14,7 @@
           label="生效油站" 
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
-          鹰眼集团
+          {{form.group_name}}
         </a-form-item>
 
         <a-form-item 
@@ -70,7 +70,7 @@
           label="初始等级有效期" 
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
-          <a-radio-group name="radioGroup" v-model="initial_day_type">
+          <a-radio-group name="radioGroup" v-model="initial_day_type" @change="changeDayType">
             <a-radio :value="1">
               7天
             </a-radio>
@@ -95,7 +95,7 @@
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
 
-          <a-button type="primary" style="margin-right: 10px;" v-if="type=='add'"> 新增 </a-button>
+          <a-button type="primary" style="margin-right: 10px;" v-if="type=='add'" @click="submit"> 新增 </a-button>
           <a-button type="primary" style="margin-right: 10px;" v-else> 编辑 </a-button>
 
           <a-button @click="exit"> 取消 </a-button>
@@ -111,7 +111,7 @@
 <script>
 import { STable } from '@/components'
 
-import { getUserBasicslist } from '@/api/crm'
+import { postBasicsset } from '@/api/crm'
 
 export default {
   name: 'FoundationAdd',
@@ -121,14 +121,14 @@ export default {
   data () {
     return {
       form:{
-        id: null,	 //[string]		修改的时候使用		
-        group_name: null,
+        id: undefined,	 //[string]		修改的时候使用		
+        group_name: '鹰眼集团',
         //[string]	是	生效油站名称		
         member_type: 1,
         //[string]	是	会员注册1是注册即会员 2授权手机号		
-        member_id: null,
+        member_id: undefined,
         //[string]	是	初始会员等级		
-        initial_day: null,
+        initial_day: 7,
         //[string]	是	初始等级有效期
       },
       initial_day_type: 1
@@ -142,6 +142,26 @@ export default {
   },
   created () {},
   methods: {
+    submit(){
+      console.log(this.form)
+    },
+    changeDayType(){
+      // this.initial_day_type
+      // console.log(this.initial_day_type)
+      switch (this.initial_day_type) {
+        case 1:
+          this.form.initial_day = 7
+          break;
+        case 2:
+          this.form.initial_day = 30
+          break;
+        case 3:
+          this.form.initial_day = undefined
+          break;
+        default:
+          break;
+      }
+    },
     openModal(){
       let routerJump = this.$router.resolve({ path: '/crm/member/grow' });
       window.open(routerJump.href, '_blank');
@@ -168,7 +188,7 @@ export default {
 .head-title {
   font-size: 16px;
   font-weight: 700;
-  color: #1e1e28;
+  color: #040a46;
   height: 55px;
   line-height: 41px;
   border-bottom: 1px solid #eaeaf4;

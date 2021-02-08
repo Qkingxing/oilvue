@@ -14,23 +14,25 @@
     </div>
     <div v-if="dateKey == 'jintian'">
       <div class="head-title">销售总数据</div>
-      <div class="saleall">
-        <div class="saleall-container">
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
+      <div class="saleall_3" >
+        <div class="saleall-container" v-for="(list,index) in lists" :key="index">
+          <number-card :list='list'></number-card>
+
         </div>
       </div>
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
-          <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-          </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
+        <a-popover placement="bottom">
+          <template slot="content">
+            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+            </div>
+          </template>
+
+          <a-button>切换</a-button>
+        </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
@@ -46,47 +48,44 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-        <div class="pie-chart-box">
-            <div class="tab_1">
-                <a-tabs>
-                    <a-tab-pane key="1" tab="Tab 1">
-                        <G2></G2>
-                    </a-tab-pane>
-                    <a-tab-pane key="2" tab="Tab 2">
-                        <G2></G2>
-                    </a-tab-pane>
-                    <a-tab-pane key="3" tab="Tab 3">
-                        <G2></G2>
-                    </a-tab-pane>
-                </a-tabs>
-            </div>
+      <div class="pie-chart-box">
+        <div class="tab_1">
+          <a-tabs>
+            <a-tab-pane key="1" tab="Tab 1">
+              <G2 v-if="show" :nums='nums'></G2>
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="Tab 2">
+              <G2 v-if="show" :nums='nums'></G2>
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="Tab 3">
+              <G2 v-if="show" :nums='nums'></G2>
+            </a-tab-pane>
+          </a-tabs>
         </div>
+      </div>
     </div>
-
-
-
-
 
     <div class="time" v-if="dateKey == 'zuotian'">
       <div class="head-title">销售总数据</div>
-      <div class="saleall">
-        <div class="saleall-container">
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
+      <div class="saleall_3" >
+        <div class="saleall-container" v-for="(list, index) in lists" :key="index">
+          <number-card :list="list"></number-card>
         </div>
       </div>
 
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
-          <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-          </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
+        <a-popover placement="bottom">
+          <template slot="content">
+            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+            </div>
+          </template>
+
+          <a-button>切换</a-button>
+        </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
@@ -103,42 +102,45 @@
       </a-row>
 
       <div class="head-title">点比分析</div>
-     <div class="pie-chart-box">
+      <div class="pie-chart-box">
         <div class="tab_1">
-            <a-tabs>
-                <a-tab-pane key="1" tab="Tab 1">
-                    <G2></G2>
-                </a-tab-pane>
-                <a-tab-pane key="2" tab="Tab 2">
-                    <G2></G2>
-                </a-tab-pane>
-                <a-tab-pane key="3" tab="Tab 3">
-                    <G2></G2>
-                </a-tab-pane>
-            </a-tabs>
+          <a-tabs>
+            <a-tab-pane key="1" tab="Tab 1">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="Tab 2">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="Tab 3">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+          </a-tabs>
         </div>
-    </div>
+      </div>
     </div>
 
     <div v-if="dateKey == 'benzhou'">
       <div class="head-title">销售总数据</div>
-      <div class="saleall">
-        <div class="saleall-container">
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
+      
+       <div class="saleall_3" >
+        <div class="saleall-container" v-for="(list,index) in lists" :key="index">
+          <number-card :list='list'></number-card>
+
         </div>
       </div>
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
-          <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-          </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
+        <a-popover placement="bottom">
+          <template slot="content">
+            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+            </div>
+          </template>
+
+          <a-button>切换</a-button>
+        </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
@@ -154,41 +156,43 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-        <div class="pie-chart-box">
-            <div class="tab_1">
-                <a-tabs>
-                    <a-tab-pane key="1" tab="Tab 1">
-                        <G2></G2>
-                    </a-tab-pane>
-                    <a-tab-pane key="2" tab="Tab 2">
-                        <G2></G2>
-                    </a-tab-pane>
-                    <a-tab-pane key="3" tab="Tab 3">
-                        <G2></G2>
-                    </a-tab-pane>
-                </a-tabs>
-            </div>
+      <div class="pie-chart-box">
+        <div class="tab_1">
+          <a-tabs>
+            <a-tab-pane key="1" tab="Tab 1">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="Tab 2">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="Tab 3">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+          </a-tabs>
         </div>
+      </div>
     </div>
     <div v-if="dateKey == 'benyue'">
       <div class="head-title">销售总数据</div>
-      <div class="saleall">
-        <div class="saleall-container">
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
+        <div class="saleall_3" >
+        <div class="saleall-container" v-for="(list,index) in lists" :key="index">
+          <number-card :list='list'></number-card>
+
         </div>
       </div>
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
-          <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-          </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
+        <a-popover placement="bottom">
+          <template slot="content">
+            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+            </div>
+          </template>
+
+          <a-button>切换</a-button>
+        </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
@@ -204,41 +208,43 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-        <div class="pie-chart-box">
-            <div class="tab_1">
-                <a-tabs>
-                    <a-tab-pane key="1" tab="Tab 1">
-                        <G2></G2>
-                    </a-tab-pane>
-                    <a-tab-pane key="2" tab="Tab 2">
-                        <G2></G2>
-                    </a-tab-pane>
-                    <a-tab-pane key="3" tab="Tab 3">
-                        <G2></G2>
-                    </a-tab-pane>
-                </a-tabs>
-            </div>
+      <div class="pie-chart-box">
+        <div class="tab_1">
+          <a-tabs>
+            <a-tab-pane key="1" tab="Tab 1">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="Tab 2">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="Tab 3">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+          </a-tabs>
         </div>
+      </div>
     </div>
     <div v-if="dateKey == 'zidingyi'">
       <div class="head-title">销售总数据</div>
-      <div class="saleall">
-        <div class="saleall-container">
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
+       <div class="saleall_3" >
+        <div class="saleall-container" v-for="(list,index) in lists" :key="index">
+          <number-card :list='list'></number-card>
+
         </div>
       </div>
       <div class="sales">
         <div class="head-title">销售收入趋势</div>
-        <el-popover placement="bottom" width="66" trigger="hover">
-          <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-          </div>
-          <el-button slot="reference">切换</el-button>
-        </el-popover>
+        <a-popover placement="bottom">
+          <template slot="content">
+            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+            </div>
+          </template>
+
+          <a-button>切换</a-button>
+        </a-popover>
       </div>
       <a-row>
         <a-col :span="20" v-if="line == 1">
@@ -254,21 +260,21 @@
         </a-col>
       </a-row>
       <div class="head-title">点比分析</div>
-         <div class="pie-chart-box">
-            <div class="tab_1">
-                <a-tabs>
-                    <a-tab-pane key="1" tab="Tab 1">
-                        <G2></G2>
-                    </a-tab-pane>
-                    <a-tab-pane key="2" tab="Tab 2">
-                        <G2></G2>
-                    </a-tab-pane>
-                    <a-tab-pane key="3" tab="Tab 3">
-                        <G2></G2>
-                    </a-tab-pane>
-                </a-tabs>
-            </div>
+      <div class="pie-chart-box">
+        <div class="tab_1">
+          <a-tabs>
+            <a-tab-pane key="1" tab="Tab 1">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="Tab 2">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="Tab 3">
+              <G2 :nums='nums'></G2>
+            </a-tab-pane>
+          </a-tabs>
         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -278,7 +284,9 @@ import G2 from '../components/G2'
 import times from '../times'
 import NumberCard from '../components/numberCard'
 import LineCharts from '../components/LineCharts'
+import {analysiss} from '@/api/data'
 export default {
+  props: ['lists'],
   name: 'Dashboard',
   components: {
     times,
@@ -301,10 +309,22 @@ export default {
       key: 'quanbu',
       noTitleKey: 'quanbu',
       dateKey: 'jintian',
+      show:false
     }
   },
-  mounted() {},
+  created() {
+      this.analysis()
+  },
   methods: {
+      analysis(){
+		 return analysiss({}).then(res=>{
+			res.data.map(item =>{
+                this.nums = item;
+                
+            })
+            this.show = true
+		 })
+	 },
     income(index) {
       if (index == 1) {
         this.line = 1
@@ -326,7 +346,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" >
 .search {
   height: 40px;
   display: flex;
@@ -338,7 +358,7 @@ export default {
     line-height: 24px;
     margin-right: 20px;
     text-align: center;
-    color: #1e1e28;
+    color: #040a46;
     font-size: 12px;
     cursor: pointer;
     border-radius: 4px;
@@ -358,37 +378,42 @@ export default {
   width: 300px;
   margin: 0 auto;
   .span {
-    color: #1e1e28;
+    color: #040a46;
   }
 }
-.pie-chart-box{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
-        .tab_1{
-            min-width: 680px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 6px 0 ;
-            border-radius: 2p
-        }
+.pie-chart-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  .tab_1 {
+    min-width: 680px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 6px 0;
+    border-radius: 2p;
+  }
 }
 
 // 销售总数据
-.saleall {
+.saleall_3 {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
+   flex-wrap: wrap;
   padding-bottom: 10px;
 
   .saleall-container {
     margin: -10px;
-    display: flex;
-    flex-wrap: wrap;
+    // display: flex;
+    // flex-wrap: wrap;
+     width: 20%;
 
     /deep/.number-card {
       display: flex;
-      flex: 1 1 20%;
-      max-width: 20%;
+      // flex: 1 1 20%;
+      // max-width: 20%;
+       background-image: url('./img/bei.png');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
     }
   }
 }

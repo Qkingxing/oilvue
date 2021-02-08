@@ -24,23 +24,27 @@
               <div  class="page-content">
               </div>
             </div>
+            <a-table class="my-table" :columns="columns" :data-source="data">
+              <a slot="name" slot-scope="text">{{ text }}</a>
+            </a-table>
           </div>
             <div  class="right_box"><div  class="head_title"><span >短信设置</span></div><div  class="content">
-                <div  class="icon_box">
+                <div  class="icon_box" @click="icoClick(1)">
                   <img  src="https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/06/12/16/b89e25f00b25b33b560abfbe8e90.png">
                   <span >余额预警设置</span>
                 </div>
-                <div  class="icon_box">
+                <div  class="icon_box" @click="icoClick(2)">
                   <img  src="https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/06/12/16/2af3da3d8792666f09967f0ea991.png">
                   <span >签名管理</span>
                 </div>
-                <div  class="icon_box">
+                <div  class="icon_box" @click="icoClick(3)">
                   <img  src="https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/06/12/16/eaff44cab40faf63489f90eb46cc.png">
                   <span >短信测试</span>
                 </div>
               </div>
             </div>
           </div>
+         
           </div>
          
         </div>
@@ -49,14 +53,95 @@
 
 <script>
 export default {
-    name: 'SMSManage'
+    name: 'SMSManage',
+    data(){
+      return{
+        data:[
+          {
+            key: '1',
+            name: '时间',
+            age: 32,
+            address: ''
+          },
+          {
+            key: '2',
+            name: '通知名称',
+            age: 42,
+            address: ''
+          },
+          {
+            key: '3',
+            name: 'Joe Black',
+            age: 32,
+            address: ''
+          }
+        ],
+      columns: [
+        {
+          title: '时间',
+          dataIndex: 'name',
+          key: 'name'
+        },
+        {
+          title: '通知名称',
+          dataIndex: 'age',
+          key: 'age'
+        },
+        {
+          title: '任务类型',
+          dataIndex: 'address',
+          key: 'address 1'
+        },
+        {
+          title: '活动名称',
+          dataIndex: 'address',
+          key: 'address 2',
+        
+        },
+        {
+          title: '数量(条)',
+          dataIndex: 'address',
+          key: 'address 3',
+        
+        },
+        {
+          title: '归属油站',
+          dataIndex: 'address',
+          key: 'address 4',
+        
+        },
+        {
+          title: '创建人',
+          dataIndex: 'address',
+          key: 'address 4',
+        
+        },
+        {
+          title: '操作',
+          dataIndex: 'address',
+          key: 'address 4',
+        
+        }
+      ]
+      }
+    },
+    methods:{
+      icoClick(val){
+        
+      }
+    }
 }
 </script>
 <style scoped>
+.my-table{
+  box-sizing: border-box;
+  width: calc(100% - 11px);
+  padding: 0 24px 0 10px;
+}
 .head-title {
     font-size: 16px;
     font-weight: 700;
-    color: #1e1e28;
+    color: #040a46;
     height: 55px;
     line-height: 41px;
     border-bottom: 1px solid #eaeaf4;
@@ -176,7 +261,7 @@ export default {
     padding: 24px;
 }
 .box_one .left_box .sms_total_wrap .sms_total_item_top {
-  color: #1e1e28;
+  color: #040a46;
   font-size: 14px;
 }
 .box_one .left_box .sms_total_wrap .sms_total_item_bottom {
@@ -234,11 +319,8 @@ export default {
 }
 .box_one .right_box .content .icon_box {
     width: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
+    cursor:pointer;
     align-items: center;
     margin-top: 24px;
 }

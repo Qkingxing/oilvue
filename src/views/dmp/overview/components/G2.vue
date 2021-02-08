@@ -1,28 +1,37 @@
 <template>
-  <div id="charts" style="width: 400px" ref="charts"></div>
+  
+  <div>
+        <div id="charts" style="width: 400px" ref="charts"></div>
+  </div>
 </template>
 
 <script>
 import { Chart } from '@antv/g2'
 
 export default {
+  props:['nums'],
   data() {
     return {
       data: [
-        { item: '事例一', count: 40, percent: 0.4 },
-        { item: '事例二', count: 21, percent: 0.21 },
-        { item: '事例三', count: 17, percent: 0.17 },
-        { item: '事例四', count: 13, percent: 0.13 },
-        { item: '事例五', count: 9, percent: 0.09 },
+        { item: '92#', count: this.nums.fives_oils_actually_paid, d: 0.4 , },
+        { item: '0#', count: this.nums.zero_oils_actually_paid, d: 0.21 },
+        { item: '95#', count: this.nums.two_oils_actually_paid, d: 0.17 },
       ],
     }
   },
+  created(){
+      console.log(this.nums)
+  },
+  
   methods: {
+      
     init: function () {
+        let thit = this
       const chart = new Chart({
         container: this.$refs.charts,
-        autoFit: true,
+        autoFit: false,
         height: 300,
+        width:600,
       })
 
       chart.coordinate('theta', {
@@ -31,21 +40,21 @@ export default {
       })
       chart.data(this.data)
 
-      chart.scale('percent', {
+      chart.scale('d', {
         formatter: (val) => {
           val = val * 100 + '%'
           return val
         },
       })
-
       // 声明需要进行自定义图例字段： 'item'
       chart.legend('item', {
         position: 'right', // 配置图例显示位置
         custom: true, // 关键字段，告诉 G2，要使用自定义的图例
-        items: this.data.map((obj, index) => {
+        items: thit.data.map((obj, index) => {
+            console.log(thit)
           return {
             name: obj.item, // 对应 itemName
-            value: obj.percent, // 对应 itemValue
+            value: obj, // 对应 itemValue
             marker: {
               symbol: 'square', // marker 的形状
               style: {
@@ -59,13 +68,13 @@ export default {
           style: {
             fill: '#999',
           }, // 配置 itemValue 样式
-          formatter: (val) => `${val * 100}%`, // 格式化 itemValue 内容
+          formatter: (val) => `${val.d * 100}%  ${val.count} 元`, // 格式化 itemValue 内容
         },
       })
       chart
         .interval()
         .adjust('stack')
-        .position('percent')
+        .position('d')
         .color('item')
         .style({
           fillOpacity: 1,

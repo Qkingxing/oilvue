@@ -103,7 +103,7 @@ ol {
   }
   .ant-tooltip-inner{
     background-color: #fff;
-    color: #1e1e28;
+    color: #040a46;
   }
 }
 // 超链接边框
@@ -127,4 +127,33 @@ ol {
 }
 .ant-pro-page-header-wrap-page-header-warp{
   background: transparent;
+}
+// 隐藏滚动条
+.public_global_scrollHidden{
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  &::-webkit-scrollbar{
+    display: none; /* Chrome Safari */
+  }
+}
+// 隐藏菜单边框
+.ant-pro-sider-menu-sider{
+  box-shadow: none;
+  border-right: 1px solid #eaeaea;
+}
+// 更改头部高度
+.ant-pro-global-header{
+  height: 55px;
+  box-shadow: none;
+}
+// 更改头部高度
+.ant-layout-header{
+  height: 55px;
+  box-shadow: none;
+}
+// 隐藏展开收起菜单按钮
+.ant-pro-global-header-trigger{
+  height: 55px;
+  line-height: 55px;
+  display: none;
 }

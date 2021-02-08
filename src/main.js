@@ -22,25 +22,15 @@ Vue.component('countTo', countTo)
 // 禁止全局引入，跟ant冲突
 import { 
   Cascader, CascaderPanel,
-  Popover,
-  Button,
-  Select,
-  Option,
-  Card,
-  Row,
-  Table
-
+  Select, Option
+ 
 } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.use(Cascader).use(CascaderPanel)
-   .use(Popover)
-   .use(Button)
-   .use(Select)
-   .use(Option)
-   .use(Card)
-   .use(Row)
-   .use(Table)
+   .use(Select).use(Option)
+ 
+
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
 import './mock'
@@ -64,7 +54,7 @@ Vue.component('page-header-wrapper', PageHeaderWrapper)
 // 引入自定义阿里图标库
 import { Icon } from 'ant-design-vue';
 const IconFont = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2354010_t5rzgia7jsm.js',
+  scriptUrl: '//at.alicdn.com/t/font_2354010_4avtv0xexi5.js',
 });
 Vue.component('icon-font', IconFont)
 

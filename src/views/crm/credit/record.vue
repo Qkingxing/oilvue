@@ -197,7 +197,7 @@ export default {
 .head-title{
   font-size: 16px;
   font-weight: 700;
-  color: #1e1e28;
+  color: #040a46;
   height: 55px;
   line-height: 41px;
   border-bottom: 1px solid #eaeaf4;
@@ -230,11 +230,11 @@ export default {
     .value{
       font-size: 34px;
       line-height: 34px;
-      color: #1e1e28;
+      color: #040a46;
     }
     .unit {
       font-size: 12px;
-      color: #1e1e28;
+      color: #040a46;
       margin-left: 5px;
       transform: translateY(-1px);
     }
@@ -280,7 +280,7 @@ export default {
       line-height: 24px;
       margin-right: 20px;
       text-align: center;
-      color: #1e1e28;
+      color: #040a46;
       font-size: 12px;
       cursor: pointer;
       &.active{

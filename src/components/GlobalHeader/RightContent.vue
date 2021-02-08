@@ -300,14 +300,19 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.header_right_wrap{
+  display: flex;
+  align-items: center;
+}
 .box-item{
   height: 55px;
+  line-height: 55px;
   display: inline-block;
   width: 50px;
   text-align: center;
   cursor: pointer;
   font-size: 20px;
-  color: #1e1e28;
+  color: #040a46;
   .header-notice{
     display: inline-block;
     padding: 0 14px 0 20px;

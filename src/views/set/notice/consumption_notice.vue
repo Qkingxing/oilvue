@@ -330,7 +330,7 @@ export default {
   margin-bottom:20px;
     padding: 10px 20px 15px 20px;
     border-bottom: 1px solid #eaeaf4;
-    color: #1e1e28;
+    color: #040a46;
     font-weight: 700;
     font-size: 16px;
     
@@ -361,7 +361,7 @@ export default {
     width: 100%;
     line-height: normal!important;
     font-size: 12px;
-    color: #1e1e28;
+    color: #040a46;
     margin: 0;
     padding: 0;
 }
@@ -370,7 +370,7 @@ export default {
     line-height: 19px;
 }
 .channel_wrap .channel_item_right .preview_wrap .header_wrap .header_left .header_title {
-    color: #1e1e28;
+    color: #040a46;
 }
 .channel_wrap .channel_item_right .preview_wrap .header_wrap .header_left .header_circle {
     width: 20px;
@@ -419,7 +419,7 @@ export default {
     box-sizing: border-box;
 }
 .channel_wrap .channel_item_right .title {
-    color: #1e1e28;
+    color: #040a46;
     line-height: 14px;
     font-weight: 500;
 }
@@ -466,7 +466,7 @@ export default {
 }
 .header_wrap .header_title {
     font-size: 16px;
-    color: #1e1e28;
+    color: #040a46;
     font-weight: 700;
 }
 .header_wrap {

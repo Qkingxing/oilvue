@@ -6,8 +6,8 @@
         支付设置
       </div>
       <div class="form-wrap">
-        <a-tabs type="card">
-          <a-tab-pane key="1" tab="付款限制">
+        <a-tabs @change="tabChange">
+          <a-tab-pane  key="1" tab="付款限制">
              <a-form
               v-bind="formItemLayout"
             >
@@ -15,15 +15,15 @@
               <span style="padding-right:80px">支付次数</span>
               <span style="padding-right:14px">每个账号每</span>
              
-              <a-input-number style="width:100px" :min="8" :max="12" :value="number.value" />
+              <a-input-number style="width:100px"  :min="0" v-model="paylimit.day_num" />
               <span style="padding-left:8px">天</span>
               <span style="padding:0 5px 0 3px">,可支付</span>
-               <a-input-number style="width:100px" :min="8" :max="12" :value="number.value" />
+               <a-input-number style="width:100px" :min="0" v-model="paylimit.pay_num" />
               <span style="padding-left:4px">次</span>
             </a-form-item>
-            <a-button type="primary">
-      保存
-    </a-button>
+            <a-button @click="setPayastrictset" style="margin:80px 0 0 60px;" type="primary">
+                保存
+              </a-button>
             </a-form>
           </a-tab-pane>
           <a-tab-pane key="2" tab="退款限制">
@@ -33,18 +33,18 @@
 
             <a-form-item label="">
                <span style="padding-right:80px">退款有效期</span>
-              <a-radio-group v-decorator="['radio-group']">
-                <a-radio value="a">
+              <a-radio-group v-model="returnlimit.refund_period">
+                <a-radio value="7">
                 7天
                 </a-radio>
-                <a-radio value="b">
+                <a-radio value="30">
                 30天
                 </a-radio>
-                <a-radio value="b">
+                <a-radio value="999">
                 自定义
                 </a-radio>
-                 <a-input-number style="margin:0 10px;width:100px" :min="8" :max="12" :value="number.value" />
-                  <a-radio value="b">
+                 <a-input-number v-show="returnlimit.refund_period==999" style="margin:0 10px;width:100px" :min="0" :max="12" v-model="inputNum" />
+                  <a-radio value="1">
                 仅限当天退款
                 </a-radio>
                   
@@ -53,12 +53,12 @@
             
 
              <a-form-item label="">
-               <span>退款返券</span>
-               <a-radio-group v-decorator="['radio-group']">
-                <a-radio value="a">
+               <span style="padding-right:10px">退款返券</span>
+               <a-radio-group v-model="returnlimit.is_returnticket">
+                <a-radio value="1">
                 开启
                 </a-radio>
-                <a-radio value="b">
+                <a-radio value="0">
                 关闭
                 </a-radio>
                
@@ -71,13 +71,13 @@
               <span style="padding-right:80px">退款次数</span>
               <span style="padding-right:14px">每个账号每</span>
              
-              <a-input-number style="width:100px" :min="8" :max="12" :value="number.value" />
+              <a-input-number style="width:100px" :min="0"  v-model="returnlimit.day_num" />
               <span style="padding-left:8px">天</span>
               <span style="padding:0 5px 0 3px">,可退款</span>
-               <a-input-number style="width:100px" :min="8" :max="12" :value="number.value" />
+               <a-input-number style="width:100px" :min="0" v-model="returnlimit.refund_num" />
               <span style="padding-left:4px">次</span>
             </a-form-item>
-            <a-button type="primary">
+            <a-button @click="setRefundastrictset" style="margin:80px 0 0 60px;" type="primary">
       保存
     </a-button>
             </a-form>
@@ -91,30 +91,91 @@
 </template>
 
 <script>
+import api from '../../../api/set.js'
 export default {
-    name: 'Basis',
+    name: 'refund',
      data: () => ({
-       lastIndex:'12/20',
-       number:{},
+       paylimit:{
+        day_num: '',
+        pay_num: ''
+       },
+       returnlimit:{
+
+       },
+       inputNum:'',
+       
       formItemLayout: {
         labelCol: { span: 0 },
         wrapperCol: { span: 24 },
-      },
-      previewVisible: false,
-      previewImage: '',
-      fileList: [
-        {
-          uid: '-1',
-          name: 'image.png',
-          status: 'done',
-          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        }
-      ]
+      }
   }),
-  beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'validate_other' });
+  mounted() {
+    this.setPayastrictlist()
   },
   methods: {
+    tabChange(e){
+    
+    if(e==1){
+      this.setPayastrictlist()
+    }else{
+      this.setRefundastrictlist()
+    }
+     
+    },
+    setRefundastrictlist(){
+      let that=this
+      api.setRefundastrictlist().then(res=>{
+       
+        that.returnlimit=res.data
+        if(that.returnlimit.refund_period!=7&&that.returnlimit.refund_period!=30&&that.returnlimit.refund_period!=1){
+          that.inputNum=that.returnlimit.refund_period
+          that.returnlimit.refund_period=999
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
+    setRefundastrictset(){
+      let that=this
+      let obj={
+        day_num: that.returnlimit.day_num,
+        id: that.returnlimit.id,
+        is_returnticket: that.returnlimit.is_returnticket,
+        refund_num: that.returnlimit.refund_num,
+        refund_period: that.returnlimit.refund_period==999?that.inputNum:that.returnlimit.refund_period
+      }
+      api.setRefundastrictset(obj).then(res=>{
+        if(res.code==200){
+          that.$message.success(res.msg);
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
+    setPayastrictset(){
+      let that=this
+      let obj={
+        day_num:that.paylimit.day_num,
+        id:that.paylimit.group_id,
+        pay_num: that.paylimit.pay_num
+      }
+      api.setPayastrictset(obj).then(res=>{
+        if(res.code==200){
+          that.$message.success(res.msg);
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
+    setPayastrictlist(){
+      let that=this
+      api.setPayastrictlist().then(res=>{
+        
+        that.paylimit=res.data
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
      handleCancel() {
       this.previewVisible = false;
     },
@@ -165,6 +226,7 @@ export default {
   }
   .form-wrap{
     padding:30px 0;
+    padding-left:40px;
   }
 </style>
 

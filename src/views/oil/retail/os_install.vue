@@ -28,7 +28,26 @@
 </template>
 
 <script>
+import { getBasic } from'@/api/finance.js'
 export default {
-    name: 'Reports'
+    name: 'Reports',
+    data(){
+      return{
+        
+      }
+    },
+    created() {
+      this.loadBasic()
+    },
+    methods:{
+      loadBasic(){
+        let _obj={
+          site_id:'2'
+        }
+        getBasic(_obj).then(res=>{
+          console.log(res)
+        })
+      }
+    }
 }
 </script>

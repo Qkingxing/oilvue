@@ -305,7 +305,7 @@ export default {
     .loginContainerMainHeaderText{
       font-size: 23px;
       font-weight: 700;
-      color: #1e1e28;
+      color: #040a46;
     }
     .loginContainerMainHeaderTextSub{
       font-size: 16px;

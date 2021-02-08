@@ -379,7 +379,7 @@ export const asyncRouterMap = [
           }
         ]
       },
-      //oms
+      // oms
       {
         path: '/oms',
         name: 'oms',
@@ -551,7 +551,7 @@ export const asyncRouterMap = [
         children: [
           {
             path: '/goods/warehouse',
-            name: 'warehouse',
+            name: 'Warehouse',
             redirect: '/goods/warehouse/my',
             component: () => import('@/views/goods/warehouse'),
             meta: { title: 'menu.goods.warehouse', keepAlive: true },
@@ -560,7 +560,7 @@ export const asyncRouterMap = [
                 path: '/goods/warehouse/my',
                 name: 'my',
                 component: () => import('@/views/goods/warehouse/my'),
-                meta: { title: 'menu.goods.warehouse.my' },
+                meta: { title: 'menu.goods.warehouse.my' }
               },
               {
                 path: '/goods/warehouse/Classification',
@@ -848,21 +848,13 @@ export const asyncRouterMap = [
           }
         ]
       },
-      // system
+      // notPermission
       {
-        path: '/system',
-        name: 'system',
-        redirect: '/system/role',
-        component: RouteView,
-        meta: { title: 'menu.system', keepAlive: true, icon: 'like' },
-        children: [
-          {
-            path: '/system/role',
-            name: 'role',
-            component: () => import('@/views/support/product'),
-            meta: { title: 'menu.system.role', keepAlive: true }
-          }
-        ]
+        path: '/notPermission',
+        name: 'notPermission',
+        component: () => import('@/views/notPermission'),
+        hidden: true,
+        meta: { title: 'menu.notPermission', hidden: true }
       }
       // dashboard
       // {
@@ -1184,7 +1176,7 @@ export const asyncRouterMap = [
   },
   {
     path: '*',
-    redirect: '/404',
+    redirect: '/notPermission',
     hidden: true
   }
 ]

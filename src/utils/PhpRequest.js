@@ -17,8 +17,15 @@ const PhpRequest = axios.create({
 const errorHandler = (error) => {
   if (error.response) {
     const data = error.response.data
+    // console.log(data)
     // 从 localstorage 获取 token
     const token = storage.get(ACCESS_TOKEN)
+    if (error.response.status === 500) {
+      notification.error({
+        message: 'Forbidden',
+        description: data.message
+      })
+    }
     if (error.response.status === 403) {
       notification.error({
         message: 'Forbidden',
@@ -55,7 +62,22 @@ PhpRequest.interceptors.request.use(config => {
 
 // response interceptor
 PhpRequest.interceptors.response.use((response) => {
-  return response.data
+  let res = response.data
+
+  if (res.code==200) {
+    return res
+  }else{
+    notification.error({
+      message: 'Forbidden',
+      description: res.msg
+    })
+    // store.dispatch('Logout').then(() => {
+    //   setTimeout(() => {
+    //     window.location.reload()
+    //   }, 1500)
+    // })
+  }
+  return res
 }, errorHandler)
 
 const installer = {

@@ -1,14 +1,15 @@
 
 <template>
-  <a-layout>
+  <div>开发中...</div>
+  <!-- <a-layout>
     <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
 
       <a-tabs default-active-key="1" size="large">
         <a-tab-pane key="1" tab="积分变动记录">
           <div class="filterContentContainer">
-            <div class="screen">
+            <div class="screen"> -->
               <!-- <a-range-picker show-time></a-range-picker> -->
-            </div>
+            <!-- </div>
             <div>
               <a-input-search placeholder="请输入活动id/活动名称" style="width: 200px" />
             </div>
@@ -62,7 +63,7 @@
       </a-tabs>
     </a-layout-content>
 
-  </a-layout>
+  </a-layout> -->
 </template>
 
 <script>
@@ -177,7 +178,7 @@ export default {
 .head-title{
   font-size: 16px;
   font-weight: 700;
-  color: #1e1e28;
+  color: #040a46;
   height: 55px;
   line-height: 41px;
   border-bottom: 1px solid #eaeaf4;
@@ -210,11 +211,11 @@ export default {
     .value{
       font-size: 34px;
       line-height: 34px;
-      color: #1e1e28;
+      color: #040a46;
     }
     .unit {
       font-size: 12px;
-      color: #1e1e28;
+      color: #040a46;
       margin-left: 5px;
       transform: translateY(-1px);
     }
@@ -261,7 +262,7 @@ export default {
       line-height: 24px;
       margin-right: 20px;
       text-align: center;
-      color: #1e1e28;
+      color: #040a46;
       font-size: 12px;
       cursor: pointer;
       &.active{

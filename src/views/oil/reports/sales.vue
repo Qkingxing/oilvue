@@ -1,4 +1,3 @@
-
 <template>
   <div>
     sales
@@ -7,6 +6,6 @@
 
 <script>
 export default {
-    name: 'Sales'
+  name: 'Sales'
 }
 </script>

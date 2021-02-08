@@ -221,10 +221,12 @@
                   {{oldTotal}}
                 </span>
                 」位
+                <!-- <span class="themeColor select-all">选择全部</span> -->
               </span>
             </span>
             <div>
               <a-button :disabled="!oldselectedRowKeys.length">发优惠券</a-button>
+              <a-button v-if="oldselectedRowKeys.length>0" style="margin-left: 8px;">加标签</a-button>
               <a-button style="margin-left: 8px;">导出报表</a-button>
               <a-button style="margin-left: 8px;" icon="setting" @click="openColSetting"/>
             </div>
@@ -251,13 +253,14 @@
                   3
                 </span>
                 」位
-                <span class="themeColor select-all" @click="showEditTag('all')">
+                <!-- <span class="themeColor select-all" @click="showEditTag('all')">
                   选择全部
-                </span>
+                </span> -->
               </span>
             </span>
             <div>
-              <a-button disabled>发优惠券</a-button>
+              <a-button :disabled="!selectedRowKeys.length">发优惠券</a-button>
+              <a-button v-if="selectedRowKeys.length>0" style="margin-left: 8px;">加标签</a-button>
               <a-button style="margin-left: 8px;">导出报表</a-button>
               <a-button style="margin-left: 8px;" icon="setting" v-if="radioValue=='old'"/>
             </div>
@@ -265,7 +268,7 @@
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
             :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
@@ -292,7 +295,7 @@
 import { STable } from '@/components'
 
 import { getServiceList } from '@/api/manage'
-import { getOldUserList } from '@/api/crm'
+import { getOldUserList, getSonoillist, getSonsitelist } from '@/api/crm'
 
 import EditTag from '../components/EditTag'
 
@@ -454,6 +457,7 @@ export default {
           page: parameter.pageNo, // 页码
           size: parameter.pageSize // 每页页数
         }
+        console.log(this.oldqueryParam)
         return getOldUserList(Object.assign(params))
         .then((res)=>{
           // 自定义出参
@@ -553,7 +557,12 @@ export default {
 
   },
   mounted(){
-
+    getSonoillist().then(res=>{
+      // console.log(res)
+    })
+    getSonsitelist().then(res=>{
+      console.log(res.data.data)
+    })
   },
   methods: {
     showEditTag (type) {
@@ -619,7 +628,7 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 16px;
-    color: #1e1e28;
+    color: #040a46;
   }
 }
 .search-btn{
@@ -643,7 +652,7 @@ export default {
   .title{
     font-size: 16px;
     font-weight: 500;
-    color: #1e1e28;
+    color: #040a46;
     line-height: 24px;
     padding: 23px 0 16px 0;
   }

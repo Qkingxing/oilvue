@@ -18,8 +18,20 @@
       <a-form layout="inline">
         <a-row>
           <a-form-item label="标签名称">
-            <a-input :maxLength="10" placeholder="请输入标签名称" style="width:300px;"/>
-            <span style="margin-left: -45px; color: rgb(199, 199, 199); position: relative;">10/10</span>
+            <a-input v-model="form.name" :maxLength="10" placeholder="请输入标签名称" style="width:300px;"/>
+            <span style="margin-left: -45px; color: rgb(199, 199, 199); position: relative;">{{form.name.length}}/10</span>
+          </a-form-item>
+        </a-row>
+      </a-form>
+
+    </div>
+    <div v-if="type == 'editTag'" class="box">
+
+      <a-form layout="inline">
+        <a-row>
+          <a-form-item label="标签名称">
+            <a-input v-model="form.name" :maxLength="10" placeholder="请输入标签名称" style="width:300px;"/>
+            <span style="margin-left: -45px; color: rgb(199, 199, 199); position: relative;">{{form.name.length}}/10</span>
           </a-form-item>
         </a-row>
       </a-form>
@@ -58,12 +70,14 @@
       <a-button key="back" @click="handleCancel"> 取消 </a-button>
       <a-button key="submit" type="primary" :loading="loading" @click="handleOk" v-if="type=='all'"> 确认 </a-button>
       <a-button key="submit" type="primary" :loading="loading" @click="handleOk" v-if="type=='edit'"> 保存 </a-button>
-      <a-button key="submit" type="primary" :loading="loading" @click="handleOk" v-if="type=='add'"> 确认 </a-button>
+      <a-button key="submit" type="primary" :loading="loading" @click="creatTag()" v-if="type=='add'||type=='editTag'"> 确认 </a-button>
     </template>
   </a-modal>
 </template>
 
 <script>
+import { labelsave } from '@/api/crm' 
+
 export default {
   name: 'EditTag',
   data () {
@@ -71,11 +85,43 @@ export default {
       title: null,
       type: null,
       visible: false,
-      loading: false
+      loading: false,
+      form: {
+        name: '',
+        //[string]	是	标签名称		
+        id: undefined,//复制
+        //[string]		标签表的ID 修改的时候必传
+      }
     }
   },
   methods: {
-    show (type) {
+    // 重置表单
+    resetForm(){
+      this.form = {
+        name: '',
+        id: undefined
+      }
+    },
+    // 创建标签
+    creatTag(){
+      if (this.form.name == '') {
+        this.$message.error('请输入标签名称');
+        return
+      }
+      labelsave(this.form).then(res=>{
+        // console.log(res)
+        if (this.type=='add') {
+          this.$message.success('新增标签成功');
+        }
+        if (this.type=='editTag') {
+          this.$message.success('修改标签成功');
+        }
+        this.handleCancel()
+        this.$emit('save')
+        this.resetForm()
+      })
+    },
+    show (type, id, tagName) {
       this.type = type
       switch (type) {
         case 'all':
@@ -83,6 +129,11 @@ export default {
           break
         case 'add':
           this.title = '新增标签'
+          break
+        case 'editTag':
+          this.title = '修改名称'
+          this.form.id = id
+          this.form.name = tagName
           break
         case 'edit':
           this.title = '修改标签'

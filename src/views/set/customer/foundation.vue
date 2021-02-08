@@ -17,70 +17,74 @@
                 <div  class="identify-auth-action">
                   <div  class="identify-auth-action-text">
                     能链车辆认证</div>
-                     <a-switch checked-children="开启" un-checked-children="关闭" default-checked />
-                        </div>
-                        </li>
-                        </ul>
-                        </div>
-                      </div>
+                     <a-switch @change="switchChange" v-model="is_open" :loading="loadStatus"  checked-children="开启" un-checked-children="关闭"  />
+                </div>
+                </li>
+                </ul>
+                </div>
+              </div>
       
      
     </div>
+
+
+     <a-modal @cancel="handleCancel" v-model="visible" title="操作提示" @ok="handleOk">
+        <p style="text-align:center">修改能链车辆认证将立即生效</p>
+        <p style="text-align:center">是否确认此操作？</p>
+       
+      </a-modal>
   </div>
 </template>
 
 <script>
+import api from '../../../api/set.js'
 export default {
     name: 'Basis',
      data: () => ({
-       lastIndex:'12/20',
-      formItemLayout: {
-        labelCol: { span: 3 },
-        wrapperCol: { span: 12 },
-      },
-      previewVisible: false,
-      previewImage: '',
-      fileList: [
-        {
-          uid: '-1',
-          name: 'image.png',
-          status: 'done',
-          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        }
-      ]
+      visible:false,
+      is_open:false,
+      loadStatus:true,
+      objData:{
+        
+      }
   }),
-  beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'validate_other' });
+  mounted() {
+    this.setIdentitylist()
   },
   methods: {
-     handleCancel() {
-      this.previewVisible = false;
+    switchChange(){
+      this.visible=true
     },
-    async handlePreview(file) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-      }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
+    handleCancel(){
+      this.setIdentitylist()
     },
-    handleChange({ fileList }) {
-      this.fileList = fileList;
-    },
-    handleSubmit(e) {
-      e.preventDefault();
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          console.log('Received values of form: ', values);
+    handleOk(){
+      //setIdentityset
+      let that=this
+      let is_open=that.is_open?1:0
+      api.setIdentityset({id:that.objData.id,is_open}).then(res=>{
+        if(res.code==200){
+          
+         that.visible=false
         }
-      });
+        
+      }).catch(err=>{
+        console.log(err)
+      })
     },
-    normFile(e) {
-      console.log('Upload event:', e);
-      if (Array.isArray(e)) {
-        return e;
-      }
-      return e && e.fileList;
-    },
+    setIdentitylist(){
+      let that=this
+      api.setIdentitylist().then(res=>{
+        if(res.code==200){
+          that.loadStatus=false
+          that.objData=res.data
+          that.is_open=res.data.is_open?true:false
+        }
+        
+      }).catch(err=>{
+        console.log(err)
+      })
+    }
   }
 }
 </script>

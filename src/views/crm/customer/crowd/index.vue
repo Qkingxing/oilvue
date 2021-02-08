@@ -4,11 +4,18 @@
     <a-layout v-if="$route.name=='crowd'">
       <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
         <div class="actionBtns">
-          <a-button type="primary" @click="showEditTag('add')"> 新增客户分群 </a-button>
-          <router-link :to="{ name: 'activity_add' }">
-            <a-button> 创建营销活动 </a-button>
-          </router-link>
-          <a-button disabled> 创建短信 </a-button>
+          <div class="left-btns">
+            <a-button type="primary" @click="openAdd()"> 新增客户分群 </a-button>
+            <router-link :to="{ name: 'activity_add' }">
+              <a-button> 创建营销活动 </a-button>
+            </router-link>
+            <a-button disabled> 创建短信 </a-button>
+          </div>
+          <div class="right-btns" v-if="selectedRows.length>0">
+            <a-button> 删除 </a-button>
+            <a-button> 导出数据 </a-button>
+          </div>
+          
         </div>
 
         <!-- 表格 -->
@@ -16,11 +23,16 @@
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
             :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           >
+            <span slot="grouping_name" slot-scope="text, record">
+              <template>
+                <router-link :to="{name:'CrmCrowdDetail',query:{id:record.group_id}}">{{text}}</router-link>
+              </template>
+            </span>
             <span slot="action" slot-scope="text, record">
               <template>
                 <a @click="delTag(record)">刷新</a>
@@ -41,7 +53,8 @@
 
 <script>
 import { STable } from '@/components'
-import { getRoleList, getServiceList } from '@/api/manage'
+
+import { getGroupinglist } from '@/api/crm'
 
 export default {
   name: 'Crowd',
@@ -56,36 +69,40 @@ export default {
       columns: [
         {
           title: '客户群ID',
-          dataIndex: 'no'
+          dataIndex: 'group_id',
+          key: 'group_id',
         },
         {
           title: '客户群名称',
-          dataIndex: 'description'
+          dataIndex: 'grouping_name',
+          key: 'grouping_name',
+          scopedSlots: { customRender: 'grouping_name' }
         },
         {
           title: '人数',
-          dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'peo_count',
+          key: 'peo_count',
         },
         {
           title: '类型',
-          dataIndex: 'time',
-          needTotal: true
+          dataIndex: 'grouping_type',
+          key: 'grouping_type',
         },
-        {
-          title: '应用活动次数',
-          // dataIndex: 'status',
-          needTotal: true
-        },
+        // 暂时不做
+        // {
+        //   title: '应用活动次数',
+        //   dataIndex: 'status',
+        //   key: 'status',
+        // },
         {
           title: '客户群创建时间',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'create_time',
+          key: 'create_time',
         },
         {
           title: '数据刷新时间',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'update_time',
+          key: 'update_time',
         },
         {
           title: '操作',
@@ -95,11 +112,24 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
+        // console.log('loadData.parameter', parameter)
+        let params = {
+          page: parameter.pageNo, // 页码
+          limit: parameter.pageSize, // 每页页数
+        }
+        return getGroupinglist(Object.assign(params)).then(res => {
+          console.log(res.data)
+          // 自定义出参
+          // console.log(res.data.list)
+          this.oldTotal = res.countPage
+          return {
+            data: res.data, // 列表数组
+            pageNo: parameter.pageNo,  // 当前页码
+            pageSize: parameter.pageSize,  // 每页页数
+            totalCount: res.countPage, // 列表总条数
+            // totalPage: res.data.totalPage // 列表总页数
+          }
+        })
       },
       selectedRowKeys: [],
       selectedRows: [],
@@ -116,7 +146,6 @@ export default {
   },
   created () {
     this.tableOption()
-    getRoleList({ t: new Date() })
   },
   methods: {
     delTag () {
@@ -131,8 +160,10 @@ export default {
         onCancel () {}
       })
     },
-    showEditTag (type) {
-
+    openAdd () {
+      this.$router.push({
+        name: 'CrmCrowdAdd'
+      })
     },
     tableOption () {
       if (!this.optionAlertShow) {
@@ -162,7 +193,7 @@ export default {
 .head-title{
   font-size: 16px;
   font-weight: 700;
-  color: #1e1e28;
+  color: #040a46;
   height: 55px;
   line-height: 41px;
   border-bottom: 1px solid #eaeaf4;
@@ -173,6 +204,11 @@ export default {
   display: flex;
   align-items: center;
   margin: 16px 0;
+  .right-btns{
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
   button{
     margin-right: 8px;
   }
@@ -183,7 +219,7 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 16px;
-    color: #1e1e28;
+    color: #040a46;
   }
 }
 .search-btn{
@@ -206,7 +242,7 @@ export default {
   .title{
     font-size: 16px;
     font-weight: 500;
-    color: #1e1e28;
+    color: #040a46;
     line-height: 24px;
     padding: 23px 0 16px 0;
   }

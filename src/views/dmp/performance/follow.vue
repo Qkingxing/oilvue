@@ -165,6 +165,126 @@
 
 				  
 			  </div>
+			   <div class="ve-card-view" v-if="size == 'yue'">
+				  <div class="title-obj">
+					  数据统计
+					  <div class="dev">
+						<i class="more_info anticon anticon-question-circle">
+							<a-popover  overlayClassName="note">
+								<template slot="content">
+									<div class="" style="width: 200px">
+									<p>数据于每日早10点更新</p>
+									</div>
+								</template>
+								<span class="anticon">
+									<a-icon type="question-circle" />
+								</span>
+							</a-popover>
+						</i>
+					</div>
+				  </div>
+				  <div class="overflow_box">
+					 <labels></labels>
+				  </div>
+				  <div class="ve-pie-view">
+					  <div class="title-obj">
+						  占比图
+							<div class="dev">
+								<i class="more_info anticon anticon-question-circle">
+									<a-popover  overlayClassName="note">
+										<template slot="content">
+											<div class="" style="width: 200px">
+											<p>数据于每日早10点更新</p>
+											</div>
+										</template>
+										<span class="anticon">
+											<a-icon type="question-circle" />
+										</span>
+									</a-popover>
+								</i>
+							</div>
+					  </div>
+					  <div class="pie-box">
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  引导销售收入占比
+							  </div>
+							  <div class="pie-is-null">暂无数据</div>
+						  </div>
+						   <div class="pie-view">
+							  <div class="tap-title">
+								  引导加油量占比
+							  </div>
+							  <div class="pie-is-null">暂无数据</div>
+						  </div>
+					  </div>
+
+					  
+				  </div>
+
+
+				  
+			  </div>
+			   <div class="ve-card-view" v-if="size == 'yue1'">
+				  <div class="title-obj">
+					  数据统计
+					  <div class="dev">
+						<i class="more_info anticon anticon-question-circle">
+							<a-popover  overlayClassName="note">
+								<template slot="content">
+									<div class="" style="width: 200px">
+									<p>数据于每日早10点更新</p>
+									</div>
+								</template>
+								<span class="anticon">
+									<a-icon type="question-circle" />
+								</span>
+							</a-popover>
+						</i>
+					</div>
+				  </div>
+				  <div class="overflow_box">
+					 <labels></labels>
+				  </div>
+				  <div class="ve-pie-view">
+					  <div class="title-obj">
+						  占比图
+							<div class="dev">
+								<i class="more_info anticon anticon-question-circle">
+									<a-popover  overlayClassName="note">
+										<template slot="content">
+											<div class="" style="width: 200px">
+											<p>数据于每日早10点更新</p>
+											</div>
+										</template>
+										<span class="anticon">
+											<a-icon type="question-circle" />
+										</span>
+									</a-popover>
+								</i>
+							</div>
+					  </div>
+					  <div class="pie-box">
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  引导销售收入占比
+							  </div>
+							  <div class="pie-is-null">暂无数据</div>
+						  </div>
+						   <div class="pie-view">
+							  <div class="tap-title">
+								  引导加油量占比
+							  </div>
+							  <div class="pie-is-null">暂无数据</div>
+						  </div>
+					  </div>
+
+					  
+				  </div>
+
+
+				  
+			  </div>
 		  </div>
 	  </div>
   </div>
@@ -207,7 +327,7 @@ export default {
 					>span{
 						font-size: 16px;
 						font-weight: 500;
-						color: #1e1e28;
+						color: #040a46;
 					}
 				}
 				.condition-bar{
@@ -230,7 +350,7 @@ export default {
 								font-size: 14px;
 								font-family: PingFangSC-Regular,PingFang SC;
 								font-weight: 400;
-								color: #1e1e28;
+								color: #040a46;
 							}
 							.content{
 								margin-left: 16px;
@@ -244,7 +364,7 @@ export default {
 								font-size: 14px;
 								font-family: PingFangSC-Regular,PingFang SC;
 								font-weight: 400;
-								color: #1e1e28;
+								color: #040a46;
 							}
 							.content{
 								margin-left: 16px;
@@ -260,7 +380,7 @@ export default {
 							font-size: 14px;
 							font-family: PingFangSC-Regular,PingFang SC;
 							font-weight: 400;
-							color: #1e1e28;
+							color: #040a46;
 						}
 						.assembly{
 							display: flex;
@@ -285,7 +405,7 @@ export default {
 						font-size: 14px;
 						font-family: PingFangSC-Medium,PingFang SC;
 						font-weight: 500;
-						color: #1e1e28;
+						color: #040a46;
 						.dev{
 							margin-left: 5px;
 							margin-top: -2px;
@@ -320,7 +440,7 @@ export default {
 								font-size: 14px;
 								font-family: PingFangSC-Medium,PingFang SC;
 								font-weight: 500;
-								color: #1e1e28;
+								color: #040a46;
 								margin: 25px 0 16px 0;
 							}
 							.pie-is-null{

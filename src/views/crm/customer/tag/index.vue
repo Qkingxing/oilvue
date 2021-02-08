@@ -17,6 +17,8 @@
           <router-link :to="{ name: 'activity_add' }">
             <a-button> 创建营销活动 </a-button>
           </router-link>
+          <a-button icon="export" v-if="selectedRows.length>0"> 导出数据 </a-button>
+          <a-button v-if="selectedRows.length>0" @click="delAll"> 删除 </a-button>
         </div>
 
         <!-- 表格 -->
@@ -24,11 +26,18 @@
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
             :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           >
+
+            <span slot="name" slot-scope="text, record">
+              <template>
+                <router-link :to="{name:'CrmTagDetail',query:{id:record.id}}">{{text}}</router-link>
+              </template>
+            </span>
+
             <span slot="action" slot-scope="text, record">
               <template>
                 <a @click="delTag(record)">删除</a>
@@ -37,7 +46,7 @@
           </s-table>
         </div>
       </a-layout-content>
-      <EditTag ref="EditTag"></EditTag>
+      <EditTag ref="EditTag" @save="resetList"></EditTag>
     </a-layout>
     <router-view />
   </div>
@@ -46,7 +55,8 @@
 <script>
 import { STable } from '@/components'
 import EditTag from '../components/EditTag'
-import { getRoleList, getServiceList } from '@/api/manage'
+
+import { getlabellist, labeldel } from '@/api/crm'
 
 export default {
   name: 'Tag',
@@ -62,26 +72,25 @@ export default {
       columns: [
         {
           title: '标签名称',
-          dataIndex: 'no'
+          dataIndex: 'name',
+          scopedSlots: { customRender: 'name' }
         },
         {
           title: '人数',
-          dataIndex: 'description'
+          dataIndex: 'count',
         },
-        {
-          title: '应用活动（次）',
-          dataIndex: 'status',
-          needTotal: true
-        },
+        // 暂时不做
+        // {
+          // title: '应用活动（次）',
+          // dataIndex: 'status',
+        // },
         {
           title: '创建时间',
-          dataIndex: 'time',
-          needTotal: true
+          dataIndex: 'create_time',
         },
         {
           title: '标签数据更新时间',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'update_time',
         },
         {
           title: '操作',
@@ -91,11 +100,25 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
+        // console.log('loadData.parameter', parameter)
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+        }
+        return getlabellist(Object.assign(params)).then((res)=>{
+          console.log(res.data.data)
+          // 自定义出参
+          // console.log(res.data.list)
+          this.oldTotal = res.data.total
+          return {
+            data: res.data.data, // 列表数组
+            pageNo: res.data.current_page,  // 当前页码
+            pageSize: res.data.per_page,  // 每页页数
+            totalCount: res.data.total, // 列表总条数
+            // totalPage: res.data.totalPage // 列表总页数
+          }
+        })
+
       },
       selectedRowKeys: [],
       selectedRows: [],
@@ -112,17 +135,48 @@ export default {
   },
   created () {
     this.tableOption()
-    getRoleList({ t: new Date() })
   },
   methods: {
-    delTag () {
+    resetList(){
+      this.$refs.table.refresh(true)
+      
+    },
+    delAll(){
+      let that = this
+      // console.log(this.selectedRows)
+      let id = this.selectedRows.map(e=>{
+        return e.id
+      })
+      // console.log(id)
       this.$confirm({
         title: '温馨提示',
         content: '删除会清除标签全部信息，是否删除？',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          // console.log(item)
+          labeldel(id).then(res=>{
+            // console.log(res)
+            that.selectedRowKeys = []
+            that.selectedRows = []
+            that.$message.success('删除成功')
+            that.resetList()
+          })
+        },
+        onCancel () {}
+      })
+
+    },
+    delTag (item) {
+      let that = this
+      this.$confirm({
+        title: '温馨提示',
+        content: '删除会清除标签全部信息，是否删除？',
+        onOk () {
+          // console.log(item)
+          labeldel([item.id]).then(res=>{
+            // console.log(res)
+            that.$message.success('删除成功')
+            that.resetList()
+          })
         },
         onCancel () {}
       })
@@ -158,7 +212,7 @@ export default {
 .head-title{
   font-size: 16px;
   font-weight: 700;
-  color: #1e1e28;
+  color: #040a46;
   height: 55px;
   border-bottom: 1px solid #eaeaf4;
   display: flex;
@@ -179,7 +233,7 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 16px;
-    color: #1e1e28;
+    color: #040a46;
   }
 }
 .search-btn{
@@ -202,7 +256,7 @@ export default {
   .title{
     font-size: 16px;
     font-weight: 500;
-    color: #1e1e28;
+    color: #040a46;
     line-height: 24px;
     padding: 23px 0 16px 0;
   }

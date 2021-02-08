@@ -287,6 +287,6 @@
  .screen-item{
    margin-bottom: 16px;
    margin-left: 50px;
-   color: #1e1e28;
+   color: #040a46;
  }
 </style>

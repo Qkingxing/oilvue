@@ -55,6 +55,12 @@
           <div class="title">基础属性</div>
         </div>
       </div>
+
+
+      <div class="btn-box">
+        <a-button type="primary" size="large"> 确认 </a-button>
+        <a-button style="margin-left: 8px;" size="large" @click="$router.go(-1)"> 取消 </a-button>
+      </div>
     </a-layout-content>
   </a-layout>
 </template>
@@ -160,7 +166,7 @@ export default {
     line-height: 40px;
     text-align: right;
     margin-right: 20px;
-    color: #1e1e28;
+    color: #040a46;
     font-size: 14px;
   }
 }
@@ -191,10 +197,31 @@ export default {
     padding: 24px;
     box-sizing: border-box;
     .title{
-      color: #1e1e28;
+      color: #040a46;
       font-weight: 500;
       margin-bottom: 16px;
     }
   }
+}
+.btn-box{
+  width: 100%;
+  height: 87px;
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding-left: 251px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 -2px 8px 0 #eaeaea;
+  z-index: 9;
+}
+.ant-btn-lg{
+  min-width: 82px;
+  font-size: 14px;
+  padding: 0 19px;
+  height: 40px;
+  line-height: 40px;
 }
 </style>
