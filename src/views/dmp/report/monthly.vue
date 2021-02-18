@@ -138,7 +138,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .head-title {
   font-size: 16px;
   font-weight: 700;
