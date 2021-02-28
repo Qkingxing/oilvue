@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import JavaRequest from '@/utils/JavaRequest'
+import PhpRequest from '@/utils/PhpRequest'
 
 const userApi = {
   Login: '/auth/login',
@@ -11,7 +12,9 @@ const userApi = {
   SendSmsErr: '/account/sms_err',
   // get my info
   UserInfo: '/user/info',
-  UserMenu: '/user/nav'
+  // UserMenu: '/user/nav',
+  UserMenu: '/work/groupmenulist',
+  router: '/work/groupmenulist'
 }
 
 /**
@@ -60,10 +63,31 @@ export function getInfo () {
 }
 
 export function getCurrentUserNav () {
-  return request({
+  return PhpRequest({
     url: userApi.UserMenu,
-    method: 'get'
+    method: 'post'
   })
+
+  // return new Promise((resolve, reject) => {
+  //   // loginService.getCurrentUserNav(token).then(res => {
+  //   //   console.log('res哈哈哈哈', res)
+  //   //   const { result } = res
+  //   //   const menuNav = []
+  //   //   const childrenNav = []
+  //   //   //      后端数据, 根级树数组,  根级 PID
+  //   //   listToTree(nav, childrenNav, 0)
+  //   //   rootRouter.children = childrenNav
+  //   //   menuNav.push(rootRouter)
+  //   //   console.log('menuNav', menuNav)
+  //   //   const routers = generator(menuNav)
+  //   //   routers.push(notFoundRouter)
+  //   //   console.log('routers', routers)
+  //   //   resolve(routers)
+  //   // }).catch(err => {
+  //   //   reject(err)
+  //   // })
+  //   // resolve('hahahahahaahhaha')
+  // })
 }
 
 export function logout () {
@@ -85,5 +109,14 @@ export function get2step (parameter) {
     url: userApi.twoStepCode,
     method: 'post',
     data: parameter
+  })
+}
+
+export function QueryAuthRoute (params) {
+  // https://oilphp.ldyxx.com/work/groupmenuchange
+  return PhpRequest({
+    url: userApi.router,
+    method: 'post',
+    data: params
   })
 }

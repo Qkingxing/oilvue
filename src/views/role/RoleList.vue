@@ -77,7 +77,7 @@
 <script>
 import pick from 'lodash.pick'
 import { getRoleList, getPermissions } from '@/api/manage'
-import { actionToObject } from '@/utils/permissions'
+// import { actionToObject } from '@/utils/permissions'
 import { baseMixin } from '@/store/app-mixin'
 
 export default {
