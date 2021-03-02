@@ -18,3 +18,13 @@ export function analysiss(data){
         data
     })
 }
+
+// 查看收入趋势
+
+export function revenue(data){
+    return JavaRequest({
+        url:'/data/get_trend_income',
+        method:'post',
+        data
+    })
+}

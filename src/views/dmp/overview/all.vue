@@ -15,14 +15,13 @@
       </div>
     </div>
     <div v-if="dateKey == '1'">
-      <component v-if="show" :nums='nums' :lists='lists' :is="vivew"></component>
+      <component v-if="show" :nums="nums" :lists="lists" :is="vivew"></component>
     </div>
     <div class="time" v-if="dateKey == '2'">
       <div class="head-title">销售总数据</div>
-      <div class="saleall_1" >
-        <div class="saleall-container" v-for='(list,index) in lists' :key="index">
-          <number-card :list='list'></number-card>
-         
+      <div class="saleall_1">
+        <div class="saleall-container" v-for="(list, index) in lists" :key="index">
+          <number-card :list="list"></number-card>
         </div>
       </div>
 
@@ -58,13 +57,13 @@
       <div class="head-title">点比分析</div>
       <a-row style="width: 100%; display: flex; margin-bottom: 20px">
         <a-card style="min-width: 700px" class="box-card">
-          <G2 :nums='nums'></G2>
+          <G2 :nums="nums"></G2>
           <div class="box">
             <span class="span">油品销售占比</span>
           </div>
         </a-card>
         <a-card style="min-width: 700px; margin-left: 20px" class="box-card">
-          <G2 :nums='nums'></G2>
+          <G2 :nums="nums"></G2>
           <div class="box">
             <!-- <span class="span">加油升数按油品类型占比</span> -->
           </div>
@@ -72,7 +71,7 @@
       </a-row>
       <a-row style="width: 100%; display: flex">
         <a-card style="min-width: 700px" class="box-card">
-          <G2 :nums='nums'></G2>
+          <G2 :nums="nums"></G2>
           <div class="box">
             <span class="span">油品销售占比</span>
           </div>
@@ -81,13 +80,13 @@
     </div>
 
     <div v-if="dateKey == '3'">
-      <component :nums='nums' :lists='lists' :is="vivew"></component>
+      <component :nums="nums" :lists="lists" :is="vivew"></component>
     </div>
     <div v-if="dateKey == '4'">
-      <component :nums='nums' :lists='lists' :is="vivew"></component>
+      <component :nums="nums" :lists="lists" :is="vivew"></component>
     </div>
     <div v-if="dateKey == '5'">
-      <component :nums='nums' :lists='lists' :is="vivew"></component>
+      <component :nums="nums" :lists="lists" :is="vivew"></component>
     </div>
   </div>
 </template>
@@ -97,9 +96,10 @@ import G2 from './components/G2'
 import times from './times'
 import NumberCard from './components/numberCard'
 import LineCharts from './components/LineCharts'
-import {analysiss} from '@/api/data'
+import { analysiss } from '@/api/data'
+import { revenue } from '@/api/data'
 export default {
-  props:['lists'],
+  props: ['lists'],
   name: 'Dashboard',
   components: {
     times,
@@ -122,32 +122,34 @@ export default {
       key: '1',
       noTitleKey: 'quanbu',
       dateKey: '1',
-      show:false
+      show: false,
       // lists: {},
     }
   },
- 
-  mounted() {
 
-  },
+  mounted() {},
   created() {
- this.analysis()
-    // this.mapData()
+    this.analysis()
+    this.revenue()
   },
   methods: {
-       analysis(){
-		 return analysiss({}).then(res=>{
-			res.data.map(item =>{
-                this.nums = item;
-                
-            })
-            this.show = true
-		 })
-	 },
+    revenue(){
+      return revenue({}).then(res =>{
+        console.log(res)
+      })
+    },
+    analysis() {
+      return analysiss({}).then((res) => {
+        res.data.map((item) => {
+          this.nums = item
+        })
+        this.show = true
+      })
+    },
     onChange(date, dateString) {
       // this.setData(dateString, 1)
     },
-    
+
     // setData(index, time) {
     //   if (time == 1) {
     //     let starting_time = index[0]
