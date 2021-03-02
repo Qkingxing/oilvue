@@ -20,11 +20,6 @@
       <div class="saleall_2">
         <div class="saleall-container" v-for="(list,index) in lists" :key="index">
           <number-card :list='list'></number-card>
-          <!-- <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card>
-          <number-card></number-card> -->
         </div>
       </div>
 
@@ -210,7 +205,7 @@ export default {
     // flex-wrap: wrap;
      width: 20%;
 
-    /deep/.number-card {
+   .number-card {
       display: flex;
       // flex: 1 1 20%;
       // max-width: 20%;

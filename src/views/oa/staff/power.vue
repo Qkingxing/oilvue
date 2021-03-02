@@ -11,92 +11,30 @@
           <div class="content">
             <div class="contentBlock">
               <div class="contentMain">
-                <div class="roles">
-                   <template>
-                    <a-card hoverable style="width: 300px;margin: 10px 10px;">
-                      <img
-                        slot="cover"
-                        alt="example"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                      />
-                      <template slot="actions" class="ant-card-actions">
-                        <a-icon key="setting" type="setting" />
-                        <a-icon key="edit" type="edit" />
-                        <a-icon key="ellipsis" type="ellipsis" />
-                      </template>
-                      <a-card-meta title="Card title" description="This is the description">
-                        <a-avatar
-                          slot="avatar"
-                          src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                        />
-                      </a-card-meta>
+                <div class="roles" v-for="a in 9" :key="a">
+                  <template>
+                    <a-card hoverable style="width: 300px; margin: 10px 10px">
+                      <a style="padding-left: 190px;display: block;margin-top: -14px;">修改权限</a>
+                      <div style="display: flex; flex-direction: column">
+                        <div style="margin: 32px auto;">
+                          <div style="width:50px;height:50px;border: 1px solid;margin: 0 auto;border-radius: 30px;">
+                          </div>
+                          <div style="margin: 20px 0 30px 0;text-align: center;">加油员</div>
+                        </div>
+                      </div>
+
+                      <div style="margin-bottom: 60px;">
+                          <span>权限说明：拥有油站下的全部数据查看</span>
+                          <span>权限及功能修改权限</span>
+                          <p>该角色目前已配置16个账号</p>
+                      </div>
+
+                      <div style="display: flex;justify-content: space-between;">
+                        <p>角色权限<a>详情</a></p>
+                        <p>角色列表<a>详情</a></p>
+                      </div>
                     </a-card>
                   </template>
-                  <!-- <div class="item">
-                    <div class="itemContent">
-                      <a class="setpower">修改权限</a>
-                      <img src="" alt="" srcset="" />
-                      <span class="powername">加油员</span>
-                      <p>权限说明: 拥有油站下的部分数据查看及编辑的权限</p>
-                      <p>该角色目前已经配置12个账号</p>
-                      <div class="buttons">
-                        <p>角色权限<a>详情</a></p>
-                        <p>角色列表<a>详情</a></p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="itemContent">
-                      <a class="setpower">修改权限</a>
-                      <img src="" alt="" srcset="" />
-                      <span class="powername">加油员</span>
-                      <p>权限说明: 拥有油站下的部分数据查看及编辑的权限</p>
-                      <p>该角色目前已经配置12个账号</p>
-                      <div class="buttons">
-                        <p>角色权限<a>详情</a></p>
-                        <p>角色列表<a>详情</a></p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="itemContent">
-                      <a class="setpower">修改权限</a>
-                      <img src="" alt="" srcset="" />
-                      <span class="powername">加油员</span>
-                      <p>权限说明: 拥有油站下的部分数据查看及编辑的权限</p>
-                      <p>该角色目前已经配置12个账号</p>
-                      <div class="buttons">
-                        <p>角色权限<a>详情</a></p>
-                        <p>角色列表<a>详情</a></p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="itemContent">
-                      <a class="setpower">修改权限</a>
-                      <img src="" alt="" srcset="" />
-                      <span class="powername">加油员</span>
-                      <p>权限说明: 拥有油站下的部分数据查看及编辑的权限</p>
-                      <p>该角色目前已经配置12个账号</p>
-                      <div class="buttons">
-                        <p>角色权限<a>详情</a></p>
-                        <p>角色列表<a>详情</a></p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="itemContent">
-                      <a class="setpower">修改权限</a>
-                      <img src="" alt="" srcset="" />
-                      <span class="powername">加油员</span>
-                      <p>权限说明: 拥有油站下的部分数据查看及编辑的权限</p>
-                      <p>该角色目前已经配置12个账号</p>
-                      <div class="buttons">
-                        <p>角色权限<a>详情</a></p>
-                        <p>角色列表<a>详情</a></p>
-                      </div>
-                    </div>
-                  </div> -->
                 </div>
               </div>
             </div>
@@ -110,9 +48,9 @@
 <script>
 export default {
   name: 'Operformance',
-  data () {
+  data() {
     return {}
-  }
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -172,14 +110,15 @@ export default {
 }
 .roles {
   display: flex;
-  flex: 1;
+//   flex: 1;
   flex-wrap: wrap;
-  margin: -10px;
+  margin: 0px;
 
   .item {
     height: 400px;
     width: 33%;
     display: flex;
+    
   }
 
   .itemContent {

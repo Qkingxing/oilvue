@@ -296,7 +296,7 @@ export default {
     width: 20%;
     // flex-wrap: wrap;
 
-    /deep/.number-card {
+     .number-card {
       width: 100%；;
       display: flex;
       // flex: 1 1 20%;
