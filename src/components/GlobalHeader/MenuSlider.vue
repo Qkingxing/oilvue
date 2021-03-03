@@ -20,8 +20,10 @@
                                 @mouseenter="enter(index)"
                                 >
                                 <div class="menu-icon">
-                                    <a-icon v-if="typeof item.meta.icon == 'string'" :type="item.meta.icon" />
-                                    <a-icon v-else :component="item.meta.icon" />
+
+                                    <icon-font v-if="item.meta.icon.includes('icon')" :type="item.meta.icon" />
+                                    <a-icon v-else :type="item.meta.icon" />
+
                                 </div>
                                 <div class="menu-title">{{i18nRender(item.meta.title)}}</div>
                             </div>
