@@ -869,7 +869,6 @@ export const asyncRouterMap = [
         path: '/notPermission',
         name: 'notPermission',
         component: () => import('@/views/notPermission'),
-        hidden: true,
         meta: { title: 'menu.notPermission', hidden: true }
       }
       // dashboard
