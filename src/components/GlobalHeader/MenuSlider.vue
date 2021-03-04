@@ -129,6 +129,9 @@ export default {
     watch: {
         $route(newV,oldV){
             this.findFatherIndex()
+            if (this.$route.name == 'notPermission') {
+                this.$emit('close')
+            }
         }
     },
     created(){

@@ -493,7 +493,7 @@ export const generatorDynamicRouter = () => {
  */
 export const generator = (routerMap, parent) => {
   return routerMap.map(item => {
-    const { title, show,hidden, hideChildren, hiddenHeaderContent, target, icon } = item.meta || {}
+    const { title, show, hidden, hideChildren, hiddenHeaderContent, target, icon } = item.meta || {}
     const currentRouter = {
       // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
       path: item.path || `${parent && parent.path || ''}/${item.key}`,
@@ -503,7 +503,7 @@ export const generator = (routerMap, parent) => {
       // component: constantRouterComponents[item.component || item.key],
       // 该路由对应页面的 组件 :方案2 (动态加载)
       component: (constantRouterComponents[item.component || item.key]) || (() => import(`@/views/${item.component}`)),
-
+      
       // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
       meta: {
         title: title,
