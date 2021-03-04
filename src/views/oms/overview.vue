@@ -56,77 +56,83 @@
               <div v-show="searchType != '高级搜索'">
                 <a-col :md="24" :sm="24">
                   <a-form-item label="油品型号" class="screen-item-inline">
-                    <a-select default-value="lucy" style="width: 200px">
-                      <a-select-option value="jack">
-                        Jack
-                      </a-select-option>
-                      <a-select-option value="lucy">
-                        Lucy
+                    <a-select style="width: 200px" v-model="form.oils_id">
+                      <a-select-option :value="item.id" v-for="(item,index) in oilList" :key="item.id">
+                        {{item.oils_name}}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                   <a-form-item label="枪号" class="screen-item-inline">
-                    <a-select default-value="lucy" style="width: 200px">
-                      <a-select-option value="jack">
-                        Jack
-                      </a-select-option>
-                      <a-select-option value="lucy">
-                        Lucy
+                    <a-select style="width: 200px">
+                      <a-select-option :value="item.id" v-for="(item,index) in gunList" :key="item.id">
+                        {{item.gun_name}}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                 </a-col>
                 <a-col :md="24" :sm="24">
                   <a-form-item label="订单状态" class="screen-item-inline">
-                    <a-select default-value="1" style="width: 200px">
-                      <a-select-option value="1">
+                    <a-select default-value="0" style="width: 200px">
+                      <a-select-option value="全部">
                         交易成功
+                      </a-select-option>
+                      <a-select-option value="1">
+                        已支付
                       </a-select-option>
                       <a-select-option value="2">
                         待支付
                       </a-select-option>
                       <a-select-option value="3">
-                        支付失败
+                        退款中
+                      </a-select-option>
+                      <a-select-option value="4">
+                        已退款
+                      </a-select-option>
+                      <a-select-option value="5">
+                        已取消
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                   <a-form-item label="订单类型" class="screen-item-inline">
-                    <a-select default-value="lucy" style="width: 200px">
-                      <a-select-option value="jack">
-                        Jack
+                    <a-select default-value="0" style="width: 200px">
+                      <a-select-option value="0">
+                        全部
                       </a-select-option>
-                      <a-select-option value="lucy">
-                        Lucy
+                      <a-select-option value="1">
+                        油品
+                      </a-select-option>
+                      <a-select-option value="2">
+                        便利店
+                      </a-select-option>
+                      <a-select-option value="3">
+                        个人卡
+                      </a-select-option>
+                      <a-select-option value="4">
+                        车队卡
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                   <a-form-item label="订单来源" class="screen-item-inline">
-                    <a-select default-value="lucy" style="width: 200px">
-                      <a-select-option value="jack">
-                        Jack
+                    <a-select default-value="0" style="width: 200px">
+                      <a-select-option value="0">
+                        全部
                       </a-select-option>
-                      <a-select-option value="lucy">
-                        Lucy
+                      <a-select-option value="1">
+                        快捷加油
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                 </a-col>
                 <a-col :md="24" :sm="24">
                   <a-form-item label="支付方式" class="screen-item-inline">
-                    <a-select default-value="1" style="width: 200px">
-                      <a-select-option value="1">
-                        微信
-                      </a-select-option>
-                      <a-select-option value="2">
-                        支付宝
-                      </a-select-option>
-                      <a-select-option value="3">
-                        对公转账
+                    <a-select style="width: 200px">
+                      <a-select-option :value="item.id" v-for="(item,index) in payList" :key="item.id">
+                        {{item.name}}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                   <a-form-item label="加油员" class="screen-item-inline">
-                    <a-select default-value="lucy" style="width: 200px">
+                    <a-select style="width: 200px" v-model="form.oils_gunId">
                       <a-select-option value="jack">
                         Jack
                       </a-select-option>
@@ -178,7 +184,7 @@
 import { deleteNullAttr } from '@/utils/lzz.js'
 import moment from 'moment'
 import { STable } from '@/components'
-import { getOrderList } from '@/api/order'
+import { getOrderList, getOilSetList, getGunList, getPayList } from '@/api/order'
 export default {
   name: 'Ooverview',
   components: {
@@ -186,6 +192,9 @@ export default {
   },
   data () {
     return {
+      oilList:[],
+      gunList:[],
+      payList:[],
       searchType: '高级搜索',
       diyDate: false,
       diyTime: null,
@@ -198,7 +207,9 @@ export default {
         limit: 10,
         time_type: 1,
         starting_time: '',
-        end_time: ''
+        end_time: '',
+        oils_id:'',
+        oils_gunId:''
       },
       radioValue: 'new',
       value: '',
@@ -266,15 +277,15 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         return getOrderList(deleteNullAttr(this.form))
-          .then(res => {
-            return {
-              data: res.data, // 列表数组
-              pageNo: this.form.page, // 当前页码
-              pageSize: this.form.limit, // 每页页数
-              totalCount: res.countPage, // 列表总条数
-              totalPage: res.pageSize // 列表总页数
-            }
-          })
+        .then(res => {
+          return {
+            data: res.data, // 列表数组
+            pageNo: this.form.page, // 当前页码
+            pageSize: this.form.limit, // 每页页数
+            totalCount: res.countPage, // 列表总条数
+            totalPage: res.pageSize // 列表总页数
+          }
+        })
       },
       selectedRowKeys: [],
       selectedRows: [],
@@ -289,6 +300,11 @@ export default {
       optionAlertShow: false
     }
   },
+  created() {
+    this.loadOilList()
+    this.loadGunList()
+    this.loadPayList()
+  },
   methods: {
     moment,
     range (start, end) {
@@ -302,7 +318,25 @@ export default {
       this.form.starting_time = moment(this.diyTime[0]._d).format('YYYY-MM-DD')
       this.form.end_time = moment(this.diyTime[1]._d).format('YYYY-MM-DD')
     },
+    loadPayList(){
+      getPayList().then(res=>{
+        this.payList = res.data
+        console.log(this.payList)
+      })
+    },
+    loadGunList(){
+      getGunList().then(res=>{
+        this.gunList = res.data
+      })
+    },
+    loadOilList(){
+      getOilSetList().then(res=>{
+        this.oilList = res.data
+      })
+    },
     async toSearch () {
+      console.log(this.form)
+      return
       if (this.form.time_type != 5) {
         this.form.starting_time = ''
         this.form.end_time = ''
