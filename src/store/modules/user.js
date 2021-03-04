@@ -100,6 +100,7 @@ const user = {
     // 获取用户信息
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
+        // 假数据，暂时不可动
         getInfo().then(response => {
           
           const result = response.result
@@ -115,16 +116,23 @@ const user = {
             })
             role.permissionList = role.permissions.map(permission => { return permission.permissionId })
             commit('SET_ROLES', result.role)
-            commit('SET_INFO', result)
+            
           } else {
             reject(new Error('getInfo: roles must be a non-null array !'))
           }
-
+          // 获取当前登陆账号人员的身份信息
           getUserInfo().then((res)=>{
-            console.log(res)
+            
+            if (res.code===200) {
+              // console.log(res.data)
+              commit('SET_INFO', res.data)
+              commit('SET_NAME', { name: res.data.user_name, welcome: welcome() })
+            }else{
+              reject(new Error('个人信息获取失败'))
+            }
           })
 
-          commit('SET_NAME', { name: result.name, welcome: welcome() })
+          
           commit('SET_AVATAR', result.avatar)
 
           resolve(response)

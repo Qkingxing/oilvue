@@ -23,6 +23,7 @@
           <a-tree
             :default-expand-all="true"
             :tree-data="treeData"
+            @select="onChangePermission"
           >
             <template slot="title" slot-scope="{ title }">
               <span>{{ title }}</span>
@@ -169,7 +170,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['nickname', 'site_id']),
+    ...mapGetters(['nickname', 'site_id','userInfo']),
     wrpCls () {
       return {
         'ant-pro-global-header-index-right': true,
@@ -190,10 +191,23 @@ export default {
         // name: this.nickname
       // }
     // }, 1500)
+    console.log(this.userInfo)
     
   },
   methods: {
     ...mapActions(['getSitelist']),
+    // 切换权限
+    onChangePermission(selectedKeys){
+      // console.log(selectedKeys)
+      // console.log(this.treeData[0].children)
+      let item = this.treeData[0].children.filter(e=>{
+        return e.key === selectedKeys[0]
+      })[0]
+      
+      if (item) {
+        console.log(item.data)
+      }
+    },
     // 油站树初始化
     treeLoad(sreach){
       this.treeShow = false
