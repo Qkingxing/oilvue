@@ -465,16 +465,17 @@ export const generatorDynamicRouter = () => {
     loginService.getCurrentUserNav().then(res => {
       const { code, data: { data } } = res
       if (code === 200) {
+        // console.log(data)
         const menuNav = []
         const childrenNav = []
         // 后端数据, 根级树数组,  根级 PID
         listToTree(data, childrenNav, 0)
         rootRouter.children = childrenNav
         menuNav.push(rootRouter)
-        // console.log('menuNav', menuNav)
+        console.log('menuNav', menuNav)
         const routers = generator(menuNav)
         routers.push(notFoundRouter)
-        // console.log('routers', routers)
+        console.log('routers', routers)
         resolve(routers)
       }
     }).catch(err => {
@@ -492,7 +493,7 @@ export const generatorDynamicRouter = () => {
  */
 export const generator = (routerMap, parent) => {
   return routerMap.map(item => {
-    const { title, show, hideChildren, hiddenHeaderContent, target, icon } = item.meta || {}
+    const { title, show,hidden, hideChildren, hiddenHeaderContent, target, icon } = item.meta || {}
     const currentRouter = {
       // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
       path: item.path || `${parent && parent.path || ''}/${item.key}`,
@@ -514,6 +515,10 @@ export const generator = (routerMap, parent) => {
     }
     // 是否设置了隐藏菜单
     if (show === false) {
+      currentRouter.hidden = true
+    }
+    // 是否设置了隐藏菜单
+    if (hidden === true) {
       currentRouter.hidden = true
     }
     // 是否设置了隐藏子菜单
