@@ -1,6 +1,7 @@
 export const ACCESS_TOKEN = 'Access-Token'
 export const SITE_ID = 'site_id'
 export const GROUP_ID = 'group_id'
+export const USER_ID = 'userId'
 
 export const SIDEBAR_TYPE = 'sidebar_type'
 export const TOGGLE_MOBILE_TYPE = 'is_mobile'

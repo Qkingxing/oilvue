@@ -139,3 +139,11 @@ export function getIntegralrulelist (data) {
     data
   })
 }
+// 获取加油站列表
+export function getSitelist (data) {
+  return PhpRequest({
+    url: '/work/sitelist',
+    method: 'post',
+    data
+  })
+}

@@ -1,7 +1,15 @@
 import storage from 'store'
-import { login, getInfo, logout, _login } from '@/api/login'
-import { ACCESS_TOKEN, SITE_ID, GROUP_ID } from '@/store/mutation-types'
+import { 
+  login, 
+  getInfo, 
+  logout, 
+  _login } from '@/api/login'
+
+// import { getInfo } from '@/api/oa'
+
+import { ACCESS_TOKEN, SITE_ID, GROUP_ID, USER_ID } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
+import { getSitelist } from '@/api/crm'
 
 const user = {
   state: {
@@ -13,6 +21,7 @@ const user = {
     info: {},
     site_id: storage.get(SITE_ID),// 站点id
     group_id: storage.get(GROUP_ID),// 集团id
+    userId: storage.get(USER_ID),// 账号id
   },
 
   mutations: {
@@ -37,6 +46,9 @@ const user = {
     },
     SET_GROUP_ID: (state, group_id) => {
       state.group_id = group_id
+    },
+    SET_USER_ID: (state, userId) => {
+      state.userId = userId
     }
   },
 
@@ -50,7 +62,7 @@ const user = {
           account: userInfo.username,
           password: userInfo.password
         }).then(res => {
-          // console.log(res.data.user_name)
+          // console.log(res.data)
           // return
           if (res.code==200) {
 
@@ -62,6 +74,9 @@ const user = {
 
             storage.set(GROUP_ID, res.data.group_id, 7 * 24 * 60 * 60 * 1000)
             commit('SET_GROUP_ID', res.data.group_id)
+
+            storage.set(USER_ID, res.data.userId, 7 * 24 * 60 * 60 * 1000)
+            commit('SET_USER_ID', res.data.userId)
 
             commit('SET_NAME', { name: res.data.user_name, welcome: welcome() })
             resolve()
@@ -128,7 +143,26 @@ const user = {
         }).finally(() => {
         })
       })
-    }
+    },
+
+    // 获取油站列表
+    getSitelist ({ commit, state }, params) {
+      return new Promise((resolve, reject) => {
+        getSitelist(params).then((res) => {
+          // commit('SET_TOKEN', '')
+          // console.log(res)
+          if (res.code===200) {
+            resolve(res)
+          }else{
+            reject(new Error('getSitelist: roles must be a non-null array !'))
+          }
+        }).catch(error => {
+          reject(error)
+        }).finally(() => {
+        })
+      })
+    },
+
 
   }
 }

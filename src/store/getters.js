@@ -11,6 +11,7 @@ const getters = {
   userInfo: state => state.user.info,
   site_id: state => state.user.site_id,
   group_id: state => state.user.group_id,
+  userId: state => state.user.userId,
   addRouters: state => state.permission.addRouters,
   multiTab: state => state.app.multiTab,
   

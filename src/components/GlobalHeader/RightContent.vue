@@ -5,7 +5,7 @@
 
       <div class="box-item" style="width: auto;">
         <span class="header-notice">
-          鹰眼集团
+          {{site_id==(-1)?'集团':'油站'}}
           <a-icon type="caret-down" class="anticon" :class="{'route-icon':visible}"/>
         </span>
         
@@ -14,25 +14,18 @@
       <div slot="content" class="popover_box">
         <div class="header_stationSearchBox">
           <a-input-search 
-            placeholder="请输入集团/单站的名称或id" 
+            placeholder="请输入站点的名称" 
             size="large"
             class="tree_search"
             @change="onChange"/>
         </div>
-        <div class="tree_box">
+        <div class="tree_box" v-if="treeShow">
           <a-tree
-            :expanded-keys="expandedKeys"
-            :auto-expand-parent="autoExpandParent"
-            :tree-data="gData"
-            @expand="onExpand"
+            :default-expand-all="true"
+            :tree-data="treeData"
           >
             <template slot="title" slot-scope="{ title }">
-              <span v-if="title.indexOf(searchValue) > -1">
-                {{ title.substr(0, title.indexOf(searchValue)) }}
-                <span style="color: #f50">{{ searchValue }}</span>
-                {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
-              </span>
-              <span v-else>{{ title }}</span>
+              <span>{{ title }}</span>
             </template>
           </a-tree>
         </div>
@@ -124,67 +117,20 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import AvatarDropdown from './AvatarDropdown'
 import SelectLang from '@/components/SelectLang'
 
+const treeData = [
+  {
+    title: '集团',
+    key: '0-0',
+    children: [
 
-const x = 3;
-const y = 2;
-const z = 1;
-const gData = [];
-
-const generateData = (_level, _preKey, _tns) => {
-  const preKey = _preKey || '0';
-  const tns = _tns || gData;
-
-  const children = [];
-  for (let i = 0; i < x; i++) {
-    const key = `${preKey}-${i}`;
-    tns.push({ title: key, key, scopedSlots: { title: 'title' } });
-    if (i < y) {
-      children.push(key);
-    }
+    ],
   }
-  if (_level < 0) {
-    return tns;
-  }
-  const level = _level - 1;
-  children.forEach((key, index) => {
-    tns[index].children = [];
-    return generateData(level, key, tns[index].children);
-  });
-};
-generateData(z);
-
-const dataList = [];
-const generateList = data => {
-  for (let i = 0; i < data.length; i++) {
-    const node = data[i];
-    const key = node.key;
-    dataList.push({ key, title: key });
-    if (node.children) {
-      generateList(node.children);
-    }
-  }
-};
-generateList(gData);
-
-const getParentKey = (key, tree) => {
-  let parentKey;
-  for (let i = 0; i < tree.length; i++) {
-    const node = tree[i];
-    if (node.children) {
-      if (node.children.some(item => item.key === key)) {
-        parentKey = node.key;
-      } else if (getParentKey(key, node.children)) {
-        parentKey = getParentKey(key, node.children);
-      }
-    }
-  }
-  return parentKey;
-};
+];
 
 export default {
   name: 'RightContent',
@@ -217,15 +163,13 @@ export default {
       //   name: this.nickname
       // },
       visible: false,
-      expandedKeys: [],
-      searchValue: '',
-      autoExpandParent: true,
-      gData,
-      fullscreen: false
+      fullscreen: false, // 全屏
+      treeData,
+      treeShow: false
     }
   },
   computed: {
-    ...mapGetters(['nickname']),
+    ...mapGetters(['nickname', 'site_id']),
     wrpCls () {
       return {
         'ant-pro-global-header-index-right': true,
@@ -234,8 +178,10 @@ export default {
     }
     
   },
+  created(){
+    this.treeLoad('')
+  },
   mounted () {
-    
     // setTimeout(() => {
       // this.currentUser = {
       //   name: 'Serati Ma'
@@ -244,8 +190,28 @@ export default {
         // name: this.nickname
       // }
     // }, 1500)
+    
   },
   methods: {
+    ...mapActions(['getSitelist']),
+    // 油站树初始化
+    treeLoad(sreach){
+      this.treeShow = false
+      this.getSitelist({ sreach }).then(res=>{
+        
+        if (res.code === 200) {
+          // console.log(res.data.data)
+          this.treeData[0].children = res.data.data.map((e,i)=>{
+            return {
+              title: e.site_name,
+              key: e.id,
+              data: e
+            }
+          })
+          this.treeShow = true
+        }
+      })
+    },
     handleFullScreen(){
       let element = document.documentElement;
       if (this.fullscreen) {
@@ -273,28 +239,12 @@ export default {
       this.fullscreen = !this.fullscreen;
     },
     hide() {
-      console.log(111);
       this.visible = false;
-    },
-    onExpand(expandedKeys) {
-      this.expandedKeys = expandedKeys;
-      this.autoExpandParent = false;
     },
     onChange(e) {
       const value = e.target.value;
-      const expandedKeys = dataList
-        .map(item => {
-          if (item.title.indexOf(value) > -1) {
-            return getParentKey(item.key, gData);
-          }
-          return null;
-        })
-        .filter((item, i, self) => item && self.indexOf(item) === i);
-      Object.assign(this, {
-        expandedKeys,
-        searchValue: value,
-        autoExpandParent: true,
-      });
+      // console.log(value)
+      this.treeLoad(value)
     },
   }
 }
