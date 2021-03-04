@@ -66,16 +66,22 @@ PhpRequest.interceptors.response.use((response) => {
 
   if (res.code==200) {
     return res
+  }else if(res.code==400){
+    notification.error({
+      message: 'Forbidden',
+      description: res.msg
+    })
+    store.dispatch('Logout').then(() => {
+      setTimeout(() => {
+        window.location.reload()
+      }, 1500)
+    })
   }else{
     notification.error({
       message: 'Forbidden',
       description: res.msg
     })
-    // store.dispatch('Logout').then(() => {
-    //   setTimeout(() => {
-    //     window.location.reload()
-    //   }, 1500)
-    // })
+
   }
   return res
 }, errorHandler)
