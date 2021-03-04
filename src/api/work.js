@@ -18,3 +18,21 @@ export function userinfolist(data){
         data
     })
 }
+//权限
+
+export function rolemenu(data){
+    return PhpRequest({
+        url:'/work/rolemenu',
+        method:"post",
+        data
+    })
+}
+// 角色权限
+
+export function rolelist(data){
+    return PhpRequest({
+        url:'/work/rolelist',
+        method:'post',
+        data
+    })
+}
