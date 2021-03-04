@@ -19,7 +19,7 @@
                                 @click="fatharLink(item)"
                                 @mouseenter="enter(index)"
                                 >
-                                <div class="menu-icon">
+                                <div class="menu-icon" v-if="item.meta.icon">
 
                                     <icon-font v-if="item.meta.icon.includes('icon')" :type="item.meta.icon" />
                                     <a-icon v-else :type="item.meta.icon" />

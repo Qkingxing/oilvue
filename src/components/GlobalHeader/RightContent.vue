@@ -119,7 +119,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-
+import notification from 'ant-design-vue/es/notification'
 import AvatarDropdown from './AvatarDropdown'
 import SelectLang from '@/components/SelectLang'
 
@@ -191,7 +191,7 @@ export default {
         // name: this.nickname
       // }
     // }, 1500)
-    console.log(this.userInfo)
+    
     
   },
   methods: {
@@ -205,7 +205,31 @@ export default {
       })[0]
       
       if (item) {
-        console.log(item.data)
+        // console.log('油站')
+        // console.log(item.data)
+        console.log(this.userInfo)
+        // 当前账号是单站账号
+        if (this.userInfo.account_type) {
+          notification.error({
+            message: '错误',
+            description: '你是单站账号没有该权限'
+          })
+        }else{
+          // 当前账号是集团账号
+          console.log('切换油站成功')
+        }
+      }else{
+        // console.log('集团')
+        // 当前账号是单站账号
+        if (this.userInfo.account_type) {
+          notification.error({
+            message: '错误',
+            description: '你是单站账号没有该权限'
+          })
+        }else{
+          // 当前账号是集团账号
+          console.log('切换集团成功')
+        }
       }
     },
     // 油站树初始化
