@@ -5,7 +5,7 @@ import {
   logout, 
   _login } from '@/api/login'
 
-// import { getInfo } from '@/api/oa'
+import { getUserInfo } from '@/api/oa'
 
 import { ACCESS_TOKEN, SITE_ID, GROUP_ID, USER_ID } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
@@ -101,6 +101,7 @@ const user = {
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
+          
           const result = response.result
 
           if (result.role && result.role.permissions.length > 0) {
@@ -118,6 +119,10 @@ const user = {
           } else {
             reject(new Error('getInfo: roles must be a non-null array !'))
           }
+
+          getUserInfo().then((res)=>{
+            console.log(res)
+          })
 
           commit('SET_NAME', { name: result.name, welcome: welcome() })
           commit('SET_AVATAR', result.avatar)

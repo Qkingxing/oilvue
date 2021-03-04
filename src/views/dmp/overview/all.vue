@@ -135,7 +135,7 @@ export default {
   methods: {
     revenue(){
       return revenue({}).then(res =>{
-        console.log(res)
+        // console.log(res)
       })
     },
     analysis() {

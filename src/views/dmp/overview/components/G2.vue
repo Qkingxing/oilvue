@@ -20,7 +20,7 @@ export default {
     }
   },
   created(){
-      console.log(this.nums)
+      // console.log(this.nums)
   },
   
   methods: {
@@ -51,7 +51,7 @@ export default {
         position: 'right', // 配置图例显示位置
         custom: true, // 关键字段，告诉 G2，要使用自定义的图例
         items: thit.data.map((obj, index) => {
-            console.log(thit)
+            // console.log(thit)
           return {
             name: obj.item, // 对应 itemName
             value: obj, // 对应 itemValue

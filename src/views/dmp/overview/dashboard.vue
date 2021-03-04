@@ -64,7 +64,7 @@ export default {
         this.lists = res.data.map(e=>{
           let object = e
           for (const key in object) {
-            console.log(object[key])
+            // console.log(object[key])
             if(key != 'orderName' && key != 'comparedName' && key != 'Compared'){
               object.number = object[key];
               break
@@ -72,7 +72,7 @@ export default {
           }
           return object
         })
-        console.log(this.lists)
+        // console.log(this.lists)
       })
     },
     onTabChange(key, type) {

@@ -174,7 +174,7 @@ export default {
   },
   created() {
     //   this.analysis()
-    console.log(this.nums)
+    // console.log(this.nums)
   },
   watch:{
       nums:{
