@@ -9,19 +9,50 @@
             <a href="https://mp.nlsaas.com/oa/staff/account">员工列表</a>
           </div>
           <div class="content">
+            <a-modal width="1300px" v-model="modal2Visible" centered @ok="() => (modal2Visible = false)" :footer="null">
+              <div class="fom">
+				  <div>
+					  <a-button>全选</a-button>
+					  <a-button type="primary">
+						  删除
+					</a-button>
+				  </div>
+                <div class="showDataForTable">
+                  <s-table
+                    ref="table"
+                    size="default"
+                    rowKey="id"
+                    :columns="columns"
+                    :data="loadData"
+                    :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+                  >
+                    <span slot="name" slot-scope="text, record">
+                      <template>
+                        <router-link :to="{ name: 'CrmTagDetail', query: { id: record.id } }">{{ text }}</router-link>
+                      </template>
+                    </span>
+
+                    <span slot="action" slot-scope="text, record">
+                      <template>
+                        <a @click="delTag(record)">删除</a>
+                      </template>
+                    </span>
+                  </s-table>
+                </div>
+              </div>
+            </a-modal>
             <div class="contentBlock">
               <div class="contentMain">
-                <div class="roles" v-for="(list,index) in lists" :key="index">
+                <div class="roles" v-for="(list, index) in lists" :key="index">
                   <template>
                     <a-card hoverable style="width: 300px; margin: 10px 10px">
                       <a style="padding-left: 190px; display: block; margin-top: -14px; color: #37f">修改权限</a>
                       <div style="display: flex; flex-direction: column">
                         <div style="margin: 32px auto">
-							
-                          <div style="width: 50px; height: 50px;  margin: 0 auto; border-radius: 30px">
-							  <img :src="list.role_image" alt="" style="width:50px;height:50px;border-radius: 30px">
-						  </div>
-                          <div style="margin: 20px 0 30px 0; text-align: center">{{list.role_name}}</div>
+                          <div style="width: 50px; height: 50px; margin: 0 auto; border-radius: 30px">
+                            <img :src="list.role_image" alt="" style="width: 50px; height: 50px; border-radius: 30px" />
+                          </div>
+                          <div style="margin: 20px 0 30px 0; text-align: center">{{ list.role_name }}</div>
                         </div>
                       </div>
 
@@ -36,7 +67,7 @@
                           角色权限
                           <a-popover placement="right">
                             <template slot="content">
-                              <a-tree show-line :default-expanded-keys="['0-0-0']"  @select="onSelect">
+                              <a-tree show-line :default-expanded-keys="['0-0-0']" @select="onSelect">
                                 <a-icon slot="switcherIcon" type="down" />
                                 <a-tree-node key="0-0" title="商户平台">
                                   <a-tree-node key="0-0-3" title="首页"> </a-tree-node>
@@ -59,21 +90,21 @@
                                     <a-tree-node key="0-0-2-1" title="活动统计" />
                                   </a-tree-node>
                                 </a-tree-node>
-								<a-tree-node key="0-1" title="商户POS端">
-									 <a-tree-node key="0-1-1" title="首页"> </a-tree-node>
+                                <a-tree-node key="0-1" title="商户POS端">
+                                  <a-tree-node key="0-1-1" title="首页"> </a-tree-node>
                                 </a-tree-node>
-								<a-tree-node key="0-2" title="商户小程序(商户端)">
-									 <a-tree-node key="0-2-1" title="首页"> </a-tree-node>
+                                <a-tree-node key="0-2" title="商户小程序(商户端)">
+                                  <a-tree-node key="0-2-1" title="首页"> </a-tree-node>
                                 </a-tree-node>
-								<a-tree-node key="0-3" title="OS">
-									 <a-tree-node key="0-3-1" title="首页"> </a-tree-node>
+                                <a-tree-node key="0-3" title="OS">
+                                  <a-tree-node key="0-3-1" title="首页"> </a-tree-node>
                                 </a-tree-node>
                               </a-tree>
                             </template>
                             <span style="color: #37f">详情</span>
                           </a-popover>
                         </p>
-                        <p>角色列表<a style="color: #37f">详情</a></p>
+                        <p>角色列表<a @click="xiang" style="color: #37f">详情</a></p>
                       </div>
                     </a-card>
                   </template>
@@ -88,38 +119,121 @@
 </template>
 
 <script>
-import {rolemenu}  from '@/api/work'
-import {rolelist} from '@/api/work'
+import { rolemenu } from '@/api/work'
+import { rolelist } from '@/api/work'
+import { STable } from '@/components'
+import { getlabellist, labeldel } from '@/api/crm'
 export default {
   name: 'Operformance',
+  components: {
+    STable,
+  },
   data() {
     return {
-		lists:{},
-		imgs:''
-	}
+      selectedRowKeys: [],
+      selectedRows: [],
+      // 表头
+      columns: [
+        {
+          title: '标签名称',
+          dataIndex: 'name',
+          scopedSlots: { customRender: 'name' },
+        },
+        {
+          title: '人数',
+          dataIndex: 'count',
+        },
+        // 暂时不做
+        // {
+        // title: '应用活动（次）',
+        // dataIndex: 'status',
+        // },
+        {
+          title: '创建时间',
+          dataIndex: 'create_time',
+        },
+        {
+          title: '标签数据更新时间',
+          dataIndex: 'update_time',
+        },
+        {
+          title: '操作',
+          dataIndex: 'action',
+          scopedSlots: { customRender: 'action' },
+        },
+      ],
+      // 加载数据方法 必须为 Promise 对象
+      loadData: (parameter) => {
+        // console.log('loadData.parameter', parameter)
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+        }
+        return getlabellist(Object.assign(params)).then((res) => {
+          console.log(res.data.data)
+          // 自定义出参
+          // console.log(res.data.list)
+          this.oldTotal = res.data.total
+          return {
+            data: res.data.data, // 列表数组
+            pageNo: res.data.current_page, // 当前页码
+            pageSize: res.data.per_page, // 每页页数
+            totalCount: res.data.total, // 列表总条数
+            // totalPage: res.data.totalPage // 列表总页数
+          }
+        })
+      },
+      lists: {},
+      imgs: '',
+      modal2Visible: false,
+    }
   },
-  created(){
-	  this.rolelist()
+  created() {
+    this.rolelist()
   },
   methods: {
-	 a(){
-		 console.log(111)
-	 },
+    onSelectChange(selectedRowKeys, selectedRows) {
+      console.log()
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedRows = selectedRows
+    },
+    delTag(item) {
+      let that = this
+      this.$confirm({
+        title: '温馨提示',
+        content: '删除会清除标签全部信息，是否删除？',
+        onOk() {
+          // console.log(item)
+          labeldel([item.id]).then((res) => {
+            // console.log(res)
+            that.$message.success('删除成功')
+            that.resetList()
+          })
+        },
+        onCancel() {},
+      })
+    },
+    xiang() {
+      this.modal2Visible = true
+    },
+    a() {
+      console.log(111)
+    },
     onSelect(selectedKeys, info) {
-		console.log(111)
+      console.log(111)
       console.log('selected', selectedKeys, info)
     },
-	rolelist(){
-		return rolelist({}).then(res=>{
-			this.lists = res.data.data
-			console.log(this.imgs)
-		})
-	},
-	rolemenu(id){
-		return rolemenu({role_id:id}).then(res=>{
-			console.log(res)
-		})
-	}
+    rolelist() {
+      return rolelist({}).then((res) => {
+        this.lists = res.data.data
+        console.log(this.imgs)
+      })
+    },
+    rolemenu(id) {
+      return rolemenu({ role_id: id }).then((res) => {
+        console.log(res)
+      })
+    },
   },
 }
 </script>
@@ -164,6 +278,9 @@ export default {
         .content {
           padding: 3rem 2rem;
           display: flex;
+          /deep/.ant-modal {
+            width: 1300px;
+          }
           .contentBlock {
             display: block;
             width: 100%;
