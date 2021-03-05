@@ -11,16 +11,17 @@
           <div class="content">
             <div class="contentBlock">
               <div class="contentMain">
-                <div class="roles" v-for="a in 9" :key="a">
+                <div class="roles" v-for="(list,index) in lists" :key="index">
                   <template>
                     <a-card hoverable style="width: 300px; margin: 10px 10px">
                       <a style="padding-left: 190px; display: block; margin-top: -14px; color: #37f">修改权限</a>
                       <div style="display: flex; flex-direction: column">
                         <div style="margin: 32px auto">
-                          <div
-                            style="width: 50px; height: 50px; border: 1px solid; margin: 0 auto; border-radius: 30px"
-                          ></div>
-                          <div style="margin: 20px 0 30px 0; text-align: center">加油员</div>
+							
+                          <div style="width: 50px; height: 50px;  margin: 0 auto; border-radius: 30px">
+							  <img :src="list.role_image" alt="" style="width:50px;height:50px;border-radius: 30px">
+						  </div>
+                          <div style="margin: 20px 0 30px 0; text-align: center">{{list.role_name}}</div>
                         </div>
                       </div>
 
@@ -35,7 +36,7 @@
                           角色权限
                           <a-popover placement="right">
                             <template slot="content">
-                              <a-tree show-line :default-expanded-keys="['0-0-0']" @select="onSelect">
+                              <a-tree show-line :default-expanded-keys="['0-0-0']"  @select="onSelect">
                                 <a-icon slot="switcherIcon" type="down" />
                                 <a-tree-node key="0-0" title="商户平台">
                                   <a-tree-node key="0-0-3" title="首页"> </a-tree-node>
@@ -87,15 +88,38 @@
 </template>
 
 <script>
+import {rolemenu}  from '@/api/work'
+import {rolelist} from '@/api/work'
 export default {
   name: 'Operformance',
   data() {
-    return {}
+    return {
+		lists:{},
+		imgs:''
+	}
+  },
+  created(){
+	  this.rolelist()
   },
   methods: {
+	 a(){
+		 console.log(111)
+	 },
     onSelect(selectedKeys, info) {
+		console.log(111)
       console.log('selected', selectedKeys, info)
     },
+	rolelist(){
+		return rolelist({}).then(res=>{
+			this.lists = res.data.data
+			console.log(this.imgs)
+		})
+	},
+	rolemenu(id){
+		return rolemenu({role_id:id}).then(res=>{
+			console.log(res)
+		})
+	}
   },
 }
 </script>
