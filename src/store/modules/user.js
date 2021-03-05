@@ -5,11 +5,13 @@ import {
   logout, 
   _login } from '@/api/login'
 
-import { getUserInfo } from '@/api/oa'
+import { getUserInfo, SwitchPermission } from '@/api/oa'
 
 import { ACCESS_TOKEN, SITE_ID, GROUP_ID, USER_ID } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 import { getSitelist } from '@/api/crm'
+
+import notification from 'ant-design-vue/es/notification'
 
 const user = {
   state: {
@@ -43,6 +45,7 @@ const user = {
     },
     SET_SITE_ID: (state, site_id) => {
       state.site_id = site_id
+      state.info.site_id = site_id
     },
     SET_GROUP_ID: (state, group_id) => {
       state.group_id = group_id
@@ -136,6 +139,37 @@ const user = {
           commit('SET_AVATAR', result.avatar)
 
           resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 切换权限
+    SwitchPermission ({ commit }, site_id) {
+      return new Promise((resolve, reject) => {
+        SwitchPermission(site_id).then((res)=>{
+          if (res.code===200) {
+            // console.log(res)
+            // 更换token
+            storage.set(ACCESS_TOKEN, res.data, 7 * 24 * 60 * 60 * 1000)
+            commit('SET_TOKEN', res.data)
+            // 更换油站id
+            storage.set(SITE_ID, site_id, 7 * 24 * 60 * 60 * 1000)
+            commit('SET_SITE_ID', site_id)
+
+            notification.success({
+              message: '成功',
+              description: '切换成功，马上跳转...'
+            })
+            // 刷新
+            setTimeout(()=>{
+              location.reload();
+            },1500)
+            
+            resolve(res)
+          }else{
+            reject(new Error('切换失败'))
+          }
         }).catch(error => {
           reject(error)
         })

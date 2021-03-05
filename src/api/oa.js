@@ -10,3 +10,11 @@ export function getUserInfo(){
         data: {}
     })
 }
+// 切换权限
+export function SwitchPermission(site_id){
+    return PhpRequest({
+        url:'/work/switchPermission',
+        method: 'post',
+        data: {site_id}
+    })
+}

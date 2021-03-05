@@ -5,7 +5,7 @@
 
       <div class="box-item" style="width: auto;">
         <span class="header-notice">
-          {{site_id==(-1)?'集团':'油站'}}
+          {{site_id==(-1)?userInfo.group_name:userInfo.site_name}}
           <a-icon type="caret-down" class="anticon" :class="{'route-icon':visible}"/>
         </span>
         
@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import notification from 'ant-design-vue/es/notification'
 import AvatarDropdown from './AvatarDropdown'
 import SelectLang from '@/components/SelectLang'
@@ -195,7 +195,8 @@ export default {
     
   },
   methods: {
-    ...mapActions(['getSitelist']),
+    ...mapMutations(['SET_SITE_ID']),
+    ...mapActions(['getSitelist', 'SwitchPermission']),
     // 切换权限
     onChangePermission(selectedKeys){
       // console.log(selectedKeys)
@@ -207,7 +208,7 @@ export default {
       if (item) {
         // console.log('油站')
         // console.log(item.data)
-        console.log(this.userInfo)
+        // console.log(this.userInfo)
         // 当前账号是单站账号
         if (this.userInfo.account_type) {
           notification.error({
@@ -216,7 +217,8 @@ export default {
           })
         }else{
           // 当前账号是集团账号
-          console.log('切换油站成功')
+          // console.log('切换油站成功')
+          this.SwitchPermission(item.data.id)
         }
       }else{
         // console.log('集团')
@@ -228,7 +230,8 @@ export default {
           })
         }else{
           // 当前账号是集团账号
-          console.log('切换集团成功')
+          // console.log('切换集团成功')
+          this.SwitchPermission(-1)
         }
       }
     },
@@ -239,6 +242,7 @@ export default {
         
         if (res.code === 200) {
           // console.log(res.data.data)
+          this.treeData[0].title = this.userInfo.group_name
           this.treeData[0].children = res.data.data.map((e,i)=>{
             return {
               title: e.site_name,
