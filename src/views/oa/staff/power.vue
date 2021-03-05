@@ -11,12 +11,19 @@
           <div class="content">
             <a-modal width="1300px" v-model="modal2Visible" centered @ok="() => (modal2Visible = false)" :footer="null">
               <div class="fom">
-				  <div>
-					  <a-button>全选</a-button>
-					  <a-button type="primary">
-						  删除
-					</a-button>
-				  </div>
+                <div
+                  class="fom_a"
+                  style="width: 100%; display: flex; justify-content: space-between; margin-bottom: 15px"
+                >
+                  <div class="fom-a1" style="width: 150px; display: flex; justify-content: space-between">
+                    <a-button>全选</a-button>
+                    <a-button>删除</a-button>
+                  </div>
+                  <div style="width: 260px; margin-right: 60px">
+                    <a-input style="height: 40px" placeholder="请输入员工姓名/账号" />
+                  </div>
+                </div>
+
                 <div class="showDataForTable">
                   <s-table
                     ref="table"
@@ -38,6 +45,9 @@
                       </template>
                     </span>
                   </s-table>
+                </div>
+                <div style="width: 100px; margin: 20px auto">
+                  <a-button>取消</a-button>
                 </div>
               </div>
             </a-modal>
@@ -109,6 +119,45 @@
                     </a-card>
                   </template>
                 </div>
+                <a-card hoverable style="width: 300px; margin: 10px 10px">
+                  <div style="display: flex; flex-direction: column">
+                    <div style="margin: 32px auto">
+                      <a-icon style="font-size: 60px; color: #c7c7c7; cursor: pointer; margin: 35px 0" type="plus" />
+                      <div style="margin: 20px 0 30px 0; text-align: center"></div>
+                    </div>
+                  </div>
+
+                  <div style="margin-bottom: 60px">
+                    <span>配置自定义角色，并在该角色下配置员工账号，灵活管理员工账号权限</span>
+                  </div>
+
+                  <div style="display: flex; justify-content: space-between">
+                    <a-button @click="tianjia" style="margin: auto 75px 4px">添加角色</a-button>
+                  </div>
+                </a-card>
+                <a-modal width='1300px' v-model="modal2Visible1" centered :footer="null" @ok="() => (modal2Visible = false)">
+					<div style="width:1000px;margin:0 auto;display: flex;">
+						<p style="width:100px;padding-top:5px">角色名称</p>
+						<a-input  placeholder="" />
+					</div>
+					<div style="width:1000px;margin:0 auto;">
+						<p>选择权限</p>
+					</div>
+					<div style="width:1000px;margin:0 auto;display: flex;">
+						<p style="width:100px;padding-top:5px">权限说明</p>
+						<a-textarea
+						v-model="value"
+						placeholder="请输入权限说明"
+						:auto-size="{ minRows: 3, maxRows: 5 }"
+						/>
+					</div>
+					<div style="width:200px;margin: 40px auto;">
+						 <a-button type="primary">
+							确定
+						</a-button>
+						<a-button style="margin-left:20px">取消</a-button>
+					</div>
+                </a-modal>
               </div>
             </div>
           </div>
@@ -130,37 +179,47 @@ export default {
   },
   data() {
     return {
+		 value: '',
+      modal2Visible1: false,
       selectedRowKeys: [],
       selectedRows: [],
       // 表头
       columns: [
         {
-          title: '标签名称',
+          title: '员工姓名',
           dataIndex: 'name',
           scopedSlots: { customRender: 'name' },
         },
         {
-          title: '人数',
+          title: '账号',
           dataIndex: 'count',
         },
-        // 暂时不做
-        // {
-        // title: '应用活动（次）',
-        // dataIndex: 'status',
-        // },
         {
-          title: '创建时间',
+          title: '账号类型',
           dataIndex: 'create_time',
         },
         {
-          title: '标签数据更新时间',
+          title: '角色权限',
           dataIndex: 'update_time',
         },
         {
-          title: '操作',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' },
+          title: '所属油站',
+          dataIndex: 'youzhan',
         },
+        {
+          title: '绑定时间',
+          dataIndex: 'time',
+        },
+        {
+          title: '操作',
+          dataIndex: '操作',
+        },
+
+        // {
+        //   title: '所属油站',
+        //   dataIndex: 'action',
+        //   scopedSlots: { customRender: 'action' },
+        // },
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: (parameter) => {
@@ -192,6 +251,9 @@ export default {
     this.rolelist()
   },
   methods: {
+    tianjia() {
+      this.modal2Visible1 = true
+    },
     onSelectChange(selectedRowKeys, selectedRows) {
       console.log()
       this.selectedRowKeys = selectedRowKeys
