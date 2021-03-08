@@ -75,44 +75,7 @@
                       <div style="display: flex; justify-content: space-between">
                         <p>
                           角色权限
-                          <a-popover placement="right">
-                            <template slot="content">
-                              <a-tree show-line :default-expanded-keys="['0-0-0']" @select="onSelect">
-                                <a-icon slot="switcherIcon" type="down" />
-                                <a-tree-node key="0-0" title="商户平台">
-                                  <a-tree-node key="0-0-3" title="首页"> </a-tree-node>
-                                  <a-tree-node key="0-0-0" title="数据">
-                                    <a-tree-node key="0-0-0-0" title="员工绩效" />
-                                    <a-tree-node key="0-0-0-1" title="加油统计" />
-                                    <a-tree-node key="0-0-0-2" title="充值统计" />
-                                    <a-tree-node key="0-0-0-3" title="关注统计" />
-                                  </a-tree-node>
-                                  <a-tree-node key="0-0-1" title="概览">
-                                    <a-tree-node key="0-0-1-0" title="实时概览" />
-                                    <a-tree-node key="0-0-1-1" title="整体看板">
-                                      <a-tree-node key="0-0-2-0" title="查看整体看板" />
-                                      <a-tree-node key="0-0-2-1" title="查看订单概览" />
-                                      <a-tree-node key="0-0-2-2" title="导出报表" />
-                                    </a-tree-node>
-                                  </a-tree-node>
-                                  <a-tree-node key="0-0-2" title="营销">
-                                    <a-tree-node key="0-0-2-0" title="实时概览" />
-                                    <a-tree-node key="0-0-2-1" title="活动统计" />
-                                  </a-tree-node>
-                                </a-tree-node>
-                                <a-tree-node key="0-1" title="商户POS端">
-                                  <a-tree-node key="0-1-1" title="首页"> </a-tree-node>
-                                </a-tree-node>
-                                <a-tree-node key="0-2" title="商户小程序(商户端)">
-                                  <a-tree-node key="0-2-1" title="首页"> </a-tree-node>
-                                </a-tree-node>
-                                <a-tree-node key="0-3" title="OS">
-                                  <a-tree-node key="0-3-1" title="首页"> </a-tree-node>
-                                </a-tree-node>
-                              </a-tree>
-                            </template>
-                            <span style="color: #37f">详情</span>
-                          </a-popover>
+                            <span   style="color: #37f">详情</span>
                         </p>
                         <p>角色列表<a @click="xiang" style="color: #37f">详情</a></p>
                       </div>
@@ -121,8 +84,8 @@
                 </div>
                 <a-card hoverable style="width: 300px; margin: 10px 10px">
                   <div style="display: flex; flex-direction: column">
-                    <div style="margin: 32px auto">
-                      <a-icon style="font-size: 60px; color: #c7c7c7; cursor: pointer; margin: 35px 0" type="plus" />
+                    <div @click="tianjia" style="margin: 32px auto">
+                      <a-icon   style="font-size: 60px; color: #c7c7c7; cursor: pointer; margin: 35px 0" type="plus" />
                       <div style="margin: 20px 0 30px 0; text-align: center"></div>
                     </div>
                   </div>
@@ -135,28 +98,66 @@
                     <a-button @click="tianjia" style="margin: auto 75px 4px">添加角色</a-button>
                   </div>
                 </a-card>
-                <a-modal width='1300px' v-model="modal2Visible1" centered :footer="null" @ok="() => (modal2Visible = false)">
-					<div style="width:1000px;margin:0 auto;display: flex;">
-						<p style="width:100px;padding-top:5px">角色名称</p>
-						<a-input  placeholder="" />
-					</div>
-					<div style="width:1000px;margin:0 auto;">
-						<p>选择权限</p>
-					</div>
-					<div style="width:1000px;margin:0 auto;display: flex;">
-						<p style="width:100px;padding-top:5px">权限说明</p>
-						<a-textarea
-						v-model="value"
-						placeholder="请输入权限说明"
-						:auto-size="{ minRows: 3, maxRows: 5 }"
-						/>
-					</div>
-					<div style="width:200px;margin: 40px auto;">
-						 <a-button type="primary">
-							确定
-						</a-button>
-						<a-button style="margin-left:20px">取消</a-button>
-					</div>
+                <a-modal
+                  width="1300px"
+                  v-model="modal2Visible1"
+                  centered
+                  :footer="null"
+                  @ok="() => (modal2Visible = false)"
+                >
+                  <div style="width: 1000px; margin: 0 auto; display: flex">
+                    <p style="width: 100px; padding-top: 5px">角色名称</p>
+                    <a-input v-model="input" placeholder="" />
+                  </div>
+                  <div style="width: 1000px; margin: 0 auto; display: flex; margin-top: 20px">
+                    <p style="width: 100px; padding-top: 5px">选择权限</p>
+                    <div style="width: 950px">
+                      <div>
+                        <a-transfer
+                          class="tree-transfer"
+						  showSelectAll
+                          :data-source="dataSource"
+                          :target-keys="targetKeys"
+                          :render="(item) => item.title"
+                          :show-select-all="false"
+                          @change="onChange"
+                        >
+                          <template
+                            slot="children"
+                            slot-scope="{ props: { direction, selectedKeys }, on: { itemSelect } }"
+                          >
+                            <a-tree
+                              v-if="direction === 'left'"
+                              blockNode
+                              checkable
+                              checkStrictly
+                              defaultExpandAll
+                              :checkedKeys="[...selectedKeys, ...targetKeys]"
+                              :treeData="treeData"
+                              @check="
+                                (_, props) => {
+                                  onChecked(_, props, [...selectedKeys, ...targetKeys], itemSelect)
+                                }
+                              "
+                              @select="
+                                (_, props) => {
+                                  onChecked(_, props, [...selectedKeys, ...targetKeys], itemSelect)
+                                }
+                              "
+                            />
+                          </template>
+                        </a-transfer>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="width: 1000px; margin: 0 auto; display: flex; margin-top: 20px">
+                    <p style="width: 100px; padding-top: 5px">权限说明</p>
+                    <a-textarea v-model="value" placeholder="请输入权限说明" :auto-size="{ minRows: 3, maxRows: 5 }" />
+                  </div>
+                  <div style="width: 200px; margin: 40px auto">
+                    <a-button type="primary" @click="yes"> 确定 </a-button>
+                    <a-button style="margin-left: 20px" @click="no">取消</a-button>
+                  </div>
                 </a-modal>
               </div>
             </div>
@@ -168,9 +169,65 @@
 </template>
 
 <script>
+const treeData = [
+  {
+    key: '0-1',
+    title: '平台菜单管理',
+    children: [
+      {
+        key: '0-1-0',
+        title: '商户平台',
+        children: [
+          { key: '0-1-0-0', title: '首页' },
+          { key: '0-1-0-1', title: '数据' },
+          { key: '0-1-0-2', title: '客户' },
+          { key: '0-1-0-3', title: '营销' },
+          { key: '0-1-0-4', title: '订单' },
+          { key: '0-1-0-5', title: '财务' },
+          { key: '0-1-0-6', title: '油品' },
+		  { key: '0-1-0-7', title: '便利店商品' },
+		  { key: '0-1-0-8', title: '店铺' },
+		  { key: '0-1-0-9', title: '办公' },
+		  { key: '0-1-0-10', title: '支持' },
+		  
+        ],
+      },
+      { key: '0-1-1', title: '商户POS端' },
+      { key: '0-1-2', title: '商户小程序(商户端)' },
+      { key: '0-1-3', title: '商户小程序(平台端)' },
+      { key: '0-1-4', title: 'OS' },
+    ],
+  },
+]
+
+const transferDataSource = []
+function flatten(list = []) {
+  list.forEach((item) => {
+	
+    transferDataSource.push(item)
+    flatten(item.children)
+  })
+}
+flatten(JSON.parse(JSON.stringify(treeData)))
+
+function isChecked(selectedKeys, eventKey) {
+  return selectedKeys.indexOf(eventKey) !== -1
+}
+
+function handleTreeData(data, targetKeys = []) {
+  data.forEach((item) => {
+    item['disabled'] = targetKeys.includes(item.key)
+	
+    if (item.children) {
+      handleTreeData(item.children, targetKeys)
+    }
+  })
+  return data
+}
 import { rolemenu } from '@/api/work'
 import { rolelist } from '@/api/work'
 import { STable } from '@/components'
+import {rolesave} from '@/api/work'
 import { getlabellist, labeldel } from '@/api/crm'
 export default {
   name: 'Operformance',
@@ -179,7 +236,11 @@ export default {
   },
   data() {
     return {
-		 value: '',
+
+	  input:'',
+      targetKeys: [],
+      dataSource: transferDataSource,
+      value: '',
       modal2Visible1: false,
       selectedRowKeys: [],
       selectedRows: [],
@@ -229,7 +290,6 @@ export default {
           size: parameter.pageSize, // 每页页数
         }
         return getlabellist(Object.assign(params)).then((res) => {
-          console.log(res.data.data)
           // 自定义出参
           // console.log(res.data.list)
           this.oldTotal = res.data.total
@@ -250,12 +310,40 @@ export default {
   created() {
     this.rolelist()
   },
+  computed: {
+    treeData() {
+      return handleTreeData(treeData, this.targetKeys)
+    },
+  },
   methods: {
+    onChecked(_, e, checkedKeys, itemSelect) {
+      const { eventKey } = e.node
+      itemSelect(eventKey, !isChecked(checkedKeys, eventKey))
+    },
+    onChange(targetKeys) {
+      this.targetKeys = targetKeys
+	  console.log(this.targetKeys)
+    },
+    yes() {
+
+	  let data={
+		  id:'',
+		  role_name:this.input,
+		  introduce:this.value,
+		  menu:this.targetKeys
+	  }
+	  return rolesave(data).then(res=>{
+		  console.log(res)
+	  })
+      
+    },
+    no() {
+      this.modal2Visible1 = false
+    },
     tianjia() {
       this.modal2Visible1 = true
     },
     onSelectChange(selectedRowKeys, selectedRows) {
-      console.log()
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
@@ -281,14 +369,11 @@ export default {
     a() {
       console.log(111)
     },
-    onSelect(selectedKeys, info) {
-      console.log(111)
-      console.log('selected', selectedKeys, info)
-    },
+  
     rolelist() {
       return rolelist({}).then((res) => {
         this.lists = res.data.data
-        console.log(this.imgs)
+		console.log(this.lists)
       })
     },
     rolemenu(id) {
@@ -300,6 +385,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.tree-transfer .ant-transfer-list:first-child {
+  width: 50%;
+  flex: none;
+}
 .mainContainreBox {
   position: relative;
   display: flex;
@@ -307,6 +396,7 @@ export default {
   width: 100%;
   flex: 1;
   box-sizing: border-box;
+
   .mainContainreBlock {
     padding-left: 24px;
     padding-right: 24px;

@@ -36,3 +36,13 @@ export function rolelist(data){
         data
     })
 }
+
+// 新增权限
+
+export function rolesave(data){
+    return PhpRequest({
+        url:'/work/rolesave',
+        method:'post',
+        data
+    })
+}
