@@ -75,7 +75,7 @@
                       <div style="display: flex; justify-content: space-between">
                         <p>
                           角色权限
-                            <span   style="color: #37f">详情</span>
+                            <span  style="color: #37f">详情</span>
                         </p>
                         <p>角色列表<a @click="xiang" style="color: #37f">详情</a></p>
                       </div>

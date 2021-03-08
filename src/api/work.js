@@ -43,7 +43,6 @@ export function depotslist (data) {
         data
     })
 }
-<<<<<<< HEAD
 
 // 新增权限
 
@@ -54,5 +53,3 @@ export function rolesave(data){
         data
     })
 }
-=======
->>>>>>> 36c3b581238ab9426c9cc2117d969e52780d3a60
