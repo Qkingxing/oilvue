@@ -53,3 +53,13 @@ export function rolesave(data){
         data
     })
 }
+
+// 菜单权限获取列表
+
+export function groupmenulistt(data){
+    return PhpRequest({
+        url:'/work/groupmenulistt',
+        method:'post',
+        data
+    })
+}

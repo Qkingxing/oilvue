@@ -75,7 +75,20 @@
                       <div style="display: flex; justify-content: space-between">
                         <p>
                           角色权限
-                            <span  style="color: #37f">详情</span>
+                          <span @click="showModal(list.id)" style="color: #37f">详情</span>
+                          <a-modal :mask="datas" v-model="modal2Visibles" centered :footer="null">
+                            <a-tree
+                              v-model="checkedKeys"
+                              checkable
+                              :expanded-keys="expandedKeys"
+                              :auto-expand-parent="autoExpandParent"
+                              :selected-keys="selectedKeys"
+                              :tree-data="treeDatas"
+							  :replaceFields='{children:"treeList",title:"menu_title_code",key:"menu_id"}'
+                              @expand="onExpand"
+                              @select="onSelect"
+                            />
+                          </a-modal>
                         </p>
                         <p>角色列表<a @click="xiang" style="color: #37f">详情</a></p>
                       </div>
@@ -85,7 +98,7 @@
                 <a-card hoverable style="width: 300px; margin: 10px 10px">
                   <div style="display: flex; flex-direction: column">
                     <div @click="tianjia" style="margin: 32px auto">
-                      <a-icon   style="font-size: 60px; color: #c7c7c7; cursor: pointer; margin: 35px 0" type="plus" />
+                      <a-icon style="font-size: 60px; color: #c7c7c7; cursor: pointer; margin: 35px 0" type="plus" />
                       <div style="margin: 20px 0 30px 0; text-align: center"></div>
                     </div>
                   </div>
@@ -115,7 +128,7 @@
                       <div>
                         <a-transfer
                           class="tree-transfer"
-						  showSelectAll
+                          showSelectAll
                           :data-source="dataSource"
                           :target-keys="targetKeys"
                           :render="(item) => item.title"
@@ -169,6 +182,49 @@
 </template>
 
 <script>
+const treeDatas = [
+  {
+    title: '0-0',
+    key: '0-0',
+    children: [
+      {
+        title: '0-0-0',
+        key: '0-0-0',
+        children: [
+          { title: '0-0-0-0', key: '0-0-0-0' },
+          { title: '0-0-0-1', key: '0-0-0-1' },
+          { title: '0-0-0-2', key: '0-0-0-2' },
+        ],
+      },
+      {
+        title: '0-0-1',
+        key: '0-0-1',
+        children: [
+          { title: '0-0-1-0', key: '0-0-1-0' },
+          { title: '0-0-1-1', key: '0-0-1-1' },
+          { title: '0-0-1-2', key: '0-0-1-2' },
+        ],
+      },
+      {
+        title: '0-0-2',
+        key: '0-0-2',
+      },
+    ],
+  },
+  {
+    title: '0-1',
+    key: '0-1',
+    children: [
+      { title: '0-1-0-0', key: '0-1-0-0' },
+      { title: '0-1-0-1', key: '0-1-0-1' },
+      { title: '0-1-0-2', key: '0-1-0-2' },
+    ],
+  },
+  {
+    title: '0-2',
+    key: '0-2',
+  },
+]
 const treeData = [
   {
     key: '0-1',
@@ -185,11 +241,10 @@ const treeData = [
           { key: '0-1-0-4', title: '订单' },
           { key: '0-1-0-5', title: '财务' },
           { key: '0-1-0-6', title: '油品' },
-		  { key: '0-1-0-7', title: '便利店商品' },
-		  { key: '0-1-0-8', title: '店铺' },
-		  { key: '0-1-0-9', title: '办公' },
-		  { key: '0-1-0-10', title: '支持' },
-		  
+          { key: '0-1-0-7', title: '便利店商品' },
+          { key: '0-1-0-8', title: '店铺' },
+          { key: '0-1-0-9', title: '办公' },
+          { key: '0-1-0-10', title: '支持' },
         ],
       },
       { key: '0-1-1', title: '商户POS端' },
@@ -203,7 +258,6 @@ const treeData = [
 const transferDataSource = []
 function flatten(list = []) {
   list.forEach((item) => {
-	
     transferDataSource.push(item)
     flatten(item.children)
   })
@@ -217,7 +271,7 @@ function isChecked(selectedKeys, eventKey) {
 function handleTreeData(data, targetKeys = []) {
   data.forEach((item) => {
     item['disabled'] = targetKeys.includes(item.key)
-	
+
     if (item.children) {
       handleTreeData(item.children, targetKeys)
     }
@@ -227,7 +281,8 @@ function handleTreeData(data, targetKeys = []) {
 import { rolemenu } from '@/api/work'
 import { rolelist } from '@/api/work'
 import { STable } from '@/components'
-import {rolesave} from '@/api/work'
+import { rolesave } from '@/api/work'
+import {groupmenulistt} from '@/api/work'
 import { getlabellist, labeldel } from '@/api/crm'
 export default {
   name: 'Operformance',
@@ -236,8 +291,15 @@ export default {
   },
   data() {
     return {
-
-	  input:'',
+		obj:{},
+      expandedKeys: ['数据'],
+      autoExpandParent: false,
+      checkedKeys: [],
+      selectedKeys: [],
+      treeDatas,
+      datas: false,
+      modal2Visibles: false,
+      input: '',
       targetKeys: [],
       dataSource: transferDataSource,
       value: '',
@@ -315,33 +377,65 @@ export default {
       return handleTreeData(treeData, this.targetKeys)
     },
   },
+   watch: {
+    checkedKeys(val) {
+      console.log('onCheck', val);
+    },
+  },
   methods: {
+    showModal(id) {
+      return rolemenu({ role_id: id }).then((res) => {
+		  this.treeDatas = res.data
+		  this.treeData = res.data
+		  console.log(res.data)
+		
+        this.modal2Visibles = true
+      })
+    },
+    onSelect(selectedKeys, info) {
+      console.log('onSelect', info);
+      this.selectedKeys = selectedKeys;
+    },
     onChecked(_, e, checkedKeys, itemSelect) {
       const { eventKey } = e.node
       itemSelect(eventKey, !isChecked(checkedKeys, eventKey))
     },
+	 onCheck(checkedKeys) {
+      console.log('onCheck', checkedKeys);
+      this.checkedKeys = checkedKeys;
+    },
+	onExpand(expandedKeys) {
+      console.log('onExpand', expandedKeys);
+      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+      // or, you can remove all expanded children keys.
+      this.expandedKeys = expandedKeys;
+      this.autoExpandParent = false;
+    },
     onChange(targetKeys) {
       this.targetKeys = targetKeys
-	  console.log(this.targetKeys)
+      console.log(this.targetKeys)
     },
-    yes() {
 
-	  let data={
-		  id:'',
-		  role_name:this.input,
-		  introduce:this.value,
-		  menu:this.targetKeys
-	  }
-	  return rolesave(data).then(res=>{
-		  console.log(res)
-	  })
-      
+    yes() {
+      let data = {
+        id: '',
+        role_name: this.input,
+        introduce: this.value,
+        menu: this.targetKeys,
+      }
+      return rolesave(data).then((res) => {
+        console.log(res)
+      })
     },
     no() {
       this.modal2Visible1 = false
     },
     tianjia() {
-      this.modal2Visible1 = true
+	  return groupmenulistt({}).then(res=>{
+		  console.log(res)
+		  this.modal2Visible1 = true
+	  })
+      
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
@@ -369,16 +463,11 @@ export default {
     a() {
       console.log(111)
     },
-  
+
     rolelist() {
       return rolelist({}).then((res) => {
         this.lists = res.data.data
-		console.log(this.lists)
-      })
-    },
-    rolemenu(id) {
-      return rolemenu({ role_id: id }).then((res) => {
-        console.log(res)
+        console.log(this.lists)
       })
     },
   },
