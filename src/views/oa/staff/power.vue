@@ -84,7 +84,7 @@
                               :auto-expand-parent="autoExpandParent"
                               :selected-keys="selectedKeys"
                               :tree-data="treeDatas"
-							  :replaceFields='{children:"treeList",title:"menu_title_code",key:"menu_id"}'
+                              :replaceFields="{ children: 'treeList', title: 'menu_title_code', key: 'menu_id' }"
                               @expand="onExpand"
                               @select="onSelect"
                             />
@@ -126,41 +126,7 @@
                     <p style="width: 100px; padding-top: 5px">选择权限</p>
                     <div style="width: 950px">
                       <div>
-                        <a-transfer
-                          class="tree-transfer"
-                          showSelectAll
-                          :data-source="dataSource"
-                          :target-keys="targetKeys"
-                          :render="(item) => item.title"
-                          :show-select-all="false"
-                          @change="onChange"
-                        >
-                          <template
-                            slot="children"
-                            slot-scope="{ props: { direction, selectedKeys }, on: { itemSelect } }"
-                          >
-                            <a-tree
-                              v-if="direction === 'left'"
-                              blockNode
-                              checkable
-                              checkStrictly
-                              defaultExpandAll
-                              :checkedKeys="[...selectedKeys, ...targetKeys]"
-                              :treeData="treeData"
-							   :replaceFields='{children:"treeList",title:"menu_title_code",key:"menu_id"}'
-                              @check="
-                                (_, props) => {
-                                  onChecked(_, props, [...selectedKeys, ...targetKeys], itemSelect)
-                                }
-                              "
-                              @select="
-                                (_, props) => {
-                                  onChecked(_, props, [...selectedKeys, ...targetKeys], itemSelect)
-                                }
-                              "
-                            />
-                          </template>
-                        </a-transfer>
+                    
                       </div>
                     </div>
                   </div>
@@ -226,64 +192,12 @@ const treeDatas = [
     key: '0-2',
   },
 ]
-const treeData = [
-  {
-    key: '0-1',
-    title: '平台菜单管理',
-    children: [
-      {
-        key: '0-1-0',
-        title: '商户平台',
-        children: [
-          { key: '0-1-0-0', title: '首页' },
-          { key: '0-1-0-1', title: '数据' },
-          { key: '0-1-0-2', title: '客户' },
-          { key: '0-1-0-3', title: '营销' },
-          { key: '0-1-0-4', title: '订单' },
-          { key: '0-1-0-5', title: '财务' },
-          { key: '0-1-0-6', title: '油品' },
-          { key: '0-1-0-7', title: '便利店商品' },
-          { key: '0-1-0-8', title: '店铺' },
-          { key: '0-1-0-9', title: '办公' },
-          { key: '0-1-0-10', title: '支持' },
-        ],
-      },
-      { key: '0-1-1', title: '商户POS端' },
-      { key: '0-1-2', title: '商户小程序(商户端)' },
-      { key: '0-1-3', title: '商户小程序(平台端)' },
-      { key: '0-1-4', title: 'OS' },
-    ],
-  },
-]
 
-const transferDataSource = []
-function flatten(list = []) {
-  list.forEach((item) => {
-    transferDataSource.push(item)
-    flatten(item.children)
-  })
-}
-flatten(JSON.parse(JSON.stringify(treeData)))
-
-function isChecked(selectedKeys, eventKey) {
-  return selectedKeys.indexOf(eventKey) !== -1
-}
-
-function handleTreeData(data, targetKeys = []) {
-  data.forEach((item) => {
-    item['disabled'] = targetKeys.includes(item.key)
-
-    if (item.children) {
-      handleTreeData(item.children, targetKeys)
-    }
-  })
-  return data
-}
 import { rolemenu } from '@/api/work'
 import { rolelist } from '@/api/work'
 import { STable } from '@/components'
 import { rolesave } from '@/api/work'
-import {groupmenulistt} from '@/api/work'
+import { groupmenulistt } from '@/api/work'
 import { getlabellist, labeldel } from '@/api/crm'
 export default {
   name: 'Operformance',
@@ -292,7 +206,7 @@ export default {
   },
   data() {
     return {
-		obj:{},
+      obj: {},
       expandedKeys: ['数据'],
       autoExpandParent: false,
       checkedKeys: [],
@@ -301,8 +215,6 @@ export default {
       datas: false,
       modal2Visibles: false,
       input: '',
-      targetKeys: [],
-      dataSource: transferDataSource,
       value: '',
       modal2Visible1: false,
       selectedRowKeys: [],
@@ -374,55 +286,51 @@ export default {
     this.rolelist()
   },
   computed: {
-    treeData() {
-      return handleTreeData(treeData, this.targetKeys)
-    },
+    // treeData() {
+    //     get:function(){
+    //     }
+    //   return handleTreeData(treeData, this.targetKeys)
+    // },
   },
-   watch: {
-    checkedKeys(val) {
-      console.log('onCheck', val);
+  watch: {
+    checkedKeys1(val) {
+      console.log('onCheck', val)
     },
   },
   methods: {
     showModal(id) {
       return rolemenu({ role_id: id }).then((res) => {
-		  this.treeDatas = res.data
-		  this.treeData = res.data
-		  console.log(res.data)
-		
+        this.treeDatas = res.data
+        console.log(res.data)
+
         this.modal2Visibles = true
       })
     },
     onSelect(selectedKeys, info) {
-      console.log('onSelect', info);
-      this.selectedKeys = selectedKeys;
+      console.log('onSelect', info)
+      this.selectedKeys = selectedKeys
     },
-    onChecked(_, e, checkedKeys, itemSelect) {
-      const { eventKey } = e.node
-      itemSelect(eventKey, !isChecked(checkedKeys, eventKey))
+
+    onCheck(checkedKeys1) {
+      console.log(111)
+      this.checkedKeys1 = checkedKeys1
     },
-	 onCheck(checkedKeys) {
-      console.log('onCheck', checkedKeys);
-      this.checkedKeys = checkedKeys;
-    },
-	onExpand(expandedKeys) {
-      console.log('onExpand', expandedKeys);
+    onExpand(expandedKeys) {
+      console.log('onExpand', expandedKeys)
       // if not set autoExpandParent to false, if children expanded, parent can not collapse.
       // or, you can remove all expanded children keys.
-      this.expandedKeys = expandedKeys;
-      this.autoExpandParent = false;
+      this.expandedKeys = expandedKeys
+      this.autoExpandParent = false
     },
-    onChange(targetKeys) {
-      this.targetKeys = targetKeys
-      console.log(this.targetKeys)
-    },
+
+    
 
     yes() {
       let data = {
         id: '',
         role_name: this.input,
         introduce: this.value,
-        menu: this.targetKeys,
+        menu: '',
       }
       return rolesave(data).then((res) => {
         console.log(res)
@@ -432,11 +340,11 @@ export default {
       this.modal2Visible1 = false
     },
     tianjia() {
-	  return groupmenulistt({}).then(res=>{
-		  console.log(res)
-		  this.modal2Visible1 = true
-	  })
-      
+      return groupmenulistt({}).then((res) => {
+        console.log(res.data.data)
+        // this.treeData = res.data.data
+        this.modal2Visible1 = true
+      })
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
