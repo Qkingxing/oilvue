@@ -147,6 +147,7 @@
                               defaultExpandAll
                               :checkedKeys="[...selectedKeys, ...targetKeys]"
                               :treeData="treeData"
+							   :replaceFields='{children:"treeList",title:"menu_title_code",key:"menu_id"}'
                               @check="
                                 (_, props) => {
                                   onChecked(_, props, [...selectedKeys, ...targetKeys], itemSelect)
