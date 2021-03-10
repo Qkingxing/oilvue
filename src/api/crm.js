@@ -21,6 +21,13 @@ export function getSonsitelist () {
     method: 'post'
   })
 }
+// 获取会员等级下拉
+export function getlevelAll () {
+  return PhpRequest({
+    url: '/user/getlevelAll',
+    method: 'post'
+  })
+}
 // 获取已有客户列表
 export function getOldUserList (data) {
   return PhpRequest({
