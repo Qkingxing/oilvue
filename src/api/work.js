@@ -63,3 +63,25 @@ export function groupmenulistt(data){
         data
     })
 }
+
+// 员工账号角色清空员工操作密码
+
+export function eliminatepwd(data){
+    return PhpRequest({
+        url:'/work/eliminatepwd',
+        method:'post',
+        data
+    })
+}
+
+// 新增员工账号
+
+export function useraccount(data){
+    return PhpRequest({
+        url:'work/useraccount',
+        method:'post',
+        data
+    })
+}
+
+

@@ -6,7 +6,7 @@
           <div class="title_model">
             <div class="main_label">员工角色操作权限管理</div>
             <span>根据员工的职能为账号赋予角色属性，根据角色进行权限设置，点击可查看</span>
-            <a href="https://mp.nlsaas.com/oa/staff/account">员工列表</a>
+            <a>员工列表</a>
           </div>
           <div class="content">
             <a-modal width="1300px" v-model="modal2Visible" centered @ok="() => (modal2Visible = false)" :footer="null">
@@ -69,7 +69,7 @@
                       <div style="margin-bottom: 60px">
                         <span>权限说明：拥有油站下的全部数据查看</span>
                         <span>权限及功能修改权限</span>
-                        <p>该角色目前已配置16个账号</p>
+                        <p>该角色目前已配置{{list.count}}个账号</p>
                       </div>
 
                       <div style="display: flex; justify-content: space-between">
@@ -126,7 +126,17 @@
                     <p style="width: 100px; padding-top: 5px">选择权限</p>
                     <div style="width: 950px">
                       <div>
-                    
+						  <a-tree
+                              v-model="checkedKeys1"
+                              checkable
+                              :expanded-keys="expandedKeys1"
+                              :auto-expand-parent="autoExpandParent"
+                              :selected-keys="selectedKeys"
+                              :tree-data="treeDatas1"
+                              :replaceFields="{ children: 'treeList', title: 'menu_name', key: 'id' }"
+                              @expand="onExpands"
+                              @select="onSelect"
+                            />	
                       </div>
                     </div>
                   </div>
@@ -193,6 +203,51 @@ const treeDatas = [
   },
 ]
 
+
+const treeDatas1 = [
+  {
+    title: '0-0',
+    key: '0-0',
+    children: [
+      {
+        title: '0-0-0',
+        key: '0-0-0',
+        children: [
+          { title: '0-0-0-0', key: '0-0-0-0' },
+          { title: '0-0-0-1', key: '0-0-0-1' },
+          { title: '0-0-0-2', key: '0-0-0-2' },
+        ],
+      },
+      {
+        title: '0-0-1',
+        key: '0-0-1',
+        children: [
+          { title: '0-0-1-0', key: '0-0-1-0' },
+          { title: '0-0-1-1', key: '0-0-1-1' },
+          { title: '0-0-1-2', key: '0-0-1-2' },
+        ],
+      },
+      {
+        title: '0-0-2',
+        key: '0-0-2',
+      },
+    ],
+  },
+  {
+    title: '0-1',
+    key: '0-1',
+    children: [
+      { title: '0-1-0-0', key: '0-1-0-0' },
+      { title: '0-1-0-1', key: '0-1-0-1' },
+      { title: '0-1-0-2', key: '0-1-0-2' },
+    ],
+  },
+  {
+    title: '0-2',
+    key: '0-2',
+  },
+]
+
 import { rolemenu } from '@/api/work'
 import { rolelist } from '@/api/work'
 import { STable } from '@/components'
@@ -208,10 +263,13 @@ export default {
     return {
       obj: {},
       expandedKeys: ['数据'],
+	  expandedKeys1:[],
       autoExpandParent: false,
       checkedKeys: [],
+	  checkedKeys1:[],
       selectedKeys: [],
       treeDatas,
+	  treeDatas1,
       datas: false,
       modal2Visibles: false,
       input: '',
@@ -280,6 +338,7 @@ export default {
       lists: {},
       imgs: '',
       modal2Visible: false,
+	  arrs:[],
     }
   },
   created() {
@@ -294,6 +353,7 @@ export default {
   },
   watch: {
     checkedKeys1(val) {
+		this.arrs = val
       console.log('onCheck', val)
     },
   },
@@ -322,18 +382,27 @@ export default {
       this.expandedKeys = expandedKeys
       this.autoExpandParent = false
     },
+	onExpands(expandedKeys) {
+      console.log('onExpand', expandedKeys)
+      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+      // or, you can remove all expanded children keys.
+      this.expandedKeys1 = expandedKeys
+      this.autoExpandParent = false
+    },
 
     
 
     yes() {
       let data = {
-        id: '',
         role_name: this.input,
         introduce: this.value,
-        menu: '',
+        menu: this.arrs,
+		role_image:'https://oilphp.ldyxx.com/images/fc58b4c0f928a76b797c5c687ea8fbdf.png'
       }
       return rolesave(data).then((res) => {
         console.log(res)
+		this.rolelist()
+		this.modal2Visible1 = false
       })
     },
     no() {
@@ -342,7 +411,7 @@ export default {
     tianjia() {
       return groupmenulistt({}).then((res) => {
         console.log(res.data.data)
-        // this.treeData = res.data.data
+        this.treeDatas1 = res.data.data
         this.modal2Visible1 = true
       })
     },
