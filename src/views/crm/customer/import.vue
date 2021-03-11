@@ -17,11 +17,23 @@
 
       <!-- 表格 -->
       <div class="showDataForTable">
-        <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
+        <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData">
+          
+          <span slot="import_type" slot-scope="text, record">
+            <template>
+              <div>
+                {{text==null?'':importTypeList[text].text}}
+              </div>
+              
+            </template>
+          </span>
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">下载错误数据</a><br>
-              <a @click="delTag(record)">撤回</a>
+              <div class="action-group" style="text-align:center;">
+                <a @click="delTag(record)">下载错误数据</a><br>
+                <a @click="delTag(record)">撤回</a>
+              </div>
+              
             </template>
           </span>
         </s-table>
@@ -45,6 +57,12 @@ export default {
   },
   data () {
     return {
+      importTypeList:[
+        { text: '', value: 0 },
+        { text: '成功', value: 1 },
+        { text: '失败', value: 2 },
+        { text: '已撤回', value: 3 },
+      ],
       // 查询参数
       queryParam: {},
       // 表头
@@ -55,31 +73,32 @@ export default {
         },
         {
           title: '操作人',
-          dataIndex: 'userId'
+          dataIndex: 'user_name'
         },
         {
           title: '成功数',
-          dataIndex: 'status',
+          dataIndex: 'success_number',
         },
         {
           title: '失败数',
-          dataIndex: 'time',
+          dataIndex: 'error_number',
         },
         {
           title: '总积分',
-          // dataIndex: 'status',
+          dataIndex: 'totalIntegral',
         },
         {
           title: '总余额',
-          // dataIndex: 'status',
+          dataIndex: 'totalMoney',
         },
         {
           title: '加油卡名称',
-          // dataIndex: 'status',
+          dataIndex: 'card_name',
         },
         {
           title: '导入状态',
-          // dataIndex: 'status',
+          dataIndex: 'import_type',
+          scopedSlots: { customRender: 'import_type' }
         },
         {
           title: '导入时间',
