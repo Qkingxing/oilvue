@@ -43,8 +43,7 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="12" :sm="24">
                 <a-form-item label="偏好油站" class="screen-item">
                   <a-select v-model="oldqueryParam.love_site_id" style="width: 264px">
@@ -70,8 +69,7 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="12" :sm="24">
                 <a-form-item label="会员等级" class="screen-item">
                   <a-select v-model="oldqueryParam.spalevel_id" style="width: 264px">
@@ -98,8 +96,7 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="12" :sm="24">
                 <a-form-item label="最近加油时间" class="screen-item">
                   <a-range-picker @change="onChangeTime"/>
@@ -115,8 +112,7 @@
                   </a-input-group>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="12" :sm="24">
                 <a-form-item label="加油次数" class="screen-item">
                   <a-input-group compact>
@@ -137,8 +133,7 @@
                   </a-input-group>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="12" :sm="24">
                 <a-form-item label="加油卡余额" class="screen-item">
                   <a-input-group compact>
@@ -149,8 +144,7 @@
                   </a-input-group>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="24" :sm="24">
                 <a-form-item>
                   <a-button type="primary" class="search-btn" style="min-width:82px;" @click="$refs.table.refresh()"> 搜索 </a-button>
