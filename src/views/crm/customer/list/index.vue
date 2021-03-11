@@ -169,23 +169,23 @@
                   <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
                   <a-input
                     style="width: 100%"
-                    v-model="queryParam.keywords"
+                    v-model="queryParam.searchNumber"
                     placeholder="请输入搜索内容"
                   >
                     <a-select
                       slot="addonBefore"
                       style="width: 120px"
-                      v-model="queryParam.keyType"
+                      v-model="queryParam.numberType"
                     >
-                      <a-select-option value="86"> 客户子单编号 </a-select-option>
-                      <a-select-option value="87"> 手机号 </a-select-option>
+                      <a-select-option value="sonnumber"> 客户子单编号 </a-select-option>
+                      <a-select-option value="mobile"> 手机号 </a-select-option>
                     </a-select>
                   </a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="24" :sm="24">
                 <a-form-item>
-                  <a-button type="primary" class="search-btn" style="min-width:82px;"> 搜索 </a-button>
+                  <a-button type="primary" class="search-btn" style="min-width:82px;" @click="$refs.table2.refresh()"> 搜索 </a-button>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -247,7 +247,7 @@
             </div>
           </div>
           <s-table
-            ref="table"
+            ref="table2"
             size="default"
             rowKey="id"
             :columns="columns"
@@ -277,7 +277,7 @@ import { mapGetters } from 'vuex'
 import { STable } from '@/components'
 
 import { getServiceList } from '@/api/manage'
-import { getOldUserList, getSonoillist, getSonsitelist,getlevelAll } from '@/api/crm'
+import { getOldUserList, getSonoillist, getSonsitelist,getlevelAll,getNewUserList } from '@/api/crm'
 
 import EditTag from '../components/EditTag'
 
@@ -290,7 +290,7 @@ export default {
   },
   data () {
     return {
-      radioValue: 'old',
+      radioValue: 'new',
       oldqueryParam: {
         numberType: 'sonnumber', // 输入类型
         searchNumber: '', // 客户自编号或手机号
@@ -455,6 +455,14 @@ export default {
           identity_id: this.oldqueryParam.identity_id,
           last_time1: this.oldqueryParam.last_time1,
           last_time2: this.oldqueryParam.last_time2,
+          l_number1: this.oldqueryParam.l_number1,
+          l_number2: this.oldqueryParam.l_number2,
+          l_count1: this.oldqueryParam.l_count1,
+          l_count2: this.oldqueryParam.l_count2,
+          integral1: this.oldqueryParam.integral1,
+          integral2: this.oldqueryParam.integral2,
+          money1: this.oldqueryParam.money1,
+          money2: this.oldqueryParam.money2,
 
         }
         // 站点查询
@@ -498,10 +506,8 @@ export default {
       oldoptionAlertShow: false,
       // 查询参数
       queryParam: {
-        keyType: '86',
         numberType: 'sonnumber',
-        sonnumber: '',
-        mobile: '',
+        searchNumber: '',
       },
       // 表头
       columns: [
@@ -540,11 +546,25 @@ export default {
         }
       ],
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+        }
+        params[this.queryParam.numberType] = this.queryParam.searchNumber
+
+        return getNewUserList(Object.assign(params))
+        .then((res)=>{
+          // 自定义出参
+          // console.log(res)
+          this.oldTotal = res.data.total
+          return {
+            data: res.data.data, // 列表数组
+            pageNo: res.data.current_page,  // 当前页码
+            pageSize: res.data.per_page,  // 每页页数
+            totalCount: res.data.total, // 列表总条数
+            totalPage: res.data.total // 列表总页数
+          }
+        })
       },
       selectedRowKeys: [],
       selectedRows: [],

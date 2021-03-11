@@ -1,13 +1,18 @@
 <template>
   <a-layout>
+    <ImportCreat v-if="$route.query.isCreate == 1"/>
     <a-layout-content
+      v-else
       :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
     >
       <div class="head-title">
         客户导入
       </div>
       <div class="actionBtns">
-        <a-button type="primary"> 导入 </a-button>
+        <router-link :to="{ path: '/crm/customer/import',query:{ isCreate: 1 } }">
+          <a-button type="primary"> 导入 </a-button>
+        </router-link>
+        
       </div>
 
       <!-- 表格 -->
@@ -15,12 +20,14 @@
         <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
           <span slot="action" slot-scope="text, record">
             <template>
+              <a @click="delTag(record)">下载错误数据</a><br>
               <a @click="delTag(record)">撤回</a>
             </template>
           </span>
         </s-table>
       </div>
     </a-layout-content>
+    
   </a-layout>
 </template>
 
@@ -28,11 +35,13 @@
 import { STable } from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
+import { getImportlist } from '@/api/crm'
 
 export default {
   name: 'Import',
   components: {
-    STable
+    STable,
+    ImportCreat: ()=>import('./import/creat')
   },
   data () {
     return {
@@ -42,46 +51,39 @@ export default {
       columns: [
         {
           title: '文件名称',
-          dataIndex: 'no'
+          dataIndex: 'report_name'
         },
         {
           title: '操作人',
-          dataIndex: 'description'
+          dataIndex: 'userId'
         },
         {
           title: '成功数',
           dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '失败数',
           dataIndex: 'time',
-          needTotal: true
         },
         {
           title: '总积分',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '总余额',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '加油卡名称',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '导入状态',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '导入时间',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'generate_time',
         },
         {
           title: '操作',
@@ -91,9 +93,22 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
+        let params = {
+          page: parameter.pageNo, // 页码
+          limit: parameter.pageSize, // 每页页数
+        }
+
+        return getImportlist(Object.assign(params))
+        .then((res)=>{
+          // 自定义出参
+          // console.log(res.data)
+          return {
+            data: res.data, // 列表数组
+            pageNo: parameter.pageNo,  // 当前页码
+            pageSize: parameter.pageSize,  // 每页页数
+            totalCount: res.pageSize, // 列表总条数
+            totalPage: res.countPage // 列表总页数
+          }
         })
       },
       selectedRowKeys: [],

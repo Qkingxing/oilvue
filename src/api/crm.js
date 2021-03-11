@@ -36,6 +36,14 @@ export function getOldUserList (data) {
     data
   })
 }
+// 获取新增客户列表
+export function getNewUserList (data) {
+  return PhpRequest({
+    url: '/user/newuserlist',
+    method: 'post',
+    data
+  })
+}
 // 获取获取标签列表
 export function getlabellist (data) {
   return PhpRequest({
@@ -75,6 +83,14 @@ export function getLabeldetails (data) {
 export function getGroupinglist (data) {
   return JavaRequest({
     url: '/customer/getGrouping',
+    method: 'post',
+    data
+  })
+}
+// 客户导入列表
+export function getImportlist (data) {
+  return JavaRequest({
+    url: '/customer/query_client_excel',
     method: 'post',
     data
   })
