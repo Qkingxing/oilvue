@@ -17,8 +17,8 @@
             />
           </a-form-item>
 
-          <a-form-item label="  " :colon="false" class="form-item-group">
-            <a-form-item label="加油卡名称" :colon="false">
+          <a-form-item label="  " :colon="false" class="form-item-group" v-if="checkboxValue.length!=0">
+            <a-form-item label="加油卡名称" :colon="false" v-if="checkboxValue.includes(1)">
               <a-select style="width: 200px" placeholder="请选择加油卡名称">
                 <a-select-option value="jack">
                   Jack
@@ -31,7 +31,7 @@
                 </a-select-option>
               </a-select>
             </a-form-item>
-            <a-form-item label="固定等级" :colon="false">
+            <a-form-item label="固定等级" :colon="false" v-if="checkboxValue.includes(2)">
               <a-select style="width: 200px" placeholder="请选择固定等级">
                 <a-select-option value="jack">
                   Jack
@@ -44,7 +44,7 @@
                 </a-select-option>
               </a-select>
             </a-form-item>
-            <a-form-item label="动态等级" :colon="false">
+            <a-form-item label="动态等级" :colon="false" v-if="checkboxValue.includes(3)">
               <ul>
                 <li>铜卡会员&nbsp;&nbsp;&nbsp;&nbsp;所需成长值：0-249</li>
                 <li>铜卡会员&nbsp;&nbsp;&nbsp;&nbsp;所需成长值：0-249</li>
@@ -121,8 +121,6 @@ export default {
       // 数组转字符串
       let str = this.checkboxValue.toString()
 
-      // console.log(str)
-      this.form.cannot_cause = str
     }
   }
 }
