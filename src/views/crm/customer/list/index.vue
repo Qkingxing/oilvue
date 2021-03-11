@@ -10,7 +10,7 @@
           </a-radio-group>
         </div>
         <div class="screen-box" v-if="radioValue=='old'">
-          <a-form layout="inline" >
+          <a-form layout="inline">
             <a-row :gutter="48">
               <a-col :sm="24" :md="12">
                 <a-form-item label="客户搜索" class="screen-item">
@@ -103,11 +103,19 @@
                 </a-form-item>
               </a-col>
               <a-col :md="12" :sm="24">
-                <a-form-item label="加油升数" class="screen-item">
-                  <a-input-group compact>
-                    <a-input-number v-model="oldqueryParam.l_number1" style="width:88px;" placeholder="数字" />
+                <a-form-item
+                  label="加油升数"
+                  class="screen-item">
+                  <a-input-group compact >
+                    <a-input-number 
+                      v-model="oldqueryParam.l_number1" 
+                      style="width:88px;" 
+                      placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">至</span>
-                    <a-input-number v-model="oldqueryParam.l_number2" style="width:88px;" placeholder="数字" />
+                    <a-input-number
+                      v-model="oldqueryParam.l_number2"
+                      style="width:88px;"
+                      placeholder="数字" />
                     <span style="margin: 0px 8px;line-height:32px;">升</span>
                   </a-input-group>
                 </a-form-item>
@@ -273,7 +281,6 @@ import { getOldUserList, getSonoillist, getSonsitelist,getlevelAll } from '@/api
 
 import EditTag from '../components/EditTag'
 
-
 export default {
   name: 'Clist',
   components: {
@@ -284,7 +291,6 @@ export default {
   data () {
     return {
       radioValue: 'old',
-      
       oldqueryParam: {
         numberType: 'sonnumber', // 输入类型
         searchNumber: '', // 客户自编号或手机号
@@ -581,6 +587,7 @@ export default {
     
   },
   methods: {
+
     // 最近加油时间变更
     onChangeTime(date, dateString){
       // console.log(date.length)
