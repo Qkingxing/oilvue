@@ -2,13 +2,14 @@
 <template>
   <a-layout>
     <a-layout-content
+      v-if="pageType=='list'"
       :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
     >
       <div class="head-title">
         加油卡列表
       </div>
       <div class="actionBtns">
-        <a-button type="primary"> 新增加油卡 </a-button>
+        <a-button type="primary" @click="pageType='creat'"> 新增加油卡 </a-button>
       </div>
 
       <!-- 表格 -->
@@ -22,6 +23,7 @@
         </s-table>
       </div>
     </a-layout-content>
+    <PrepaidEdit v-if="pageType == 'creat'"/>
   </a-layout>
 </template>
 
@@ -33,10 +35,12 @@ import { getRoleList, getServiceList } from '@/api/manage'
 export default {
   name: 'Plist',
   components: {
-    STable
+    STable,
+    PrepaidEdit: ()=>import('./list/edit')
   },
   data () {
     return {
+      pageType: 'list',
       // 查询参数
       queryParam: {},
       // 表头
