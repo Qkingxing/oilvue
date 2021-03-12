@@ -23,7 +23,7 @@
         </s-table>
       </div>
     </a-layout-content>
-    <PrepaidEdit v-if="pageType == 'creat'"/>
+    <PrepaidEdit v-if="pageType == 'creat'" @back="pageType='list'"/>
   </a-layout>
 </template>
 

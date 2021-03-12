@@ -21,7 +21,7 @@
                 <div class="setting-header">基础设置</div>
                 <a-form style="min-width:700px;" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
                   <a-form-item label="加油卡名称" :colon="false">
-                    <a-input style="width:240px;"/>
+                    <a-input style="width:240px;" placeholder="请输入加油卡名称 1-12个字"/>
                   </a-form-item>
                   <a-form-item :colon="false" style="height: 40px;">
                     <div slot="label" class="setting-canUseMerchantBox">
@@ -36,7 +36,13 @@
                         <a-icon style="color: #cad5e9;font-size: 16px;" type="question-circle" />
                       </a-popover>
                     </div>
-                    <a-input style="width:240px;"/>
+                    <el-cascader
+                      style="width: 240px;"
+                      v-model="value"
+                      :options="options"
+                      :props="{ expandTrigger: 'hover', multiple: true }"
+                    ></el-cascader>
+                   
                   </a-form-item>
                   <a-form-item label="卡类型" :colon="false">
                     <a-radio-group :options="plainOptions" />
@@ -100,8 +106,110 @@
                 </div>
               </div>
             </div>
-            <div class="mainContent-block">2</div>
-            <div class="mainContent-block">3</div>
+            <div class="mainContent-block">
+              <div class="mainContent-setting-box">
+                <div class="setting-header">基础设置</div>
+                <a-form style="min-width:700px;" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+                  <a-form-item label="充值限制" :colon="false">
+                    <a-form-item label="" :colon="false" class="limit_formitem">
+                      <a-input placeholder="金额" />
+                    </a-form-item>
+                    <span style="color: rgba(0, 0, 0, 0.65); padding: 0px 10px;">至</span>
+                    <a-form-item label="" :colon="false" class="limit_formitem">
+                      <a-input placeholder="金额" />
+                    </a-form-item>
+                    <span>&nbsp;&nbsp;元</span>
+                    <span style="color: rgb(199, 199, 199);"></span>
+                  </a-form-item>
+
+                  <a-form-item label="自定义金额" :colon="false">
+                    <a-radio-group :options="plainOptions" />
+                  </a-form-item>
+
+                  <a-form-item label="可用油品" :colon="false">
+                    <el-cascader
+                      style="width: 240px;"
+                      v-model="value"
+                      :options="options"
+                      :props="{ expandTrigger: 'hover', multiple: true }"
+                    ></el-cascader>
+                   
+                  </a-form-item>
+
+                  <a-form-item label="充值优惠" :colon="false">
+                    <a-radio-group :options="plainOptions2" />
+                    <div class="preferentialTemplate">
+                      <div class="preferentialTemplateHeader">赠送规则</div>
+                      <div class="rechargeRule">
+                        <div class="rechargeRuleContent">
+                          <span style="padding: 0px 10px 0px 0px;">充值满</span>
+                          <a-form-item label="" :colon="false" class="limit_formitem">
+                            <a-input placeholder="金额" />
+                          </a-form-item>
+                          <span style="padding-left: 0.5rem;">元，</span>
+                          <span style="padding-right: 10px;">赠送</span>
+                          <a-form-item label="" :colon="false" class="limit_formitem">
+                            <a-input placeholder="金额" />
+                          </a-form-item>
+                          <span style="padding-left: 0.5rem;">元</span>
+                          <div class="operationBox">
+                            <a-icon class="reduceRuleBlock iconfont" type="minus-circle" />
+                            <a-icon class="reduceRuleBlock iconfont" type="plus-circle" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a-form-item>
+                  <a-form-item label="首次多赠" :colon="false">
+                    <a-radio-group :options="plainOptions" />
+                  </a-form-item>
+
+                </a-form>
+
+                <div class="btn-box">
+                  <a-button @click="current=0" type="info" size="large">
+                    上一步
+                  </a-button>
+                  <a-button @click="current=2" type="primary" size="large" style="margin-left: 8px;">
+                    保存
+                  </a-button>
+                </div>
+              </div>
+
+              <div class="preview-box">
+                <div class="preview-box-header">页面预览</div>
+                <div class="preview-box-content">
+                  <div class="preview-header">
+                    <img src="https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/04/16/10/666c1309d980cf8a4953486cbf85.png">
+                  </div>
+                  <div class="preview-content">
+                    <div class="preview-content-header">
+                      <div class="content-left">鹰眼第二加油站</div>
+                    </div>
+                    <div class="preview-content-body">
+                      <div class="preview-card">
+                        <img src="https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/13/8d2d587a8081c645af0335acd7ce.png" alt="预览图片">
+                        <div class="preview-card-name">鹰眼预存</div>
+                        <div class="preview-available">限LNG、CNG、98(乙醇)、95(会员)、95(乙醇)、92(会员)、92(乙醇)、0(乙醇)、-30、-10#会员价</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mainContent-block">
+              <div class="create_success">
+                <div class="icon_success">
+                  <a-icon type="check-circle" class="iconfont icon-60" style="color: rgb(100, 180, 90); font-size: 60px;"/>
+                </div>
+                <div class="create_success_title">加油卡修改成功</div>
+              </div>
+              <div class="buttonsBox">
+                <a-button type="info" size="large" @click="back">
+                  返回列表
+                </a-button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -126,7 +234,28 @@ export default {
         'https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/11/71b0969fc36bb90ed93fbb74adbb.png',
         'https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/11/2143f30c32366b5fb6d899f2d828.png',
         'https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/11/5f13040ce79b5929d4ac982a449c.png'
-      ]
+      ],
+      value: [],
+      options: [
+        {
+          value: 'zhinan',
+          label: '指南'
+        },
+        {
+          value: 'zujian',
+          label: '组件',
+        },
+        {
+          value: 'ziyuan',
+          label: '资源',
+
+        }
+      ],
+    }
+  },
+  methods:{
+    back(){
+      this.$emit('back')
     }
   }
 }
@@ -288,7 +417,41 @@ export default {
             }
           }
         }
-
+        .create_success{
+          position: absolute;
+          top: 28%;
+          left: 50%;
+          -webkit-transform: translate3d(-50%,-50%,0);
+          transform: translate3d(-50%,-50%,0);
+          .icon_success{
+            text-align: center;
+            color: #1890ff;
+            margin-bottom: 14px;
+            .iconfont{
+              transition: color .3s;
+              width: 1em;
+              height: 1em;
+              vertical-align: -.15em;
+              fill: currentColor;
+              overflow: hidden;
+            }
+          }
+          .create_success_title{
+            font-size: 18px;
+            font-weight: 500;
+            color: #1e1e28;
+            text-align: center;
+            line-height: 16px;
+            margin-bottom: 1px;
+          }
+        }
+        .buttonsBox{
+          position: absolute;
+          top: 40%;
+          left: 50%;
+          -webkit-transform: translate3d(-50%,-50%,0);
+          transform: translate3d(-50%,-50%,0);
+        }
 
 
       }
@@ -351,5 +514,63 @@ export default {
       }
     }
   }
+  .preferentialTemplate{
+    width: 572px;
+    border: 1px solid #eaeaea;
+    padding: 24px;
+    color: #1e1e28;
+    margin-top: 16px;
+    .preferentialTemplateHeader{
+      line-height: 14px;
+      margin-bottom: 16px;
+    }
+    .rechargeRule{
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+      padding: 0 24px;
+      height: 88px;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      background: #fafafa;
+      position: relative;
+      width: 396px;
+      .rechargeRuleContent{
+        width: 100%;
+      }
+      .operationBox{
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+        width: 78px;
+        position: absolute;
+        right: -79px;
+        .iconfont{
+          color: #9696a0;
+          font-size: 16px;
+          -webkit-transition: color .3s;
+          transition: color .3s;
+        }
+        .reduceRuleBlock{
+          width: 16px;
+          height: 16px;
+          cursor: pointer;
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+  .limit_formitem{
+    display: inline-block;
+    &.ant-form-item{
+      margin-bottom: 0;
+      width: 88px;
+    }
+  }
+  
 }
 </style>
