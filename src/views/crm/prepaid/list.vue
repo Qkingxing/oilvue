@@ -23,7 +23,7 @@
         </s-table>
       </div>
     </a-layout-content>
-    <PrepaidEdit v-if="pageType == 'creat'" @back="pageType='list'"/>
+    <PrepaidEdit v-if="pageType == 'creat'" :pageType="pageType" @back="pageType='list'"/>
   </a-layout>
 </template>
 
@@ -31,6 +31,7 @@
 import { STable } from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
+import { getGasfillingcardlist } from '@/api/crm'
 
 export default {
   name: 'Plist',
@@ -56,37 +57,30 @@ export default {
         {
           title: '成功数',
           dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '失败数',
           dataIndex: 'time',
-          needTotal: true
         },
         {
           title: '总积分',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '总余额',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '加油卡名称',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '导入状态',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '导入时间',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '操作',
@@ -96,9 +90,22 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+        }
+
+        return getGasfillingcardlist(Object.assign(params))
+        .then((res)=>{
+          // 自定义出参
+          console.log(res.data.data)
+          return {
+            data: res.data.data, // 列表数组
+            pageNo: parameter.pageNo,  // 当前页码
+            pageSize: parameter.pageSize,  // 每页页数
+            totalCount: res.data.total, // 列表总条数
+            totalPage: res.data.total // 列表总页数
+          }
         })
       },
       selectedRowKeys: [],

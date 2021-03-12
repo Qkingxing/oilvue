@@ -170,3 +170,19 @@ export function getSitelist (data) {
     data
   })
 }
+// 获取加油卡列表
+export function getGasfillingcardlist (data) {
+  return PhpRequest({
+    url: '/user/gasfillingcardlist',
+    method: 'post',
+    data
+  })
+}
+// 新增修改加油卡
+export function gasfillingcardsave (data) {
+  return PhpRequest({
+    url: '/user/gasfillingcardsave',
+    method: 'post',
+    data
+  })
+}

@@ -21,7 +21,7 @@
                 <div class="setting-header">基础设置</div>
                 <a-form style="min-width:700px;" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
                   <a-form-item label="加油卡名称" :colon="false">
-                    <a-input style="width:240px;" placeholder="请输入加油卡名称 1-12个字"/>
+                    <a-input v-model="form.card_name" style="width:240px;" placeholder="请输入加油卡名称 1-12个字"/>
                   </a-form-item>
                   <a-form-item :colon="false" style="height: 40px;">
                     <div slot="label" class="setting-canUseMerchantBox">
@@ -45,26 +45,61 @@
                    
                   </a-form-item>
                   <a-form-item label="卡类型" :colon="false">
-                    <a-radio-group :options="plainOptions" />
+                    <a-radio-group v-model="form.card_type">
+                      <a-radio
+                        v-for="(item,index) in cardTypeList"
+                        :key="index"
+                        :value="item.value">
+                        {{item.label}}
+                      </a-radio>
+                    </a-radio-group>
                   </a-form-item>
                   <a-form-item label="卡面样式" :colon="false">
-                    <a-radio-group :options="plainOptions2" />
+                    <a-radio-group v-model="cardCovertype" @change="onChangeCardCoverType(cardCovertype)">
+                      <a-radio :value="1"> 模板 </a-radio>
+                      <a-radio :value="2"> 自定义 </a-radio>
+                    </a-radio-group>
                     <div class="cardPanelTemplate">
-                      <div>
-                        <span class="cardPanelTemplateItem activeCardPanel">
-                          <img :src="templateList[0]" alt="">
+                      <div v-if="cardCovertype==1">
+                        <span
+                          @click="form.card_style = item"
+                          class="cardPanelTemplateItem"
+                          :class="{'activeCardPanel': item==form.card_style}"
+                          v-for="(item, index) in templateList"
+                          :key="index">
+                          <img :src="item" alt="">
                         </span>
-                        <span class="cardPanelTemplateItem">
-                          <img :src="templateList[1]" alt="">
-                        </span>
-                        <span class="cardPanelTemplateItem">
-                          <img :src="templateList[2]" alt="">
-                        </span>
+                      </div>
+                      <div v-else>
+                        <div class="customTemplate">
+                          <div class="uploadOnceContainer upload-content">
+                            
+                            <a-upload
+                              class="uploadOnceContainer_main"
+                              name="avatar"
+                              list-type="picture-card"
+                              :show-upload-list="false"
+                              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            >
+                              <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" /> -->
+                              <div>
+                                <a-icon :type="'plus'" style="font-size:20px;color: #9696a0;"/>
+                              </div>
+                            </a-upload>
+
+                            <div class="uploadOnceContainer_prompt">图片建议尺寸670像素*280像素，大小不超过1MB</div>
+                          </div>
+                          <div class="exampleBox">
+                            示例:
+                            <img src="https://uat-authentication-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/20/11/71b0969fc36bb90ed93fbb74adbb.png" alt="示例" style="border-radius: 4px;">
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </a-form-item>
                   <a-form-item label="规则说明" :colon="false">
                     <a-textarea
+                      v-model="form.card_rule"
                       style="width:320px;"
                       placeholder="可补充填写本加油卡的其他注意事项，非必填项"
                       :auto-size="{ minRows: 3, maxRows: 6 }"
@@ -251,11 +286,58 @@ export default {
 
         }
       ],
+      form: {
+        id: null,	
+        //[string]		油卡ID 修改的时候传递		
+        card_name: '',	
+        //[string]	是	油卡名称		
+        card_type: 1,	
+        //[string]	是	油卡类型 1是个人 2是车队		
+        card_style: '',	
+        //[string]	是	油卡背景图片		
+        card_rule: '',	
+        //[string]	是	油卡简介
+        site: [   // 可用油站
+          // { site_id:  }
+        ],
+        min_refill: '',	
+        //[string]	是	最小充值金额		
+        max_refill: '',	
+        //[string]	是	最大充值金额		
+        site_id: '',	
+        //[string]	是	所属油站
+      },
+      cardTypeList: [
+        { label: '个人卡', value: 1 },
+        { label: '车队卡', value: 2 },
+      ],
+      cardCovertype: 2, // 卡面样式 1 模板 2 自定义
+
+    }
+  },
+  props:{
+    pageType:{
+      type: String
+    }
+  },
+  created(){
+    // console.log(this.pageType)
+    if (this.pageType==='creat') {
+      this.form.card_style = this.templateList[0]
     }
   },
   methods:{
     back(){
       this.$emit('back')
+    },
+    // 切换卡面类型时
+    onChangeCardCoverType(value){
+      // console.log(value)
+      if (value===1) {
+        this.form.card_style = this.templateList[0]
+      }else{
+
+      }
     }
   }
 }
@@ -511,6 +593,60 @@ export default {
         height: 100%;
         position: absolute;
         right: 0;
+      }
+    }
+    // 上传图片
+    .uploadOnceContainer{
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      width: 100%;
+      position: relative;
+      .uploadOnceContainer_main{
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        .ant-upload {
+          background: #fff;
+          position: relative;
+        }
+      }
+      .ant-upload-picture-card-wrapper{
+        zoom: 1;
+        display: inline-block;
+        width: 100%;
+      }
+      .uploadOnceContainer_prompt{
+        display: block;
+        font-size: 12px;
+        color: #9696a0;
+        line-height: 12px;
+        margin-top: 8px;
+      }
+    }
+    .exampleBox{
+      position: absolute;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      right: 0;
+      top: 0;
+      height: 100px;
+      width: 180px;
+      background: #fafafa;
+      padding: 10px;
+      font-size: 14px;
+      font-family: PingFangSC-Regular,PingFang SC;
+      font-weight: 400;
+      color: #3c3c46;
+      line-height: 14px;
+      img{
+        width: 120px;
+        height: 80px;
+        vertical-align: text-top;
       }
     }
   }
