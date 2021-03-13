@@ -36,12 +36,26 @@
                         <a-icon style="color: #cad5e9;font-size: 16px;" type="question-circle" />
                       </a-popover>
                     </div>
-                    <el-cascader
+                    <a-select
+                      mode="multiple"
+                      allowClear
+                      v-model="form.site"
                       style="width: 240px;"
-                      v-model="value"
-                      :options="options"
+                      placeholder="请选择可用油站"
+                      @change="onChangeSite"
+                    >
+                      <a-select-option 
+                        v-for="(item,index) in siteList" 
+                        :key="index">
+                        {{item.site_name}}
+                      </a-select-option>
+                    </a-select>
+                    <!-- <el-cascader
+                      style="width: 240px;"
+                      v-model="form.site"
+                      :options="siteList"
                       :props="{ expandTrigger: 'hover', multiple: true }"
-                    ></el-cascader>
+                    ></el-cascader> -->
                    
                   </a-form-item>
                   <a-form-item label="卡类型" :colon="false">
@@ -76,13 +90,16 @@
                             
                             <a-upload
                               class="uploadOnceContainer_main"
-                              name="avatar"
+                              name="file"
                               list-type="picture-card"
                               :show-upload-list="false"
-                              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                              action="https://oiljava.ldyxx.com:4435/goods/FileImg"
+                              @change="handleChange"
                             >
-                              <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" /> -->
-                              <div>
+                              
+                              <img v-if="form.card_style" :src="form.card_style" alt="avatar" />
+                              <div v-if="form.card_style" class="update-tips">重新上传</div>
+                              <div v-else>
                                 <a-icon :type="'plus'" style="font-size:20px;color: #9696a0;"/>
                               </div>
                             </a-upload>
@@ -255,6 +272,9 @@
 
 <script>
 import {cardTypeList} from '@/utils/select'
+import { getSitelist } from '@/api/crm'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'PrepaidEdit',
   data(){
@@ -294,13 +314,11 @@ export default {
         //[string]	是	油卡名称		
         card_type: 1,	
         //[string]	是	油卡类型 1是个人 2是车队		
-        card_style: '',	
+        card_style: null,	
         //[string]	是	油卡背景图片		
         card_rule: '',	
         //[string]	是	油卡简介
-        site: [   // 可用油站
-          // { site_id:  }
-        ],
+        site: [],// 可用油站,index
         min_refill: '',	
         //[string]	是	最小充值金额		
         max_refill: '',	
@@ -309,7 +327,8 @@ export default {
         //[string]	是	所属油站
       },
       cardTypeList,
-      cardCovertype: 2, // 卡面样式 1 模板 2 自定义
+      cardCovertype: 1, // 卡面样式 1 模板 2 自定义
+      siteList: []
 
     }
   },
@@ -318,13 +337,52 @@ export default {
       type: String
     }
   },
+  computed:{
+    ...mapGetters(['site_id'])
+  },
   created(){
-    // console.log(this.pageType)
-    if (this.pageType==='creat') {
-      this.form.card_style = this.templateList[0]
-    }
+    this.pageInit()
+
   },
   methods:{
+    // 初始化
+    async pageInit(){
+      // 获取可用油站列表
+      let res = await getSitelist({sreach:''})
+      if(res){
+        this.siteList = res.data.data
+      }
+      // 查找当前油站
+      let index = this.siteList.findIndex((e,i)=>{
+        return e.id === this.site_id
+      })
+      this.form.site[0] = index
+
+      // console.log(index)
+
+      if (this.pageType==='creat') {
+        this.form.card_style = this.templateList[0]
+      }
+    },
+    // 变更可用油站
+    onChangeSite(indexs, values){
+      console.log(indexs)
+      console.log(values)
+    },
+    // 上传图片回调
+    handleChange(info){
+      if (info.file.status !== 'uploading') {
+        // console.log(info.file, info.fileList);
+        let url = info.file.response.data
+        // console.log(url)
+        this.form.card_style = url
+      }
+      if (info.file.status === 'done') {
+        this.$message.success(`上传成功`);
+      } else if (info.file.status === 'error') {
+        this.$message.error(`上传失败`);
+      }
+    },
     back(){
       this.$emit('back')
     },
@@ -334,7 +392,7 @@ export default {
       if (value===1) {
         this.form.card_style = this.templateList[0]
       }else{
-
+        this.form.card_style = null
       }
     }
   }
@@ -612,6 +670,23 @@ export default {
         .ant-upload {
           background: #fff;
           position: relative;
+          img{
+            width: 100px;
+            height: 100px;
+          }
+          .update-tips{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 25px;
+            line-height: 25px;
+            font-size: 14px;
+            color: #fff;
+            background-color: rgba(0,0,0,.6);
+            text-align: center;
+            overflow: hidden;
+          }
         }
       }
       .ant-upload-picture-card-wrapper{
