@@ -254,6 +254,7 @@
 </template>
 
 <script>
+import {cardTypeList} from '@/utils/select'
 export default {
   name: 'PrepaidEdit',
   data(){
@@ -307,10 +308,7 @@ export default {
         site_id: '',	
         //[string]	是	所属油站
       },
-      cardTypeList: [
-        { label: '个人卡', value: 1 },
-        { label: '车队卡', value: 2 },
-      ],
+      cardTypeList,
       cardCovertype: 2, // 卡面样式 1 模板 2 自定义
 
     }
@@ -384,6 +382,7 @@ export default {
         padding-left: 24px;
         padding-right: 24px;
         overflow: hidden;
+        overflow-x: auto;
         &:nth-child(2){
           transform: translateX(100%);
         }

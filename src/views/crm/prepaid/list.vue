@@ -14,10 +14,48 @@
 
       <!-- 表格 -->
       <div class="showDataForTable">
-        <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
+        <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData">
+          <span slot="card_type" slot-scope="text">
+            <template>
+              {{cardTypeList[text].label}}
+            </template>
+          </span>
+          <span slot="oilsinfo" slot-scope="text">
+            <template>
+              已选{{text.length}}个
+            </template>
+          </span>
+          <span slot="refill" slot-scope="text, record">
+            <template>
+              {{record.min_refill}}-{{record.max_refill}}元
+            </template>
+          </span>
+          <div slot="givemoney" slot-scope="text, record">
+            <template>
+              <p 
+                v-for="(item, index) in record.giveruleinfo"
+                :key="index">
+                {{item.refillmoney}}元
+              </p>
+            </template>
+          </div>
+          <div slot="giveruleinfo" slot-scope="text, record">
+            <template>
+              <p 
+                v-for="(item, index) in record.giveruleinfo"
+                :key="index">
+                充值{{item.refillmoney}}元{{giveMoneyTypeList[item.type].label}}{{item.givemoney}}元
+              </p>
+              <p v-if="!record.giveruleinfo.length">无优惠</p>
+            </template>
+          </div>
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">撤回</a>
+              <a @click="delTag(record)" style="margin: 0 4px;">编辑</a>
+              <a @click="delTag(record)" style="margin: 0 4px;" v-if="record.card_status">禁用</a>
+              <a @click="delTag(record)" style="margin: 0 4px;" v-else>启用</a>
+              <a @click="delTag(record)" style="margin: 0 4px;">删除</a>
+
             </template>
           </span>
         </s-table>
@@ -32,6 +70,7 @@ import { STable } from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
 import { getGasfillingcardlist } from '@/api/crm'
+import {cardTypeList,giveMoneyTypeList} from '@/utils/select'
 
 export default {
   name: 'Plist',
@@ -41,46 +80,43 @@ export default {
   },
   data () {
     return {
+      cardTypeList,
+      giveMoneyTypeList,
       pageType: 'list',
       // 查询参数
       queryParam: {},
       // 表头
       columns: [
         {
-          title: '文件名称',
-          dataIndex: 'no'
-        },
-        {
-          title: '操作人',
-          dataIndex: 'description'
-        },
-        {
-          title: '成功数',
-          dataIndex: 'status',
-        },
-        {
-          title: '失败数',
-          dataIndex: 'time',
-        },
-        {
-          title: '总积分',
-          // dataIndex: 'status',
-        },
-        {
-          title: '总余额',
-          // dataIndex: 'status',
-        },
-        {
           title: '加油卡名称',
-          // dataIndex: 'status',
+          dataIndex: 'card_name'
         },
         {
-          title: '导入状态',
-          // dataIndex: 'status',
+          title: '可用油站',
+          dataIndex: 'site_name'
         },
         {
-          title: '导入时间',
-          // dataIndex: 'status',
+          title: '卡类型',
+          dataIndex: 'card_type',
+          scopedSlots: { customRender: 'card_type' }
+        },
+        {
+          title: '可用油品',
+          dataIndex: 'oilsinfo',
+          scopedSlots: { customRender: 'oilsinfo' }
+        },
+        {
+          title: '充值限制',
+          dataIndex: 'refill',
+          scopedSlots: { customRender: 'refill' }
+        },
+        {
+          title: '充值金额',
+          scopedSlots: { customRender: 'givemoney' }
+        },
+        {
+          title: '充值优惠',
+          scopedSlots: { customRender: 'giveruleinfo' }
         },
         {
           title: '操作',
