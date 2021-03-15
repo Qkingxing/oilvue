@@ -56,9 +56,13 @@
             </a-select>
           </a-form-item>
           <a-form-item label="账号角色">
-          
-            <a-select label-in-value :default-value="{key:'请选择账号角色'}" style="width: 200px" @change="handleChanges">
-              <a-select-option v-for="(name, index) in names" :key="index" > {{ name.role_name }} </a-select-option>
+            <a-select
+              label-in-value
+              :default-value="{ key: '请选择账号角色' }"
+              style="width: 200px"
+              @change="handleChanges"
+            >
+              <a-select-option v-for="(name, index) in names" :key="index"> {{ name.role_name }} </a-select-option>
               <!-- <a-select-option value="加油员"> 加油员 </a-select-option>
               <a-select-option value="收银员"> 收银员 </a-select-option>
               <a-select-option value="财务员"> 财务员 </a-select-option>
@@ -112,6 +116,7 @@ import { STable } from '@/components'
 import { eliminatepwd } from '@/api/work'
 import { useraccount } from '@/api/work'
 import { rolelist } from '@/api/work'
+import { userdelete } from '@/api/work'
 import EditTag from '../../crm/customer/components/EditTag'
 export default {
   name: 'Account',
@@ -194,8 +199,6 @@ export default {
     rolelist() {
       return rolelist({}).then((res) => {
         this.names = res.data.data
-		
-		console.log(this.role_name)
       })
     },
     add() {
@@ -240,17 +243,40 @@ export default {
         record.visible = false
       }
       if (index == 2) {
+        let that = this
         record.visible = false
+        this.$confirm({
+          title: '系统温馨提示',
+          content: '删除会清除标签全部信息，是否删除？',
+          onOk() {
+            // console.log(item)
+            return userdelete({ id: record.id }).then((res) => {
+              console.log(res)
+              that.$message.success('删除成功')
+            })
+            // console.log(res)
+          },
+          onCancel() {},
+        })
       }
       if (index == 3) {
-        return eliminatepwd({ id: record.id })
-          .then((res) => {
-            console.log(res)
-            record.visible = false
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.$confirm({
+          title: '系统温馨提示',
+          content: '清空操作密码后，请登录POS机,"收银助手-设置-密码管理"，重新设置密码',
+          onOk() {
+            // console.log(item)
+            return eliminatepwd({ id: record.id })
+              .then((res) => {
+                console.log(res)
+                record.visible = false
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+            // console.log(res)
+          },
+          onCancel() {},
+        })
       }
     },
     handleChange(value) {

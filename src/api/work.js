@@ -84,4 +84,14 @@ export function useraccount(data){
     })
 }
 
+//删除 员工账号
+
+export function userdelete(data){
+    return PhpRequest({
+        url:'work/userdelete',
+        method:'post',
+        data
+    })
+}
+
 
