@@ -137,14 +137,19 @@
                   </div>
                   <div class="preview-content">
                     <div class="preview-content-header">
-                      <div class="content-left">鹰眼第二加油站</div>
+                      <div class="content-left">{{userInfo.site_name}}</div>
                     </div>
                     <div class="preview-content-body">
                       <div class="preview-card">
-                        <img src="https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/13/8d2d587a8081c645af0335acd7ce.png" alt="预览图片">
-                        <div class="preview-card-name">鹰眼预存</div>
+                        <img :src="form.card_style==null?'https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/04/16/14/a1a5831b2089d7d3e1a19a9e312d.png':form.card_style" alt="预览图片">
+                        <div class="preview-card-name">{{form.card_name}}</div>
                         <div class="preview-available">限LNG、CNG、98(乙醇)、95(会员)、95(乙醇)、92(会员)、92(乙醇)、0(乙醇)、-30、-10#会员价</div>
+                        <div class="preview-price">
+                          <div class="preview-price-type">￥</div><span>0.00</span>
+                        </div>
+                        <div class="preview-btn" v-show="cardCovertype==2">充值</div>
                       </div>
+               
                     </div>
                   </div>
                 </div>
@@ -200,13 +205,17 @@
                     <div class="noDiscountTemplate" v-if="form.type===0">
                       <div class="noDiscountHearder">
                         <span>固定金额</span>
-                        <a-icon class="addRuleBlock iconfont" type="minus-circle" />
-                        <a-icon class="addRuleBlock iconfont" type="plus-circle" />
+                        
+                        <a-icon @click="addGiverule" class="addRuleBlock iconfont" type="plus-circle" />
+                        <a-icon @click="delGiverule(false)" class="addRuleBlock iconfont" type="minus-circle" />
 
                       </div>
                       <div class="noDiscountContent">
-                        <div class="noDiscountItem">
-                          <a-input placeholder="金额" />
+                        <div 
+                          class="noDiscountItem"
+                          v-for="(item, index) in form.giverule"
+                          :key="index">
+                          <a-input v-model="item.refillmoney" placeholder="金额" />
                         </div>
                         <div class="noDiscountItem" style="visibility: hidden; padding-bottom: 0px;"></div>
                       </div>
@@ -228,13 +237,13 @@
                           <span style="padding-right: 10px;" v-if="form.type===2">立减</span>
                           <span style="padding-right: 10px;" v-if="form.type===3">享</span>
                           <a-form-item label="" :colon="false" class="limit_formitem">
-                            <a-input v-model="form.givemoney" placeholder="金额" />
+                            <a-input v-model="item.givemoney" placeholder="金额" />
                           </a-form-item>
                           <span style="padding-left: 0.5rem;" v-if="form.type===3">折</span>
                           <span style="padding-left: 0.5rem;" v-else>元</span>
                           <div class="operationBox">
-                            <a-icon class="reduceRuleBlock iconfont" type="minus-circle" />
-                            <a-icon class="reduceRuleBlock iconfont" type="plus-circle" v-if="index===form.giverule.length-1"/>
+                            <a-icon @click="delGiverule(index)" class="reduceRuleBlock iconfont" type="minus-circle" />
+                            <a-icon @click="addGiverule" class="reduceRuleBlock iconfont" type="plus-circle" v-if="index===form.giverule.length-1"/>
                           </div>
                         </div>
                       </div>
@@ -268,15 +277,54 @@
                   </div>
                   <div class="preview-content">
                     <div class="preview-content-header">
-                      <div class="content-left">鹰眼第二加油站</div>
+                      <div class="content-left">{{userInfo.site_name}}</div>
                     </div>
                     <div class="preview-content-body">
                       <div class="preview-card">
-                        <img src="https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/13/8d2d587a8081c645af0335acd7ce.png" alt="预览图片">
-                        <div class="preview-card-name">鹰眼预存</div>
+                        <img :src="form.card_style==null?'https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/04/16/14/a1a5831b2089d7d3e1a19a9e312d.png':form.card_style" alt="预览图片">
+                        <div class="preview-card-name">{{form.card_name}}</div>
                         <div class="preview-available">限LNG、CNG、98(乙醇)、95(会员)、95(乙醇)、92(会员)、92(乙醇)、0(乙醇)、-30、-10#会员价</div>
+                        <div class="preview-price">
+                          <div class="preview-price-type">￥</div><span>0.00</span>
+                        </div>
+                        <div class="preview-btn" v-show="cardCovertype==2">充值</div>
+                      </div>
+                      <div class="preview-form">
+                        <div class="preview-price" v-if="form.is_open == 1">
+                          <div class="preview-price-title">输入充值金额</div>
+                          <div class="preview-price-input">请输入充值金额</div>
+                        </div>
+
+                        <div class="preview-form-price-type" v-if="form.giverule.length">
+                          <div class="price-type-title">输入充值金额</div>
+                          <div class="price-type-list">
+                            <div 
+                              class="price-type-item"
+                              v-for="(item,index) in form.giverule"
+                              :key="index">
+                              <div class="price-type-item-content">
+                                <div class="price-type-number" v-show="item.refillmoney!=''">
+                                  {{item.refillmoney}}
+                                  <span style="font-size: 10px; font-weight: 600; line-height: 14px;">元</span>
+                                </div>
+                                <div class="price-type-preferential" v-show="item.givemoney!=''">
+                                  <span>赠送</span>
+                                  <span>{{item.givemoney}}</span>
+                                  <span>元</span>
+                                </div>
+                                <span v-show="item.refillmoney==''">未输入</span>
+
+                              </div>
+                            </div>
+
+                            <div class="price-type-item" style="visibility: hidden;"></div>
+                            <div class="price-type-item" style="visibility: hidden;"></div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
+                    <div class="preview-content-footer">《加油卡服务条款》《充值规则》</div>
                   </div>
                 </div>
               </div>
@@ -324,6 +372,11 @@ export default {
         'https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/11/2143f30c32366b5fb6d899f2d828.png',
         'https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/11/5f13040ce79b5929d4ac982a449c.png'
       ],
+      perviewList: [
+        'https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/13/8d2d587a8081c645af0335acd7ce.png',
+        'https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/13/86c594d94a0829217736f7df93b2.png',
+        'https://prd-1258898587.cos.ap-beijing.myqcloud.com/public/2020/11/24/13/33fd295028a684b450aa09fdc0ba.png'
+      ],
       value: [],
       options: [
         {
@@ -364,6 +417,7 @@ export default {
         giverule: [
           { refillmoney: '', givemoney: '' }
         ],// 优惠条件
+        first_give: 0,// 首充
       },
       cardTypeList,
       cardCovertype: 1, // 卡面样式 1 模板 2 自定义
@@ -379,11 +433,11 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(['site_id'])
+    ...mapGetters(['site_id', 'userInfo'])
   },
   created(){
     this.pageInit()
-
+    console.log(this.userInfo)
   },
   methods:{
     // 初始化
@@ -402,7 +456,7 @@ export default {
 
       // 油品下拉
       let oilRes = await getSiteoillist()
-      console.log(oilRes.data.data)
+      // console.log(oilRes.data.data)
       if (oilRes) {
         this.oilList = oilRes.data.data
       }
@@ -412,6 +466,29 @@ export default {
       if (this.pageType==='creat') {
         this.form.card_style = this.templateList[0]
       }
+    },
+    // 删除优惠规则
+    delGiverule(index){
+      let that = this
+
+      if (this.form.type!==0&&this.form.giverule.length===1) {
+        return
+      }
+      if (index) {
+        this.form.giverule.splice(index,1)
+      }
+      if (index===false) {
+        this.form.giverule.splice(that.form.giverule.length-1,1)
+      }
+    },
+    // 增加优惠规则
+    addGiverule(){
+      if (this.form.giverule.length===9) {
+        this.$message.error('优惠规则最多添加9条！')
+        return
+      }
+      let obj = { refillmoney: '', givemoney: '' }
+      this.form.giverule.push(obj)
     },
     // 上传图片回调
     handleChange(info){
@@ -458,6 +535,7 @@ export default {
   background: #fff;
   margin-top: 8px;
   height: 850px;
+  overflow: auto;
   .mainContent-box{
     display: block;
     box-sizing: border-box;
@@ -483,7 +561,7 @@ export default {
         position: absolute;
         padding-left: 24px;
         padding-right: 24px;
-        overflow: hidden;
+        overflow-y: auto;
         overflow-x: auto;
         &:nth-child(2){
           transform: translateX(100%);
@@ -608,6 +686,7 @@ export default {
                     width: 100%;
                   }
                   .preview-card-name{
+                    position: absolute;
                     top: 17px;
                     left: 17px;
                     width: 145px;
@@ -635,8 +714,135 @@ export default {
                     left: 17px;
                     right: 17px;
                     top: 41px;
+                    position: absolute;
+                  }
+                  .preview-price{
+                    position: absolute;
+                    left: 15px;
+                    bottom: 15px;
+                    width: 84px;
+                    height: 37px;
+                    font-size: 24px;
+                    font-family: PingFangSC-Semibold,PingFang SC;
+                    font-weight: 600;
+                    color: #fff;
+                    line-height: 37px;
+                    .preview-price-type{
+                      display: inline-block;
+                      font-size: 14px;
+                    }
+                  }
+                  
+                  .preview-btn{
+                    position: absolute;
+                    right: 15px;
+                    bottom: 16px;
+                    width: 72px;
+                    height: 30px;
+                    background: #1e3cfa;
+                    border-radius: 17px;
+                    font-size: 12px;
+                    font-family: PingFangSC-Regular,PingFang SC;
+                    font-weight: 400;
+                    color: #fff;
+                    line-height: 30px;
+                    text-align: center;
                   }
                 }
+                .preview-form{
+                  padding-top: 16px;
+                  .preview-price{
+                    padding-bottom: 20px;
+                    .preview-price-title{
+                      font-size: 12px;
+                      font-family: PingFangSC-Regular,PingFang SC;
+                      font-weight: 400;
+                      color: #1e1e28;
+                      line-height: 17px;
+                      margin-bottom: 10px;
+                    }
+                    .preview-price-input{
+                      width: 286px;
+                      height: 42px;
+                      background: #f8f8f8;
+                      border-radius: 5px;
+                      padding: 11px 9px;
+                      font-size: 15px;
+                      font-family: PingFangSC-Regular,PingFang SC;
+                      font-weight: 400;
+                      color: #b2b2b2;
+                      line-height: 20px;
+                    }
+                  }
+                  .preview-form-price-type{
+                    .price-type-title{
+                      font-size: 12px;
+                      font-family: PingFangSC-Regular,PingFang SC;
+                      font-weight: 400;
+                      color: #1e1e28;
+                      line-height: 17px;
+                      margin-bottom: 10px;
+                    }
+                    .price-type-list{
+                      display: -webkit-box;
+                      display: -ms-flexbox;
+                      display: flex;
+                      -webkit-box-pack: justify;
+                      -ms-flex-pack: justify;
+                      justify-content: space-between;
+                      -ms-flex-wrap: wrap;
+                      flex-wrap: wrap;
+                      .price-type-item{
+                        position: relative;
+                        display: -webkit-box;
+                        display: -ms-flexbox;
+                        display: flex;
+                        -webkit-box-align: center;
+                        -ms-flex-align: center;
+                        align-items: center;
+                        width: 90px;
+                        height: 60px;
+                        background: #f8f8f8;
+                        border-radius: 4px;
+                        text-align: center;
+                        font-family: PingFangSC-Regular,PingFang SC;
+                        margin-bottom: 8px;
+                        .price-type-item-content{
+                          text-align: center;
+                          -webkit-box-flex: 1;
+                          -ms-flex: 1;
+                          flex: 1;
+                          .price-type-number{
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #3c3c46;
+                            line-height: 22px;
+                          }
+                          .price-type-preferential{
+                            font-size: 10px;
+                            font-weight: 400;
+                            color: #3c3c46;
+                            line-height: 14px;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              .preview-content-footer{
+                position: absolute;
+                bottom: 12px;
+                left: 50%;
+                -webkit-transform: translate(-50%);
+                transform: translate(-50%);
+                width: 180px;
+                height: 16px;
+                font-size: 11px;
+                font-family: PingFangSC-Regular,PingFang SC;
+                font-weight: 400;
+                color: #37f;
+                line-height: 16px;
               }
             }
           }

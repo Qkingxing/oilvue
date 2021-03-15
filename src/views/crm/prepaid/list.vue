@@ -134,7 +134,7 @@ export default {
         return getGasfillingcardlist(Object.assign(params))
         .then((res)=>{
           // 自定义出参
-          console.log(res.data.data)
+          // console.log(res.data.data)
           return {
             data: res.data.data, // 列表数组
             pageNo: parameter.pageNo,  // 当前页码
