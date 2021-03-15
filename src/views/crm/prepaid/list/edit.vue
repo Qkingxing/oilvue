@@ -38,25 +38,17 @@
                     </div>
                     <a-select
                       mode="multiple"
-                      allowClear
                       v-model="form.site"
                       style="width: 240px;"
                       placeholder="请选择可用油站"
-                      @change="onChangeSite"
                     >
                       <a-select-option 
                         v-for="(item,index) in siteList" 
-                        :key="index">
+                        :key="index"
+                        :disabled="item.id==site_id">
                         {{item.site_name}}
                       </a-select-option>
                     </a-select>
-                    <!-- <el-cascader
-                      style="width: 240px;"
-                      v-model="form.site"
-                      :options="siteList"
-                      :props="{ expandTrigger: 'hover', multiple: true }"
-                    ></el-cascader> -->
-                   
                   </a-form-item>
                   <a-form-item label="卡类型" :colon="false">
                     <a-radio-group v-model="form.card_type">
@@ -164,56 +156,96 @@
                 <a-form style="min-width:700px;" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
                   <a-form-item label="充值限制" :colon="false">
                     <a-form-item label="" :colon="false" class="limit_formitem">
-                      <a-input placeholder="金额" />
+                      <a-input v-model="form.min_refill" placeholder="金额" />
                     </a-form-item>
                     <span style="color: rgba(0, 0, 0, 0.65); padding: 0px 10px;">至</span>
                     <a-form-item label="" :colon="false" class="limit_formitem">
-                      <a-input placeholder="金额" />
+                      <a-input v-model="form.max_refill" placeholder="金额" />
                     </a-form-item>
                     <span>&nbsp;&nbsp;元</span>
                     <span style="color: rgb(199, 199, 199);"></span>
                   </a-form-item>
 
                   <a-form-item label="自定义金额" :colon="false">
-                    <a-radio-group :options="plainOptions" />
+                    <a-radio-group v-model="form.is_open" class="noMargin">
+                      <a-radio :value="2"> 关 </a-radio>
+                      <a-radio :value="1"> 开 </a-radio>
+                    </a-radio-group>
                   </a-form-item>
 
                   <a-form-item label="可用油品" :colon="false">
-                    <el-cascader
+                    <a-select
+                      mode="multiple"
+                      v-model="form.oils"
                       style="width: 240px;"
-                      v-model="value"
-                      :options="options"
-                      :props="{ expandTrigger: 'hover', multiple: true }"
-                    ></el-cascader>
+                      placeholder="请选择可用油品"
+                    >
+                      <a-select-option 
+                        v-for="(item,index) in oilList" 
+                        :key="index">
+                        {{item.oils_name}}
+                      </a-select-option>
+                    </a-select>
                    
                   </a-form-item>
 
                   <a-form-item label="充值优惠" :colon="false">
-                    <a-radio-group :options="plainOptions2" />
-                    <div class="preferentialTemplate">
+                    <a-radio-group v-model="form.type" class="noMargin">
+                      <a-radio :value="1"> 充值赠送 </a-radio>
+                      <a-radio :value="2"> 充值立减 </a-radio>
+                      <a-radio :value="3"> 充值折扣 </a-radio>
+                      <a-radio :value="0"> 无优惠 </a-radio>
+                    </a-radio-group>
+
+                    <div class="noDiscountTemplate" v-if="form.type===0">
+                      <div class="noDiscountHearder">
+                        <span>固定金额</span>
+                        <a-icon class="addRuleBlock iconfont" type="minus-circle" />
+                        <a-icon class="addRuleBlock iconfont" type="plus-circle" />
+
+                      </div>
+                      <div class="noDiscountContent">
+                        <div class="noDiscountItem">
+                          <a-input placeholder="金额" />
+                        </div>
+                        <div class="noDiscountItem" style="visibility: hidden; padding-bottom: 0px;"></div>
+                      </div>
+                    </div> 
+
+                    <div class="preferentialTemplate" v-else>
                       <div class="preferentialTemplateHeader">赠送规则</div>
-                      <div class="rechargeRule">
+                      <div 
+                        class="rechargeRule"
+                        v-for="(item, index) in form.giverule"
+                        :key="index">
                         <div class="rechargeRuleContent">
                           <span style="padding: 0px 10px 0px 0px;">充值满</span>
                           <a-form-item label="" :colon="false" class="limit_formitem">
-                            <a-input placeholder="金额" />
+                            <a-input v-model="item.refillmoney" placeholder="金额" />
                           </a-form-item>
                           <span style="padding-left: 0.5rem;">元，</span>
-                          <span style="padding-right: 10px;">赠送</span>
+                          <span style="padding-right: 10px;" v-if="form.type===1">赠送</span>
+                          <span style="padding-right: 10px;" v-if="form.type===2">立减</span>
+                          <span style="padding-right: 10px;" v-if="form.type===3">享</span>
                           <a-form-item label="" :colon="false" class="limit_formitem">
-                            <a-input placeholder="金额" />
+                            <a-input v-model="form.givemoney" placeholder="金额" />
                           </a-form-item>
-                          <span style="padding-left: 0.5rem;">元</span>
+                          <span style="padding-left: 0.5rem;" v-if="form.type===3">折</span>
+                          <span style="padding-left: 0.5rem;" v-else>元</span>
                           <div class="operationBox">
                             <a-icon class="reduceRuleBlock iconfont" type="minus-circle" />
-                            <a-icon class="reduceRuleBlock iconfont" type="plus-circle" />
+                            <a-icon class="reduceRuleBlock iconfont" type="plus-circle" v-if="index===form.giverule.length-1"/>
                           </div>
                         </div>
                       </div>
+
                     </div>
                   </a-form-item>
-                  <a-form-item label="首次多赠" :colon="false">
-                    <a-radio-group :options="plainOptions" />
+                  <a-form-item label="首次多赠" :colon="false" v-if="form.type===1">
+                    <a-radio-group >
+                      <a-radio :value="2"> 关 </a-radio>
+                      <a-radio :value="1"> 开 </a-radio>
+                    </a-radio-group>
                   </a-form-item>
 
                 </a-form>
@@ -273,6 +305,7 @@
 <script>
 import {cardTypeList} from '@/utils/select'
 import { getSitelist } from '@/api/crm'
+import { getSiteoillist } from '@/api/oil'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -311,24 +344,32 @@ export default {
         id: null,	
         //[string]		油卡ID 修改的时候传递		
         card_name: '',	
-        //[string]	是	油卡名称		
+        //[string]	是	油卡名称	
+        site: [],// 可用油站,index	
         card_type: 1,	
         //[string]	是	油卡类型 1是个人 2是车队		
         card_style: null,	
         //[string]	是	油卡背景图片		
         card_rule: '',	
         //[string]	是	油卡简介
-        site: [],// 可用油站,index
         min_refill: '',	
         //[string]	是	最小充值金额		
         max_refill: '',	
         //[string]	是	最大充值金额		
-        site_id: '',	
-        //[string]	是	所属油站
+        is_open: 2,
+        // 是否开启自定义金额，1开，2关
+        oils: [], // 支持的油品
+        type: 1,
+        // 所属类型 1是充值赠送 2是充值立减 3是充值折扣 0是没有优惠
+        giverule: [
+          { refillmoney: '', givemoney: '' }
+        ],// 优惠条件
       },
       cardTypeList,
       cardCovertype: 1, // 卡面样式 1 模板 2 自定义
-      siteList: []
+      siteList: [], // 油站集合
+      isAutoMoney: 0,// 是否开启自定义金额
+      oilList: [], // 油品合集
 
     }
   },
@@ -356,18 +397,21 @@ export default {
       let index = this.siteList.findIndex((e,i)=>{
         return e.id === this.site_id
       })
+      // console.log(index)
       this.form.site[0] = index
 
-      // console.log(index)
+      // 油品下拉
+      let oilRes = await getSiteoillist()
+      console.log(oilRes.data.data)
+      if (oilRes) {
+        this.oilList = oilRes.data.data
+      }
+
+      
 
       if (this.pageType==='creat') {
         this.form.card_style = this.templateList[0]
       }
-    },
-    // 变更可用油站
-    onChangeSite(indexs, values){
-      console.log(indexs)
-      console.log(values)
     },
     // 上传图片回调
     handleChange(info){
@@ -460,6 +504,47 @@ export default {
             padding: 24px 0 16px 0;
             border-bottom: 1px solid #eaeaf4;
             margin-bottom: 27px;
+          }
+          .noMargin{
+            .ant-radio-wrapper{
+              margin-right: 0;
+            }
+          }
+          .noDiscountTemplate{
+            width: 344px;
+            background: #fafafa;
+            padding: 24px;
+            .noDiscountHearder{
+              font-size: 14px;
+              font-family: PingFangSC-Regular,PingFang SC;
+              font-weight: 400;
+              color: #1e1e28;
+              line-height: 14px;
+              margin-bottom: 16px;
+              .addRuleBlock{
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+                margin-left: 10px;
+                color: #9696a0;
+                font-size: 16px;
+              }
+            }
+            .noDiscountContent{
+              display: -webkit-box;
+              display: -ms-flexbox;
+              display: flex;
+              -webkit-box-pack: justify;
+              -ms-flex-pack: justify;
+              justify-content: space-between;
+              -ms-flex-wrap: wrap;
+              flex-wrap: wrap;
+              .noDiscountItem{
+                padding-bottom: 16px;
+                position: relative;
+                width: 88px;
+              }
+            }
           }
           .btn-box{
             display: -webkit-box;
