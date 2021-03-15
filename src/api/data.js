@@ -38,3 +38,22 @@ export function download(data){
         data
     })
 }
+
+// 数据 统计客户 -概览
+
+export function customer(data){
+    return JavaRequest({
+        url:'/data/get_customer_overview',
+        method:'post',
+        data
+    })
+}
+
+// 数据 概览 - 折线图
+export function customerStatistics(data){
+    return PhpRequest({
+        url:'/set/customerStatistics',
+        method:'post',
+        data
+    })
+}

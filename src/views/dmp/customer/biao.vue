@@ -9,21 +9,21 @@
       </span>
     </div>
     <div class="box">
-      <div class="overflow_box" v-for="(a, index) in 6" :key="index">
+      <div class="overflow_box" v-for="(list, index) in lists" :key="index">
         <div class="overflow_li">
           <div class="title">
-            <span>消费客户</span>
+            <span>{{ list.users_name }}</span>
           </div>
           <div class="price_info">
-            <span class="price">100</span>
+            <span class="price">{{ list.users_number }}</span>
             <span class="unit">人</span>
           </div>
           <div class="trend_info">
             <span>较上一周期</span>
-            <span class="percente percent-up">0.00%</span>
-             <i class="trend">
-                  <a-icon type="arrow-down" />
-                </i>
+            <span class="percente percent-up">{{ list.day_before }}</span>
+            <i class="trend">
+              <a-icon type="arrow-down" />
+            </i>
           </div>
           <i class="more_info anticon anticon-question-circle">
             <a-popover title="消费客户" overlayClassName="note">
@@ -31,7 +31,6 @@
                 <div class="" style="width: 200px">
                   <p>统计时间内，已消费人数合计</p>
                 </div>
-               
               </template>
               <span class="anticon">
                 <a-icon type="question-circle" />
@@ -42,11 +41,11 @@
       </div>
     </div>
 
-    <div class="head_title">
+    <!-- <div class="head_title">
       <span>累计数据</span>
       <span class="sub-title">统计截止时间：2021-01-23</span>
-    </div>
-    <div class="box">
+    </div> -->
+    <!-- <div class="box">
       <div class="overflow_box" v-for="(a, index) in 6" :key="index">
         <div class="overflow_li">
           <div class="title">
@@ -77,27 +76,24 @@
           </i>
         </div>
       </div>
-    </div>
+    </div> -->
+  
+  
+  <span>图表分析</span>
     <div class="head_title">
-      <span>图表分析</span>
-    </div>
-    <div class="trend-box">
-      <div class="canvas-boxs">
-        <canvas_box></canvas_box>
+      
+      <div class="trend-box">
+        <!-- <div style="width:200px;margin: 0 auto;text-align: center;" v-for="(leg,index) in legends" :key="index">
+            <span style="line-height: 35px;">{{leg}}</span>
+        </div> -->
+        <div class="canvas-boxs">
+          <canvas_box :lineChart='lineChart' ></canvas_box>
+        </div>
       </div>
     </div>
+
     <div class="pie-chart-box">
-      <div class="a">
-        <div class="pie-chart-canvas">
-          <span>图像</span>
-        </div>
-      </div>
-      <div class="a">
-        <div class="pie-chart-canvas">
-          <span>图像</span>
-        </div>
-      </div>
-      <div class="a">
+      <div class="a" v-for="(line,index) in lineChart" :key="index">
         <div class="pie-chart-canvas">
           <span>图像</span>
         </div>
@@ -110,23 +106,47 @@
 import canvas_box from './canvas_box'
 export default {
   components: { canvas_box },
+  props: ['lists','arr'],
   data() {
-    return {}
+    return {
+        lineChart:[],
+        cake:[],
+        legends:[],
+        show:false
+    }
   },
+  watch:{
+     arr:{
+         immediate:true,
+         handler(newV,oldV){
+             this.lineChart = newV.lineChart1
+             this.cake = newV
+             this.show = true
+            //  this.legends = newV.lineChart1.legend
+
+         },
+         deep:true
+     }
+      
+  }
 }
 </script>
 
 <style lang='scss' scoped>
 .biao {
   .head_title {
-    height: 16px;
+      position: relative;
     margin: 16px 0 8px 0;
     line-height: 16px;
+    border: 1px solid #eaeaf4;
+    width: 100%;
     span {
       font-size: 14px;
       color: #040a46;
       font-weight: 500;
       margin-right: 14px;
+      padding: 10px;
+      line-height: 5px
     }
     .sub-title {
       font-size: 12px;
@@ -139,6 +159,7 @@ export default {
     display: flex;
     position: relative;
     width: 100%;
+    flex-wrap: wrap;
   }
   .overflow_box {
     width: 300px;
@@ -187,13 +208,13 @@ export default {
           color: #ff4646;
           font-weight: 700;
         }
-         .trend{
-         position: relative;
-         font-size: 16px;
-         left: 5px;
-         top: 0;
-         color:rgb(72, 198, 114);
-    }
+        .trend {
+          position: relative;
+          font-size: 16px;
+          left: 5px;
+          top: 0;
+          color: rgb(72, 198, 114);
+        }
       }
       .more_info {
         font-size: 16px;
@@ -210,6 +231,7 @@ export default {
     .canvas-boxs {
       user-select: none;
       position: relative;
+      padding: 15px;
       // height: 460px;
       // border: 1px solid #eaeaf4;
       // border-radius: 4px;
