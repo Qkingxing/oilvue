@@ -38,7 +38,7 @@
         </a-form>
         <h3 style="margin-top: 10px">列表</h3>
         <div class="showDataForTable">
-          <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
+          <s-table ref="table" size="default" rowKey="key" :columns="columns" :data='loadData'>
             <span slot="action" slot-scope="text, record">
               <template>
                 <a @click="delTag(record)">删除</a>
@@ -54,6 +54,7 @@
 <script>
 import { STable } from '@/components'
 import { getServiceList } from '@/api/manage'
+import {download} from '@/api/data'
 
 export default {
   name: 'Monthly',
@@ -62,12 +63,15 @@ export default {
     STable
   },
 
+
   data () {
     return {
-      queryParam: {},
+      queryParam: {
+		  
+	  },
       columns: [
         {
-          title: '到处报表名称',
+          title: '导出报表名称',
           dataIndex: 'no'
         },
         {
@@ -85,7 +89,7 @@ export default {
           needTotal: true
         },
         {
-          title: '到处人',
+          title: '导出人',
           // dataIndex: 'status',
           needTotal: true
         },
@@ -97,7 +101,9 @@ export default {
       ],
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
+          
+		  console.log( res.result)
+		  return res.result
         })
       }
     }
@@ -106,6 +112,7 @@ export default {
   beforeCreate () {
     this.form = this.$form.createForm(this, { name: '' })
   },
+
 
   methods: {
     // search
@@ -116,8 +123,20 @@ export default {
           console.log('Received values of form: ', values)
         }
       })
-    }
+    },
+	delTag(value){
+		console.log(value)
+	}
+	//  downloads(){
+	// 	return  download({page:1,limit:10}).then(res =>{
+	// 		this.lists = res.data
+	// 	})
+	// }
+  },
+  created(){
+	//   this.downloads()
   }
+  
 }
 </script>
 

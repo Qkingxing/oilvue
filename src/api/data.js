@@ -28,3 +28,13 @@ export function revenue(data){
         data
     })
 }
+
+// 下载中心 下载列表
+
+export function download(data){
+    return JavaRequest({
+        url:'/data/get_download_list',
+        method:'post',
+        data
+    })
+}
