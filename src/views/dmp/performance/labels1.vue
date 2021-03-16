@@ -4,10 +4,10 @@
       <div class="overflow_box" v-for="(list, index) in lists" :key="index">
         <div class="overflow_li">
           <div class="title">
-            <span>{{list.sales_revenue_name}}</span>
+            <span>{{list.recharge_amount_name}}</span>
           </div>
           <div class="price_info">
-            <span class="price">{{list.sales_revenue_number}}</span>
+            <span class="price">{{list.recharge_amount_number}}</span>
             <span class="unit">人</span>
           </div>
           <div class="trend_info">

@@ -125,3 +125,33 @@ export function GasCardStatistics(data){
         data
     })
 }
+
+//  用于查看数据 员工绩效--加油统计
+
+export function revenues(data){
+    return JavaRequest({
+        url:'/data/get_sales_revenue',
+        method:'post',
+        data
+    })
+}
+
+// 员工绩效-加油统计--折线图占比图
+
+export function oilingStatistics(data){
+    return PhpRequest({
+        url:'/set/oilingStatistics',
+        method:'post',
+        data
+    })
+}
+
+// 用于查看数据 员工绩效--充值统计
+
+export function recharge(data){
+    return JavaRequest({
+        url:'/data/get_recharge_statistics',
+        method:'post',
+        data
+    })
+}

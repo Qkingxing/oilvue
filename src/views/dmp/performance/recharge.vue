@@ -63,7 +63,7 @@
 					</div>
 				  </div>
 				  <div class="overflow_box">
-					 <labels></labels>
+					 <labels1 :lists='lists' v-if="show"></labels1>
 				  </div>
 				  <div class="ve-pie-view">
 					  <div class="title-obj">
@@ -172,18 +172,32 @@
 
 <script>
 import labels from './labels'
+import labels1 from './labels1'
+import {recharge} from '@/api/data'
 export default {
 	name: 'Refueling',
-	components:{labels},
+	components:{labels,labels1},
     data(){
       return{
 		  size: 'ri',
+		  lists:[],
+		  show:false
       }
+	},
+	created(){
+		this.biao()
 	},
 	methods:{
 		onChange(date, dateString) {
       		console.log(date, dateString);
     	},
+		biao(){
+			return recharge({time_status:1}).then(res =>{
+				this.lists = res.data
+				this.show = true
+			})
+		}
+
 	}
 }
 </script>
