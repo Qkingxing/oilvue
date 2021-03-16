@@ -3,18 +3,35 @@
   <div class="member">
     <div class="mainContainreBlock">
       <div class="container animated fadeIn">
-        <datas></datas>
+        <datas :arrs='arrs' v-if='show'></datas>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import { component } from 'node_modules/vue/types/umd'
+import {member} from '@/api/data'
 import datas from './datas'
 export default {
   name: 'Member',
+  data(){
+    return{
+      arrs:[],
+      show:false
+    }
+  },
   components: { datas },
+  created(){
+    this.members()
+  },
+  methods:{
+    members(){
+      return member({}).then(res =>{
+        this.arrs = res.data
+        this.show = true
+      })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

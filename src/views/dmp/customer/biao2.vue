@@ -12,10 +12,10 @@
       <div class="overflow_box" v-for="(list, index) in lists" :key="index">
         <div class="overflow_li">
           <div class="title">
-            <span>{{ list.consumer_customers_name }}</span>
+            <span>{{ list.points_issued_name }}</span>
           </div>
           <div class="price_info">
-            <span class="price">{{ list.consumer_customers_number }}</span>
+            <span class="price">{{ list.points_issued_number }}</span>
             <span class="unit">人</span>
           </div>
           <div class="trend_info">
@@ -41,42 +41,6 @@
       </div>
     </div>
 
-    <!-- <div class="head_title">
-      <span>累计数据</span>
-      <span class="sub-title">统计截止时间：2021-01-23</span>
-    </div> -->
-    <!-- <div class="box">
-      <div class="overflow_box" v-for="(a, index) in 6" :key="index">
-        <div class="overflow_li">
-          <div class="title">
-            <span>消费客户</span>
-          </div>
-          <div class="price_info">
-            <span class="price">100</span>
-            <span class="unit">人</span>
-          </div>
-          <div class="trend_info">
-            <span>较上一周期</span>
-            <span class="percente percent-up">0.00%</span>
-             <i class="trend">
-                  <a-icon type="arrow-down" />
-                </i>
-          </div>
-          <i class="more_info anticon anticon-question-circle">
-            <a-popover title="消费客户" overlayClassName="note">
-              <template slot="content">
-                <div class="" style="width: 200px">
-                  <p>统计时间内，已消费人数合计</p>
-                </div>
-              </template>
-              <span class="anticon">
-                <a-icon type="question-circle" />
-              </span>
-            </a-popover>
-          </i>
-        </div>
-      </div>
-    </div> -->
 
     <span>图表分析</span>
     <div class="head_title">
@@ -85,34 +49,7 @@
             <span style="line-height: 35px;">{{leg}}</span>
         </div> -->
         <div class="canvas-boxs">
-          <canvas_box :lineChart="lineChart" ></canvas_box>
-        </div>
-      </div>
-    </div>
-
-    <div class="pie-chart-box">
-      <div class="a">
-        <div class="div">
-          <span>{{cake1.name}}</span>
-        </div>
-        <div class="pie-chart-canvas">
-          <bing :cake1="cake1"></bing>
-        </div>
-      </div>
-      <div class="a">
-        <div class="div">
-          <span>{{cake2.name}}</span>
-        </div>
-        <div class="pie-chart-canvas">
-          <bing1 :cake2="cake2"></bing1>
-        </div>
-      </div>
-      <div class="a">
-        <div class="div">
-          <span>{{cake3.name}}</span>
-        </div>
-        <div class="pie-chart-canvas">
-          <bing2 :cake3="cake3" v-if="show"></bing2>
+          <!-- <canvas_box5 :lineChart="lineChart" ></canvas_box5> -->
         </div>
       </div>
     </div>
@@ -120,50 +57,27 @@
 </template>
 
 <script>
-import canvas_box from './canvas_box'
-import bing from './bing'
-import bing1 from './bing1'
-import bing2 from './bing2'
+import canvas_box5 from './canvas_box'
+import {customerIntegralStatistics} from '@/api/data'
 export default {
-  components: { canvas_box, bing,bing1,bing2 },
-  props: ['lists', 'arr'],
+  components: { canvas_box5 },
+  props: ['lists'],
   data() {
     return {
-      lineChart: [],
-      cake: [],
-      legends: [],
-      show: false,
-      item: [],
-      cake1: {},
-      cake2: {},
-      cake3: {},
-      items:[]
+      
     }
   },
-  watch: {
-    arr: {
-      immediate: true,
-      handler(newV, oldV) {
-        this.lineChart = newV.lineChart1
-        this.cake = newV
-        this.cake1 = newV.cake1
-        this.cake2 = newV.cake2
-        this.cake3 = newV.cake3
-        this.item.push(this.cake1,this.cake2,this.cake3)
-        let arr = []
-        let arr1 = []
-        let arr2 = []
-        arr.push(this.cake1)
-        arr1.push(this.cake2)
-        arr2.push(this.cake3)
-        this.items.push(arr,arr1,arr2)
-        this.show = true
-      },
-      deep: true,
-    },
-    
+   created(){
+        this.biao()
+   },
+   methods:{
+       biao(){
+           return customerIntegralStatistics({time_type:1}).then(res =>{
+               console.log(res)
+           })
+       }
+   }
 
-  },
 }
 </script>
 
@@ -173,7 +87,6 @@ export default {
     position: relative;
     margin: 16px 0 8px 0;
     line-height: 16px;
-    border: 1px solid #eaeaf4;
     width: 100%;
     span {
       font-size: 14px;

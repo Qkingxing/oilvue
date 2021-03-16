@@ -1,51 +1,52 @@
 <template>
-  <div id="canvas_box" ref="canvas_box"></div>
+
+    <div id="canvas_box1" style="width:100%" ref="canvas_box1"></div>
+
+  
 </template>
 
 <script>
 import { Chart } from '@antv/g2'
 export default {
-  props: ['lineChart'],
+  props: ['arrBiao'],
   data() {
     return {
       lists: [],
-      data: [],
+    //   data: [],
     }
   },
   mounted() {
     this.biao3()
   },
   watch: {
-    lineChart: {
+    arrBiao: {
       immediate: true,
       handler(newObj, index) {
-        console.log(newObj)
-        this.lists = newObj
-
-        for (let i = 0; i < newObj.series.length; i++) {
-          for (let j = 0; j < newObj.xAxis.length; j++) {
-            let item = {}
-            item.month = newObj.xAxis[j]
-            item.city = newObj.legend[i]
-            item.temperature = newObj.series[i][j]
-            this.data.push(item)
-          }
-        }
+        this.lists = newObj.increase
       },
       deep: true,
     },
   },
   methods: {
     biao3() {
+    let data = []
+      for (let i = 0; i < this.lists.series.length; i++) {
+        for (let j = 0; j < this.lists.xAxis.length; j++) {
+          let item = {}
+          item.month = this.lists.xAxis[j]
+          item.city = this.lists.legend[i]
+          item.temperature = this.lists.series[i][j]
+          data.push(item)
+        }
+      }
+      console.log(data)
       const chart = new Chart({
-        container: this.$refs.canvas_box,
+        container: this.$refs.canvas_box1,
         autoFit: true,
         height: 500,
       })
 
-      
-      chart.data(this.data)
-    
+      chart.data(data)
       chart.scale({
         month: {
           range: [0, 1],
@@ -79,7 +80,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-#canvas_box {
+#canvas_box1 {
   position: relative;
   width: 100%;
   height: 400px;

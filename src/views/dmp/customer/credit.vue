@@ -10,7 +10,7 @@
 				  <shujian></shujian>
 			  </div>
 			  <div class="content">
-				  <biao></biao>
+				  <biao2 :lists='lists' v-if="show"></biao2>
 			  </div>
 		  </div>
       </div>
@@ -19,15 +19,28 @@
 
 <script>
 import shujian from './shujian'
-import biao from './biao'
+import biao2 from './biao2'
+import {statistics} from '@/api/data'
 export default {
-	components:{shujian,biao},
+	components:{shujian,biao2},
     name: 'Credit',
     data(){
         return{
-
+			lists:[],
+			show:false
         }
-    }
+    },
+	mounted(){
+		this.biao()
+	},
+	methods:{
+		biao(){
+			return statistics({}).then(res =>{
+				this.lists = res.data
+				this.show = true
+			})
+		}
+	}
 }
 </script>
 <style lang="scss" scoped>

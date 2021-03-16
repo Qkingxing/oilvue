@@ -57,3 +57,52 @@ export function customerStatistics(data){
         data
     })
 }
+
+// 客户会员
+
+export function member(data){
+    return JavaRequest({
+        url:'/data/get_Total_member_data',
+        method:'post',
+        data
+    })
+}
+
+// 客户会员 折线图和占比图
+
+export function customerMemberStatistic(data){
+    return PhpRequest({
+        url:'/set/customerMemberStatistic',
+        method:'post',
+        data
+    })
+}
+
+// 客户车辆 折线图
+export function carinfo(data){
+    return PhpRequest({
+        url:'/set/carinfo',
+        method:'post',
+        data
+    })
+}
+
+// 客户积分 
+
+export function statistics(data){
+    return JavaRequest({
+        url:'/data/get_points_statistics',
+        method:'post',
+        data
+    })
+}
+
+// 客户积分 折线图
+
+export function customerIntegralStatistics(data){
+    return PhpRequest({
+        url:'/set/customerIntegralStatistics',
+        method:'post',
+        data
+    })
+}

@@ -54,11 +54,11 @@
       <div class="headr_char">
         <div class="chart_treema_box">
           <span class="span">认证类型占比</span>
-          这是图
+           <canvas_box2 :arrBiao='arrBiao'></canvas_box2>
         </div>
         <div class="chart_line_box">
           <span class="span">新增认证人数折线图</span>
-          这是图
+          <canvas_box3 :arrBiao='arrBiao'></canvas_box3>
         </div>
       </div>
       <div class="head_title">
@@ -76,7 +76,9 @@
           </a-popover>
         </div>
       </div>
-      <div class="draw_chart_line_center">这是图</div>
+      <div class="draw_chart_line_center">
+           <canvas_box4 :arrBiao='arrBiao'></canvas_box4>
+      </div>
       <div class="head_title">
         <div class="title_top_size">
           <div class="">
@@ -107,7 +109,12 @@
 </template>
 
 <script>
+import canvas_box2 from './canvas_box2'
+import canvas_box3 from './canvas_box3'
+import canvas_box4 from './canvas_box4'
 export default {
+  props:['arrBiao'],
+  components:{canvas_box2,canvas_box3,canvas_box4},
   data() {
     return {
       tabList: [
