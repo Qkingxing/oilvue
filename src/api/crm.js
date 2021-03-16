@@ -186,3 +186,19 @@ export function gasfillingcardsave (data) {
     data
   })
 }
+// 删除加油卡
+export function deleteCard (id) {
+  return PhpRequest({
+    url: '/user/carddel',
+    method: 'post',
+    data: {id}
+  })
+}
+// 启用、禁用加油卡
+export function changeCardStatus (data) {
+  return PhpRequest({
+    url: '/user/cardopensave',
+    method: 'post',
+    data
+  })
+}

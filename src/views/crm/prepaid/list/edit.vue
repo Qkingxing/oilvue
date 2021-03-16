@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <div class="main-content">
+      <div class="main-content" v-loading="loading">
         <div class="mainContent-box">
           <div class="mainContent-scroll" :ittfm="current">
             <div class="mainContent-block">
@@ -120,7 +120,7 @@
                 </a-form>
 
                 <div class="btn-box">
-                  <a-button type="info" size="large">
+                  <a-button type="info" size="large" @click="back">
                     取消
                   </a-button>
                   <a-button @click="current=1" type="primary" size="large" style="margin-left: 8px;">
@@ -143,7 +143,7 @@
                       <div class="preview-card">
                         <img :src="form.card_style==null?'https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/04/16/14/a1a5831b2089d7d3e1a19a9e312d.png':form.card_style" alt="预览图片">
                         <div class="preview-card-name">{{form.card_name}}</div>
-                        <div class="preview-available">限LNG、CNG、98(乙醇)、95(会员)、95(乙醇)、92(会员)、92(乙醇)、0(乙醇)、-30、-10#会员价</div>
+                        <div class="preview-available">{{oilText}}</div>
                         <div class="preview-price">
                           <div class="preview-price-type">￥</div><span>0.00</span>
                         </div>
@@ -195,7 +195,7 @@
                   </a-form-item>
 
                   <a-form-item label="充值优惠" :colon="false">
-                    <a-radio-group v-model="form.type" class="noMargin">
+                    <a-radio-group v-model="form.type" class="noMargin" @change="onChangeType">
                       <a-radio :value="1"> 充值赠送 </a-radio>
                       <a-radio :value="2"> 充值立减 </a-radio>
                       <a-radio :value="3"> 充值折扣 </a-radio>
@@ -213,7 +213,7 @@
                       <div class="noDiscountContent">
                         <div 
                           class="noDiscountItem"
-                          v-for="(item, index) in form.giverule"
+                          v-for="(item, index) in editGiverule"
                           :key="index">
                           <a-input v-model="item.refillmoney" placeholder="金额" />
                         </div>
@@ -225,7 +225,7 @@
                       <div class="preferentialTemplateHeader">赠送规则</div>
                       <div 
                         class="rechargeRule"
-                        v-for="(item, index) in form.giverule"
+                        v-for="(item, index) in editGiverule"
                         :key="index">
                         <div class="rechargeRuleContent">
                           <span style="padding: 0px 10px 0px 0px;">充值满</span>
@@ -251,10 +251,20 @@
                     </div>
                   </a-form-item>
                   <a-form-item label="首次多赠" :colon="false" v-if="form.type===1">
-                    <a-radio-group >
-                      <a-radio :value="2"> 关 </a-radio>
+                    <a-radio-group v-model="isFirstGive">
+                      <a-radio :value="0"> 关 </a-radio>
                       <a-radio :value="1"> 开 </a-radio>
                     </a-radio-group>
+                  </a-form-item>
+
+                  <a-form-item label=" " :colon="false" v-if="isFirstGive">
+                    <div class="preferentialTemplate" style="display: flex; align-items: center; padding-top: 4px; padding-bottom: 3px;">
+                      <span>首次充值多赠送</span>
+                      <a-form-item label="" :colon="false" class="limit_formitem gas-card-setting-more-send-input" style="padding-top: 36px;">
+                        <a-input v-model="form.first_give" placeholder="整数" class="limit_input" style="margin: 0px 8px;"/>
+                      </a-form-item>
+                      <span style="margin-left:15px;">元</span>
+                    </div>
                   </a-form-item>
 
                 </a-form>
@@ -263,7 +273,7 @@
                   <a-button @click="current=0" type="info" size="large">
                     上一步
                   </a-button>
-                  <a-button @click="current=2" type="primary" size="large" style="margin-left: 8px;">
+                  <a-button @click="save" type="primary" size="large" style="margin-left: 8px;">
                     保存
                   </a-button>
                 </div>
@@ -283,7 +293,7 @@
                       <div class="preview-card">
                         <img :src="form.card_style==null?'https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/04/16/14/a1a5831b2089d7d3e1a19a9e312d.png':form.card_style" alt="预览图片">
                         <div class="preview-card-name">{{form.card_name}}</div>
-                        <div class="preview-available">限LNG、CNG、98(乙醇)、95(会员)、95(乙醇)、92(会员)、92(乙醇)、0(乙醇)、-30、-10#会员价</div>
+                        <div class="preview-available">{{oilText}}</div>
                         <div class="preview-price">
                           <div class="preview-price-type">￥</div><span>0.00</span>
                         </div>
@@ -295,12 +305,12 @@
                           <div class="preview-price-input">请输入充值金额</div>
                         </div>
 
-                        <div class="preview-form-price-type" v-if="form.giverule.length">
+                        <div class="preview-form-price-type" v-if="editGiverule.length">
                           <div class="price-type-title">输入充值金额</div>
                           <div class="price-type-list">
                             <div 
                               class="price-type-item"
-                              v-for="(item,index) in form.giverule"
+                              v-for="(item,index) in editGiverule"
                               :key="index">
                               <div class="price-type-item-content">
                                 <div class="price-type-number" v-show="item.refillmoney!=''">
@@ -351,8 +361,9 @@
 </template>
 
 <script>
+// import _ from 'lodash'
 import {cardTypeList} from '@/utils/select'
-import { getSitelist } from '@/api/crm'
+import { getSitelist,gasfillingcardsave } from '@/api/crm'
 import { getSiteoillist } from '@/api/oil'
 import { mapGetters } from 'vuex'
 
@@ -412,10 +423,10 @@ export default {
         is_open: 2,
         // 是否开启自定义金额，1开，2关
         oils: [], // 支持的油品
-        type: 1,
+        type: 0,
         // 所属类型 1是充值赠送 2是充值立减 3是充值折扣 0是没有优惠
         giverule: [
-          { refillmoney: '', givemoney: '' }
+          { refillmoney: null, givemoney: null }
         ],// 优惠条件
         first_give: 0,// 首充
       },
@@ -424,36 +435,56 @@ export default {
       siteList: [], // 油站集合
       isAutoMoney: 0,// 是否开启自定义金额
       oilList: [], // 油品合集
+      isFirstGive: 0, // 是否开启首充
+      editGiverule: [
+        { refillmoney: null, givemoney: null }
+      ],
+      loading: false,
 
     }
   },
   props:{
     pageType:{
       type: String
+    },
+    formData:{
+      type: Object,
+      default: null
     }
   },
   computed:{
-    ...mapGetters(['site_id', 'userInfo'])
+    ...mapGetters(['site_id', 'userInfo']),
+    oilText(){
+      let oilsText = '限'
+      this.form.oils.forEach(e=>{
+        if (this.oilList[e]) {
+          oilsText += `${this.oilList[e].oils_name}、`
+        }
+      })
+      if (this.form.oils.length===0) {
+        oilsText = ''
+      }
+      if (this.form.oils.length===1) {
+        oilsText = oilsText.replace('、','')
+      }
+      // console.log(oilsText)
+      return oilsText
+    }
   },
   created(){
     this.pageInit()
-    console.log(this.userInfo)
+    
   },
   methods:{
     // 初始化
     async pageInit(){
+      let that = this
+      this.loading = true
       // 获取可用油站列表
       let res = await getSitelist({sreach:''})
       if(res){
         this.siteList = res.data.data
       }
-      // 查找当前油站
-      let index = this.siteList.findIndex((e,i)=>{
-        return e.id === this.site_id
-      })
-      // console.log(index)
-      this.form.site[0] = index
-
       // 油品下拉
       let oilRes = await getSiteoillist()
       // console.log(oilRes.data.data)
@@ -461,34 +492,176 @@ export default {
         this.oilList = oilRes.data.data
       }
 
-      
-
       if (this.pageType==='creat') {
         this.form.card_style = this.templateList[0]
+        // 查找当前油站
+        let index = this.siteList.findIndex((e,i)=>{
+          return e.id === this.site_id
+        })
+        // console.log(index)
+        this.form.site[0] = index
       }
+      if (this.pageType==='edit') {
+        console.log(this.formData)
+        this.form.id = this.formData.id
+        this.form.card_name = this.formData.card_name
+
+        // 查找当前油站
+        let site = []
+        this.formData.site_name.forEach((fe,fi)=>{
+          let index = that.siteList.findIndex((ce,ci)=>{
+            return ce.id === fe.site_id
+          })  
+          site.push(index)
+        })
+        this.form.site = site
+
+        this.form.card_type = this.formData.card_type || 1
+
+        if (this.formData.card_style) {
+          this.form.card_style = this.formData.card_style
+          let index = this.templateList.findIndex(e=>{
+            return e === that.formData.card_style
+          })
+          // 没找到背景图，证明是自定义的
+          if (index===(-1)) {
+            this.cardCovertype = 2
+          }
+          // console.log(index)
+        }
+
+        this.form.card_rule = this.formData.card_rule
+        this.form.min_refill = this.formData.min_refill
+        this.form.max_refill = this.formData.max_refill
+        this.form.is_open = this.formData.is_open || 2
+
+        if (this.formData.oilsinfo.length) {
+          let oils = []
+          // 查找油品
+          this.formData.oilsinfo.forEach((fe,fi)=>{
+            let index = that.oilList.findIndex((ce,ci)=>{
+              return ce.id === fe.oils_id
+            })  
+            oils.push(index)
+          })
+          this.form.oils = oils
+        }
+
+        this.form.type = this.formData.type
+        this.form.giverule = this.formData.giveruleinfo
+        this.editGiverule = _.cloneDeep(this.form.giverule)
+
+        this.form.first_give = this.formData.first_give || 0
+        this.isFirstGive = this.formData.first_give?1:0
+
+
+      }
+      this.loading = false
+    },
+    // 保存
+    save(){
+      let form = {}
+      console.log(this.form)
+      // 可用油站参数拼接
+      let site = []
+      this.form.site.forEach(e=>{
+        if (this.siteList[e]) {
+          site.push({
+            site_id: this.siteList[e].id
+          })
+        }
+      })
+      // 可用油品
+      let oils = []
+      this.form.oils.forEach(e=>{
+        if (this.oilList[e]) {
+          oils.push({
+            oils_id: this.oilList[e].id
+          })
+        }
+      })
+      // console.log(oils)
+      let giverule = []
+      
+      this.editGiverule.forEach(e=>{
+        if (this.form.type===0) {
+          e.givemoney = 0
+        }
+        if (e.refillmoney) {
+          giverule.push(e)
+        }
+      })
+      
+
+      form = {
+        card_name: this.form.card_name,
+        //[string]	是	油卡名称		
+        card_type: this.form.card_type,
+        //[string]	是	油卡类型 1是个人 2是车队		
+        card_style: this.form.card_style,	
+        //[string]	是	油卡背景图片		
+        card_rule: this.form.card_rule,
+        //[string]	是	油卡简介		
+        is_open: this.form.is_open,
+        //[string]	是	是否开启 1是开启 2是关闭		
+        first_give: this.form.first_give || 0,
+        //[string]	是	首冲 如果是关闭的话 给0
+        site, // 可用油站
+        min_refill: this.form.min_refill,
+        //[string]	是	最小充值金额		
+        max_refill: this.form.max_refill,
+        //[string]	是	最大充值金额		
+        site_id: this.site_id,
+        //[string]	是	所属油站
+        oils, // 支持的油品
+        type: this.form.type,//所属类型 1是充值赠送 2是充值立减 3是充值折扣 0是没有优惠
+        giverule,
+      }
+      if (this.pageType === 'edit') {
+        form.id = this.form.id
+      }
+
+      console.log(form)
+      gasfillingcardsave(form).then((res)=>{
+        console.log(res)
+        this.current = 2
+      })
+
+
+
+    },
+    // 变更优惠规则时
+    onChangeType(){
+      console.log(this.form.type)
+      if (this.form.type!==0&&this.form.giverule.length===0) {
+        this.editGiverule = { refillmoney: '', givemoney: '' }
+      }else{
+        this.editGiverule = _.cloneDeep(this.form.giverule)
+      }
+      
     },
     // 删除优惠规则
     delGiverule(index){
       let that = this
 
-      if (this.form.type!==0&&this.form.giverule.length===1) {
+      if (this.form.type!==0&&this.editGiverule.length===1) {
         return
       }
       if (index) {
-        this.form.giverule.splice(index,1)
+        this.editGiverule.splice(index,1)
       }
       if (index===false) {
-        this.form.giverule.splice(that.form.giverule.length-1,1)
+        this.editGiverule.splice(that.editGiverule.length-1,1)
       }
     },
     // 增加优惠规则
     addGiverule(){
-      if (this.form.giverule.length===9) {
+      if (this.editGiverule.length===9) {
         this.$message.error('优惠规则最多添加9条！')
         return
       }
       let obj = { refillmoney: '', givemoney: '' }
-      this.form.giverule.push(obj)
+      this.editGiverule.push(obj)
     },
     // 上传图片回调
     handleChange(info){
@@ -845,6 +1018,18 @@ export default {
                 line-height: 16px;
               }
             }
+          }
+        }
+        .preferentialTemplate{
+          width: 572px;
+          border: 1px solid #eaeaea;
+          padding: 24px;
+          color: #1e1e28;
+          margin-top: 16px;
+          .gas-card-setting-more-send-input{
+            padding-top: 17px!important;
+            width: 104px;
+            margin-bottom: 16px;
           }
         }
         .create_success{

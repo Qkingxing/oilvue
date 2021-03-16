@@ -15,6 +15,24 @@
       <!-- 表格 -->
       <div class="showDataForTable">
         <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData">
+          <div slot="site_name" slot-scope="text" class="showDataForTableForStationDiv">
+            <template>
+              <span v-if="text.length==1">{{text[0].site_name}}</span>
+              <a-popover title="可用油站" >
+                <template slot="content">
+                  <p
+                    v-for="(item,index) in text"
+                    :key="index">{{item.site_name}}</p>
+                </template>
+                <span v-if="text.length>1">
+                  <span class="showDataForTableForStationSpan">{{text.length}}</span>
+                  <span>个站可用</span>
+                </span>
+              </a-popover>
+              
+
+            </template>
+          </div>
           <span slot="card_type" slot-scope="text">
             <template>
               {{cardTypeList[text].label}}
@@ -22,7 +40,14 @@
           </span>
           <span slot="oilsinfo" slot-scope="text">
             <template>
-              已选{{text.length}}个
+              <a-popover title="生效油品" placement="right">
+                <template slot="content">
+                  <p
+                    v-for="(item,index) in text"
+                    :key="index">{{item.oils_name}}</p>
+                </template>
+                <span>已选{{text.length}}个</span>
+              </a-popover>
             </template>
           </span>
           <span slot="refill" slot-scope="text, record">
@@ -32,29 +57,37 @@
           </span>
           <div slot="givemoney" slot-scope="text, record">
             <template>
-              <p 
-                v-for="(item, index) in record.giveruleinfo"
-                :key="index">
-                {{item.refillmoney}}元
-              </p>
+              <div v-if="record.giveruleinfo.length">
+                <p 
+                  v-for="(item, index) in record.giveruleinfo"
+                  :key="index">
+                  {{item.refillmoney}}元
+                </p>
+              </div>
+              <div v-else>-</div>
+              
             </template>
           </div>
           <div slot="giveruleinfo" slot-scope="text, record">
             <template>
-              <p 
-                v-for="(item, index) in record.giveruleinfo"
-                :key="index">
-                充值{{item.refillmoney}}元{{giveMoneyTypeList[item.type].label}}{{item.givemoney}}元
-              </p>
-              <p v-if="!record.giveruleinfo.length">无优惠</p>
+              <div v-if="record.giveruleinfo.length&&record.type!=0">
+                <p 
+                  v-for="(item, index) in record.giveruleinfo"
+                  :key="index">
+                  充值{{item.refillmoney}}元{{giveMoneyTypeList[item.type].label}}{{item.givemoney}}元
+                </p>
+              </div>
+              <div v-if="record.giveruleinfo.length==0&&record.type==0">-</div>
+              
+              <p v-if="record.type==0">无优惠</p>
             </template>
           </div>
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)" style="margin: 0 4px;">编辑</a>
-              <a @click="delTag(record)" style="margin: 0 4px;" v-if="record.card_status">禁用</a>
-              <a @click="delTag(record)" style="margin: 0 4px;" v-else>启用</a>
-              <a @click="delTag(record)" style="margin: 0 4px;">删除</a>
+              <a @click="editCard(record)" style="margin: 0 4px;">编辑</a>
+              <a @click="changeCardStatus(record)" style="margin: 0 4px;" v-if="record.card_status">禁用</a>
+              <a @click="changeCardStatus(record)" style="margin: 0 4px;" v-else>启用</a>
+              <a @click="deleteCard(record)" style="margin: 0 4px;">删除</a>
 
             </template>
           </span>
@@ -62,6 +95,7 @@
       </div>
     </a-layout-content>
     <PrepaidEdit v-if="pageType == 'creat'" :pageType="pageType" @back="pageType='list'"/>
+    <PrepaidEdit v-if="pageType == 'edit'" :formData="cardItem" :pageType="pageType" @back="pageType='list'"/>
   </a-layout>
 </template>
 
@@ -69,7 +103,7 @@
 import { STable } from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
-import { getGasfillingcardlist } from '@/api/crm'
+import { getGasfillingcardlist, deleteCard, changeCardStatus } from '@/api/crm'
 import {cardTypeList,giveMoneyTypeList} from '@/utils/select'
 
 export default {
@@ -93,7 +127,8 @@ export default {
         },
         {
           title: '可用油站',
-          dataIndex: 'site_name'
+          dataIndex: 'site_name',
+          scopedSlots: { customRender: 'site_name' }
         },
         {
           title: '卡类型',
@@ -154,7 +189,8 @@ export default {
           onChange: this.onSelectChange
         }
       },
-      optionAlertShow: false
+      optionAlertShow: false,
+      cardItem: null,
     }
   },
   created () {
@@ -170,6 +206,43 @@ export default {
           return new Promise((resolve, reject) => {
             resolve()
           }).catch(() => console.log('Oops errors!'))
+        },
+        onCancel () {}
+      })
+    },
+    // 启用，禁用
+    changeCardStatus(item){
+      // console.log(item.card_status)
+      let params = {
+        id: item.id,
+        card_status: item.card_status?0:1
+      }
+      changeCardStatus(params).then(()=>{
+        if (item.card_status) {
+          this.$message.success('禁用成功')
+        }else{
+          this.$message.success('启用成功')
+        }
+        this.$refs.table.refresh()
+      })
+    },
+    // 编辑加油卡
+    editCard(item){
+      this.pageType = 'edit'
+      this.cardItem = item
+    },
+    // 删除加油卡
+    deleteCard (item) {
+      let that = this
+      console.log(item)
+      this.$confirm({
+        title: '操作提示',
+        content: '删除无法恢复，是否确认删除？',
+        onOk () {
+          deleteCard(item.id).then(()=>{
+            that.$message.success('删除成功')
+            that.$refs.table.refresh()
+          })
         },
         onCancel () {}
       })
@@ -262,6 +335,12 @@ export default {
 }
 .select-all {
   margin-left: 16px;
+  cursor: pointer;
+}
+.showDataForTableForStationSpan{
+  color: #37f;
+}
+.showDataForTableForStationDiv{
   cursor: pointer;
 }
 </style>
