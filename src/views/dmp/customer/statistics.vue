@@ -3,7 +3,7 @@
   <div class="statistics">
       <div class="mainContainreBlock">
 		<div class="container animated fadeIn">
-			<tab></tab>
+			<tab :lists='lists' v-if="show"></tab>
       	</div>
 	  </div>
 	 
@@ -11,15 +11,28 @@
 </template>
 
 <script>
+import {card} from '@/api/data'
 import tab from './tab'
 export default {
 	name: 'Cstatistics',
 	components:{tab},
     data(){
       return{
-
+		  lists:[],
+		  show:false
       }
-    }
+    },
+	created(){
+		this.biao()
+	},
+	methods:{
+		biao(){
+			return card({}).then(res =>{
+				this.lists = res.data
+				this.show = true
+			})
+		}
+	}
 }
 </script>
 

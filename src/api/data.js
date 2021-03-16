@@ -106,3 +106,22 @@ export function customerIntegralStatistics(data){
         data
     })
 }
+
+//  客户 客户--加油卡总数据
+
+export function card(data){
+    return JavaRequest({
+        url:'/data/get_Total_fuel_card',
+        method:'post',
+        data
+    })
+}
+// 客户-加油卡统计--折线图占比图
+
+export function GasCardStatistics(data){
+    return PhpRequest({
+        url:'/set/GasCardStatistics',
+        method:'post',
+        data
+    })
+}

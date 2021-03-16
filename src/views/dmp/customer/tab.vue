@@ -47,7 +47,7 @@
           <span class="text">加油卡总数据</span>
         </div>
         <div class="overflow_box">
-            <liebiao></liebiao>
+            <liebiao :lists='lists'></liebiao>
         </div>
       </div>
     </div>
@@ -62,6 +62,7 @@
 import liebiao from './liebiao'
 export default {
     components:{liebiao},
+    props:['lists'],
   data() {
     return {
       tabList: [

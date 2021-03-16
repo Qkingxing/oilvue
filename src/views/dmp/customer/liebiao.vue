@@ -1,18 +1,18 @@
 <template>
   <div class="biao">
     <div class="box">
-      <div class="overflow_box" v-for="(a, index) in 6" :key="index">
+      <div class="overflow_box" v-for="(list, index) in lists" :key="index">
         <div class="overflow_li">
           <div class="title">
-            <span>消费客户</span>
+            <span>{{list.top_up_order_name}}</span>
           </div>
           <div class="price_info">
-            <span class="price">100</span>
+            <span class="price">{{list.top_up_order_number}}</span>
             <span class="unit">人</span>
           </div>
           <div class="trend_info">
             <span>较上一周期</span>
-            <span class="percente percent-up">0.00%</span>
+            <span class="percente percent-up">{{list.day_before}}</span>
             <i class="trend">
               <a-icon type="arrow-down" />
             </i>
@@ -39,7 +39,7 @@
         <a-popover placement="bottom">
           <template slot="content">
             <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-              <span style="cursor: pointer">消费金额趋势</span>
+              <span @click="bba" style="cursor: pointer">消费金额趋势</span>
             </div>
           </template>
 
@@ -47,26 +47,56 @@
         </a-popover>
       </div>
     </div>
-    <div class="trend-box">
+    <div class="trend-box" v-if="a == 1">
       <div class="canvas-boxs">
-        <canvas_box></canvas_box>
+        <canvas_box6 :lineChart1='lineChart1' v-if="show"></canvas_box6>
+      </div>
+    </div>
+    <div class="trend-box" v-if="a == 2">
+      <div class="canvas-boxs">
+        <canvas_box7 :lineChart2='lineChart2' v-if="show"></canvas_box7>
       </div>
     </div>
     <div class="pie-chart-box">
-      <div class="aac">消费占比</div>
+      <bing8 :cake='cake' v-if="show"></bing8>
+      <span >消费占比</span>
     </div>
   </div>
 </template>
 
 <script>
-import canvas_box from './canvas_box'
+import {GasCardStatistics} from '@/api/data'
+import canvas_box6 from './canvas_box6'
+import canvas_box7 from './canvas_box7'
+import bing8 from './bing8'
 export default {
-  components: { canvas_box },
+  components: { canvas_box6,canvas_box7,bing8 },
+  props:['lists'],
   data() {
-    return {}
+    return {
+      a:1,
+      lineChart1:{},
+      lineChart2:{},
+      cake:{},
+      show:false
+    }
+  },
+  created(){
+    this.biao()
   },
   methods: {
-    income() {},
+     biao(){
+       return GasCardStatistics({time_type:1}).then(res =>{
+         this.lineChart1 = res.data.lineChart1
+         this.lineChart2 = res.data.lineChart2
+         this.cake = res.data.cake1
+         this.show = true
+         console.log(res)
+       })
+     },
+     bba(){
+       this.a = 2
+     }
   },
 }
 </script>
@@ -128,6 +158,7 @@ export default {
        width: 100%;
     display: flex;
     position: relative;
+    flex-wrap: wrap;
   }
   .overflow_box {
     width: 300px;
@@ -198,6 +229,7 @@ export default {
     .canvas-boxs {
       user-select: none;
       position: relative;
+      width: 100%;
       .canvas-boxs {
         width: 68%;
         height: 400px;
@@ -210,13 +242,7 @@ export default {
     grid-gap: 8px;
     margin-top: 16px;
     .aac {
-      min-width: 670px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 0 6px 0;
-      border-radius: 2px;
-      border: 1px solid;
-      height: 400px;
+      
     }
   }
 }
