@@ -59,8 +59,9 @@
     </div>
     <div class="pie-chart-box">
       <bing8 :cake='cake' v-if="show"></bing8>
-      <span >消费占比</span>
+      
     </div>
+    <div  style="width:200px;margin: 0 259px;text-align: center;">消费类型占比</div>
   </div>
 </template>
 
@@ -241,9 +242,10 @@ export default {
     grid-template-columns: 1fr 1fr;
     grid-gap: 8px;
     margin-top: 16px;
-    .aac {
+    
+    // .aac {
       
-    }
+    // }
   }
 }
 </style>

@@ -42,29 +42,48 @@
     </div>
 
 
-    <span>图表分析</span>
-    <div class="head_title">
-      <div class="trend-box">
-        <!-- <div style="width:200px;margin: 0 auto;text-align: center;" v-for="(leg,index) in legends" :key="index">
-            <span style="line-height: 35px;">{{leg}}</span>
-        </div> -->
-        <div class="canvas-boxs">
-          <!-- <canvas_box5 :lineChart="lineChart" ></canvas_box5> -->
-        </div>
+    <span>趋势图</span>
+       <div class="head_title">
+      <span class="text">消费金额趋势</span>
+      <div class="xiaofei">
+        <a-popover placement="bottom">
+          <template slot="content">
+            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+              <span @click="bba" style="cursor: pointer">消费金额趋势</span>
+            </div>
+          </template>
+
+          <div class="qie">切换</div>
+        </a-popover>
+      </div>
+    </div>
+    <div class="trend-box" v-if="a == 1">
+      <div class="canvas-boxs">
+        <canvas_box8 :lineChart1='lineChart1' v-if='show'></canvas_box8>
+      </div>
+    </div>
+    <div class="trend-box" v-if="a == 2">
+      <div class="canvas-boxs">
+        <canvas_box9 :lineChart2='lineChart2' v-if='show'></canvas_box9>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import canvas_box8 from './canvas_box8'
+import canvas_box9 from './canvas_box9'
 import canvas_box5 from './canvas_box'
 import {customerIntegralStatistics} from '@/api/data'
 export default {
-  components: { canvas_box5 },
+  components: { canvas_box5 ,canvas_box8,canvas_box9},
   props: ['lists'],
   data() {
     return {
-      
+      lineChart1:{},
+      lineChart2:{},
+      show:false,
+      a:1
     }
   },
    created(){
@@ -73,8 +92,14 @@ export default {
    methods:{
        biao(){
            return customerIntegralStatistics({time_type:1}).then(res =>{
+             this.lineChart1 = res.data.lineChart1
+             this.lineChart2 = res.data.lineChart2
+             this.show = true
                console.log(res)
            })
+       },
+       bba(){
+         this.a = 2
        }
    }
 
@@ -88,6 +113,19 @@ export default {
     margin: 16px 0 8px 0;
     line-height: 16px;
     width: 100%;
+     .xiaofei {
+      position: absolute;
+      left: 97px;
+      top: -22px;
+      span {
+        position: absolute;
+        font-size: 12px;
+        left: 100px;
+      }
+      .qie{
+        margin-top: 21px;
+      }
+    }
     span {
       font-size: 14px;
       color: #040a46;
