@@ -246,7 +246,7 @@
                       <div class="noDiscountContent">
                         <div 
                           class="noDiscountItem"
-                          v-for="(item, index) in editGiverule"
+                          v-for="(item, index) in form.editGiverule"
                           :key="index">
                           <a-input 
                             v-model="item.refillmoney" 
@@ -259,25 +259,25 @@
                       </div>
                     </div> 
 
-                    <a-form-model 
-                      ref="editGiverule"
-                      :model="editGiverule" 
+                    <div
                       class="preferentialTemplate" 
                       v-else>
 
                       <div class="preferentialTemplateHeader">赠送规则</div>
                       <div
                         class="rechargeRule"
-                        v-for="(item, index) in editGiverule"
+                        v-for="(item, index) in form.editGiverule"
                         :key="index">
                         <div class="rechargeRuleContent">
                           <span style="padding: 0px 10px 0px 0px;">充值满</span>
                           <a-form-model-item 
                             label="" 
                             :colon="false" 
-                            class="limit_formitem">
+                            class="limit_formitem"
+                            :prop="'editGiverule.' + index + '.refillmoney'"
+                            :rules="refillmoneyRule">
 
-                            <a-input v-model="item.refillmoney" placeholder="金额" />
+                            <a-input v-model="item.refillmoney" placeholder="金额" type="number" />
                           </a-form-model-item>
 
                           <span style="padding-left: 0.5rem;">元，</span>
@@ -288,20 +288,26 @@
                           <a-form-model-item 
                             label="" 
                             :colon="false" 
-                            class="limit_formitem">
+                            class="limit_formitem"
+                            :prop="'editGiverule.' + index + '.givemoney'"
+                            :rules="{
+                              required: true,
+                              message: '请输入合法金额！',
+                              trigger: 'blur',
+                            }">
 
-                            <a-input v-model="item.givemoney" placeholder="金额" />
+                            <a-input v-model="item.givemoney" placeholder="金额" type="number"/>
                           </a-form-model-item>
 
                           <span style="padding-left: 0.5rem;" v-if="form.type===3">折</span>
                           <span style="padding-left: 0.5rem;" v-else>元</span>
                           <div class="operationBox">
                             <a-icon @click="delGiverule(index)" class="reduceRuleBlock iconfont" type="minus-circle" />
-                            <a-icon @click="addGiverule" class="reduceRuleBlock iconfont" type="plus-circle" v-if="index===editGiverule.length-1"/>
+                            <a-icon @click="addGiverule" class="reduceRuleBlock iconfont" type="plus-circle" v-if="index===form.editGiverule.length-1"/>
                           </div>
                         </div>
                       </div>
-                    </a-form-model>
+                    </div>
 
                   </a-form-model-item>
                   <a-form-model-item label="首次多赠" :colon="false" v-if="form.type===1">
@@ -359,25 +365,32 @@
                           <div class="preview-price-input">请输入充值金额</div>
                         </div>
 
-                        <div class="preview-form-price-type" v-if="editGiverule.length">
+                        <div class="preview-form-price-type" v-if="form.editGiverule.length">
                           <div class="price-type-title">输入充值金额</div>
                           <div class="price-type-list">
                             <div 
                               class="price-type-item"
-                              v-for="(item,index) in editGiverule"
+                              v-for="(item,index) in form.editGiverule"
                               :key="index">
                               <div class="price-type-item-content">
-                                <div class="price-type-number" v-show="item.refillmoney!=''">
+                                <div class="price-type-number" v-show="item.refillmoney&&item.refillmoney!=''">
                                   {{item.refillmoney}}
                                   <span style="font-size: 10px; font-weight: 600; line-height: 14px;">元</span>
                                 </div>
-                                <div class="price-type-preferential" v-show="item.givemoney!=''">
-                                  <span>赠送</span>
-                                  <span>{{item.givemoney}}</span>
+                                <div class="price-type-preferential" v-show="item.givemoney&&item.givemoney!=''">
+                                  <span v-if="form.type===1">赠送</span>
+                                  <span v-if="form.type===2">立减</span>
+                                  <span v-if="form.type===3">优惠</span>
+                                  <span v-if="form.type===3">{{computZhe(item.refillmoney,item.givemoney)}}</span>
+                                  <span v-else>{{item.givemoney}}</span>
                                   <span>元</span>
                                 </div>
-                                <span v-show="item.refillmoney==''">未输入</span>
-
+                                <span v-show="!item.refillmoney||item.refillmoney==''">未输入</span>
+                                <img 
+                                  v-if="form.type===3&&item.givemoney&&item.givemoney!=''"
+                                  src="https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/04/17/11/0eb00733b7fe29f03d2ab2c07cfb.png" 
+                                  style="position: absolute; width: 38px; height: 37px; top: 0px; right: 0px;">
+                                <div v-if="form.type===3&&item.givemoney&&item.givemoney!=''" class="price-discount">{{item.givemoney}}折</div>
                               </div>
                             </div>
 
@@ -510,6 +523,9 @@ export default {
           { refillmoney: null, givemoney: null, error: false }
         ],// 优惠条件
         first_give: 0,// 首充
+        editGiverule: [
+          { refillmoney: null, givemoney: null, error: false }
+        ],
       },
       rules:{
         card_name:[
@@ -530,15 +546,16 @@ export default {
           { required: true, message: '油品限制为必填，不能为空！', trigger: 'blur' },
         ],
       },
+      refillmoneyRule:[
+        { required: true, message: '请输入合法金额！', trigger: 'blur', }
+      ],
       cardTypeList,
       cardCovertype: 1, // 卡面样式 1 模板 2 自定义
       siteList: [], // 油站集合
       isAutoMoney: 0,// 是否开启自定义金额
       oilList: [], // 油品合集
       isFirstGive: 0, // 是否开启首充
-      editGiverule: [
-        { refillmoney: null, givemoney: null, error: false }
-      ],
+      
       loading: false,
 
     }
@@ -649,7 +666,7 @@ export default {
 
         this.form.type = this.formData.type
         this.form.giverule = this.formData.giveruleinfo
-        this.editGiverule = _.cloneDeep(this.form.giverule)
+        this.form.editGiverule = _.cloneDeep(this.formData.giveruleinfo)
 
         this.form.first_give = this.formData.first_give || 0
         this.isFirstGive = this.formData.first_give?1:0
@@ -657,17 +674,21 @@ export default {
 
       }
       this.loading = false
-      this.$refs.ruleForm.validate()
-      this.$refs.ruleForm2.validate()
+      // this.$refs.ruleForm.validate()
+      // this.$refs.ruleForm2.validate()
+    },
+    // 计算折扣，精确两位小数
+    computZhe(max,zhe){
+      return (max*zhe/10).toFixed(2)
     },
     // 检查固定金额
     checkNoGive(e,index){
 
       let val = e.target.value
       if (Number(val) <= Number(this.form.max_refill) && Number(val) >= Number(this.form.min_refill)) {
-        this.editGiverule[index].error = false
+        this.form.editGiverule[index].error = false
       }else{
-        this.editGiverule[index].error = true
+        this.form.editGiverule[index].error = true
       }
     },
     // 表单校验
@@ -677,7 +698,7 @@ export default {
           if (valid) {
             // alert('submit!');
             this.current = current
-            this.$refs.ruleForm2.validate()
+            // this.$refs.ruleForm2.validate()
           } else {
             // console.log('error submit!!');
             return false;
@@ -724,7 +745,7 @@ export default {
       // console.log(oils)
       let giverule = []
       
-      this.editGiverule.forEach(e=>{
+      this.form.editGiverule.forEach(e=>{
         if (this.form.type===0) {
           e.givemoney = 0
         }
@@ -775,9 +796,9 @@ export default {
     onChangeType(){
       console.log(this.form.type)
       if (this.form.type!==0&&this.form.giverule.length===0) {
-        this.editGiverule = { refillmoney: null, givemoney: null, error: false }
+        this.form.editGiverule = { refillmoney: null, givemoney: null, error: false }
       }else{
-        this.editGiverule = _.cloneDeep(this.form.giverule)
+        this.form.editGiverule = _.cloneDeep(this.form.giverule)
       }
       
     },
@@ -786,26 +807,26 @@ export default {
       // console.log(index)
       let that = this
 
-      if (this.form.type!==0&&this.editGiverule.length===1) {
+      if (this.form.type!==0&&this.form.editGiverule.length===1) {
         return
       }
       if (index===false) {
-        this.editGiverule.splice(that.editGiverule.length-1,1)
+        this.form.editGiverule.splice(that.editGiverule.length-1,1)
         return
       }
 
-      this.editGiverule.splice(index,1)
+      this.form.editGiverule.splice(index,1)
 
       
     },
     // 增加优惠规则
     addGiverule(){
-      if (this.editGiverule.length===9) {
+      if (this.form.editGiverule.length===9) {
         this.$message.error('优惠规则最多添加9条！')
         return
       }
       let obj = { refillmoney: null, givemoney: null, error: false }
-      this.editGiverule.push(obj)
+      this.form.editGiverule.push(obj)
     },
     // 上传图片回调
     handleChange(info){
@@ -1148,6 +1169,20 @@ export default {
                             color: #3c3c46;
                             line-height: 14px;
                           }
+                          .price-discount{
+                            position: absolute;
+                            height: 16px;
+                            width: 37px;
+                            font-size: 8px;
+                            font-family: PingFangSC-Regular,PingFang SC;
+                            font-weight: 400;
+                            color: #fff;
+                            line-height: 11px;
+                            top: 0;
+                            right: 0;
+                            -webkit-transform: translate3d(2px,7px,0) rotate(45deg);
+                            transform: translate3d(2px,7px,0) rotate(45deg);
+                          }
                         }
                       }
                     }
@@ -1378,8 +1413,6 @@ export default {
       width: 396px;
       .rechargeRuleContent{
         width: 100%;
-        display: flex;
-        align-items: center;
       }
       .operationBox{
         display: inline-block;
