@@ -155,3 +155,33 @@ export function recharge(data){
         data
     })
 }
+
+// 员工绩效-充值统计--折线图占比图
+
+export function RechargeStatistics(data){
+    return PhpRequest({
+        url:'/set/RechargeStatistics',
+        method:'post',
+        data
+    })
+}
+
+// 用于查看数据 员工绩效--关注统计
+
+export function follow(data){
+    return JavaRequest({
+        url:'/data/get_follow_statistics',
+        method:'post',
+        data
+    })
+}
+
+// 员工绩效-关注统计--折线图占比图
+
+export function follows(data){
+    return PhpRequest({
+        url:'/set/followStatistics',
+        method:'post',
+        data
+    })
+}

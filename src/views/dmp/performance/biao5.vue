@@ -5,7 +5,7 @@
 <script>
 import { Pie } from '@antv/g2plot'
 export default {
-  props: ['cake2'],
+  props: ['cake1'],
   data() {
     return {
       arrs: [],
@@ -16,7 +16,7 @@ export default {
     // console.log(this.cake1)
   },
   watch: {
-    cake2: {
+    cake1: {
       immediate: true,
       handler(item) {
         this.arrs = item
