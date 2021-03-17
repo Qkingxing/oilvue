@@ -19,11 +19,21 @@
             <div class="mainContent-block">
               <div class="mainContent-setting-box">
                 <div class="setting-header">基础设置</div>
-                <a-form style="min-width:700px;" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
-                  <a-form-item label="加油卡名称" :colon="false">
-                    <a-input v-model="form.card_name" style="width:240px;" placeholder="请输入加油卡名称 1-12个字"/>
-                  </a-form-item>
-                  <a-form-item :colon="false" style="height: 40px;">
+                <a-form-model
+                  ref="ruleForm"
+                  :model="form"
+                  :rules="rules"
+                  style="min-width:700px;" 
+                  :label-col="{ span: 3 }" 
+                  :wrapper-col="{ span: 19 }">
+                  <a-form-model-item label="加油卡名称" ref="card_name" prop="card_name" :colon="false">
+                    <a-input 
+                      v-model="form.card_name"
+                      style="width:240px;" 
+                      placeholder="请输入加油卡名称 1-12个字"
+                    />
+                  </a-form-model-item>
+                  <a-form-model-item :colon="false" style="height: 40px;">
                     <div slot="label" class="setting-canUseMerchantBox">
                       <span>可用油站</span>
                       <a-popover placement="top">
@@ -49,8 +59,8 @@
                         {{item.site_name}}
                       </a-select-option>
                     </a-select>
-                  </a-form-item>
-                  <a-form-item label="卡类型" :colon="false">
+                  </a-form-model-item>
+                  <a-form-model-item label="卡类型" :colon="false">
                     <a-radio-group v-model="form.card_type">
                       <a-radio
                         v-for="(item,index) in cardTypeList"
@@ -59,8 +69,8 @@
                         {{item.label}}
                       </a-radio>
                     </a-radio-group>
-                  </a-form-item>
-                  <a-form-item label="卡面样式" :colon="false">
+                  </a-form-model-item>
+                  <a-form-model-item label="卡面样式" :colon="false">
                     <a-radio-group v-model="cardCovertype" @change="onChangeCardCoverType(cardCovertype)">
                       <a-radio :value="1"> 模板 </a-radio>
                       <a-radio :value="2"> 自定义 </a-radio>
@@ -105,25 +115,25 @@
                         </div>
                       </div>
                     </div>
-                  </a-form-item>
-                  <a-form-item label="规则说明" :colon="false">
+                  </a-form-model-item>
+                  <a-form-model-item label="规则说明" :colon="false">
                     <a-textarea
                       v-model="form.card_rule"
                       style="width:320px;"
                       placeholder="可补充填写本加油卡的其他注意事项，非必填项"
                       :auto-size="{ minRows: 3, maxRows: 6 }"
                     />
-                  </a-form-item>
+                  </a-form-model-item>
 
 
  
-                </a-form>
+                </a-form-model>
 
                 <div class="btn-box">
                   <a-button type="info" size="large" @click="back">
                     取消
                   </a-button>
-                  <a-button @click="current=1" type="primary" size="large" style="margin-left: 8px;">
+                  <a-button @click="checkForm(1)" type="primary" size="large" style="margin-left: 8px;">
                     下一步
                   </a-button>
                 </div>
@@ -158,27 +168,50 @@
             <div class="mainContent-block">
               <div class="mainContent-setting-box">
                 <div class="setting-header">基础设置</div>
-                <a-form style="min-width:700px;" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
-                  <a-form-item label="充值限制" :colon="false">
-                    <a-form-item label="" :colon="false" class="limit_formitem">
-                      <a-input v-model="form.min_refill" placeholder="金额" />
-                    </a-form-item>
+                <a-form-model 
+                  ref="ruleForm2"
+                  :model="form"
+                  :rules="rules"
+                  style="min-width:700px;" 
+                  :label-col="{ span: 3 }" 
+                  :wrapper-col="{ span: 19 }">
+
+                  <a-form-model-item label="充值限制" :colon="false">
+                    <a-form-model-item label="" ref="min_refill" prop="min_refill" :colon="false" class="limit_formitem">
+                      <a-input 
+                        v-model="form.min_refill" 
+                        placeholder="金额" 
+                        type="number"
+                        @change="
+                          () => {
+                            $refs.ruleForm2.validate()
+                          }
+                        "/>
+                    </a-form-model-item>
                     <span style="color: rgba(0, 0, 0, 0.65); padding: 0px 10px;">至</span>
-                    <a-form-item label="" :colon="false" class="limit_formitem">
-                      <a-input v-model="form.max_refill" placeholder="金额" />
-                    </a-form-item>
+                    <a-form-model-item label="" ref="max_refill" prop="max_refill" :colon="false" class="limit_formitem">
+                      <a-input 
+                        v-model="form.max_refill" 
+                        placeholder="金额" 
+                        type="number"
+                        @change="
+                          () => {
+                            $refs.ruleForm2.validate()
+                          }
+                        "/>
+                    </a-form-model-item>
                     <span>&nbsp;&nbsp;元</span>
                     <span style="color: rgb(199, 199, 199);"></span>
-                  </a-form-item>
+                  </a-form-model-item>
 
-                  <a-form-item label="自定义金额" :colon="false">
+                  <a-form-model-item label="自定义金额" :colon="false">
                     <a-radio-group v-model="form.is_open" class="noMargin">
                       <a-radio :value="2"> 关 </a-radio>
                       <a-radio :value="1"> 开 </a-radio>
                     </a-radio-group>
-                  </a-form-item>
+                  </a-form-model-item>
 
-                  <a-form-item label="可用油品" :colon="false">
+                  <a-form-model-item label="可用油品" ref="oils" prop="oils" :colon="false">
                     <a-select
                       mode="multiple"
                       v-model="form.oils"
@@ -192,9 +225,9 @@
                       </a-select-option>
                     </a-select>
                    
-                  </a-form-item>
+                  </a-form-model-item>
 
-                  <a-form-item label="充值优惠" :colon="false">
+                  <a-form-model-item label="充值优惠" :colon="false">
                     <a-radio-group v-model="form.type" class="noMargin" @change="onChangeType">
                       <a-radio :value="1"> 充值赠送 </a-radio>
                       <a-radio :value="2"> 充值立减 </a-radio>
@@ -215,65 +248,86 @@
                           class="noDiscountItem"
                           v-for="(item, index) in editGiverule"
                           :key="index">
-                          <a-input v-model="item.refillmoney" placeholder="金额" />
+                          <a-input 
+                            v-model="item.refillmoney" 
+                            placeholder="金额" 
+                            type="number"
+                            @change="(e)=>checkNoGive(e, index)"/>
+                          <div v-show="item.error" class="noDiscountError" style="">充值金额超出限制范围</div>
                         </div>
                         <div class="noDiscountItem" style="visibility: hidden; padding-bottom: 0px;"></div>
                       </div>
                     </div> 
 
-                    <div class="preferentialTemplate" v-else>
+                    <a-form-model 
+                      ref="editGiverule"
+                      :model="editGiverule" 
+                      class="preferentialTemplate" 
+                      v-else>
+
                       <div class="preferentialTemplateHeader">赠送规则</div>
-                      <div 
+                      <div
                         class="rechargeRule"
                         v-for="(item, index) in editGiverule"
                         :key="index">
                         <div class="rechargeRuleContent">
                           <span style="padding: 0px 10px 0px 0px;">充值满</span>
-                          <a-form-item label="" :colon="false" class="limit_formitem">
+                          <a-form-model-item 
+                            label="" 
+                            :colon="false" 
+                            class="limit_formitem">
+
                             <a-input v-model="item.refillmoney" placeholder="金额" />
-                          </a-form-item>
+                          </a-form-model-item>
+
                           <span style="padding-left: 0.5rem;">元，</span>
                           <span style="padding-right: 10px;" v-if="form.type===1">赠送</span>
                           <span style="padding-right: 10px;" v-if="form.type===2">立减</span>
                           <span style="padding-right: 10px;" v-if="form.type===3">享</span>
-                          <a-form-item label="" :colon="false" class="limit_formitem">
+                          
+                          <a-form-model-item 
+                            label="" 
+                            :colon="false" 
+                            class="limit_formitem">
+
                             <a-input v-model="item.givemoney" placeholder="金额" />
-                          </a-form-item>
+                          </a-form-model-item>
+
                           <span style="padding-left: 0.5rem;" v-if="form.type===3">折</span>
                           <span style="padding-left: 0.5rem;" v-else>元</span>
                           <div class="operationBox">
                             <a-icon @click="delGiverule(index)" class="reduceRuleBlock iconfont" type="minus-circle" />
-                            <a-icon @click="addGiverule" class="reduceRuleBlock iconfont" type="plus-circle" v-if="index===form.giverule.length-1"/>
+                            <a-icon @click="addGiverule" class="reduceRuleBlock iconfont" type="plus-circle" v-if="index===editGiverule.length-1"/>
                           </div>
                         </div>
                       </div>
+                    </a-form-model>
 
-                    </div>
-                  </a-form-item>
-                  <a-form-item label="首次多赠" :colon="false" v-if="form.type===1">
+                  </a-form-model-item>
+                  <a-form-model-item label="首次多赠" :colon="false" v-if="form.type===1">
                     <a-radio-group v-model="isFirstGive">
                       <a-radio :value="0"> 关 </a-radio>
                       <a-radio :value="1"> 开 </a-radio>
                     </a-radio-group>
-                  </a-form-item>
+                  </a-form-model-item>
 
-                  <a-form-item label=" " :colon="false" v-if="isFirstGive">
+                  <a-form-model-item label=" " :colon="false" v-if="isFirstGive">
                     <div class="preferentialTemplate" style="display: flex; align-items: center; padding-top: 4px; padding-bottom: 3px;">
                       <span>首次充值多赠送</span>
-                      <a-form-item label="" :colon="false" class="limit_formitem gas-card-setting-more-send-input" style="padding-top: 36px;">
+                      <a-form-model-item label="" :colon="false" class="limit_formitem gas-card-setting-more-send-input" style="padding-top: 36px;">
                         <a-input v-model="form.first_give" placeholder="整数" class="limit_input" style="margin: 0px 8px;"/>
-                      </a-form-item>
+                      </a-form-model-item>
                       <span style="margin-left:15px;">元</span>
                     </div>
-                  </a-form-item>
+                  </a-form-model-item>
 
-                </a-form>
+                </a-form-model>
 
                 <div class="btn-box">
                   <a-button @click="current=0" type="info" size="large">
                     上一步
                   </a-button>
-                  <a-button @click="save" type="primary" size="large" style="margin-left: 8px;">
+                  <a-button @click="checkForm(2)" type="primary" size="large" style="margin-left: 8px;">
                     保存
                   </a-button>
                 </div>
@@ -370,6 +424,33 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'PrepaidEdit',
   data(){
+    const checkMin = (rule, value, callback) => {
+      // console.log(this.form.max_refill)
+      // setTimeout(() => {
+        if (this.form.max_refill) {
+          if (value > Number(this.form.max_refill)) {
+            callback(new Error('请输入合法金额！'))
+          }else{
+            callback()
+          }
+        }else{
+          callback()
+        }
+      // }, 200)
+    }
+    const checkMax = (rule, value, callback) => {
+      //  setTimeout(() => {
+        if (this.form.min_refill) {
+          if (value < Number(this.form.min_refill)) {
+            callback(new Error('最大金额不能小于最小金额'))
+          }else{
+            callback()
+          }
+        }else{
+          callback()
+        }
+      // }, 200)
+    }
     return {
       current: 0,
       plainOptions:[
@@ -407,7 +488,7 @@ export default {
       form: {
         id: null,	
         //[string]		油卡ID 修改的时候传递		
-        card_name: '',	
+        card_name: null,	
         //[string]	是	油卡名称	
         site: [],// 可用油站,index	
         card_type: 1,	
@@ -416,9 +497,9 @@ export default {
         //[string]	是	油卡背景图片		
         card_rule: '',	
         //[string]	是	油卡简介
-        min_refill: '',	
+        min_refill: null,	
         //[string]	是	最小充值金额		
-        max_refill: '',	
+        max_refill: null,	
         //[string]	是	最大充值金额		
         is_open: 2,
         // 是否开启自定义金额，1开，2关
@@ -426,9 +507,28 @@ export default {
         type: 0,
         // 所属类型 1是充值赠送 2是充值立减 3是充值折扣 0是没有优惠
         giverule: [
-          { refillmoney: null, givemoney: null }
+          { refillmoney: null, givemoney: null, error: false }
         ],// 优惠条件
         first_give: 0,// 首充
+      },
+      rules:{
+        card_name:[
+          { required: true, message: '加油卡名称为必填，不能为空！', trigger: 'blur' },
+          { min: 1, max: 12, message: '请输入合法名称', trigger: 'blur' },
+        ],
+        min_refill:[
+          { required: true, message: '请输入合法金额！', trigger: 'blur' },
+          { min: 1, message: '请输入合法金额！', trigger: 'blur' },
+          { validator: checkMin, trigger: 'blur' },
+        ],
+        max_refill:[
+          { required: true, message: '请输入合法金额！', trigger: 'blur' },
+          { min: 1, message: '请输入合法金额！', trigger: 'blur' },
+          { validator: checkMax, trigger: 'blur' },
+        ],
+        oils:[
+          { required: true, message: '油品限制为必填，不能为空！', trigger: 'blur' },
+        ],
       },
       cardTypeList,
       cardCovertype: 1, // 卡面样式 1 模板 2 自定义
@@ -437,7 +537,7 @@ export default {
       oilList: [], // 油品合集
       isFirstGive: 0, // 是否开启首充
       editGiverule: [
-        { refillmoney: null, givemoney: null }
+        { refillmoney: null, givemoney: null, error: false }
       ],
       loading: false,
 
@@ -557,6 +657,47 @@ export default {
 
       }
       this.loading = false
+      this.$refs.ruleForm.validate()
+      this.$refs.ruleForm2.validate()
+    },
+    // 检查固定金额
+    checkNoGive(e,index){
+
+      let val = e.target.value
+      if (Number(val) <= Number(this.form.max_refill) && Number(val) >= Number(this.form.min_refill)) {
+        this.editGiverule[index].error = false
+      }else{
+        this.editGiverule[index].error = true
+      }
+    },
+    // 表单校验
+    checkForm(current){
+      if (current===1) {
+        this.$refs.ruleForm.validate(valid => {
+          if (valid) {
+            // alert('submit!');
+            this.current = current
+            this.$refs.ruleForm2.validate()
+          } else {
+            // console.log('error submit!!');
+            return false;
+          }
+        });
+      }
+      if (current===2) {
+        this.$refs.ruleForm2.validate(valid => {
+          if (valid) {
+            console.log('submit!');
+
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+        return
+        this.save()
+        
+      }
     },
     // 保存
     save(){
@@ -634,7 +775,7 @@ export default {
     onChangeType(){
       console.log(this.form.type)
       if (this.form.type!==0&&this.form.giverule.length===0) {
-        this.editGiverule = { refillmoney: '', givemoney: '' }
+        this.editGiverule = { refillmoney: null, givemoney: null, error: false }
       }else{
         this.editGiverule = _.cloneDeep(this.form.giverule)
       }
@@ -642,17 +783,20 @@ export default {
     },
     // 删除优惠规则
     delGiverule(index){
+      // console.log(index)
       let that = this
 
       if (this.form.type!==0&&this.editGiverule.length===1) {
         return
       }
-      if (index) {
-        this.editGiverule.splice(index,1)
-      }
       if (index===false) {
         this.editGiverule.splice(that.editGiverule.length-1,1)
+        return
       }
+
+      this.editGiverule.splice(index,1)
+
+      
     },
     // 增加优惠规则
     addGiverule(){
@@ -660,7 +804,7 @@ export default {
         this.$message.error('优惠规则最多添加9条！')
         return
       }
-      let obj = { refillmoney: '', givemoney: '' }
+      let obj = { refillmoney: null, givemoney: null, error: false }
       this.editGiverule.push(obj)
     },
     // 上传图片回调
@@ -794,6 +938,13 @@ export default {
                 padding-bottom: 16px;
                 position: relative;
                 width: 88px;
+                .noDiscountError{
+                  color: red;
+                  width: 88px;
+                  height: 16px;
+                  font-size: 12px;
+                  line-height: 14px;
+                }
               }
             }
           }
@@ -1227,6 +1378,8 @@ export default {
       width: 396px;
       .rechargeRuleContent{
         width: 100%;
+        display: flex;
+        align-items: center;
       }
       .operationBox{
         display: inline-block;
