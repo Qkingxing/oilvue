@@ -174,6 +174,7 @@
 import labels from './labels'
 import labels1 from './labels1'
 import {recharge} from '@/api/data'
+import biao3 from './biao3'
 export default {
 	name: 'Refueling',
 	components:{labels,labels1},
