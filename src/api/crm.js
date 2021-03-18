@@ -87,6 +87,15 @@ export function getGroupinglist (data) {
     data
   })
 }
+// 获取客户分群中的条件
+export function getSelectOption () {
+  return JavaRequest({
+    url: '/customer/query_user_group_set',
+    method: 'post',
+    data:{pid:0}
+  })
+}
+
 // 客户导入列表
 export function getImportlist (data) {
   return JavaRequest({
