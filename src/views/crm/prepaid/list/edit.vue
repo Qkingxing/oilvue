@@ -274,10 +274,19 @@
                             label="" 
                             :colon="false" 
                             class="limit_formitem"
+                            ref="editGiverule.refillmoney"
                             :prop="'editGiverule.' + index + '.refillmoney'"
                             :rules="refillmoneyRule">
 
-                            <a-input v-model="item.refillmoney" placeholder="金额" type="number" />
+                            <a-input 
+                              v-model="item.refillmoney" 
+                              placeholder="金额" 
+                              type="number" 
+                              @change="
+                                () => {
+                                  $refs['editGiverule.refillmoney'][index].onFieldBlur()
+                                }
+                              "/>
                           </a-form-model-item>
 
                           <span style="padding-left: 0.5rem;">元，</span>
@@ -290,13 +299,18 @@
                             :colon="false" 
                             class="limit_formitem"
                             :prop="'editGiverule.' + index + '.givemoney'"
-                            :rules="{
-                              required: true,
-                              message: '请输入合法金额！',
-                              trigger: 'blur',
-                            }">
+                            :rules="givemoneyRule">
 
-                            <a-input v-model="item.givemoney" placeholder="金额" type="number"/>
+                            <a-input 
+                              v-model="item.givemoney" 
+                              :placeholder="form.type===3?'数字':'金额'" 
+                              type="number"
+                              @change="
+                                () => {
+                                  $refs.ruleForm2.validate()
+                                }
+                              "/>
+                          
                           </a-form-model-item>
 
                           <span style="padding-left: 0.5rem;" v-if="form.type===3">折</span>
@@ -320,8 +334,22 @@
                   <a-form-model-item label=" " :colon="false" v-if="isFirstGive">
                     <div class="preferentialTemplate" style="display: flex; align-items: center; padding-top: 4px; padding-bottom: 3px;">
                       <span>首次充值多赠送</span>
-                      <a-form-model-item label="" :colon="false" class="limit_formitem gas-card-setting-more-send-input" style="padding-top: 36px;">
-                        <a-input v-model="form.first_give" placeholder="整数" class="limit_input" style="margin: 0px 8px;"/>
+                      <a-form-model-item 
+                        label="" 
+                        :colon="false" 
+                        class="limit_formitem gas-card-setting-more-send-input" 
+                        style="padding-top: 36px;"
+                        ref="first_give" 
+                        prop="first_give"
+                        :rules="firstGiveRule">
+                       
+                        <a-input 
+                          v-model="form.first_give" 
+                          placeholder="整数" 
+                          class="limit_input" 
+                          style="margin: 0px 8px;"
+                          type="number" />
+
                       </a-form-model-item>
                       <span style="margin-left:15px;">元</span>
                     </div>
@@ -433,36 +461,119 @@ import {cardTypeList} from '@/utils/select'
 import { getSitelist,gasfillingcardsave } from '@/api/crm'
 import { getSiteoillist } from '@/api/oil'
 import { mapGetters } from 'vuex'
+//参数str判断的字符串 m最小值 n最大值
+function isRangeIn(str,maxnum,minnum ) {
+  var num = Number(str);
+  if(num <= Number(maxnum) && num >= Number(minnum)){
+    return true;
+  }
+  return false;
+}
 
 export default {
   name: 'PrepaidEdit',
   data(){
     const checkMin = (rule, value, callback) => {
+      if (Number(value)<0) {
+        callback(new Error('请输入合法金额！'))
+      }
       // console.log(this.form.max_refill)
-      // setTimeout(() => {
-        if (this.form.max_refill) {
-          if (value > Number(this.form.max_refill)) {
-            callback(new Error('请输入合法金额！'))
-          }else{
-            callback()
-          }
-        }else{
-          callback()
-        }
-      // }, 200)
+      if (Number(value) > Number(this.form.max_refill)) {
+        callback(new Error('请输入合法金额！'))
+      }else{
+        callback()
+      }
     }
     const checkMax = (rule, value, callback) => {
-      //  setTimeout(() => {
-        if (this.form.min_refill) {
-          if (value < Number(this.form.min_refill)) {
-            callback(new Error('最大金额不能小于最小金额'))
+      if (Number(value)<0) {
+        callback(new Error('请输入合法金额！'))
+      }
+      if (Number(value) < Number(this.form.min_refill)) {
+        callback(new Error('最大金额不能小于最小金额'))
+      }else{
+        callback()
+      }
+
+    }
+    // 充值校验
+    const refillmoneyCheck = (rule, value, callback) => {
+      if (Number(value)<0) {
+        callback(new Error('请输入合法金额！'))
+      }
+      let count = this.form.editGiverule.filter(e=>{
+        return e.refillmoney === value
+      }).length
+
+      if (count>1) {
+        callback(new Error('存在重复金额'))
+      }
+
+      if (isRangeIn(value,this.form.max_refill,this.form.min_refill)) {
+        callback()
+      }else{
+        callback(new Error('请输入合法金额！'))
+      }
+
+    }
+    // 赠送立减优惠校验
+    const givemoneyCheck = (rule, value, callback) => {
+      if (Number(value)<0) {
+        callback(new Error('请输入合法金额！'))
+      }
+      if (this.form.type===3) {
+        if (isRangeIn(value,9.9,5)) {
+          callback()
+        }else{
+          callback(new Error('折扣5~9.9之间'))
+        }
+      }
+      // console.log(rule.field)
+      let index = rule.field.split('.')[1]
+      // console.log(index)
+      if (isRangeIn(value,this.form.max_refill,this.form.min_refill)) {
+        if (this.form.editGiverule[index].refillmoney) {
+          if (Number(value) > Number(this.form.editGiverule[index].refillmoney)) {
+            if (this.form.type===1) {
+              callback(new Error('优惠不能大于充值金额'))
+            }
+            if (this.form.type===2) {
+              callback(new Error('立减不能大于充值金额'))
+            }
           }else{
             callback()
           }
         }else{
           callback()
         }
-      // }, 200)
+      }else{
+        callback(new Error('请输入合法金额！'))
+      }
+    }
+    const firstGiveCheck = (rule, value, callback) => {
+      let that = this
+      if (Number(value)<0) {
+        callback(new Error('请输入合法金额！'))
+      }
+      
+      let min = Math.min.apply(Math, that.form.editGiverule.map((e)=>{
+        return e.refillmoney
+      }))
+      // console.log(min)
+      let index = that.form.editGiverule.findIndex((e)=>{
+        return Number(e.refillmoney) === min
+      })
+      // console.log(index)
+      let item = that.form.editGiverule[index]
+
+      let cha = Number(item.refillmoney)-Number(item.givemoney)
+      // console.log(cha)
+      // console.log(Number(value))
+
+      if (cha < Number(value)) {
+        callback(new Error('总优惠金额不能大于充值金额'))
+      } else {
+        callback()
+      } 
     }
     return {
       current: 0,
@@ -501,7 +612,7 @@ export default {
       form: {
         id: null,	
         //[string]		油卡ID 修改的时候传递		
-        card_name: null,	
+        card_name: '',	
         //[string]	是	油卡名称	
         site: [],// 可用油站,index	
         card_type: 1,	
@@ -510,9 +621,9 @@ export default {
         //[string]	是	油卡背景图片		
         card_rule: '',	
         //[string]	是	油卡简介
-        min_refill: null,	
+        min_refill: '',	
         //[string]	是	最小充值金额		
-        max_refill: null,	
+        max_refill: '',	
         //[string]	是	最大充值金额		
         is_open: 2,
         // 是否开启自定义金额，1开，2关
@@ -520,11 +631,11 @@ export default {
         type: 0,
         // 所属类型 1是充值赠送 2是充值立减 3是充值折扣 0是没有优惠
         giverule: [
-          { refillmoney: null, givemoney: null, error: false }
+          { refillmoney: '', givemoney: '', error: false }
         ],// 优惠条件
         first_give: 0,// 首充
         editGiverule: [
-          { refillmoney: null, givemoney: null, error: false }
+          { refillmoney: '', givemoney: '', error: false }
         ],
       },
       rules:{
@@ -534,20 +645,28 @@ export default {
         ],
         min_refill:[
           { required: true, message: '请输入合法金额！', trigger: 'blur' },
-          { min: 1, message: '请输入合法金额！', trigger: 'blur' },
           { validator: checkMin, trigger: 'blur' },
         ],
         max_refill:[
           { required: true, message: '请输入合法金额！', trigger: 'blur' },
-          { min: 1, message: '请输入合法金额！', trigger: 'blur' },
           { validator: checkMax, trigger: 'blur' },
         ],
         oils:[
           { required: true, message: '油品限制为必填，不能为空！', trigger: 'blur' },
         ],
+        
       },
       refillmoneyRule:[
-        { required: true, message: '请输入合法金额！', trigger: 'blur', }
+        { required: true, message: '请输入合法金额！', trigger: 'blur' },
+        { validator: refillmoneyCheck, trigger: 'blur' },
+      ],
+      givemoneyRule:[
+        { required: true, message: '请输入合法金额！', trigger: 'blur', },
+        { validator: givemoneyCheck, trigger: 'blur' },
+      ],
+      firstGiveRule:[
+        { required: true, message: '请输入金额', trigger: 'blur' },
+        { validator: firstGiveCheck, trigger: 'blur' },
       ],
       cardTypeList,
       cardCovertype: 1, // 卡面样式 1 模板 2 自定义
@@ -674,8 +793,6 @@ export default {
 
       }
       this.loading = false
-      // this.$refs.ruleForm.validate()
-      // this.$refs.ruleForm2.validate()
     },
     // 计算折扣，精确两位小数
     computZhe(max,zhe){
@@ -696,11 +813,9 @@ export default {
       if (current===1) {
         this.$refs.ruleForm.validate(valid => {
           if (valid) {
-            // alert('submit!');
             this.current = current
-            // this.$refs.ruleForm2.validate()
           } else {
-            // console.log('error submit!!');
+            this.$message.error('请将错误改正，再次提交')
             return false;
           }
         });
@@ -708,16 +823,13 @@ export default {
       if (current===2) {
         this.$refs.ruleForm2.validate(valid => {
           if (valid) {
-            console.log('submit!');
-
+            this.save()
+            this.current = current
           } else {
-            console.log('error submit!!');
+            this.$message.error('请将错误改正，再次提交')
             return false;
           }
         });
-        return
-        this.save()
-        
       }
     },
     // 保存
@@ -783,9 +895,9 @@ export default {
         form.id = this.form.id
       }
 
-      console.log(form)
+      // console.log(form)
       gasfillingcardsave(form).then((res)=>{
-        console.log(res)
+        // console.log(res)
         this.current = 2
       })
 
