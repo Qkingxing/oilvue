@@ -14,7 +14,7 @@
           label="生效油站" 
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
-          {{form.group_name}}
+          {{userInfo.group_name}}
         </a-form-item>
 
         <a-form-item 
@@ -112,6 +112,7 @@
 import { STable } from '@/components'
 
 import { postBasicsset } from '@/api/crm'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'FoundationAdd',
@@ -122,7 +123,7 @@ export default {
     return {
       form:{
         id: undefined,	 //[string]		修改的时候使用		
-        group_name: '鹰眼集团',
+        group_name: '',
         //[string]	是	生效油站名称		
         member_type: 1,
         //[string]	是	会员注册1是注册即会员 2授权手机号		
@@ -135,12 +136,17 @@ export default {
 
     }
   },
+  computed: {
+    ...mapGetters(['userInfo']),
+  },
   props:{
     type:{
       type: String
     }
   },
-  created () {},
+  created () {
+    console.log(this.userInfo)
+  },
   methods: {
     submit(){
       console.log(this.form)

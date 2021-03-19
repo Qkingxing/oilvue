@@ -26,11 +26,11 @@
               </div>
               <div class="setting-item">
                 <div class="setting-title">生效油站</div>
-                <div class="setting-content">鹰眼集团</div>
+                <div class="setting-content">{{userInfo.group_name}}</div>
               </div>
               <div class="setting-item">
                 <div class="setting-title">成长值累积门槛</div>
-                <div class="setting-content">订单实付金额大于9.90元时，才计算成长值</div>
+                <div class="setting-content">订单实付金额大于{{rule.threshold}}元时，才计算成长值</div>
               </div>
               <div class="setting-item">
                 <div class="setting-title">成长值累积规则</div>
@@ -65,7 +65,7 @@
 
 <script>
 import { STable } from '@/components'
-
+import { mapGetters } from 'vuex'
 
 import { queryMemberSpalevel } from '@/api/crm'
 
@@ -119,11 +119,25 @@ export default {
           // dataIndex: 'watch',
         }
       ],
+      rule: [
+        {
+          level:[
+            {},// 等级1
+            {},// 等级2
+            {},// 等级3
+            {},// 等级4
+          ]
+        }, // 规则1
+        {
+
+        } // 规则2
+      ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         // console.log('loadData.parameter', parameter)
         return queryMemberSpalevel({}).then(res=>{
-          console.log(res.data)
+          console.log(res.data[0])
+          this.rule = res.data[0]
           return {
             data: res.data, // 列表数组
             pageNo: 1,  // 当前页码
@@ -137,7 +151,12 @@ export default {
       }
     }
   },
-  created () {},
+  computed:{
+    ...mapGetters(['userInfo'])
+  },
+  created () {
+    console.log(this.userInfo)
+  },
   methods: {
     delTag () {
       this.$confirm({

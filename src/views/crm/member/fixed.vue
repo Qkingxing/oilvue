@@ -21,11 +21,26 @@
           :columns="columns" 
           :data="loadData">
 
+          <div slot="group_name" >
+            <template>
+              {{userInfo.group_name}}
+            </template>
+          </div>
           <div slot="discount_list" slot-scope="discount_list">
             <template>
               <div 
                 v-for="(item,index) in discount_list" 
-                :key="index">{{item.oils_name}}</div>
+                :key="index">
+                {{item.oils_name}} 每升优惠{{item.oils_money}}元
+              </div>
+            </template>
+          </div>
+
+          <div slot="level_status" slot-scope="item, row">
+            <template>
+              <div v-if="item===1">永久</div>
+              <div v-if="item===2">缺少字段</div>
+              <div v-if="item===3">{{row.expired_time}}过期</div>
             </template>
           </div>
 
@@ -69,7 +84,7 @@
 <script>
 import { STable } from '@/components'
 
-
+import { mapGetters } from 'vuex'
 import { queryFixedLevel } from '@/api/crm'
 
 export default {
@@ -97,7 +112,7 @@ export default {
         },
         {
           title: '生效油站',
-          dataIndex: 'group_id',
+          scopedSlots: { customRender: 'group_name' }
         },
         {
           title: '等级优惠',
@@ -108,6 +123,7 @@ export default {
         {
           title: '等级有效期',
           dataIndex: 'level_status',
+          scopedSlots: { customRender: 'level_status' },
         },
         {
           title: '最近修改人',
@@ -137,7 +153,12 @@ export default {
       }
     }
   },
-  created () { },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
+  created () { 
+    console.log(this.userInfo)
+  },
   methods: {
     openEdit(item){
       this.page = 'edit'
