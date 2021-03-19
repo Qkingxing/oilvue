@@ -1,8 +1,6 @@
-
 import JavaRequest from '@/utils/JavaRequest'
 import PhpRequest from '@/utils/PhpRequest'
 import store from '@/store'
-
 
 // 获取偏爱的油品下拉
 export function getSonoillist () {
@@ -10,7 +8,7 @@ export function getSonoillist () {
     url: '/user/sonoillist',
     method: 'post',
     data: {
-      site_id: store.getters.site_id,
+      site_id: store.getters.site_id
     }
   })
 }
@@ -68,7 +66,7 @@ export function labeldel (id) {
   return PhpRequest({
     url: '/user/labeldel',
     method: 'post',
-    data:{id}
+    data: { id }
   })
 }
 // 客户标签详情
@@ -92,7 +90,7 @@ export function getSelectOption () {
   return JavaRequest({
     url: '/customer/query_user_group_set',
     method: 'post',
-    data:{pid:0}
+    data: { pid: 0 }
   })
 }
 
@@ -200,7 +198,7 @@ export function deleteCard (id) {
   return PhpRequest({
     url: '/user/carddel',
     method: 'post',
-    data: {id}
+    data: { id }
   })
 }
 // 启用、禁用加油卡
