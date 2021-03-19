@@ -40,13 +40,13 @@
                     <a-radio value="c">
                       支付方式
                     </a-radio>
-                    <a-radio value="b">
+                    <a-radio value="d">
                       油品
                     </a-radio>
-                    <a-radio value="b">
+                    <a-radio value="e">
                       油枪
                     </a-radio>
-                    <a-radio value="b">
+                    <a-radio value="f">
                       商品名称
                     </a-radio>
                   </a-radio-group>
