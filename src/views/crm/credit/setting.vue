@@ -9,7 +9,10 @@
           </div>
           <div class="deploy-item">
             <div class="label">积分过期</div>
-            <a-radio-group v-model="time_type">
+            <a-radio-group v-model="time_type" style="display:flex;">
+              <a-radio :style="radioStyle" :value="1">
+                永久有效
+              </a-radio>
               <a-radio :style="radioStyle" :value="2">
                 统一过期，每年&nbsp;&nbsp;
                 <a-date-picker
@@ -19,12 +22,11 @@
                   @change="onChangeTime">
                 </a-date-picker>
               </a-radio>
-              <a-radio :style="radioStyle" :value="1">
-                永久有效
-              </a-radio>
+              
 
             </a-radio-group>
           </div>
+
           <div class="deploy-item">
             <div class="label">享受优惠不可获积分</div>
             <a-checkbox-group
@@ -32,6 +34,7 @@
               name="checkboxgroup"
               :options="plainOptions"
               @change="onChangeRadio"
+              style="display:flex;flex-direction: column;"
             />
           </div>
           <div class="btn-box">
@@ -160,6 +163,7 @@ export default {
 }
 .deploy-item{
   display: flex;
+  margin-bottom: 16px;
   .label{
     width: 126px;
     text-align: right;

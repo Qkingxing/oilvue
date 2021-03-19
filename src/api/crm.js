@@ -139,13 +139,16 @@ export function queryMemberSpalevel (data) {
 }
 // 获取积分设置
 export function getIntegrallist () {
+  let data = {}
+  if (store.getters.site_id===(-1)) {
+    data.group_id = store.getters.group_id
+  }else{
+    data.site_id = store.getters.site_id
+  }
   return PhpRequest({
     url: '/user/integrallist',
     method: 'post',
-    data: {
-      group_id: store.getters.group_id,
-      site_id: store.getters.site_id
-    }
+    data
   })
 }
 // 享受优惠不可获积分列表
@@ -165,6 +168,11 @@ export function postIntegralset (data) {
 }
 // 积分规则列表
 export function getIntegralrulelist (data) {
+  if (store.getters.site_id===(-1)) {
+    data.group_id = store.getters.group_id
+  }else{
+    data.site_id = store.getters.site_id
+  }
   return PhpRequest({
     url: '/user/integralrulelist',
     method: 'post',
