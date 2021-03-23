@@ -21,6 +21,7 @@
         <div class="row-content">
           <a-range-picker 
             @change="onChangeTime"
+            :allowClear="false"
             format="YYYY-MM-DD HH:mm:ss"
             v-model="form.date"
             :disabled-date="disabledDate"
@@ -51,21 +52,23 @@
       <div class="row-item flex paneTabs">
         <div 
           class="paneBox"
-          :class="{'paneCur': index == integralsetIndex}"
+          ref="paneBox"
+          :class="{paneCur: index === integralsetIndex}"
           @click="integralsetIndex = index"
+          :index="index"
           v-for="(item, index) in form.integralset"
           :key="index">
           <span>{{'积分规则'+funcChangeNumToCHN(index+1)}}</span>
-          <a-icon @click="delIntegralset(index)" v-if="form.integralset.length>1" type="close" style="cursor: pointer;color: rgb(150, 162, 190);margin-left: 6px;"/>
+          <a-icon @click.stop="delIntegralset(index)" v-if="form.integralset.length>1" type="close" style="cursor: pointer;color: rgb(150, 162, 190);margin-left: 6px;"/>
         </div>
 
         <div class="addPane">
-          <span><a-icon type="plus" /></span>
+          <span @click="addIntegralset()"><a-icon type="plus"/></span>
         </div>
       </div>
 
       <div 
-        v-show="index == integralsetIndex"
+        v-show="index === integralsetIndex"
         class="rules-edit-container-ele"
         v-for="(item, index) in form.integralset"
         :key="index">
@@ -128,41 +131,84 @@
                         <div class="date-round"></div>
                         <div>
                           <div v-show="it.rule_type==2">
-                            <div class="dateEveryLine">
+
+                            <div 
+                              class="dateEveryLine" 
+                              column
+                              :haserr="checkDayTime(timeIndex, i, index)"
+                              v-for="(timeItem, timeIndex) in it.day"
+                              :key="timeIndex">
                               <div class="dateEveryLineMain">
-                                <a-time-picker placeholder="请选择时间"/>
+
+                                <a-time-picker 
+                                  :default-open-value="moment('00:00:00', 'HH:mm:ss')"
+                                  v-model="timeItem.start" 
+                                  placeholder="请选择时间" />
+
                                 <span class="dateEveryLine_centerText">至</span>
-                                <a-time-picker placeholder="请选择时间"/>
-                                <div class="dateEveryLine_operationBox"></div>
-                                <div class="dateEveryLine_error">
+
+                                <a-time-picker 
+                                  :default-open-value="moment('00:00:00', 'HH:mm:ss')"
+                                  v-model="timeItem.end" 
+                                  placeholder="请选择时间" />
+
+                                <div class="dateEveryLine_operationBox">
+                                  <a-icon @click="addDayTime(timeIndex, i, index)" type="plus-circle" v-if="checkDayTime(timeIndex, i, index)==0&&timeIndex==it.day.length-1&&timeItem.start&&timeItem.end"/>
+                                  <a-icon @click="deleteDayTime(timeIndex, i, index)" type="delete" v-if="checkDayTime(timeIndex, i, index)==0&&it.day.length>1"/>
+                                </div>
+
+                                <div 
+                                  v-if="checkDayTime(timeIndex, i, index)==1"
+                                  class="dateEveryLine_error">
                                   <a-icon type="exclamation-circle" />
-                                  <span>起始时间不能大于结束时间</span>
+                                  <span>{{timeItem.error}}</span>
                                 </div>
                               </div>
                             </div>
+
                             <div class="dateEveryLine_tips">请选择24小时制时间，格式如 00:00:00 至 23:59:59</div>
                           </div>
                           <div v-show="it.rule_type==3">
                             <div class="dateMixinBoxTop">
                               <div class="dateMixinBox">
                                 <div class="dateMixinBoxLine">
-                                  <div class="dateMixinBoxLineBlock" ischoice="1">日</div>
-                                  <div class="dateMixinBoxLineBlock">一</div>
-                                  <div class="dateMixinBoxLineBlock">二</div>
-                                  <div class="dateMixinBoxLineBlock">三</div>
-                                  <div class="dateMixinBoxLineBlock">四</div>
-                                  <div class="dateMixinBoxLineBlock">五</div>
-                                  <div class="dateMixinBoxLineBlock">六</div>
+                                  <div 
+                                    class="dateMixinBoxLineBlock"
+                                    v-for="weekItem in weekList"
+                                    :key="weekItem" 
+                                    :ischoice="it.week.week_list.includes(weekItem)?1:''"
+                                    @click="onChangeWeek(weekItem,i,index,$event)">
+                                    {{weekItem}}
+                                  </div>
                                 </div>
-                                <div class="dateEveryLine" haserr="1">
-                                  <a-time-picker placeholder="请选择时间"/>
-                                  <span class="dateEveryLine_centerText">至</span>
-                                  <a-time-picker placeholder="请选择时间"/>
-                                  <div class="dateEveryLine_operationBox"></div>
+                                <div 
+                                  class="dateEveryLine" 
+                                  :haserr="checkDayTime(timeIndex, i, index,'week')"
+                                  v-for="(timeItem, timeIndex) in it.week.day"
+                                  :key="timeIndex">
 
-                                  <div class="dateEveryLine_error">
+                                  <a-time-picker 
+                                    :default-open-value="moment('00:00:00', 'HH:mm:ss')"
+                                    v-model="timeItem.start" 
+                                    placeholder="请选择时间"/>
+
+                                  <span class="dateEveryLine_centerText">至</span>
+
+                                  <a-time-picker 
+                                    :default-open-value="moment('00:00:00', 'HH:mm:ss')"
+                                    v-model="timeItem.end" 
+                                    placeholder="请选择时间"/>
+
+                                  <div class="dateEveryLine_operationBox">
+                                    <a-icon @click="addDayTime(timeIndex, i, index, 'week')" type="plus-circle" v-if="checkDayTime(timeIndex, i, index, 'week')==0&&timeIndex==it.week.day.length-1&&timeItem.start&&timeItem.end"/>
+                                    <a-icon @click="deleteDayTime(timeIndex, i, index, 'week')" type="delete" v-if="checkDayTime(timeIndex, i, index,'week')==0&&it.week.day.length>1"/>
+                                  </div>
+
+                                  <div 
+                                    v-if="checkDayTime(timeIndex, i, index,'week')==1"
+                                    class="dateEveryLine_error">
                                     <a-icon type="exclamation-circle" />
-                                    <span>起始时间不能大于结束时间</span>
+                                    <span>{{timeItem.error}}</span>
                                   </div>
                                 </div>
 
@@ -176,36 +222,44 @@
                                 <div class="dateMixinBoxLine" style="width: 90%;">
                                   <div 
                                     class="dateMixinBoxLineBlock"
-                                    :ischoice="index"
-                                    v-for="(item, index) in 31"
-                                    :key="index">{{index+1}}</div>
+                                    :ischoice="it.month.month_list.includes(monthItem)?1:''"
+                                    v-for="monthItem in 31"
+                                    :key="monthItem"
+                                    @click="onChangeMonth(monthItem,i,index,$event)">
+                                    {{monthItem}}
+                                  </div>
                                 </div>
-                                <div class="dateEveryLine" haserr="0">
-                                  <a-time-picker placeholder="请选择时间"/>
+                                <div 
+                                  class="dateEveryLine" 
+                                  :haserr="checkDayTime(timeIndex, i, index,'month')"
+                                  v-for="(timeItem, timeIndex) in it.month.day"
+                                  :key="timeIndex">
+
+                                  <a-time-picker 
+                                    :default-open-value="moment('00:00:00', 'HH:mm:ss')"
+                                    v-model="timeItem.start" 
+                                    placeholder="请选择时间"/>
+
                                   <span class="dateEveryLine_centerText">至</span>
-                                  <a-time-picker placeholder="请选择时间"/>
+
+                                  <a-time-picker 
+                                    :default-open-value="moment('00:00:00', 'HH:mm:ss')"
+                                    v-model="timeItem.end" 
+                                    placeholder="请选择时间"/>
+
                                   <div class="dateEveryLine_operationBox">
-                                    <a-icon type="delete" />
+                                    <a-icon @click="addDayTime(timeIndex, i, index, 'month')" type="plus-circle" v-if="checkDayTime(timeIndex, i, index, 'month')==0&&timeIndex==it.month.day.length-1&&timeItem.start&&timeItem.end"/>
+                                    <a-icon @click="deleteDayTime(timeIndex, i, index, 'month')" type="delete" v-if="checkDayTime(timeIndex, i, index,'month')==0&&it.month.day.length>1"/>
                                   </div>
 
-                                  <!-- <div class="dateEveryLine_error">
+                                  <div 
+                                    v-if="checkDayTime(timeIndex, i, index,'month')==1"
+                                    class="dateEveryLine_error">
                                     <a-icon type="exclamation-circle" />
-                                    <span>起始时间不能大于结束时间</span>
-                                  </div> -->
-                                </div>
-                                <div class="dateEveryLine" haserr="1">
-                                  <a-time-picker placeholder="请选择时间"/>
-                                  <span class="dateEveryLine_centerText">至</span>
-                                  <a-time-picker placeholder="请选择时间"/>
-                                  <div class="dateEveryLine_operationBox">
-                                    <a-icon type="delete" />
+                                    <span>{{timeItem.error}}</span>
                                   </div>
+                                </div>
 
-                                  <div class="dateEveryLine_error">
-                                    <a-icon type="exclamation-circle" />
-                                    <span>起始时间不能大于结束时间</span>
-                                  </div>
-                                </div>
                                 <div class="dateEveryLine_tips">请选择24小时制时间，格式如 00:00:00 至 23:59:59</div>
                               </div>
                             </div>
@@ -244,43 +298,53 @@
                   <div class="flex mar_top16">
                     <div class="row-title line_h40" style="margin-top: 24px;">获取积分</div>
                     <div>
-                      <div class="flex getintegralBox">
+                      <div 
+                        class="flex getintegralBox"
+                        v-for="(jifenItem,jifenIndex) in it.getintegral"
+                        :key="jifenIndex">
                         <div class="getintegral">
                           <div class="flex integBox">
                             <span class="line_h40 m_r_15">积分油品</span>
-                            <!-- <el-select multiple  collapse-tags v-model="selectedArray" @change="changeSelect" placeholder="请选择活动油站" style="height: auto; margin-bottom: 5px;">
-                              <el-option label="全选" value="全选" @click.native="selectAll"></el-option>
-                              <el-option v-for="(item, index) in options" :key="index" :label="item.name" :value="item.name"></el-option>
-                            </el-select> -->
+                            <el-select 
+                              multiple 
+                              collapse-tags 
+                              v-model="jifenItem.oils_ids" 
+                              @change="(val)=>selectAllOil(val,jifenIndex,i,index)" 
+                              placeholder="请选择积分油品" 
+                              style="width: 240px;">
+                              <el-option v-for="(oilItem, oilIndex) in oilList" :key="oilIndex" :label="oilItem.oils_name" :value="oilItem.id"></el-option>
+                            </el-select>
                           </div>
                           <div class="flex integBox">
                             <span class="line_h40 s_span m_r_15">消费积分</span>
                             <div class="flex calcIntegral">
                               <span>消费</span>
-                              <a-select style="width: 90px">
-                                <a-select-option value="jack">
-                                  Jack
-                                </a-select-option>
-                                <a-select-option value="lucy">
-                                  Lucy
-                                </a-select-option>
-          
-                                <a-select-option value="Yiminghe">
-                                  yiminghe
-                                </a-select-option>
+                              <a-select v-model="jifenItem.exp_type" style="width: 90px">
+                                <a-select-option :value="1"> 原价 </a-select-option>
+                                <a-select-option :value="2"> 实付 </a-select-option>
+                                <a-select-option :value="3"> 升数 </a-select-option>
                               </a-select>
                               <span>每</span>
-                              <a-input-number />
-                              <span>元</span>
+                              <a-input-number 
+                                :min="0"
+                                :precision="2"
+                                :placeholder="jifenItem.exp_type==3?'数量':'金额'"
+                              />
+                              <span v-if="jifenItem.exp_type==3">升</span>
+                              <span v-else>元</span>
                               <span>积</span>
-                              <a-input-number />
+                              <a-input-number placeholder="整数" :min="0" :precision="0"/>
                               <span>分</span>
                             </div>
                           </div>
                         </div>
                         <div class="handlePenel">
-                          <a-icon type="plus-circle" class="m_r_8 pointer addGetJf"/>
-                          <a-icon type="delete" class="pointer"/>
+                          <a-icon 
+                            @click="addJifen(jifenIndex,i,index)"
+                            v-show="jifenIndex==it.getintegral.length-1"
+                            type="plus-circle" 
+                            class="m_r_8 pointer addGetJf"/>
+                          <a-icon @click="deleteJifen(jifenIndex,i,index)" type="delete" class="pointer"/>
                         </div>
                       </div>
                       
@@ -323,6 +387,7 @@
 <script>
 import moment from 'moment';
 import { getSitelist } from '@/api/crm'
+import { getSitesoillist } from '@/api/oil'
 import { getPayList } from '@/api/base'
 import { funcChangeNumToCHN } from '@/utils/util'
 import { mapGetters } from 'vuex'
@@ -342,6 +407,8 @@ export default {
       sitelist: [],  // 油站下拉
       oldChooseData: [], // 油站下拉上次的选择
       payList: [], // 支付方式下拉
+      weekList:['日','一','二','三','四','五','六'],
+      oilList:[],//油品下拉
       form: {
         date: [ moment().startOf('day'), moment().endOf('day') ],
         start_time: moment().startOf('day').format('YYYY-MM-DD HH:mm:ss'), // 开始时间
@@ -356,32 +423,34 @@ export default {
               {
                 rule_type: 1, //重复方式重复方式 1是活动期间 2是每日重复 3每周重复 4每月重复，然后当选择活动期间之后，日期之类的填写null
                 day: [
-                  { start: '', end: '' }
+                  { start: null, end: null, error: null }
                 ],
                 week:{
                   week_list: [],
                   day: [
-                    { start: '', end: '' }
+                    { start: null, end: null, error: null }
                   ],
                 },
                 month:{
                   month_list:[],
                   day: [
-                    { start: '', end: '' }
+                    { start: null, end: null, error: null }
                   ],
                 },
                 pay_id: [], //支付方式ID
-                getintegral: [//获取积分
+                getintegral: [ //获取积分
                   {
                     //积分油品  字符串
-                    oils_ids: [1,2,3,4,5,6],
+                    oils_ids: [],
+                    oldChooseData: [], // 用于全选
                     //消费类型1是实付 2是原价 3升数
-                    exp_type: null,
+                    exp_type: 1,
                     //消费金钱
                     money: null,
                     //获得积分
                     integral: null
-                  }
+                  },
+
                 ]
               },
             ]
@@ -479,6 +548,53 @@ export default {
     // 删除规则
     delIntegralset(index){
       this.form.integralset.splice(index, 1)
+      if (this.integralsetIndex>this.form.integralset.length-1) {
+        this.integralsetIndex = this.form.integralset.length-1
+      }
+    },
+    // 增加一条规则
+    addIntegralset(){
+      let obj = {
+        activity_type: 1, //活动人群活动人群类型 1所有线上客户 2部分可参与 3部分不可参与  如果选择所有客户的话，客户群体选择null
+        activity_ids: null, //客户群体
+        name: '', //积分规则名称
+        giveintegral: [
+          {
+            rule_type: 1, //重复方式重复方式 1是活动期间 2是每日重复 3每周重复 4每月重复，然后当选择活动期间之后，日期之类的填写null
+            day: [
+              { start: null, end: null, error: null }
+            ],
+            week:{
+              week_list: [],
+              day: [
+                { start: null, end: null, error: null }
+              ],
+            },
+            month:{
+              month_list:[],
+              day: [
+                { start: null, end: null, error: null }
+              ],
+            },
+            pay_id: [], //支付方式ID
+            getintegral: [ //获取积分
+              {
+                //积分油品  字符串
+                oils_ids: [],
+                oldChooseData: [], // 用于全选
+                //消费类型1是实付 2是原价 3升数
+                exp_type: 1,
+                //消费金钱
+                money: null,
+                //获得积分
+                integral: null
+              },
+
+            ]
+          },
+        ]
+      }
+      this.form.integralset.push(obj)
     },
     // 禁止选择今天之前的时间
     disabledDate(current) {
@@ -497,6 +613,7 @@ export default {
       }
       // console.log(this.form)
     },
+    // 初始化
     async Init(){
       let SitelistRes = null
       if (this.userInfo.site_id === (-1)) {
@@ -511,13 +628,152 @@ export default {
           })
         }
       }
+      // 获取支付方式列表
       let payRes = await getPayList()
-      console.log(payRes.data)
+      // console.log(payRes.data)
       if (payRes) {
         this.payList = payRes.data
       }
       
       
+    },
+    // 选择重复周
+    onChangeWeek(item,i,index, event){
+      let arr = this.form.integralset[index].giveintegral[i].week.week_list.map(e=>{
+        return e
+      })
+      if (arr.includes(item)) {
+        let arr2 = arr.filter(e=>{
+          return e !== item
+        })
+        this.form.integralset[index].giveintegral[i].week.week_list = arr2
+      }else{
+        this.form.integralset[index].giveintegral[i].week.week_list.push(item)
+      }
+    },
+    // 选择重复月
+    onChangeMonth(item,i,index, event){
+      let arr = this.form.integralset[index].giveintegral[i].month.month_list.map(e=>{
+        return e
+      })
+      if (arr.includes(item)) {
+        let arr2 = arr.filter(e=>{
+          return e !== item
+        })
+        this.form.integralset[index].giveintegral[i].month.month_list = arr2
+      }else{
+        this.form.integralset[index].giveintegral[i].month.month_list.push(item)
+      }
+    },
+    // 增加一条时间规则
+    addDayTime(timeIndex, i, index, key){
+      let obj = { start: null, end: null, error: null }
+      if (key) {
+        // 每周，每月
+        this.form.integralset[index].giveintegral[i][key].day.push(obj)
+      }else{
+        // 每日
+        this.form.integralset[index].giveintegral[i].day.push(obj)
+      }
+      
+    },
+    // 删除一条时间规则
+    deleteDayTime(timeIndex, i, index, key){
+      // console.log(timeIndex)
+      if (key) {
+        // 每周，每月
+        this.form.integralset[index].giveintegral[i][key].day.splice(timeIndex, 1)
+      }else{
+         // 每日
+        this.form.integralset[index].giveintegral[i].day.splice(timeIndex, 1)
+      }
+    },
+    
+    // 校验时间
+    checkDayTime(timeIndex, i, index, key){
+      if (key) {
+        let { start, end } = this.form.integralset[index].giveintegral[i][key].day[timeIndex]
+
+        if (start && end) {
+          // 开始时间不能大于结束时间
+          if (moment(start)>=moment(end)) {
+            this.form.integralset[index].giveintegral[i][key].day[timeIndex].error = '起始时间不能大于结束时间'
+            return 1
+          }
+          // 开始，结束时间不能与其他集合内任意时间重叠
+          let arr = this.form.integralset[index].giveintegral[i][key].day.filter((e, dayIndex)=>{
+            return dayIndex !== timeIndex && e.start && e.end
+          })
+
+          for (let dayIndex = 0; dayIndex < arr.length; dayIndex++) {
+            const e = arr[dayIndex];
+            if (moment(e.start)<=moment(start)&&moment(start)<=moment(e.end)) {
+              this.form.integralset[index].giveintegral[i][key].day[timeIndex].error = '当前规则有冲突'
+              return 1
+            }
+            if (moment(e.start)<=moment(end)&&moment(end)<=moment(e.end)) {
+              this.form.integralset[index].giveintegral[i][key].day[timeIndex].error = '当前规则有冲突'
+              return 1
+            }
+          }
+        }
+        this.form.integralset[index].giveintegral[i][key].day[timeIndex].error = null
+        // 1 不合法， 0 合法
+        return 0
+      }else{
+        let { start, end } = this.form.integralset[index].giveintegral[i].day[timeIndex]
+
+        if (start && end) {
+          // 开始时间不能大于结束时间
+          if (moment(start)>=moment(end)) {
+            this.form.integralset[index].giveintegral[i].day[timeIndex].error = '起始时间不能大于结束时间'
+            return 1
+          }
+          // 开始，结束时间不能与其他集合内任意时间重叠
+          let arr = this.form.integralset[index].giveintegral[i].day.filter((e, dayIndex)=>{
+            return dayIndex !== timeIndex && e.start && e.end
+          })
+
+          for (let dayIndex = 0; dayIndex < arr.length; dayIndex++) {
+            const e = arr[dayIndex];
+            if (moment(e.start)<=moment(start)&&moment(start)<=moment(e.end)) {
+              this.form.integralset[index].giveintegral[i].day[timeIndex].error = '当前规则有冲突'
+              return 1
+            }
+            if (moment(e.start)<=moment(end)&&moment(end)<=moment(e.end)) {
+              this.form.integralset[index].giveintegral[i].day[timeIndex].error = '当前规则有冲突'
+              return 1
+            }
+          }
+        }
+        this.form.integralset[index].giveintegral[i].day[timeIndex].error = null
+        // 1 不合法， 0 合法
+        return 0
+      }
+      
+    },
+    // 删除一条积分规则
+    deleteJifen(jifenIndex,i,index){
+      // console.log(this.form.integralset[index].giveintegral[i].getintegral[jifenIndex])
+      if (this.form.integralset[index].giveintegral[i].getintegral.length===1) {
+        return
+      }
+      this.form.integralset[index].giveintegral[i].getintegral.splice(jifenIndex, 1)
+    },
+    // 增加一条积分规则
+    addJifen(jifenIndex,i,index){
+      let obj = {
+        //积分油品  字符串
+        oils_ids: [],
+        oldChooseData: [], // 用于全选
+        //消费类型1是实付 2是原价 3升数
+        exp_type: 1,
+        //消费金钱
+        money: null,
+        //获得积分
+        integral: null
+      }
+      this.form.integralset[index].giveintegral[i].getintegral.push(obj)
     },
     // 全选油站
     selectAllSite (val) {
@@ -552,9 +808,64 @@ export default {
           this.form.site_ids = ['ALL_SELECT'].concat(val);
         }
       }
-      console.log(this.form.site_ids)
+
       // 储存当前选择的最后结果 作为下次的老数据
       this.oldChooseData = this.form.site_ids;
+
+      // console.log(this.form.site_ids)
+      let site_ids = this.form.site_ids.filter((e)=>{
+        return e!=='ALL_SELECT'
+      })
+      // console.log(site_ids)
+      if (site_ids.length) {
+        getSitesoillist(site_ids).then((res)=>{
+          console.log(res.data)
+          this.oilList = res.data
+          this.oilList.unshift({
+            oils_name: '全选',
+            id: 'ALL_SELECT'
+          })
+        })
+      }else{
+        this.oilList = []
+      }
+    },
+    // 全选油品
+    selectAllOil (val,jifenIndex,i,index) {
+      const allValues = this.oilList.map(item => {
+        return item.id;
+      });
+      // 用来储存上一次选择的值，可进行对比
+      const oldVal = this.form.integralset[index].giveintegral[i].getintegral[jifenIndex].oldChooseData.length > 0 ? this.form.integralset[index].giveintegral[i].getintegral[jifenIndex].oldChooseData : [];
+ 
+      // 若选择全部
+      if (val.includes('ALL_SELECT')) {
+        this.form.integralset[index].giveintegral[i].getintegral[jifenIndex].oils_ids = allValues;
+      }
+      // console.log(oldVal)
+      // 取消全部选中， 上次有， 当前没有， 表示取消全选
+      if (oldVal.includes('ALL_SELECT') && !val.includes('ALL_SELECT')) {
+        this.form.integralset[index].giveintegral[i].getintegral[jifenIndex].oils_ids = [];
+      }
+ 
+      // 点击非全部选中，需要排除全部选中 以及 当前点击的选项
+      // 新老数据都有全部选中
+      if (oldVal.includes('ALL_SELECT') && val.includes('ALL_SELECT')) {
+        const index = val.indexOf('ALL_SELECT');
+        val.splice(index, 1); // 排除全选选项
+        this.form.integralset[index].giveintegral[i].getintegral[jifenIndex].oils_ids = val;
+      }
+ 
+      // 全选未选，但是其他选项都全部选上了，则全选选上
+      if (!oldVal.includes('ALL_SELECT') && !val.includes('ALL_SELECT')) {
+        if (val.length === allValues.length - 1) {
+          this.form.integralset[index].giveintegral[i].getintegral[jifenIndex].oils_ids = ['ALL_SELECT'].concat(val);
+        }
+      }
+
+      // 储存当前选择的最后结果 作为下次的老数据
+      this.form.integralset[index].giveintegral[i].getintegral[jifenIndex].oldChooseData = this.form.integralset[index].giveintegral[i].getintegral[jifenIndex].oils_ids;
+
     },
     // 提交表单
     save(){
@@ -819,6 +1130,10 @@ a{
     span{
       color: #ea4b4b;
     }
+    .ant-time-picker-input{
+      color: #ea4b4b;
+      border-color: #ea4b4b;
+    }
   }
   .dateEveryLineMain{
     position: relative;
@@ -953,6 +1268,19 @@ a{
   padding: 42px 0 0 385px;
   .ant-btn{
     margin: 0 4px;
+  }
+}
+</style>
+<style lang="less">
+.dateEveryLine{
+  &[haserr="1"]{
+    .ant-time-picker-input{
+      color: #ea4b4b;
+      border-color: #ea4b4b;
+    }
+    i{
+      color: #ea4b4b;
+    }
   }
 }
 </style>

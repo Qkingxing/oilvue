@@ -16,3 +16,12 @@ export function getSiteoillist () {
     data
   })
 }
+
+// 获取某油站下油品列表（可查询多个油站）
+export function getSitesoillist (site_ids) {
+  return PhpRequest({
+    url: '/set/sitesoillist',
+    method: 'post',
+    data: {site_ids}
+  })
+}
