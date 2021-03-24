@@ -52,7 +52,7 @@
             size="default"
             rowKey="id"
             :columns="columns"
-            :data="loadData"
+            :data="loadData2"
           >
             <div slot="time" slot-scope="item, row">
               <template>
@@ -89,7 +89,7 @@
             size="default"
             rowKey="id"
             :columns="columns3"
-            :data="loadData"
+            :data="loadData3"
           >
             <div slot="time" slot-scope="item, row">
               <template>
@@ -138,7 +138,6 @@ export default {
   data () {
     return {
       pageType: 'list',
-      type: 1,
       // 表头
       columns: [
         {
@@ -190,13 +189,50 @@ export default {
         let params = {
           page: parameter.pageNo, // 页码
           size: parameter.pageSize, // 每页页数
-          type: this.type
+          type: 1
         }
         return getIntegralrulelist(Object.assign(params)).then(res=>{
           console.log(res.data.list)
           // 自定义出参
-          // console.log(res.data.list)
-          this.oldTotal = res.data.totalCount
+
+          return {
+            data: res.data.list, // 列表数组
+            pageNo: res.data.pageNo,  // 当前页码
+            pageSize: res.data.pageSize,  // 每页页数
+            totalCount: res.data.totalCount, // 列表总条数
+            totalPage: res.data.totalPage // 列表总页数
+          }
+        })
+      },
+      loadData2: parameter => {
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+          type: 2
+        }
+        return getIntegralrulelist(Object.assign(params)).then(res=>{
+          console.log(res.data.list)
+          // 自定义出参
+
+          return {
+            data: res.data.list, // 列表数组
+            pageNo: res.data.pageNo,  // 当前页码
+            pageSize: res.data.pageSize,  // 每页页数
+            totalCount: res.data.totalCount, // 列表总条数
+            totalPage: res.data.totalPage // 列表总页数
+          }
+        })
+      },
+      loadData3: parameter => {
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+          type: 3
+        }
+        return getIntegralrulelist(Object.assign(params)).then(res=>{
+          console.log(res.data.list)
+          // 自定义出参
+
           return {
             data: res.data.list, // 列表数组
             pageNo: res.data.pageNo,  // 当前页码

@@ -43,9 +43,9 @@
             <el-option v-for="(item, index) in sitelist" :key="index" :label="item.site_name" :value="item.id"></el-option>
           </el-select>
           <!-- 检查规则是否冲突，等接口 -->
-          <!-- <div>
+          <div>
             <a-alert message="某某加油站在该时间已有积分规则" type="error" show-icon />
-          </div> -->
+          </div>
         </div>
       </div>
 
