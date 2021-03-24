@@ -149,6 +149,14 @@ export function getIntegrallist () {
     data
   })
 }
+// 新增积分规则
+export function addIntegralruleset (data) {
+  return PhpRequest({
+    url: '/user/integralruleset',
+    method: 'post',
+    data
+  })
+}
 // 享受优惠不可获积分列表
 export function getCannotintegral () {
   return PhpRequest({

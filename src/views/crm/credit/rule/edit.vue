@@ -328,12 +328,13 @@
                               <a-input-number 
                                 :min="0"
                                 :precision="2"
+                                v-model="jifenItem.money"
                                 :placeholder="jifenItem.exp_type==3?'数量':'金额'"
                               />
                               <span v-if="jifenItem.exp_type==3">升</span>
                               <span v-else>元</span>
                               <span>积</span>
-                              <a-input-number placeholder="整数" :min="0" :precision="0"/>
+                              <a-input-number v-model="jifenItem.integral" placeholder="整数" :min="0" :precision="0"/>
                               <span>分</span>
                             </div>
                           </div>
@@ -351,11 +352,11 @@
                     </div>
                   </div>
                 </div>
-                <div class="removeRuleWrap"><span>删除</span></div>
+                <div @click="delGiveintegral(index,i)" class="removeRuleWrap" v-if="item.giveintegral.length!=1"><span>删除</span></div>
               </div>
 
               <div class="addRuleSet">
-                <div class="addbox">
+                <div class="addbox" @click="addGiveintegral(index)">
                   <a-icon type="plus" />
                   <span class="addText">继续添加</span>
                 </div>
@@ -386,7 +387,7 @@
 
 <script>
 import moment from 'moment';
-import { getSitelist } from '@/api/crm'
+import { getSitelist, addIntegralruleset } from '@/api/crm'
 import { getSitesoillist } from '@/api/oil'
 import { getPayList } from '@/api/base'
 import { funcChangeNumToCHN } from '@/utils/util'
@@ -545,14 +546,14 @@ export default {
     back(){
       this.$emit('back')
     },
-    // 删除规则
+    // 删除大规则
     delIntegralset(index){
       this.form.integralset.splice(index, 1)
       if (this.integralsetIndex>this.form.integralset.length-1) {
         this.integralsetIndex = this.form.integralset.length-1
       }
     },
-    // 增加一条规则
+    // 增加一条大规则
     addIntegralset(){
       let obj = {
         activity_type: 1, //活动人群活动人群类型 1所有线上客户 2部分可参与 3部分不可参与  如果选择所有客户的话，客户群体选择null
@@ -594,7 +595,53 @@ export default {
           },
         ]
       }
-      this.form.integralset.push(obj)
+      this.checkForm().then(()=>{
+        this.form.integralset.push(obj)
+        this.integralsetIndex = this.form.integralset.length-1
+      }).catch(()=>{})
+    },
+    // 增加一条小规则
+    addGiveintegral(index){
+      let obj = {
+        rule_type: 1, //重复方式重复方式 1是活动期间 2是每日重复 3每周重复 4每月重复，然后当选择活动期间之后，日期之类的填写null
+        day: [
+          { start: null, end: null, error: null }
+        ],
+        week:{
+          week_list: [],
+          day: [
+            { start: null, end: null, error: null }
+          ],
+        },
+        month:{
+          month_list:[],
+          day: [
+            { start: null, end: null, error: null }
+          ],
+        },
+        pay_id: [], //支付方式ID
+        getintegral: [ //获取积分
+          {
+            //积分油品  字符串
+            oils_ids: [],
+            oldChooseData: [], // 用于全选
+            //消费类型1是实付 2是原价 3升数
+            exp_type: 1,
+            //消费金钱
+            money: null,
+            //获得积分
+            integral: null
+          },
+
+        ]
+      }
+      this.checkForm().then(()=>{
+        this.form.integralset[index].giveintegral.push(obj)
+      }).catch(()=>{})
+    },
+    // 删除一条小规则
+    delGiveintegral(index,i){
+      this.form.integralset[index].giveintegral.splice(i, 1)
     },
     // 禁止选择今天之前的时间
     disabledDate(current) {
@@ -773,7 +820,9 @@ export default {
         //获得积分
         integral: null
       }
-      this.form.integralset[index].giveintegral[i].getintegral.push(obj)
+      this.checkForm().then(()=>{
+        this.form.integralset[index].giveintegral[i].getintegral.push(obj)
+      }).catch(()=>{})
     },
     // 全选油站
     selectAllSite (val) {
@@ -819,7 +868,7 @@ export default {
       // console.log(site_ids)
       if (site_ids.length) {
         getSitesoillist(site_ids).then((res)=>{
-          console.log(res.data)
+          // console.log(res.data)
           this.oilList = res.data
           this.oilList.unshift({
             oils_name: '全选',
@@ -867,9 +916,114 @@ export default {
       this.form.integralset[index].giveintegral[i].getintegral[jifenIndex].oldChooseData = this.form.integralset[index].giveintegral[i].getintegral[jifenIndex].oils_ids;
 
     },
+    // 表单校验
+    checkForm(){
+      return new Promise((resolve, reject)=>{
+        let isError = false
+        let erroeText = '请先填写完整规则信息'
+        // console.log(this.form)
+        let form = {
+          site_ids: this.form.site_ids.filter((e)=>{
+            return e !== "ALL_SELECT"
+          }),
+          start_time: this.form.start_time,
+          end_time: this.form.end_time,
+          integralset: _.cloneDeep(this.form.integralset)
+        }
+        if (!form.site_ids.length&&!isError) {
+          erroeText = '请选择活动油站'
+          isError = true
+        }
+        form.integralset.forEach((integralsetItem,integralsetIndex)=>{
+          // console.log(integralsetItem)
+          integralsetItem.name = `积分规则${funcChangeNumToCHN(integralsetIndex+1)}`
+          integralsetItem.giveintegral.forEach((giveintegralItem,giveintegralIndex)=>{
+            
+            // 每日
+            if (giveintegralItem.rule_type===2) {
+              console.log(giveintegralItem)
+              giveintegralItem.day.forEach((dayItem,datIndex)=>{
+                
+                dayItem.start = moment(dayItem.start).format('HH:mm:ss')
+                dayItem.end = moment(dayItem.end).format('HH:mm:ss')
+
+                if ((dayItem.start==="Invalid date"||dayItem.end==="Invalid date")&&!isError) {
+                  erroeText = '请先填写完整规则信息 - 规则时间'
+                  isError = true
+                }
+              })
+            }
+            // 每周
+            if (giveintegralItem.rule_type===3) {
+              console.log(giveintegralItem)
+              giveintegralItem.week.day.forEach((dayItem,datIndex)=>{
+                
+                dayItem.start = moment(dayItem.start).format('HH:mm:ss')
+                dayItem.end = moment(dayItem.end).format('HH:mm:ss')
+
+                if ((dayItem.start==="Invalid date"||dayItem.end==="Invalid date")&&!isError) {
+                  erroeText = '请先填写完整规则信息 - 规则时间'
+                  isError = true
+                }
+              })
+            }
+            // 每月
+            if (giveintegralItem.rule_type===4) {
+              giveintegralItem.month.day.forEach((dayItem,datIndex)=>{
+              
+                dayItem.start = moment(dayItem.start).format('HH:mm:ss')
+                dayItem.end = moment(dayItem.end).format('HH:mm:ss')
+
+                if ((dayItem.start==="Invalid date"||dayItem.end==="Invalid date")&&!isError) {
+                  erroeText = '请先填写完整规则信息 - 规则时间'
+                  isError = true
+                }
+              })
+            }
+            if (!giveintegralItem.pay_id.length&&!isError) {
+              erroeText = '请先填写完整规则信息 - 支付方式'
+              isError = true
+            }
+            giveintegralItem.getintegral.forEach((getintegralItem,getintegralIndex)=>{
+              // 去掉油品里的全选
+              getintegralItem.oils_ids = getintegralItem.oils_ids.filter(e=>{
+                return e !== "ALL_SELECT"
+              })
+              if (!getintegralItem.oils_ids.length&&!isError) {
+                erroeText = '请先填写完整规则信息 - 积分油品'
+                isError = true
+              }
+              if (!getintegralItem.money&&!isError) {
+                erroeText = '请先填写完整规则信息 - 消费积分'
+                isError = true
+              }
+              if (!getintegralItem.integral&&!isError) {
+                erroeText = '请先填写完整规则信息 - 消费积分'
+                isError = true
+              }
+
+            })
+
+          })
+        })
+        if (isError) {
+          this.$message.error(erroeText)
+          reject()
+        }else{
+          resolve(form)
+        }
+      })
+    },
     // 提交表单
     save(){
-      console.log(this.form)
+      this.checkForm().then((form)=>{
+        console.log(form)
+        addIntegralruleset(form).then((res)=>{
+
+        })
+      })
+      .catch(()=>{})
+
     }
 
   }
