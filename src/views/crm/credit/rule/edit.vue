@@ -62,7 +62,7 @@
           <a-icon @click.stop="delIntegralset(index)" v-if="form.integralset.length>1" type="close" style="cursor: pointer;color: rgb(150, 162, 190);margin-left: 6px;"/>
         </div>
 
-        <div class="addPane">
+        <div class="addPane" v-if="pageType=='add'">
           <span @click="addIntegralset()"><a-icon type="plus"/></span>
         </div>
       </div>
@@ -76,7 +76,7 @@
         <div class="content">
           <div class="row-item flex">
             <div class="row-title">活动人群</div>
-            <div class="row-content">
+            <div class="row-content" v-if="pageType=='add'">
               <div>
                 <a-radio-group v-model="item.activity_type">
                   <a-radio :value="1">
@@ -108,6 +108,9 @@
                   ></el-cascader>
                 </span>
               </div>
+            </div>
+            <div v-else class="row-content">
+              <div v-if="item.activity_type==1">所有线上客户</div>
             </div>
           </div>
           <div class="row-item flex">
@@ -692,6 +695,7 @@ export default {
       }
       if (this.pageType==='edit') {
         console.log(this.itemData)
+        // 编辑模式，拉取详情
         getIntegrallists(this.itemData.id).then((res)=>{
           console.log(res.data)
         })
