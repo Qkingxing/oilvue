@@ -2,7 +2,7 @@
 <template>
 
   <a-layout-content 
-    v-if="pageType=='edit'"
+    v-loading="loading"
     :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
     <div class="tipsBox">
       <div class="configTips">
@@ -12,7 +12,8 @@
     </div>
     
     <div class="head">
-      <span class="title">新增积分规则</span>
+      <span class="title" v-if="pageType=='add'">新增积分规则</span>
+      <span class="title" v-if="pageType=='edit'">修改积分规则</span>
     </div>
 
     <div class="content">
@@ -42,9 +43,8 @@
           <el-select multiple collapse-tags v-model="form.site_ids" @change="selectAllSite" placeholder="请选择活动油站" style="height: auto; margin-bottom: 5px;">
             <el-option v-for="(item, index) in sitelist" :key="index" :label="item.site_name" :value="item.id"></el-option>
           </el-select>
-          <!-- 检查规则是否冲突，等接口 -->
-          <div>
-            <a-alert message="某某加油站在该时间已有积分规则" type="error" show-icon />
+          <div v-show="conflict.show">
+            <a-alert :message="conflict.text" type="error" show-icon />
           </div>
         </div>
       </div>
@@ -387,7 +387,7 @@
 
 <script>
 import moment from 'moment';
-import { getSitelist, addIntegralruleset } from '@/api/crm'
+import { getSitelist, addIntegralruleset,ruleConflict } from '@/api/crm'
 import { getSitesoillist } from '@/api/oil'
 import { getPayList } from '@/api/base'
 import { funcChangeNumToCHN } from '@/utils/util'
@@ -399,6 +399,7 @@ export default {
   components: {},
   data () {
     return {
+      loading: false,
       selectedArray: [],
       options: [
         { name: '油品券', label: 'one' },
@@ -459,6 +460,10 @@ export default {
 
         ]
       },
+      conflict:{
+        show:false,
+        text: ''
+      },// 冲突对象
       value: [],
       options: [
         {
@@ -662,6 +667,7 @@ export default {
     },
     // 初始化
     async Init(){
+      this.loading = true
       let SitelistRes = null
       if (this.userInfo.site_id === (-1)) {
         // 获取油站列表
@@ -682,7 +688,7 @@ export default {
         this.payList = payRes.data
       }
       
-      
+      this.loading = false
     },
     // 选择重复周
     onChangeWeek(item,i,index, event){
@@ -861,12 +867,17 @@ export default {
       // 储存当前选择的最后结果 作为下次的老数据
       this.oldChooseData = this.form.site_ids;
 
+      // 校验油站规则是否有冲突
+      this.checkSiteRule()
+
+      // 根据选择油站，拉取油品列表
       // console.log(this.form.site_ids)
       let site_ids = this.form.site_ids.filter((e)=>{
         return e!=='ALL_SELECT'
       })
       // console.log(site_ids)
       if (site_ids.length) {
+        this.loading = true
         getSitesoillist(site_ids).then((res)=>{
           // console.log(res.data)
           this.oilList = res.data
@@ -874,10 +885,57 @@ export default {
             oils_name: '全选',
             id: 'ALL_SELECT'
           })
+          this.loading = false
         })
       }else{
         this.oilList = []
       }
+
+    },
+    // 校验油站规则是否有冲突
+    checkSiteRule(){
+      if (this.form.site_ids.length===0) {
+        this.conflict.show = false
+        this.conflict.text = ''
+        return
+      }
+
+      let params = {
+        start: this.form.start_time,
+        end: this.form.end_time,
+        site_ids: this.form.site_ids.filter((e=>{
+          return e !== 'ALL_SELECT'
+        }))
+      }
+      this.loading = true
+      ruleConflict(params).then((res)=>{
+        // console.log(res.data.isnull)
+        // 冲突
+        if (res.data.isnull===false) {
+          let arr = this.sitelist.filter((e)=>{
+            return this.form.site_ids.includes(e.id)
+          })
+          arr = arr.filter((e)=>{
+            return e.id !== 'ALL_SELECT'
+          })
+          arr = arr.map(e=>{
+            return e.site_name
+          })
+          let text = ''
+          arr.forEach(e=>{
+            text += `${e}、`
+          })
+          text = text.substring(0, text.length-1)
+
+          this.conflict.show = true
+          this.conflict.text = `${text}在该时间已有积分规则`
+        }else{
+          // 不冲突
+          this.conflict.show = false
+          this.conflict.text = ''
+        }
+        this.loading = false
+      })
     },
     // 全选油品
     selectAllOil (val,jifenIndex,i,index) {
@@ -1018,9 +1076,12 @@ export default {
     save(){
       this.checkForm().then((form)=>{
         console.log(form)
-        addIntegralruleset(form).then((res)=>{
+        if(this.pageType==='add'){
+          addIntegralruleset(form).then((res)=>{
 
-        })
+          })
+        }
+        
       })
       .catch(()=>{})
 

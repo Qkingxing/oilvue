@@ -165,6 +165,14 @@ export function addIntegralruleset (data) {
     data
   })
 }
+// 查询积分规则是否冲突
+export function ruleConflict (data) {
+  return PhpRequest({
+    url: '/user/ruleConflict',
+    method: 'post',
+    data
+  })
+}
 // 享受优惠不可获积分列表
 export function getCannotintegral () {
   return PhpRequest({

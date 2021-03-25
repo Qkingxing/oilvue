@@ -117,7 +117,7 @@
       </a-tabs>
     </a-layout-content>
     <RuleDetail v-if="pageType=='detail'" :pageType="pageType" @back="pageType='list'"/>
-    <RuleEdit v-if="pageType=='edit'" :pageType="pageType" @back="pageType='list'"/>
+    <RuleEdit v-if="pageType=='edit'||pageType=='add'" :pageType="pageType" @back="pageType='list'"/>
   </a-layout>
 </template>
 
@@ -254,7 +254,7 @@ export default {
   methods: {
     // 新增规则
     addRule(){  
-      this.pageType = 'edit'
+      this.pageType = 'add'
     },
     onChangeTab(type){
       console.log(type)

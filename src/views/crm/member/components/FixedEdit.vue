@@ -451,17 +451,16 @@ export default {
       }
       this.checkRule().then(()=>{
         this.form.grade.push(obj)
-      })
-      
-      if (this.form.grade.length>1) {
-        let arr = this.oilList.map((e)=>{
-          return e.id
-        })
-        if (arr.includes('ALL_SELECT')) {
-          this.oilList.splice(0,1)
+        if (this.form.grade.length>1) {
+          let arr = this.oilList.map((e)=>{
+            return e.id
+          })
+          if (arr.includes('ALL_SELECT')) {
+            this.oilList.splice(0,1)
+          }
         }
-      }
-      
+      }).catch(()=>{})
+
     },
     // 全选油品
     selectAllOil(val, index){
