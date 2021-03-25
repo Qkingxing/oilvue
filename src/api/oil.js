@@ -3,8 +3,7 @@ import PhpRequest from '@/utils/PhpRequest'
 import store from '@/store'
 
 
-// 油品挂牌价-列表
-// 获取油品列表
+// 获取油品列表(油站，单个)
 export function getSiteoillist () {
   let data = {}
   if (store.getters.site_id!==(-1)) {
@@ -15,13 +14,20 @@ export function getSiteoillist () {
     method: 'post',
     data
   })
+  
 }
-
 // 获取某油站下油品列表（可查询多个油站）
 export function getSitesoillist (site_ids) {
   return PhpRequest({
     url: '/set/sitesoillist',
     method: 'post',
     data: {site_ids}
+  })
+}
+// 集团油品列表
+export function getGroupolilist () {
+  return PhpRequest({
+    url: '/set/groupolilist',
+    method: 'post',
   })
 }

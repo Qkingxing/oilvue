@@ -127,6 +127,14 @@ export function queryFixedLevel (data) {
     data
   })
 }
+// 新增固定等级
+export function addFixedLevel (data) {
+  return JavaRequest({
+    url: '/customer/addFixedLevel',
+    method: 'post',
+    data
+  })
+}
 // 查询动态等级信息
 export function queryMemberSpalevel (data) {
   return JavaRequest({
