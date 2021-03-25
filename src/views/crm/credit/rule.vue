@@ -77,7 +77,7 @@
 
             <span slot="action" slot-scope="text, record">
               <template>
-                <a @click="stop(record)">编辑</a>
+                <a @click="editRule(record)">编辑</a>
                 <a @click="stop(record)">删除</a>
               </template>
             </span>
@@ -116,8 +116,14 @@
         </a-tab-pane>
       </a-tabs>
     </a-layout-content>
+
     <RuleDetail v-if="pageType=='detail'" :pageType="pageType" @back="pageType='list'"/>
-    <RuleEdit v-if="pageType=='edit'||pageType=='add'" :pageType="pageType" @back="pageType='list'"/>
+    
+    <RuleEdit 
+      v-if="pageType=='edit'||pageType=='add'" 
+      :pageType="pageType" 
+      :itemData="itemData"
+      @back="pageType='list'"/>
   </a-layout>
 </template>
 
@@ -192,7 +198,7 @@ export default {
           type: 1
         }
         return getIntegralrulelist(Object.assign(params)).then(res=>{
-          console.log(res.data.list)
+          // console.log(res.data.list)
           // 自定义出参
 
           return {
@@ -211,7 +217,7 @@ export default {
           type: 2
         }
         return getIntegralrulelist(Object.assign(params)).then(res=>{
-          console.log(res.data.list)
+          // console.log(res.data.list)
           // 自定义出参
 
           return {
@@ -230,7 +236,7 @@ export default {
           type: 3
         }
         return getIntegralrulelist(Object.assign(params)).then(res=>{
-          console.log(res.data.list)
+          // console.log(res.data.list)
           // 自定义出参
 
           return {
@@ -242,6 +248,7 @@ export default {
           }
         })
       },
+      itemData:{}
 
     }
   },
@@ -252,15 +259,20 @@ export default {
     console.log(this.userInfo)
   },
   methods: {
+    editRule(item){
+      this.itemData = item
+      this.pageType = 'edit'
+    },
     // 新增规则
     addRule(){  
       this.pageType = 'add'
     },
     onChangeTab(type){
-      console.log(type)
+      // console.log(type)
     },
     watch(item){
-      console.log(item)
+      // console.log(item)
+      this.itemData = item
       this.pageType = 'detail'
     },
     // 结束规则

@@ -189,6 +189,14 @@ export function addIntegralruleset (data) {
     data
   })
 }
+// 积分规则-详情
+export function getIntegrallists (id) {
+  return PhpRequest({
+    url: '/user/integrallists',
+    method: 'post',
+    data:{id}
+  })
+}
 // 查询积分规则是否冲突
 export function ruleConflict (data) {
   return PhpRequest({

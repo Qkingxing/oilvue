@@ -387,7 +387,7 @@
 
 <script>
 import moment from 'moment';
-import { getSitelist, addIntegralruleset,ruleConflict } from '@/api/crm'
+import { getSitelist, addIntegralruleset,ruleConflict,getIntegrallists } from '@/api/crm'
 import { getSitesoillist } from '@/api/oil'
 import { getPayList } from '@/api/base'
 import { funcChangeNumToCHN } from '@/utils/util'
@@ -535,6 +535,9 @@ export default {
   props:{
     pageType:{
       type: String
+    },
+    itemData:{
+      type: Object
     }
   },
   computed:{
@@ -686,6 +689,12 @@ export default {
       // console.log(payRes.data)
       if (payRes) {
         this.payList = payRes.data
+      }
+      if (this.pageType==='edit') {
+        console.log(this.itemData)
+        getIntegrallists(this.itemData.id).then((res)=>{
+          console.log(res.data)
+        })
       }
       
       this.loading = false
