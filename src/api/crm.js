@@ -135,10 +135,34 @@ export function addFixedLevel (data) {
     data
   })
 }
+// 删除固定等级
+export function delFixedLevel (id) {
+  return JavaRequest({
+    url: '/customer/delFixedLevel',
+    method: 'post',
+    data: {id}
+  })
+}
 // 查询动态等级信息
 export function queryMemberSpalevel (data) {
   return JavaRequest({
     url: '/customer/queryMemberSpalevel',
+    method: 'post',
+    data
+  })
+}
+// 查询动态等级-认证列表
+export function queryCertification (data) {
+  return JavaRequest({
+    url: '/customer/queryCertification',
+    method: 'post',
+    data
+  })
+}
+// 查询动态等级-用户列表
+export function queryUserList (data) {
+  return JavaRequest({
+    url: '/customer/queryUserList',
     method: 'post',
     data
   })
@@ -157,7 +181,7 @@ export function getIntegrallist () {
     data
   })
 }
-// 新增积分规则
+// 新增、修改积分规则
 export function addIntegralruleset (data) {
   return PhpRequest({
     url: '/user/integralruleset',

@@ -4,7 +4,7 @@
     <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
       <div class="head-title">
         <span>
-          免审核用户列表
+          {{itemData.level_name}}用户列表
         </span>
         <a-button @click="exit"> 返回上一页 </a-button>
       </div>
@@ -23,10 +23,15 @@
         <s-table
           ref="table"
           size="default"
-          rowKey="key"
+          rowKey="id"
           :columns="columns"
           :data="loadData"
         >
+          <div slot="id" slot-scope="text, record">
+            <template>
+              <div class="handle-btn" style="margin: 0px;">{{text}}</div>
+            </template>
+          </div>
           <span slot="action" slot-scope="text, record">
             <template>
               <a @click="delTag(record)">删除</a>
@@ -40,12 +45,17 @@
 
 <script>
 import { STable } from '@/components'
-import { getServiceList } from '@/api/manage'
+import { queryUserList } from '@/api/crm'
 
 export default {
   name: 'FixedUserList',
   components: {
     STable
+  },
+  props:{
+    itemData:{
+      type: Object
+    }
   },
   data () {
     return {
@@ -55,31 +65,32 @@ export default {
       columns: [
         {
           title: '客户子编号',
-          dataIndex: 'no'
+          dataIndex: 'id',
+          scopedSlots: { customRender: 'id' }
         },
         {
           title: '手机号',
-          // dataIndex: 'no'
+          dataIndex: 'mobile'
         },
         {
           title: '姓名',
-        //   dataIndex: 'status',
+          dataIndex: 'user_id',
         },
         {
           title: '车牌号',
-        //   dataIndex: 'status',
+          dataIndex: 'license_plate',
         },
         {
           title: '获取等级渠道',
-          dataIndex: 'description'
+          dataIndex: 'certification_name'
         },
         {
           title: '获取等级时间',
-          dataIndex: 'status',
+          dataIndex: 'create_time',
         },
         {
           title: '到期时间',
-        //   dataIndex: 'time',
+          // dataIndex: 'create_time',
         },
         {
           title: '操作',
@@ -89,10 +100,22 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
+        console.log(this.itemData)
+        let params = {
+          level_id: this.itemData.id,
+          page: parameter.pageNo, // 页码
+          limit: parameter.pageSize, // 每页页数
+        }
+        return queryUserList(params)
           .then(res => {
-            return res.result
+            
+            return {
+              data: res.data, // 列表数组
+              pageNo: parameter.pageNo,  // 当前页码
+              pageSize: parameter.pageSize,  // 每页页数
+              totalCount: 1, // 列表总条数
+              totalPage: 1 // 列表总页数
+            }
           })
       },
       
@@ -201,6 +224,11 @@ export default {
 }
 .select-all{
   margin-left: 16px;
+  cursor: pointer;
+}
+.handle-btn{
+  margin: 0 8px;
+  color: #7c7ee2;
   cursor: pointer;
 }
 

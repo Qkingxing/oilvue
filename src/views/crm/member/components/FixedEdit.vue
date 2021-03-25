@@ -134,9 +134,8 @@
                     type="minus-circle" 
                     class="item-icon"/>
 
-                  <a-popover :visible="true" placement="right" content="优惠力度过大，请谨慎提交">
+                  <a-popover v-if="form.discount_type==2&&item.discount<8" :visible="true" placement="right" content="优惠力度过大，请谨慎提交">
                     <a-icon 
-                      v-show="form.discount_type==2&&item.discount<8"
                       type="exclamation-circle" 
                       style="color: rgb(247, 182, 2); font-size: 16px; margin-left: 8px;"/>
                   </a-popover>
@@ -261,6 +260,9 @@ export default {
   props:{
     type:{
       type: String
+    },
+    formData: {
+      type: Object
     }
   },
   data () {
@@ -323,7 +325,10 @@ export default {
         id: 'ALL_SELECT',
         oils_name: '全选',
       })
-      console.log(this.oilList)
+      // console.log(this.oilList)
+      if (this.type === 'edit') {
+        console.log(this.formData)
+      }
     })
   },
   methods: {
