@@ -143,6 +143,14 @@ export function delFixedLevel (id) {
     data: {id}
   })
 }
+// 固定等级-详情
+export function getFixedLevelDetail (id) {
+  return JavaRequest({
+    url: '/query_fixedLevel_list',
+    method: 'post',
+    data: {id}
+  })
+}
 // 查询动态等级信息
 export function queryMemberSpalevel (data) {
   return JavaRequest({

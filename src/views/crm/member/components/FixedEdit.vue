@@ -247,7 +247,7 @@
 import { mapGetters } from 'vuex'
 import { STable } from '@/components'
 import moment from 'moment';
-import { addFixedLevel } from '@/api/crm'
+import { addFixedLevel,getFixedLevelDetail } from '@/api/crm'
 import { getGroupolilist } from '@/api/oil'
 
 const plainOptions = ['姓名', '车牌号']
@@ -317,10 +317,15 @@ export default {
   },
   created () {
     // console.log(this.userInfo)
-    // 获取油品列表
-    getGroupolilist().then((res)=>{
-      // console.log(res.data)
-      this.oilList = res.data
+    this.Init()
+  },
+  methods: {
+    moment,
+    async Init(){
+      // 获取油品列表
+      let oilRes = await getGroupolilist()
+        // console.log(res.data)
+      this.oilList = oilRes.data
       this.oilList.unshift({
         id: 'ALL_SELECT',
         oils_name: '全选',
@@ -328,11 +333,16 @@ export default {
       // console.log(this.oilList)
       if (this.type === 'edit') {
         console.log(this.formData)
+        // 获取详情
+        let formRes = await getFixedLevelDetail(this.formData.id)
+
+        console.log(formRes)
+
+
+
       }
-    })
-  },
-  methods: {
-    moment,
+
+    },
     save(){
       let that = this
       // console.log(this.form)

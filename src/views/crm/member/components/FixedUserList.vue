@@ -13,7 +13,7 @@
       <div class="table-header">
         
         <div class="searchBox">
-          <a-input-search placeholder="请输入会员手机号" style="width: 200px" />
+          <a-input-search v-model="mobile" @search="$refs.table.refresh()" placeholder="请输入会员手机号" style="width: 200px" />
         </div>
         <div class="sub-title"></div>
       </div>
@@ -61,6 +61,7 @@ export default {
     return {
       // 查询参数
       queryParam: { },
+      mobile: '',
       // 表头
       columns: [
         {
@@ -102,6 +103,7 @@ export default {
       loadData: parameter => {
         console.log(this.itemData)
         let params = {
+          mobile: this.mobile,
           level_id: this.itemData.id,
           page: parameter.pageNo, // 页码
           limit: parameter.pageSize, // 每页页数
@@ -113,8 +115,8 @@ export default {
               data: res.data, // 列表数组
               pageNo: parameter.pageNo,  // 当前页码
               pageSize: parameter.pageSize,  // 每页页数
-              totalCount: 1, // 列表总条数
-              totalPage: 1 // 列表总页数
+              totalCount: res.countPage, // 列表总条数
+              totalPage: res.pageSize // 列表总页数
             }
           })
       },
