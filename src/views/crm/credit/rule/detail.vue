@@ -119,7 +119,7 @@
 
 
 import { mapGetters } from 'vuex'
-import { getIntegrallists } from '@/api/crm'
+import { getIntegrallists,stopIntegralruleset } from '@/api/crm'
 import { getPayList } from '@/api/base'
 import { getSitesoillist } from '@/api/oil'
 
@@ -182,13 +182,15 @@ export default {
     },
     // 结束规则
     stop(){
+      let that = this
       this.$confirm({
         title: '温馨提示',
         content: '积分规则停用后将不再生效，是否确认停用',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          stopIntegralruleset(that.form.id).then(()=>{
+            that.$message.success('结束成功')
+            that.back()
+          })
         },
         onCancel () {}
       })

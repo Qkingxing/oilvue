@@ -1,6 +1,7 @@
 <template>
 
     <a-layout-content
+      v-loading="loading"
       class="fixed_level_page"
       :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
     >
@@ -247,7 +248,7 @@
 import { mapGetters } from 'vuex'
 import { STable } from '@/components'
 import moment from 'moment';
-import { addFixedLevel,getFixedLevelDetail } from '@/api/crm'
+import { addFixedLevel,getFixedLevelDetail,editFixedLevel } from '@/api/crm'
 import { getGroupolilist } from '@/api/oil'
 
 const plainOptions = ['姓名', '车牌号']
@@ -309,6 +310,7 @@ export default {
         ],
       },
       oilList: [],//油品下拉
+      loading: false,
 
     }
   },
@@ -322,6 +324,7 @@ export default {
   methods: {
     moment,
     async Init(){
+      this.loading = true
       // 获取油品列表
       let oilRes = await getGroupolilist()
         // console.log(res.data)
@@ -332,15 +335,43 @@ export default {
       })
       // console.log(this.oilList)
       if (this.type === 'edit') {
-        console.log(this.formData)
+        // console.log(this.formData)
         // 获取详情
         let formRes = await getFixedLevelDetail(this.formData.id)
 
-        console.log(formRes)
+        let form = _.cloneDeep(formRes.data[0])
+        form.grade = []
+        
+        
+        form.treeList.forEach((e,i)=>{
+          // console.log(e)
+          e.oils_id = e.oils_ids.map(Number)
+          e.oldChooseData = []
+          e.discount = e.oils_money
+          form.grade.push(e)
+        })
+        
+        // console.log(form)
 
+        this.$set(this,'form',form)
+
+        if (this.form.template_icon==='https://yy-1258898587.cos.ap-guangzhou.myqcloud.com/public/2020/01/08/19/25b67c1677b9a0dc609b780a63d0.png') {
+          this.templateType = 1
+        }else{
+          this.templateType = 2
+        }
+        if (this.form.grade.length>1) {
+          let arr = this.oilList.map((e)=>{
+            return e.id
+          })
+          if (arr.includes('ALL_SELECT')) {
+            this.oilList.splice(0,1)
+          }
+        }
 
 
       }
+      this.loading = false
 
     },
     save(){
@@ -353,6 +384,11 @@ export default {
             // console.log(form)
             if (that.type === 'add') {
               addFixedLevel(form).then(()=>{
+                that.exit()
+              })
+            }
+            if (that.type === 'edit') {
+              editFixedLevel(form).then(()=>{
                 that.exit()
               })
             }

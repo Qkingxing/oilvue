@@ -135,6 +135,14 @@ export function addFixedLevel (data) {
     data
   })
 }
+// 修改固定等级
+export function editFixedLevel (data) {
+  return JavaRequest({
+    url: '/customer/updateFixedLevel',
+    method: 'post',
+    data
+  })
+}
 // 删除固定等级
 export function delFixedLevel (id) {
   return JavaRequest({
@@ -146,7 +154,7 @@ export function delFixedLevel (id) {
 // 固定等级-详情
 export function getFixedLevelDetail (id) {
   return JavaRequest({
-    url: '/query_fixedLevel_list',
+    url: '/customer/query_fixedLevel_list',
     method: 'post',
     data: {id}
   })
@@ -195,6 +203,22 @@ export function addIntegralruleset (data) {
     url: '/user/integralruleset',
     method: 'post',
     data
+  })
+}
+// 删除积分规则
+export function delIntegralruleset (id) {
+  return PhpRequest({
+    url: '/user/integralruledel',
+    method: 'post',
+    data: {id}
+  })
+}
+// 结束积分规则
+export function stopIntegralruleset (id) {
+  return PhpRequest({
+    url: '/user/integralruleover',
+    method: 'post',
+    data: {id}
   })
 }
 // 积分规则-详情

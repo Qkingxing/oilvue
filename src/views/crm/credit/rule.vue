@@ -50,7 +50,8 @@
           <siteDetail 
             v-if="itemData&&userInfo.site_id!==-1"
             :itemData="itemData"
-            :active="active"/>
+            :active="active"
+            @reset="$refs.table.refresh()"/>
 
           <div v-if="!itemData&&userInfo.site_id!==-1" class="empty_wrap">
             <a-empty />
@@ -59,7 +60,7 @@
         </a-tab-pane>
         <a-tab-pane :key="2" tab="待开始">
           <s-table
-            ref="table"
+            ref="table2"
             size="default"
             rowKey="id"
             :columns="columns"
@@ -96,7 +97,7 @@
         </a-tab-pane>
         <a-tab-pane :key="3" tab="已结束">
           <s-table
-            ref="table"
+            ref="table3"
             size="default"
             rowKey="id"
             :columns="columns3"
@@ -146,7 +147,7 @@
 <script>
 import { STable } from '@/components'
 
-import { getIntegralrulelist } from '@/api/crm'
+import { getIntegralrulelist,delIntegralruleset,stopIntegralruleset } from '@/api/crm'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -297,26 +298,30 @@ export default {
     },
     // 结束规则
     stop(item){
+      let that = this
       this.$confirm({
         title: '温馨提示',
         content: '积分规则停用后将不再生效，是否确认停用',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          stopIntegralruleset(item.id).then(()=>{
+            that.$message.success('结束成功')
+            that.$refs.table.refresh()
+          })
         },
         onCancel () {}
       })
     },
     // 删除规则
     delItem(item){
+      let that = this
       this.$confirm({
         title: '是否删除积分规则',
         content: '积分规则删除后将不可恢复',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          delIntegralruleset(item.id).then(()=>{
+            that.$message.success('删除成功')
+            that.$refs.table2.refresh()
+          })
         },
         onCancel () {}
       })

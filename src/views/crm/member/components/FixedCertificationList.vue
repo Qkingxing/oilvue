@@ -99,9 +99,11 @@ export default {
         console.log(this.itemData)
         let params = {
           level_id: this.itemData.id,
-          mobile: this.mobile,
           page: parameter.pageNo, // 页码
           limit: parameter.pageSize, // 每页页数
+        }
+        if (this.mobile!=='') {
+          params.mobile = this.mobile
         }
 
         return queryCertification(params)

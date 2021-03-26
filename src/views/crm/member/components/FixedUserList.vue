@@ -34,7 +34,7 @@
           </div>
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">删除</a>
+              <a @click="delUser(record)">删除</a>
             </template>
           </span>
         </s-table>
@@ -103,10 +103,12 @@ export default {
       loadData: parameter => {
         console.log(this.itemData)
         let params = {
-          mobile: this.mobile,
           level_id: this.itemData.id,
           page: parameter.pageNo, // 页码
           limit: parameter.pageSize, // 每页页数
+        }
+        if (this.mobile!=='') {
+          params.mobile = this.mobile
         }
         return queryUserList(params)
           .then(res => {
@@ -128,10 +130,11 @@ export default {
     exit(){
       this.$emit('exit')
     },
-    delTag () {
+    delUser (item) {
+      let that = this
       this.$confirm({
-        title: '温馨提示',
-        content: '删除会清除标签全部信息，是否删除？',
+        title: '是否删除该用户？',
+        content: `删除后该用户将不再是${that.itemData.level_name}`,
         onOk () {
           return new Promise((resolve, reject) => {
             resolve()

@@ -69,7 +69,7 @@
               <a-divider type="vertical" />
               <a @click="delFixedLevel(record)">删除</a>
               <a-divider type="vertical" />
-              <a @click="delTag(record)">下载等级码</a>
+              <a @click="download(record)">下载等级码</a>
             </template>
           </span>
 
@@ -206,6 +206,18 @@ export default {
             that.$message.success('删除成功')
             that.$refs.table.refresh()
           })
+        },
+        onCancel () {}
+      })
+    },
+    download (item) {
+      this.$confirm({
+        title: '操作提示',
+        content: '开发中...',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            resolve()
+          }).catch(() => console.log('Oops errors!'))
         },
         onCancel () {}
       })
