@@ -3,15 +3,16 @@
   <a-layout>
     <a-layout-content 
       v-if="pageType=='list'"
-      :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
+      :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '700px', position: 'relative' }">
       <div class="addRuleBtn">
         <a-button type="primary" @click="addRule">
           新增积分规则
         </a-button>
       </div>
-      <a-tabs default-active-key="1" size="large" @change="onChangeTab">
-        <a-tab-pane key="1" tab="进行中">
+      <a-tabs v-model="active" size="large">
+        <a-tab-pane :key="1" tab="进行中">
           <s-table
+            v-show="userInfo.site_id===-1"
             ref="table"
             size="default"
             rowKey="id"
@@ -45,8 +46,18 @@
               </template>
             </span>
           </s-table>
+
+          <siteDetail 
+            v-if="itemData&&userInfo.site_id!==-1"
+            :itemData="itemData"
+            :active="active"/>
+
+          <div v-if="!itemData&&userInfo.site_id!==-1" class="empty_wrap">
+            <a-empty />
+          </div>
+
         </a-tab-pane>
-        <a-tab-pane key="2" tab="待开始">
+        <a-tab-pane :key="2" tab="待开始">
           <s-table
             ref="table"
             size="default"
@@ -78,12 +89,12 @@
             <span slot="action" slot-scope="text, record">
               <template>
                 <a @click="editRule(record)">编辑</a>
-                <a @click="stop(record)">删除</a>
+                <a @click="delItem(record)">删除</a>
               </template>
             </span>
           </s-table>
         </a-tab-pane>
-        <a-tab-pane key="3" tab="已结束">
+        <a-tab-pane :key="3" tab="已结束">
           <s-table
             ref="table"
             size="default"
@@ -117,7 +128,12 @@
       </a-tabs>
     </a-layout-content>
 
-    <RuleDetail v-if="pageType=='detail'" :pageType="pageType" @back="pageType='list'"/>
+    <RuleDetail 
+      v-if="pageType=='detail'" 
+      :pageType="pageType" 
+      :itemData="itemData"
+      :active="active"
+      @back="pageType='list'"/>
     
     <RuleEdit 
       v-if="pageType=='edit'||pageType=='add'" 
@@ -130,7 +146,6 @@
 <script>
 import { STable } from '@/components'
 
-import { getServiceList } from '@/api/manage'
 import { getIntegralrulelist } from '@/api/crm'
 import { mapGetters } from 'vuex'
 
@@ -139,11 +154,13 @@ export default {
   components: {
     STable,
     RuleDetail: ()=>import('./rule/detail'),
-    RuleEdit: ()=>import('./rule/edit')
+    siteDetail: ()=>import('./rule/siteDetail'),
+    RuleEdit: ()=>import('./rule/edit'),
   },
   data () {
     return {
       pageType: 'list',
+      active: 1,
       // 表头
       columns: [
         {
@@ -190,16 +207,23 @@ export default {
           dataIndex: 'user_name',
         }
       ],
+
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
+
         let params = {
           page: parameter.pageNo, // 页码
           size: parameter.pageSize, // 每页页数
           type: 1
         }
         return getIntegralrulelist(Object.assign(params)).then(res=>{
-          // console.log(res.data.list)
+          console.log(res.data.list)
           // 自定义出参
+          // 集团
+          if (this.userInfo.site_id!==(-1)) {
+            // this.itemData = res.data.list[0] || null
+            this.itemData = null
+          }
 
           return {
             data: res.data.list, // 列表数组
@@ -248,7 +272,7 @@ export default {
           }
         })
       },
-      itemData:{}
+      itemData: null
 
     }
   },
@@ -267,19 +291,29 @@ export default {
     addRule(){  
       this.pageType = 'add'
     },
-    onChangeTab(type){
-      // console.log(type)
-    },
     watch(item){
       // console.log(item)
       this.itemData = item
       this.pageType = 'detail'
     },
     // 结束规则
-    stop(){
+    stop(item){
       this.$confirm({
         title: '温馨提示',
         content: '积分规则停用后将不再生效，是否确认停用',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            resolve()
+          }).catch(() => console.log('Oops errors!'))
+        },
+        onCancel () {}
+      })
+    },
+    // 删除规则
+    delItem(item){
+      this.$confirm({
+        title: '是否删除积分规则',
+        content: '积分规则删除后将不可恢复',
         onOk () {
           return new Promise((resolve, reject) => {
             resolve()
@@ -301,5 +335,11 @@ export default {
 }
 a{
   margin: 0 5px;
+}
+.empty_wrap{
+  min-height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -111,6 +111,8 @@
             </div>
             <div v-else class="row-content">
               <div v-if="item.activity_type==1">所有线上客户</div>
+              <div v-if="item.activity_type==2">某些人可参与</div>
+              <div v-if="item.activity_type==3">某些人不可参与</div>
             </div>
           </div>
           <div class="row-item flex">
@@ -123,7 +125,7 @@
                 <div>
                   <div class="flex mar_top16">
                     <div class="row-title">重复方式</div>
-                    <div class="row-content">
+                    <div class="row-content" v-if="pageType=='add'">
                       <a-radio-group v-model="it.rule_type">
                         <a-radio :value="1">活动期间</a-radio>
                         <a-radio :value="2">每日重复</a-radio>
@@ -273,20 +275,29 @@
                         </div>
                       </div>
                     </div>
+                    <div class="row-content" v-else>
+                      <div v-if="it.rule_type==1">活动期间</div>
+                      <div v-if="it.rule_type==2">每日重复</div>
+                      <div v-if="it.rule_type==3">每周重复</div>
+                      <div v-if="it.rule_type==4">每月重复</div>
+                    </div>
                   </div>
                   <div 
                     class="flex"
-                    :class="{'mar_top16':it.rule_type==1}">
+                    :class="{'mar_top16':it.rule_type==1||pageType=='edit'}">
                     <div 
                       class="row-title line_h40"
-                      :class="{'ruleTimeBox':it.rule_type!=1}">规则时间</div>
+                      :class="{'ruleTimeBox':it.rule_type!=1&&pageType=='add'}">规则时间</div>
                     <div class="row-content line_h40" v-if="it.rule_type==1&&form.start_time">
                       {{form.start_time}} ~ {{form.end_time}}
+                    </div>
+                    <div class="row-content ruleTimeDetail" v-if="pageType=='edit'">
+                      {{timeText(it)}}
                     </div>
                   </div>
                   <div class="flex mar_top16">
                     <div class="row-title line_h40">支付方式</div>
-                    <div class="row-content" style="display:flex;align-items:center;">
+                    <div v-if="pageType=='add'" class="row-content" style="display:flex;align-items:center;">
                       <a-select v-model="it.pay_id" style="width: 240px" mode="multiple" placeholder="请选择支付方式">
                         <a-select-option 
                           v-for="(item, index) in payList"
@@ -296,6 +307,11 @@
                         </a-select-option>
 
                       </a-select>
+                    </div>
+                    <div v-else class="row-content">
+                      <div class="pay_type_box">
+                        {{payListText(it.pay_id)}}
+                      </div>
                     </div>
                   </div>
                   <div class="flex mar_top16">
@@ -358,7 +374,7 @@
                 <div @click="delGiveintegral(index,i)" class="removeRuleWrap" v-if="item.giveintegral.length!=1"><span>删除</span></div>
               </div>
 
-              <div class="addRuleSet">
+              <div class="addRuleSet" v-if="pageType=='add'">
                 <div class="addbox" @click="addGiveintegral(index)">
                   <a-icon type="plus" />
                   <span class="addText">继续添加</span>
@@ -377,7 +393,7 @@
 
     <div class="createdBtn">
       <a-button type="primary" @click="save">
-        创 建
+        {{pageType=='add'?'创 建':'保 存'}}
       </a-button>
       <a-button type="info" @click="back">
         返 回
@@ -403,11 +419,6 @@ export default {
   data () {
     return {
       loading: false,
-      selectedArray: [],
-      options: [
-        { name: '油品券', label: 'one' },
-        { name: '商品券', label: 'tow' },
-      ],
       integralsetIndex: 0,// 显示规则索引
       sitelist: [],  // 油站下拉
       oldChooseData: [], // 油站下拉上次的选择
@@ -544,7 +555,7 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(['userInfo'])
+    ...mapGetters(['userInfo']),
   },
   created () {
     // console.log(this.userInfo.site_id)
@@ -553,6 +564,139 @@ export default {
   methods: {
     moment,
     funcChangeNumToCHN,
+    // 初始化
+    async Init(){
+      this.loading = true
+      let SitelistRes = null
+      if (this.userInfo.site_id === (-1)) {
+        // 获取油站列表
+        SitelistRes = await getSitelist({sreach:''})
+        // console.log(SitelistRes.data.data)
+        if (SitelistRes) {
+          this.sitelist = SitelistRes.data.data
+          this.sitelist.unshift({
+            site_name: '全选',
+            id: 'ALL_SELECT'
+          })
+        }
+      }
+      // 获取支付方式列表
+      let payRes = await getPayList()
+      // console.log(payRes.data)
+      if (payRes) {
+        this.payList = payRes.data
+      }
+      if (this.pageType==='edit') {
+        // console.log(this.itemData)
+        // 编辑模式，拉取详情
+        let formRes = await getIntegrallists(this.itemData.id)
+        let form = _.cloneDeep(formRes.data)
+
+        form.date = [form.start_time,form.end_time]
+        form.site_ids = form.site_ids.map(Number)
+        // 获取油品下拉
+        let oilRes = await getSitesoillist(form.site_ids)
+        this.oilList = oilRes.data
+        this.oilList.unshift({
+          oils_name: '全选',
+          id: 'ALL_SELECT'
+        })
+        // console.log(form)
+        form.integralset.forEach((e,i)=>{
+          // console.log(e)
+          e.giveintegral.forEach((e2,i2)=>{
+            // console.log(e2)
+            if (!e2.day) {
+              e2.day = [
+                { start: null, end: null, error: null }
+              ]
+            }
+            if (!e2.week) {
+              e2.week = {
+                week_list: [],
+                day: [
+                  { start: null, end: null, error: null }
+                ],
+              }
+            }
+            if(!e2.month){
+              e2.month = {
+                month_list:[],
+                day: [
+                  { start: null, end: null, error: null }
+                ],
+              }
+            }
+            e2.pay_id = e2.pay_id.map(Number)
+            e2.getintegral.forEach((e3,i3)=>{
+              e3.oldChooseData = []
+              e3.oils_ids = e3.oils_ids.map(Number)
+            })
+            
+          })
+        })
+        
+        // console.log(form)
+        this.$set(this,'form',form)
+
+      }
+      
+      this.loading = false
+    },
+    // 重复时间转换文字
+    timeText(item){
+      let str = ''
+      // 每日
+      if (item.rule_type===2) {
+        let arr = item.day.map(e=>{
+          return `${e.start}~${e.end}`
+        })
+        str = arr.join('、')
+      }
+      // 每周
+      if (item.rule_type===3) {
+        let arr = item.week.day.map(e=>{
+          return `${e.start}~${e.end}`
+        })
+        str = arr.join('、')
+        
+        let weekArr = item.week.week_list.map(e=>{
+          return `周${e}`
+        })
+        let weekStr = weekArr.join('、')
+        // console.log(weekStr)
+        str = `${weekStr} ${str}`
+      }
+      // 每月
+      if (item.rule_type===4) {
+        let arr = item.month.day.map(e=>{
+          return `${e.start}~${e.end}`
+        })
+        str = arr.join('、')
+        
+        let monthArr = item.month.month_list.map(e=>{
+          return `${e}日`
+        })
+        let monthStr = monthArr.join('、')
+        // console.log(monthStr)
+        str = `${monthStr} ${str}`
+      }
+
+      return str
+    },
+    // 支付方式转换中文
+    payListText(ids){
+      // console.log(this.payList)
+      let arr = this.payList.filter(e=>{
+        return ids.includes(e.id)
+      })
+      arr = arr.map(e=>{
+        return e.name
+      })
+      let str = arr.join('、')
+      // console.log(str)
+      return str
+    },
     // 返回列表页
     back(){
       this.$emit('back')
@@ -669,39 +813,9 @@ export default {
         this.form.start_time = null
         this.form.end_time = null
       }
+      // 校验油站规则是否有冲突
+      this.checkSiteRule()
       // console.log(this.form)
-    },
-    // 初始化
-    async Init(){
-      this.loading = true
-      let SitelistRes = null
-      if (this.userInfo.site_id === (-1)) {
-        // 获取油站列表
-        SitelistRes = await getSitelist({sreach:''})
-        // console.log(SitelistRes.data.data)
-        if (SitelistRes) {
-          this.sitelist = SitelistRes.data.data
-          this.sitelist.unshift({
-            site_name: '全选',
-            id: 'ALL_SELECT'
-          })
-        }
-      }
-      // 获取支付方式列表
-      let payRes = await getPayList()
-      // console.log(payRes.data)
-      if (payRes) {
-        this.payList = payRes.data
-      }
-      if (this.pageType==='edit') {
-        console.log(this.itemData)
-        // 编辑模式，拉取详情
-        getIntegrallists(this.itemData.id).then((res)=>{
-          console.log(res.data)
-        })
-      }
-      
-      this.loading = false
     },
     // 选择重复周
     onChangeWeek(item,i,index, event){
@@ -992,7 +1106,7 @@ export default {
       return new Promise((resolve, reject)=>{
         let isError = false
         let erroeText = '请先填写完整规则信息'
-        // console.log(this.form)
+
         let form = {
           site_ids: this.form.site_ids.filter((e)=>{
             return e !== "ALL_SELECT"
@@ -1001,22 +1115,30 @@ export default {
           end_time: this.form.end_time,
           integralset: _.cloneDeep(this.form.integralset)
         }
+        if (this.pageType==='edit') {
+          form.id = this.form.id
+        }
         if (!form.site_ids.length&&!isError) {
           erroeText = '请选择活动油站'
           isError = true
         }
         form.integralset.forEach((integralsetItem,integralsetIndex)=>{
+          if (this.pageType==='edit') {
+            integralsetItem.id = integralsetItem.id
+          }
           // console.log(integralsetItem)
           integralsetItem.name = `积分规则${funcChangeNumToCHN(integralsetIndex+1)}`
           integralsetItem.giveintegral.forEach((giveintegralItem,giveintegralIndex)=>{
-            
+            if (this.pageType==='edit') {
+              giveintegralItem.id = giveintegralItem.id
+            }
             // 每日
             if (giveintegralItem.rule_type===2) {
-              console.log(giveintegralItem)
+              // console.log(giveintegralItem)
               giveintegralItem.day.forEach((dayItem,datIndex)=>{
                 
-                dayItem.start = moment(dayItem.start).format('HH:mm:ss')
-                dayItem.end = moment(dayItem.end).format('HH:mm:ss')
+                dayItem.start = typeof dayItem.start==='string'?dayItem.start:moment(dayItem.start).format('HH:mm:ss')
+                dayItem.end = typeof dayItem.end==='string'?dayItem.end:moment(dayItem.end).format('HH:mm:ss')
 
                 if ((dayItem.start==="Invalid date"||dayItem.end==="Invalid date")&&!isError) {
                   erroeText = '请先填写完整规则信息 - 规则时间'
@@ -1026,11 +1148,11 @@ export default {
             }
             // 每周
             if (giveintegralItem.rule_type===3) {
-              console.log(giveintegralItem)
+              // console.log(giveintegralItem)
               giveintegralItem.week.day.forEach((dayItem,datIndex)=>{
                 
-                dayItem.start = moment(dayItem.start).format('HH:mm:ss')
-                dayItem.end = moment(dayItem.end).format('HH:mm:ss')
+                dayItem.start = typeof dayItem.start==='string'?dayItem.start:moment(dayItem.start).format('HH:mm:ss')
+                dayItem.end = typeof dayItem.end==='string'?dayItem.end:moment(dayItem.end).format('HH:mm:ss')
 
                 if ((dayItem.start==="Invalid date"||dayItem.end==="Invalid date")&&!isError) {
                   erroeText = '请先填写完整规则信息 - 规则时间'
@@ -1041,10 +1163,10 @@ export default {
             // 每月
             if (giveintegralItem.rule_type===4) {
               giveintegralItem.month.day.forEach((dayItem,datIndex)=>{
-              
-                dayItem.start = moment(dayItem.start).format('HH:mm:ss')
-                dayItem.end = moment(dayItem.end).format('HH:mm:ss')
 
+                dayItem.start = typeof dayItem.start==='string'?dayItem.start:moment(dayItem.start).format('HH:mm:ss')
+                dayItem.end = typeof dayItem.end==='string'?dayItem.end:moment(dayItem.end).format('HH:mm:ss')
+                
                 if ((dayItem.start==="Invalid date"||dayItem.end==="Invalid date")&&!isError) {
                   erroeText = '请先填写完整规则信息 - 规则时间'
                   isError = true
@@ -1077,6 +1199,7 @@ export default {
 
           })
         })
+
         if (isError) {
           this.$message.error(erroeText)
           reject()
@@ -1088,13 +1211,12 @@ export default {
     // 提交表单
     save(){
       this.checkForm().then((form)=>{
-        console.log(form)
-        if(this.pageType==='add'){
-          addIntegralruleset(form).then((res)=>{
+        // console.log(form)
 
-          })
-        }
-        
+        addIntegralruleset(form).then((res)=>{
+          this.back()
+        })
+
       })
       .catch(()=>{})
 
@@ -1240,6 +1362,10 @@ a{
 }
 .rules-edit-container-ele{
   margin: 40px 0 0 40px;
+  .pay_type_box{
+    width: 476px;
+    margin: 8px 0 0 0;
+  }
   .row-item{
     .row-title{
       font-size: 14px;
@@ -1471,7 +1597,10 @@ a{
   }
 }
 
-
+.ruleTimeDetail{
+  width: 600px;
+  padding-top: 10px;
+}
 .dateEveryLine_tips{
   display: block;
   font-size: 14px;

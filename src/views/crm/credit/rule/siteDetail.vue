@@ -2,32 +2,15 @@
 <template>
 
   <a-layout-content 
-    v-if="pageType=='detail'"
     v-loading="loading"
     :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
-    <div class="tipsBox">
-      <div class="configTips">
-        <a-icon type="exclamation-circle" style="color: rgb(84, 130, 235);vertical-align: middle;margin-right: 5px;"/>
-        <span class="teipsText">多个积分规则以最高积分规则为准</span>
-      </div>
-    </div>
-    
-    <div class="head">
-      <span class="title">积分规则详情</span>
-      <a-button type="info" class="goback" @click="back">
-        返回上一页
-      </a-button>
-    </div>
 
     <div class="ruleDetail">
       <div class="box">
         <span class="s1">活动时间</span>
         <span class="s2">{{form.start_time}} - {{form.end_time}}</span>
       </div>
-      <div class="box flex">
-        <span class="s1">活动油站</span>
-        <span class="s2" style="width: 800px;">{{form.site_name}}</span>
-      </div>
+
       <div class="box" v-if="active==1">
         <span class="s1">操作</span>
         <span class="s2 end" @click="stop">结束</span>
@@ -124,7 +107,7 @@ import { getPayList } from '@/api/base'
 import { getSitesoillist } from '@/api/oil'
 
 export default {
-  name: 'RuleDetail',
+  name: 'siteDetail',
   components: {},
   data () {
     return {
@@ -137,9 +120,6 @@ export default {
     }
   },
   props:{
-    pageType:{
-      type: String
-    },
     itemData:{
       type: Object
     },
@@ -153,7 +133,7 @@ export default {
   },
   created () {
     // console.log(this.userInfo)
-    // console.log(this.itemData)
+    console.log(this.itemData)
     this.Init()
     
   },
