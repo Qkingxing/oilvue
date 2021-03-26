@@ -1051,7 +1051,7 @@ export default {
         // 冲突
         if (res.data.isnull===false) {
           let arr = this.sitelist.filter((e)=>{
-            return this.form.site_ids.includes(e.id)
+            return res.data.site_ids.includes(e.id)
           })
           arr = arr.filter((e)=>{
             return e.id !== 'ALL_SELECT'
@@ -1117,6 +1117,11 @@ export default {
       return new Promise((resolve, reject)=>{
         let isError = false
         let erroeText = '请先填写完整规则信息'
+
+        if (this.conflict.show) {
+          erroeText = this.conflict.text
+          isError = true
+        }
 
         let form = {
           site_ids: this.form.site_ids.filter((e)=>{
