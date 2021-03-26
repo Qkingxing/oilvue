@@ -568,6 +568,7 @@ export default {
     async Init(){
       this.loading = true
       let SitelistRes = null
+      // 如果是集团权限
       if (this.userInfo.site_id === (-1)) {
         // 获取油站列表
         SitelistRes = await getSitelist({sreach:''})
@@ -579,6 +580,16 @@ export default {
             id: 'ALL_SELECT'
           })
         }
+      }else{
+        // 单站权限
+        this.form.site_ids = [this.userInfo.site_id]
+        // 获取油品下拉
+        let oilRes = await getSitesoillist(this.form.site_ids)
+        this.oilList = oilRes.data
+        this.oilList.unshift({
+          oils_name: '全选',
+          id: 'ALL_SELECT'
+        })
       }
       // 获取支付方式列表
       let payRes = await getPayList()

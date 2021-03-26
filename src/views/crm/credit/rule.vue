@@ -219,10 +219,9 @@ export default {
         return getIntegralrulelist(Object.assign(params)).then(res=>{
           console.log(res.data.list)
           // 自定义出参
-          // 集团
+          // 单站模式
           if (this.userInfo.site_id!==(-1)) {
-            // this.itemData = res.data.list[0] || null
-            this.itemData = null
+            this.itemData = res.data.list[0] || null
           }
 
           return {
