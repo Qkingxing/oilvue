@@ -4,7 +4,7 @@
     <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
       <div class="head-title">
         <span>
-          免审核认证列表
+          {{itemData.level_name}}认证列表
         </span>
         <a-button @click="exit"> 返回上一页 </a-button>
       </div>
@@ -13,7 +13,7 @@
       <div class="table-header">
         
         <div class="searchBox">
-          <a-input-search placeholder="请输入会员手机号" style="width: 200px" />
+          <a-input-search v-model="mobile" @search="$refs.table.refresh()" placeholder="请输入会员手机号" style="width: 200px" />
         </div>
         <div class="sub-title"></div>
       </div>
@@ -23,15 +23,16 @@
         <s-table
           ref="table"
           size="default"
-          rowKey="key"
+          rowKey="id"
           :columns="columns"
           :data="loadData"
         >
-          <span slot="action" slot-scope="text, record">
+          <div class="handle-btn-group" slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">删除</a>
+              <div class="handle-btn" @click="delTag(record)">同意</div>
+              <div class="handle-btn" @click="delTag(record)">拒绝</div>
             </template>
-          </span>
+          </div>
         </s-table>
       </div>
     </a-layout-content>
@@ -40,59 +41,81 @@
 
 <script>
 import { STable } from '@/components'
-import { getServiceList } from '@/api/manage'
+import { queryCertification } from '@/api/crm'
 
 export default {
   name: 'FixedCertificationList',
   components: {
     STable
   },
+  props:{
+    itemData:{
+      type: Object
+    }
+  },
   data () {
     return {
       // 查询参数
       queryParam: { },
+      mobile: '',
       // 表头
       columns: [
         {
           title: '手机号',
-          dataIndex: 'no'
+          dataIndex: 'mobile'
         },
         {
           title: '会员等级',
-          dataIndex: 'description'
+          dataIndex: 'level_id'
         },
         {
           title: '认证时间',
-          dataIndex: 'status',
+          dataIndex: 'create_time',
         },
         {
           title: '认证状态',
-        //   dataIndex: 'time',
+          dataIndex: 'certification_type',
         },
         {
           title: '姓名',
-        //   dataIndex: 'status',
+          dataIndex: 'user_id',
         },
         {
           title: '车牌号',
-        //   dataIndex: 'status',
+          dataIndex: 'license_plate',
         },
         {
           title: '备注',
-        //   dataIndex: 'status',
+          dataIndex: 'remarks',
         },
         {
           title: '操作',
-          dataIndex: 'action',
           scopedSlots: { customRender: 'action' }
         }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
+        // console.log('loadData.parameter', parameter)
+        console.log(this.itemData)
+        let params = {
+          level_id: this.itemData.id,
+          page: parameter.pageNo, // 页码
+          limit: parameter.pageSize, // 每页页数
+        }
+        if (this.mobile!=='') {
+          params.mobile = this.mobile
+        }
+
+        return queryCertification(params)
           .then(res => {
-            return res.result
+            // console.log(res)
+            return {
+              data: res.data, // 列表数组
+              pageNo: parameter.pageNo,  // 当前页码
+              pageSize: parameter.pageSize,  // 每页页数
+              totalCount: res.countPage, // 列表总条数
+              totalPage: res.pageSize // 列表总页数
+            }
           })
       },
       
@@ -202,6 +225,19 @@ export default {
 .select-all{
   margin-left: 16px;
   cursor: pointer;
+}
+.handle-btn-group{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  .handle-btn{
+    margin: 0 8px;
+    color: #7c7ee2;
+    cursor: pointer;
+  }
 }
 
 </style>

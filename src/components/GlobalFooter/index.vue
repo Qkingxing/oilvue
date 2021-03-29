@@ -1,7 +1,7 @@
 <template>
   <global-footer class="footer custom-render">
     <template v-slot:links>
-      <a href="https://www.github.com/vueComponent/pro-layout" target="_blank">Copyright@能链集团</a>
+      <a >Copyright@油客云</a>
       <!-- <a href="https://www.github.com/vueComponent/pro-layout" target="_blank">Pro Layout</a> -->
       <!-- <a href="https://www.github.com/vueComponent/ant-design-vue-pro" target="_blank">Github</a> -->
       <!-- <a href="https://www.github.com/sendya/" target="_blank">@Sendya</a> -->

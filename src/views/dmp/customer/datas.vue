@@ -1,60 +1,67 @@
 <template>
   <div class="shijian">
-       <a-card
+    <a-card
       style="width: 100%"
       :tab-list="tabList"
       :active-tab-key="key"
       loading
       @tabChange="(key) => onTabChange(key, 'key')"
     >
-    
-      <span slot="customRender" slot-scope="item"> 
-          {{ item.key }} 
+      <span slot="customRender" slot-scope="item">
+        {{ item.key }}
       </span>
     </a-card>
     <div class="dev1">
-         <i class="more_info anticon anticon-question-circle">
-            <a-popover  overlayClassName="note">
-                <template slot="content">
-                    <div class="" style="width: 200px">
-                    <p>往前7天（不包含今日）</p>
-                    </div>
-                </template>
-                <span class="anticon">
-                    <a-icon type="question-circle" />
-                </span>
-            </a-popover>
-        </i>
+      <i class="more_info anticon anticon-question-circle">
+        <a-popover overlayClassName="note">
+          <template slot="content">
+            <div class="" style="width: 200px">
+              <p>往前7天（不包含今日）</p>
+            </div>
+          </template>
+          <span class="anticon">
+            <a-icon type="question-circle" />
+          </span>
+        </a-popover>
+      </i>
     </div>
     <div class="dev">
-         <i class="more_info anticon anticon-question-circle">
-            <a-popover  overlayClassName="note">
-                <template slot="content">
-                    <div class="" style="width: 200px">
-                    <p>往前30天（不包含今日）</p>
-                    </div>
-                </template>
-                <span class="anticon">
-                    <a-icon type="question-circle" />
-                </span>
-            </a-popover>
-        </i>
+      <i class="more_info anticon anticon-question-circle">
+        <a-popover overlayClassName="note">
+          <template slot="content">
+            <div class="" style="width: 200px">
+              <p>往前30天（不包含今日）</p>
+            </div>
+          </template>
+          <span class="anticon">
+            <a-icon type="question-circle" />
+          </span>
+        </a-popover>
+      </i>
     </div>
 
-    <div v-if="key === 'tab1' || key === 'tab2' || key === 'tab3' || key === 'tab4' || key === 'tab5' || key === 'tab6' || key === 'tab7'">
+    <div
+      v-if="
+        key === 'tab1' ||
+        key === 'tab2' ||
+        key === 'tab3' ||
+        key === 'tab4' ||
+        key === 'tab5' ||
+        key === 'tab6' ||
+        key === 'tab7'
+      "
+    >
       <div class="content">
         <div class="head_title">
           <span class="">会员总数据</span>
         </div>
         <div class="overflow_box">
-          <biao1></biao1>
+          <biao1 :arrs='arrs'></biao1>
         </div>
       </div>
     </div>
 
-    <div>
-      
-    </div>
+    <div></div>
   </div>
 </template>
 
@@ -62,12 +69,25 @@
 import biao1 from '../customer/biao1'
 export default {
   components: { biao1 },
+  props:['arrs'],
+  created(){
+  },
+//   watch:{
+// 	  arrs:{
+// 		  handler(value){
+// 			  this.lists = value
+// 		  },
+// 		  immediate:true,
+// 		  deep:true
+// 	  },
+//   },
   data() {
     return {
+		lists:[],
       tabList: [
         {
           key: 'tab1',
-          tab:'今日',
+          tab: '今日',
           scopedSlots: { tab: 'customRender' },
         },
         {
@@ -86,16 +106,16 @@ export default {
           key: 'tab5',
           tab: '日',
         },
-         {
+        {
           key: 'tab6',
           tab: '周',
         },
-         {
+        {
           key: 'tab7',
           tab: '月',
         },
       ],
-       key: 'tab1',
+      key: 'tab1',
       style: { width: '200px' },
     }
   },
@@ -110,20 +130,20 @@ export default {
 
 <style lang='scss' scoped>
 .shijian {
-   .ant-card{
-        border-top: none;
-        border-right: none;
-        border-left: none;
-        border-bottom: 1px solid #e8e8e8;
-        overflow: hidden;
-    }
-    .dates{
-        width: 0;
-        height: 0;
-        position: relative;
-        top: -20px;
-        
-    }
+  .ant-card {
+	  
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #e8e8e8;
+    overflow: hidden;
+  }
+  .dates {
+    width: 0;
+    height: 0;
+    position: relative;
+    top: -20px;
+  }
   .ant-menu {
     .ant-menu-item {
       padding-left: 25px;
@@ -155,8 +175,8 @@ export default {
       height: 20px;
       margin: 20px 0;
     }
-    .overflow_box{
-        border: none;
+    .overflow_box {
+      border: none;
     }
   }
 }

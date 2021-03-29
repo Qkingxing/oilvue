@@ -3,7 +3,7 @@
   <div class="car">
       <div class="mainContainreBlock">
 		  <div class="container animated fadeIn">	  
-				<datas1></datas1>
+				<datas1 :arrBiao='arrBiao' v-if="show"></datas1>
 		  </div>
 		  
       </div>
@@ -12,16 +12,27 @@
 
 <script>
 import datas1 from './datas1'
+import {carinfo} from '@/api/data'
 export default {
 	components:{datas1},
     name: 'Car',
     data(){
       return{
-
+        arrBiao:[],
+        show:false
       }
     },
+    mounted(){
+      this.biao()
+    },
     methods:{
-
+      biao(){
+        return carinfo({time_type:1}).then(res =>{
+          this.arrBiao = res.data
+          console.log(this.arrBiao)
+          this.show = true
+        })
+      }
     }
 }
 </script>

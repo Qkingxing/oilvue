@@ -22,13 +22,15 @@ Vue.component('countTo', countTo)
 // 禁止全局引入，跟ant冲突
 import { 
   Cascader, CascaderPanel,
-  Select, Option
+  Select, Option,
+  Loading
  
 } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.use(Cascader).use(CascaderPanel)
    .use(Select).use(Option)
+   .use(Loading)
  
 
 // mock

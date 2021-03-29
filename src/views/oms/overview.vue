@@ -29,8 +29,6 @@
                   </a-radio-group>
                   <a-range-picker
                     v-show="diyDate"
-                    :disabled-date="disabledDate"
-                    :disabled-time="disabledRangeTime"
                     :show-time="{
                       hideDisabledOptions: true,
                       defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
@@ -58,22 +56,22 @@
                   <a-form-item label="油品型号" class="screen-item-inline">
                     <a-select style="width: 200px" v-model="form.oils_id">
                       <a-select-option :value="item.id" v-for="(item,index) in oilList" :key="item.id">
-                        {{item.oils_name}}
+                        {{ item.oils_name }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                   <a-form-item label="枪号" class="screen-item-inline">
                     <a-select style="width: 200px">
                       <a-select-option :value="item.id" v-for="(item,index) in gunList" :key="item.id">
-                        {{item.gun_name}}
+                        {{ item.gun_name }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                 </a-col>
                 <a-col :md="24" :sm="24">
                   <a-form-item label="订单状态" class="screen-item-inline">
-                    <a-select default-value="0" style="width: 200px">
-                      <a-select-option value="全部">
+                    <a-select v-model="form.order_status" style="width: 200px">
+                      <a-select-option value="0">
                         交易成功
                       </a-select-option>
                       <a-select-option value="1">
@@ -127,17 +125,14 @@
                   <a-form-item label="支付方式" class="screen-item-inline">
                     <a-select style="width: 200px">
                       <a-select-option :value="item.id" v-for="(item,index) in payList" :key="item.id">
-                        {{item.name}}
+                        {{ item.name }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                   <a-form-item label="加油员" class="screen-item-inline">
-                    <a-select style="width: 200px" v-model="form.oils_gunId">
-                      <a-select-option value="jack">
-                        Jack
-                      </a-select-option>
-                      <a-select-option value="lucy">
-                        Lucy
+                    <a-select style="width: 200px" v-model="form.user_id">
+                      <a-select-option :value="item.id" v-for="item in depotslist" :key="item.id">
+                        {{ item.role_name }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
@@ -184,7 +179,7 @@
 import { deleteNullAttr } from '@/utils/lzz.js'
 import moment from 'moment'
 import { STable } from '@/components'
-import { getOrderList, getOilSetList, getGunList, getPayList } from '@/api/order'
+import { getOrderList, getOilSetList, getGunList, getPayList, getDepotslist } from '@/api/order'
 export default {
   name: 'Ooverview',
   components: {
@@ -192,9 +187,9 @@ export default {
   },
   data () {
     return {
-      oilList:[],
-      gunList:[],
-      payList:[],
+      oilList: [],
+      gunList: [],
+      payList: [],
       searchType: '高级搜索',
       diyDate: false,
       diyTime: null,
@@ -208,8 +203,10 @@ export default {
         time_type: 1,
         starting_time: '',
         end_time: '',
-        oils_id:'',
-        oils_gunId:''
+        oils_id: '',
+        oils_gunId: '',
+        user_id: '',
+        order_status: '0'
       },
       radioValue: 'new',
       value: '',
@@ -289,21 +286,11 @@ export default {
       },
       selectedRowKeys: [],
       selectedRows: [],
-
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
+      depotslist: []
     }
   },
-  created() {
-    this.loadOilList()
-    this.loadGunList()
-    this.loadPayList()
+  created () {
+
   },
   methods: {
     moment,
@@ -318,25 +305,28 @@ export default {
       this.form.starting_time = moment(this.diyTime[0]._d).format('YYYY-MM-DD')
       this.form.end_time = moment(this.diyTime[1]._d).format('YYYY-MM-DD')
     },
-    loadPayList(){
-      getPayList().then(res=>{
-        this.payList = res.data
-        console.log(this.payList)
+    loadDepotslist () {
+      getDepotslist().then(res => {
+        console.log(res.data.data)
+        this.depotslist = res.data.data
       })
     },
-    loadGunList(){
-      getGunList().then(res=>{
+    loadPayList () {
+      getPayList().then(res => {
+        this.payList = res.data
+      })
+    },
+    loadGunList () {
+      getGunList().then(res => {
         this.gunList = res.data
       })
     },
-    loadOilList(){
-      getOilSetList().then(res=>{
+    loadOilList () {
+      getOilSetList().then(res => {
         this.oilList = res.data
       })
     },
     async toSearch () {
-      console.log(this.form)
-      return
       if (this.form.time_type != 5) {
         this.form.starting_time = ''
         this.form.end_time = ''
@@ -355,22 +345,11 @@ export default {
     },
     advanceSearchChange () {
       this.searchType == '高级搜索' ? this.searchType = '点击收起' :　this.searchType = '高级搜索'
-    },
-    disabledDate (current) {
-      return current && current < moment().endOf('day')
-    },
-    disabledRangeTime (_, type) {
-      if (type === 'start') {
-        return {
-          disabledHours: () => this.range(0, 60).splice(4, 20),
-          disabledMinutes: () => this.range(30, 60),
-          disabledSeconds: () => [55, 56]
-        }
-      }
-      return {
-        disabledHours: () => this.range(0, 60).splice(20, 4),
-        disabledMinutes: () => this.range(0, 31),
-        disabledSeconds: () => [55, 56]
+      if (this.searchType == '点击收起') {
+        this.loadOilList()
+        this.loadGunList()
+        this.loadPayList()
+        this.loadDepotslist()
       }
     },
     timeRadioChange (value) {

@@ -1,18 +1,18 @@
 <template>
   <div class="biao">
     <div class="box">
-      <div class="overflow_box" v-for="(a, index) in 6" :key="index">
+      <div class="overflow_box" v-for="(list, index) in lists" :key="index">
         <div class="overflow_li">
           <div class="title">
-            <span>消费客户</span>
+            <span>{{list.sales_revenue_name}}</span>
           </div>
           <div class="price_info">
-            <span class="price">100</span>
+            <span class="price">{{list.sales_revenue_number}}</span>
             <span class="unit">人</span>
           </div>
           <div class="trend_info">
             <span>较上一周期</span>
-            <span class="percente percent-up">0.00%</span>
+            <span class="percente percent-up">{{list.day_before}}</span>
             <i class="trend">
               <a-icon type="arrow-down" />
             </i>
@@ -37,6 +37,7 @@
 
 <script>
 export default {
+  props:['lists'],
   data() {
     return {}
   },

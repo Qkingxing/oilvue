@@ -92,11 +92,12 @@
                     list-type="picture-card"
                     class="avatar-uploader"
                     :show-upload-list="false"
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    action="https://oiljava.ldyxx.com:4435/goods/FileImg"
+                    :data="data1"
                     :before-upload="beforeUpload"
                     @change="handleChange"
                   >
-                    <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                    <img style="width: 100px; height: 100px" v-if="imageUrl" :src="imageUrl" />
                     <div v-else>
                       <a-icon :type="loading ? 'loading' : 'plus'" />
                       <div class="ant-upload-text">Upload</div>
@@ -114,12 +115,14 @@
 </template>
 
 <script>
+// import {FileImg} from '@/api/work'
 import { personage } from '@/api/work'
-function getBase64(img, callback) {
-  const reader = new FileReader()
-  reader.addEventListener('load', () => callback(reader.result))
-  reader.readAsDataURL(img)
-}
+// function getBase64(img, callback) {
+// 	console.log(img)
+//   const reader = new FileReader()
+//   reader.addEventListener('load', () => callback(reader.result))
+//   reader.readAsDataURL(img)
+// }
 export default {
   name: 'Center',
   data() {
@@ -137,8 +140,12 @@ export default {
       show5: null,
 
       show7: null,
+      data1: {
+        file: {},
+      },
     }
   },
+  created() {},
   methods: {
     inp() {
       if (!this.input1) {
@@ -198,23 +205,29 @@ export default {
     setModal1Visible(modal1Visible) {
       this.modal1Visible = modal1Visible
     },
+    // 上传
+
     handleChange(info) {
+      console.log(info)
       if (info.file.status === 'uploading') {
         this.loading = true
         return
       }
       if (info.file.status === 'done') {
         // Get this url from response in real world.
-        getBase64(info.file.originFileObj, (imageUrl) => {
-          this.imageUrl = imageUrl
-          this.loading = false
-        })
+        this.imageUrl = info.file.response.data
+        // getBase64(info.file.response.data, (imageUrl) => {
+        // 	console.log(imageUrl)
+        //   this.imageUrl = imageUrl
+        this.loading = false
+        // })
       }
     },
     beforeUpload(file) {
+      this.data1.file = file
       const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
       if (!isJpgOrPng) {
-        this.$message.error('You can only upload JPG file!')
+        this.$message.error('请上传 JPG 或 IPG 格式的照片!')
       }
       const isLt2M = file.size / 1024 / 1024 < 2
       if (!isLt2M) {

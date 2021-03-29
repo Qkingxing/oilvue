@@ -63,7 +63,7 @@
 					</div>
 				  </div>
 				  <div class="overflow_box">
-					 <labels></labels>
+					 <labels2 :lists='lists' v-if="show"></labels2>
 				  </div>
 				  <div class="ve-pie-view">
 					  <div class="title-obj">
@@ -86,15 +86,29 @@
 					  <div class="pie-box">
 						  <div class="pie-view">
 							  <div class="tap-title">
-								  引导销售收入占比
+								  {{cake1.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							  <biao5 :cake1='cake1' v-if='show1'></biao5>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 						   <div class="pie-view">
 							  <div class="tap-title">
-								  引导加油量占比
+								  {{cake2.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							   <biao6 :cake2='cake2' v-if='show1'></biao6>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake3.name}}
+							  </div>
+							  <biao7 :cake3='cake3' v-if='show1'></biao7>
+						  </div>
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake4.name}}
+							  </div>
+							   <biao8 :cake4='cake4' v-if='show1'></biao8>
 						  </div>
 					  </div>
 
@@ -124,7 +138,7 @@
 					</div>
 				  </div>
 				  <div class="overflow_box">
-					 <labels></labels>
+					 <labels2 :lists='lists' v-if="show"></labels2>
 				  </div>
 				  <div class="ve-pie-view">
 					  <div class="title-obj">
@@ -144,20 +158,35 @@
 								</i>
 							</div>
 					  </div>
-					  <div class="pie-box">
+					 <div class="pie-box">
 						  <div class="pie-view">
 							  <div class="tap-title">
-								  引导销售收入占比
+								  {{cake1.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							  <biao5 :cake1='cake1' v-if='show1'></biao5>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 						   <div class="pie-view">
 							  <div class="tap-title">
-								  引导加油量占比
+								  {{cake2.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							   <biao6 :cake2='cake2' v-if='show1'></biao6>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake3.name}}
+							  </div>
+							  <biao7 :cake3='cake3' v-if='show1'></biao7>
+						  </div>
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake4.name}}
+							  </div>
+							   <biao8 :cake4='cake4' v-if='show1'></biao8>
 						  </div>
 					  </div>
+
 
 					  
 				  </div>
@@ -184,7 +213,7 @@
 					</div>
 				  </div>
 				  <div class="overflow_box">
-					 <labels></labels>
+					 <labels2 :lists='lists' v-if="show"></labels2>
 				  </div>
 				  <div class="ve-pie-view">
 					  <div class="title-obj">
@@ -204,20 +233,35 @@
 								</i>
 							</div>
 					  </div>
-					  <div class="pie-box">
+					   <div class="pie-box">
 						  <div class="pie-view">
 							  <div class="tap-title">
-								  引导销售收入占比
+								  {{cake1.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							  <biao5 :cake1='cake1' v-if='show1'></biao5>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 						   <div class="pie-view">
 							  <div class="tap-title">
-								  引导加油量占比
+								  {{cake2.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							   <biao6 :cake2='cake2' v-if='show1'></biao6>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake3.name}}
+							  </div>
+							  <biao7 :cake3='cake3' v-if='show1'></biao7>
+						  </div>
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake4.name}}
+							  </div>
+							   <biao8 :cake4='cake4' v-if='show1'></biao8>
 						  </div>
 					  </div>
+
 
 					  
 				  </div>
@@ -244,7 +288,7 @@
 					</div>
 				  </div>
 				  <div class="overflow_box">
-					 <labels></labels>
+					<labels2 :lists='lists' v-if="show"></labels2>
 				  </div>
 				  <div class="ve-pie-view">
 					  <div class="title-obj">
@@ -264,18 +308,32 @@
 								</i>
 							</div>
 					  </div>
-					  <div class="pie-box">
+					   <div class="pie-box">
 						  <div class="pie-view">
 							  <div class="tap-title">
-								  引导销售收入占比
+								  {{cake1.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							  <biao5 :cake1='cake1' v-if='show1'></biao5>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 						   <div class="pie-view">
 							  <div class="tap-title">
-								  引导加油量占比
+								  {{cake2.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							   <biao6 :cake2='cake2' v-if='show1'></biao6>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake3.name}}
+							  </div>
+							  <biao7 :cake3='cake3' v-if='show1'></biao7>
+						  </div>
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake4.name}}
+							  </div>
+							   <biao8 :cake4='cake4' v-if='show1'></biao8>
 						  </div>
 					  </div>
 
@@ -291,19 +349,53 @@
 </template>
 
 <script>
-import labels from './labels'
+import labels2 from './labels2'
+import {follow} from '@/api/data'
+import biao5 from './biao5'
+import biao6 from './biao6'
+import biao7 from './biao7'
+import biao8 from './biao8'
+import {follows} from '@/api/data'
 export default {
 	name: 'Refueling',
-	components:{labels},
+	components:{labels2,biao5,biao6,biao7,biao8},
     data(){
       return{
 		  size: 'ri',
+		  lists:[],
+		  show:false,
+		  cake1:{},
+		  cake2:{},
+		  cake3:{},
+		  cake4:{},
+		  show1:false
       }
+	},
+	created(){
+		this.biao()
+		this.biao1()
 	},
 	methods:{
 		onChange(date, dateString) {
       		console.log(date, dateString);
     	},
+		biao(){
+			return follow({}).then(res =>{
+				this.lists = res.data
+				this.show = true
+				console.log(res)
+			})
+		},
+		biao1(){
+			return follows({time_type:1}).then(res =>{
+				this.cake1 = res.data.cake1
+				this.cake2 = res.data.cake2
+				this.cake3 = res.data.cake3
+				this.cake4 = res.data.cake4
+				this.show1 = true
+				console.log(res)
+			})
+		}
 	}
 }
 </script>

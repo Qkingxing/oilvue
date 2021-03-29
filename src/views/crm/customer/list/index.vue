@@ -10,7 +10,7 @@
           </a-radio-group>
         </div>
         <div class="screen-box" v-if="radioValue=='old'">
-          <a-form layout="inline" >
+          <a-form layout="inline">
             <a-row :gutter="48">
               <a-col :sm="24" :md="12">
                 <a-form-item label="客户搜索" class="screen-item">
@@ -43,101 +43,84 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="12" :sm="24">
-                <a-form-item label="客户标签" class="screen-item">
-                  <a-select default-value="lucy" style="width: 264px">
-                    <a-select-option value="jack">
-                      Jack
-                    </a-select-option>
-                    <a-select-option value="lucy">
-                      Lucy
-                    </a-select-option>
-                    <a-select-option value="disabled" disabled>
-                      Disabled
-                    </a-select-option>
-                    <a-select-option value="Yiminghe">
-                      yiminghe
+                <a-form-item label="偏好油站" class="screen-item">
+                  <a-select v-model="oldqueryParam.love_site_id" style="width: 264px">
+                    <a-select-option
+                      :value="item.id"
+                      v-for="(item,index) in loveSiteSelect"
+                      :key="index">
+                      {{item.site_name}}
                     </a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="12" :sm="24">
                 <a-form-item label="偏好油品" class="screen-item">
-                  <a-select default-value="lucy" style="width: 264px">
-                    <a-select-option value="jack">
-                      Jack
+                  <a-select v-model="oldqueryParam.oil_id" style="width: 264px">
+                    <a-select-option
+                      :value="item.id"
+                      v-for="(item,index) in oilSelect"
+                      :key="index">
+                      {{item.oils_name}}
                     </a-select-option>
-                    <a-select-option value="lucy">
-                      Lucy
-                    </a-select-option>
-                    <a-select-option value="disabled" disabled>
-                      Disabled
-                    </a-select-option>
-                    <a-select-option value="Yiminghe">
-                      yiminghe
-                    </a-select-option>
+                    
                   </a-select>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="12" :sm="24">
                 <a-form-item label="会员等级" class="screen-item">
-                  <a-select default-value="lucy" style="width: 264px">
-                    <a-select-option value="jack">
-                      Jack
+                  <a-select v-model="oldqueryParam.spalevel_id" style="width: 264px">
+                    <a-select-option
+                      :value="item.id"
+                      v-for="(item,index) in levelSelect"
+                      :key="index">
+                      {{item.level_name}}
                     </a-select-option>
-                    <a-select-option value="lucy">
-                      Lucy
-                    </a-select-option>
-                    <a-select-option value="disabled" disabled>
-                      Disabled
-                    </a-select-option>
-                    <a-select-option value="Yiminghe">
-                      yiminghe
-                    </a-select-option>
+                    
                   </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="12" :sm="24">
                 <a-form-item label="客户身份" class="screen-item">
-                  <a-select default-value="lucy" style="width: 264px">
-                    <a-select-option value="jack">
-                      Jack
+                  <a-select v-model="oldqueryParam.identity_id" style="width: 264px">
+                    <a-select-option
+                      :value="item.value"
+                      v-for="(item,index) in identitySelect"
+                      :key="index">
+                      {{item.label}}
                     </a-select-option>
-                    <a-select-option value="lucy">
-                      Lucy
-                    </a-select-option>
-                    <a-select-option value="disabled" disabled>
-                      Disabled
-                    </a-select-option>
-                    <a-select-option value="Yiminghe">
-                      yiminghe
-                    </a-select-option>
+                    
                   </a-select>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="12" :sm="24">
                 <a-form-item label="最近加油时间" class="screen-item">
-                  <a-range-picker />
+                  <a-range-picker @change="onChangeTime"/>
                 </a-form-item>
               </a-col>
               <a-col :md="12" :sm="24">
-                <a-form-item label="加油升数" class="screen-item">
-                  <a-input-group compact>
-                    <a-input v-model="oldqueryParam.l_number1" style="width:88px;" placeholder="数字"/>
+                <a-form-item
+                  label="加油升数"
+                  class="screen-item">
+                  <a-input-group compact >
+                    <a-input-number 
+                      v-model="oldqueryParam.l_number1" 
+                      style="width:88px;" 
+                      placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">至</span>
-                    <a-input v-model="oldqueryParam.l_number2" style="width:88px;" placeholder="数字"/>
+                    <a-input-number
+                      v-model="oldqueryParam.l_number2"
+                      style="width:88px;"
+                      placeholder="数字" />
                     <span style="margin: 0px 8px;line-height:32px;">升</span>
                   </a-input-group>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="12" :sm="24">
                 <a-form-item label="加油次数" class="screen-item">
                   <a-input-group compact>
@@ -158,8 +141,7 @@
                   </a-input-group>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="12" :sm="24">
                 <a-form-item label="加油卡余额" class="screen-item">
                   <a-input-group compact>
@@ -170,11 +152,10 @@
                   </a-input-group>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row :gutter="48">
+
               <a-col :md="24" :sm="24">
                 <a-form-item>
-                  <a-button type="primary" class="search-btn" style="min-width:82px;"> 搜索 </a-button>
+                  <a-button type="primary" class="search-btn" style="min-width:82px;" @click="$refs.table.refresh()"> 搜索 </a-button>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -188,23 +169,23 @@
                   <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
                   <a-input
                     style="width: 100%"
-                    v-model="queryParam.keywords"
+                    v-model="queryParam.searchNumber"
                     placeholder="请输入搜索内容"
                   >
                     <a-select
                       slot="addonBefore"
                       style="width: 120px"
-                      v-model="queryParam.keyType"
+                      v-model="queryParam.numberType"
                     >
-                      <a-select-option value="86"> 客户子单编号 </a-select-option>
-                      <a-select-option value="87"> 手机号 </a-select-option>
+                      <a-select-option value="sonnumber"> 客户子单编号 </a-select-option>
+                      <a-select-option value="mobile"> 手机号 </a-select-option>
                     </a-select>
                   </a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="24" :sm="24">
                 <a-form-item>
-                  <a-button type="primary" class="search-btn" style="min-width:82px;"> 搜索 </a-button>
+                  <a-button type="primary" class="search-btn" style="min-width:82px;" @click="$refs.table2.refresh()"> 搜索 </a-button>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -266,7 +247,7 @@
             </div>
           </div>
           <s-table
-            ref="table"
+            ref="table2"
             size="default"
             rowKey="id"
             :columns="columns"
@@ -292,13 +273,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { STable } from '@/components'
 
 import { getServiceList } from '@/api/manage'
-import { getOldUserList, getSonoillist, getSonsitelist } from '@/api/crm'
+import { getOldUserList, getSonoillist, getSonsitelist,getlevelAll,getNewUserList } from '@/api/crm'
 
 import EditTag from '../components/EditTag'
-
 
 export default {
   name: 'Clist',
@@ -309,18 +290,19 @@ export default {
   },
   data () {
     return {
-      radioValue: 'old',
-      
+      radioValue: 'new',
       oldqueryParam: {
-        numberType: 'sonnumber',
-        searchNumber: null,
+        numberType: 'sonnumber', // 输入类型
+        searchNumber: '', // 客户自编号或手机号
         is_consumption: 1,//是否已消费，1是0否 2全部
+        love_site_id: '', // 偏好油站
         site_id: 0,//站点ID
-        oil_id: 0,//油品ID 0是全部
-        spalevel_id: 0,//动态会员等级 0是全部
+        oil_id: '',// 偏好油品ID 0是全部
+        level_id: '', // 会员等级
+        spalevel_id: '',//动态会员等级 0是全部
         identity_id: 0,//客户身份 0是全部
-        last_time1: null,//最近加油时间 （小）
-        last_time2: null,//最近加油时间 （大）
+        last_time1: '',//最近加油时间 （小）
+        last_time2: '',//最近加油时间 （大）
         l_number1: null,//加油升数（小）
         l_number2: null,//加油升数（大）
         l_count1: null,//加油次数（小）
@@ -330,6 +312,16 @@ export default {
         money1: null,//加油卡余额（小）
         money2: null,//加油卡余额（大）
       },
+      loveSiteSelect:[],// 偏好油站下拉
+      oilSelect:[],// 偏好油品下拉
+      levelSelect:[],// 会员等级下拉
+      identitySelect:[ // 客户身份下拉
+        { label: '全部', value: 0 },
+        { label: '物流车/商用车', value: 1 },
+        { label: '专快车/顺风车', value: 2 },
+        { label: '私家车', value: 3 },
+        { label: '出租车', value: 4 },
+      ],// 会员等级下拉
       consumptionOptions: [
         { label: '全部', value: 2 },
         { label: '已消费', value: 1 },
@@ -455,9 +447,34 @@ export default {
         // console.log('loadData.parameter', parameter)
         let params = {
           page: parameter.pageNo, // 页码
-          size: parameter.pageSize // 每页页数
+          size: parameter.pageSize, // 每页页数
+          group_id: this.userInfo.group_id, // 集团id
+          is_consumption: this.oldqueryParam.is_consumption,
+          oil_id: this.oldqueryParam.oil_id,
+          spalevel_id: this.oldqueryParam.spalevel_id,
+          identity_id: this.oldqueryParam.identity_id,
+          last_time1: this.oldqueryParam.last_time1,
+          last_time2: this.oldqueryParam.last_time2,
+          l_number1: this.oldqueryParam.l_number1,
+          l_number2: this.oldqueryParam.l_number2,
+          l_count1: this.oldqueryParam.l_count1,
+          l_count2: this.oldqueryParam.l_count2,
+          integral1: this.oldqueryParam.integral1,
+          integral2: this.oldqueryParam.integral2,
+          money1: this.oldqueryParam.money1,
+          money2: this.oldqueryParam.money2,
+
         }
+        // 站点查询
+        if (this.userInfo.site_id!==(-1)) {
+          params.site_id = this.userInfo.site_id
+        }else{
+          // 集团查询
+          params.love_site_id = this.oldqueryParam.love_site_id
+        }
+        params[this.oldqueryParam.numberType] = this.oldqueryParam.searchNumber
         console.log(this.oldqueryParam)
+        // console.log(params)
         return getOldUserList(Object.assign(params))
         .then((res)=>{
           // 自定义出参
@@ -489,10 +506,8 @@ export default {
       oldoptionAlertShow: false,
       // 查询参数
       queryParam: {
-        keyType: '86',
         numberType: 'sonnumber',
-        sonnumber: '',
-        mobile: '',
+        searchNumber: '',
       },
       // 表头
       columns: [
@@ -531,11 +546,25 @@ export default {
         }
       ],
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+        }
+        params[this.queryParam.numberType] = this.queryParam.searchNumber
+
+        return getNewUserList(Object.assign(params))
+        .then((res)=>{
+          // 自定义出参
+          // console.log(res)
+          this.oldTotal = res.data.total
+          return {
+            data: res.data.data, // 列表数组
+            pageNo: res.data.current_page,  // 当前页码
+            pageSize: res.data.per_page,  // 每页页数
+            totalCount: res.data.total, // 列表总条数
+            totalPage: res.data.total // 列表总页数
+          }
+        })
       },
       selectedRowKeys: [],
       selectedRows: [],
@@ -550,21 +579,47 @@ export default {
       optionAlertShow: false
     }
   },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
   created () {
     // console.log(this.$route.name)
     this.tableOption()
     this.oldtableOption()
+    // 会员等级下拉
+    getlevelAll().then(res=>{
+      // console.log(res.data)
+      this.levelSelect = res.data
+    })
+    // 偏好油站下拉
+    getSonoillist().then(res=>{
+      // console.log(res.data)
+      this.oilSelect = res.data
+    })
+    // 偏好油站下拉
+    getSonsitelist().then(res=>{
+      // console.log(res.data)
+      this.loveSiteSelect = res.data
+    })
 
   },
   mounted(){
-    getSonoillist().then(res=>{
-      // console.log(res)
-    })
-    getSonsitelist().then(res=>{
-      console.log(res.data.data)
-    })
+    
   },
   methods: {
+
+    // 最近加油时间变更
+    onChangeTime(date, dateString){
+      // console.log(date.length)
+      // console.log(dateString)
+      if (date.length===0) {
+        this.oldqueryParam.last_time1 = ''
+        this.oldqueryParam.last_time2 = ''
+      }else{
+        this.oldqueryParam.last_time1 = dateString[0]
+        this.oldqueryParam.last_time2 = dateString[1]
+      }
+    },
     showEditTag (type) {
       this.$refs['EditTag'].show(type)
     },

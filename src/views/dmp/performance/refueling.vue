@@ -63,7 +63,7 @@
 					</div>
 				  </div>
 				  <div class="overflow_box">
-					 <labels></labels>
+					 <labels :lists='lists' v-if="show"></labels>
 				  </div>
 				  <div class="ve-pie-view">
 					  <div class="title-obj">
@@ -86,27 +86,32 @@
 					  <div class="pie-box">
 						  <div class="pie-view">
 							  <div class="tap-title">
-								  引导销售收入占比
+								  {{cake1.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							  <!-- 1111111111111111111111111111111111 -->
+							  <biao :cake1='cake1' v-if="show1"></biao>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 						   <div class="pie-view">
 							  <div class="tap-title">
-								  引导加油量占比
+								   {{cake2.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							  <biao1 :cake2='cake2' v-if="show1"></biao1>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 						   <div class="pie-view">
 							  <div class="tap-title">
-								  车主首次加油销售收入占比
+								  {{cake3.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							  <biao2 :cake3='cake3' v-if="show1"></biao2>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 						   <div class="pie-view">
 							  <div class="tap-title">
-								  车主首次加油油量占比
+								  {{cake4.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							   <biao3 :cake4='cake4' v-if="show1"></biao3>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 					  </div>
 
@@ -136,7 +141,7 @@
 					</div>
 				  </div>
 				  <div class="overflow_box">
-					 <labels></labels>
+					<labels :lists='lists' v-if="show"></labels>
 				  </div>
 				  <div class="ve-pie-view">
 					  <div class="title-obj">
@@ -156,38 +161,188 @@
 								</i>
 							</div>
 					  </div>
-					  <div class="pie-box">
+					 	  <div class="pie-box">
 						  <div class="pie-view">
 							  <div class="tap-title">
-								  引导销售收入占比
+								  {{cake1.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							  <!-- 1111111111111111111111111111111111 -->
+							  <biao :cake1='cake1' v-if="show1"></biao>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 						   <div class="pie-view">
 							  <div class="tap-title">
-								  引导加油量占比
+								   {{cake2.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							  <biao1 :cake2='cake2' v-if="show1"></biao1>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 						   <div class="pie-view">
 							  <div class="tap-title">
-								  车主首次加油销售收入占比
+								  {{cake3.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							  <biao2 :cake3='cake3' v-if="show1"></biao2>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 						   <div class="pie-view">
 							  <div class="tap-title">
-								  车主首次加油油量占比
+								  {{cake4.name}}
 							  </div>
-							  <div class="pie-is-null">暂无数据</div>
+							   <biao3 :cake4='cake4' v-if="show1"></biao3>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
 						  </div>
 					  </div>
 
 					  
 				  </div>
+			  </div>
+			  <div class="ve-card-view" v-if="size == 'yue'">
+				  <div class="title-obj">
+					  数据统计
+					  <div class="dev">
+						<i class="more_info anticon anticon-question-circle">
+							<a-popover  overlayClassName="note">
+								<template slot="content">
+									<div class="" style="width: 200px">
+									<p>数据于每日早10点更新</p>
+									</div>
+								</template>
+								<span class="anticon">
+									<a-icon type="question-circle" />
+								</span>
+							</a-popover>
+						</i>
+					</div>
+				  </div>
+				  <div class="overflow_box">
+					<labels :lists='lists' v-if="show"></labels>
+				  </div>
+				  <div class="ve-pie-view">
+					  <div class="title-obj">
+						  占比图
+							<div class="dev">
+								<i class="more_info anticon anticon-question-circle">
+									<a-popover  overlayClassName="note">
+										<template slot="content">
+											<div class="" style="width: 200px">
+											<p>数据于每日早10点更新</p>
+											</div>
+										</template>
+										<span class="anticon">
+											<a-icon type="question-circle" />
+										</span>
+									</a-popover>
+								</i>
+							</div>
+					  </div>
+					 	  <div class="pie-box">
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake1.name}}
+							  </div>
+							  <!-- 1111111111111111111111111111111111 -->
+							  <biao :cake1='cake1' v-if="show1"></biao>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+						   <div class="pie-view">
+							  <div class="tap-title">
+								   {{cake2.name}}
+							  </div>
+							  <biao1 :cake2='cake2' v-if="show1"></biao1>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+						   <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake3.name}}
+							  </div>
+							  <biao2 :cake3='cake3' v-if="show1"></biao2>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+						   <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake4.name}}
+							  </div>
+							   <biao3 :cake4='cake4' v-if="show1"></biao3>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+					  </div>
 
+					  
+				  </div>
+			  </div>
+			  <div class="ve-card-view" v-if="size == 'yue1'">
+				  <div class="title-obj">
+					  数据统计
+					  <div class="dev">
+						<i class="more_info anticon anticon-question-circle">
+							<a-popover  overlayClassName="note">
+								<template slot="content">
+									<div class="" style="width: 200px">
+									<p>数据于每日早10点更新</p>
+									</div>
+								</template>
+								<span class="anticon">
+									<a-icon type="question-circle" />
+								</span>
+							</a-popover>
+						</i>
+					</div>
+				  </div>
+				  <div class="overflow_box">
+					<labels :lists='lists' v-if="show"></labels>
+				  </div>
+				  <div class="ve-pie-view">
+					  <div class="title-obj">
+						  占比图
+							<div class="dev">
+								<i class="more_info anticon anticon-question-circle">
+									<a-popover  overlayClassName="note">
+										<template slot="content">
+											<div class="" style="width: 200px">
+											<p>数据于每日早10点更新</p>
+											</div>
+										</template>
+										<span class="anticon">
+											<a-icon type="question-circle" />
+										</span>
+									</a-popover>
+								</i>
+							</div>
+					  </div>
+					  	  <div class="pie-box">
+						  <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake1.name}}
+							  </div>
+							  <!-- 1111111111111111111111111111111111 -->
+							  <biao :cake1='cake1' v-if="show1"></biao>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+						   <div class="pie-view">
+							  <div class="tap-title">
+								   {{cake2.name}}
+							  </div>
+							  <biao1 :cake2='cake2' v-if="show1"></biao1>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+						   <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake3.name}}
+							  </div>
+							  <biao2 :cake3='cake3' v-if="show1"></biao2>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+						   <div class="pie-view">
+							  <div class="tap-title">
+								  {{cake4.name}}
+							  </div>
+							   <biao3 :cake4='cake4' v-if="show1"></biao3>
+							  <!-- <div class="pie-is-null">暂无数据</div> -->
+						  </div>
+					  </div>
 
-				  
+					  
+				  </div>
 			  </div>
 		  </div>
 	  </div>
@@ -195,19 +350,52 @@
 </template>
 
 <script>
+import biao from './biao' 
+import biao1 from './biao1'
+import biao2 from './biao2'
+import biao3 from './biao3'
+import {oilingStatistics} from '@/api/data'
+import {revenues} from '@/api/data'
 import labels from './labels'
 export default {
 	name: 'Refueling',
-	components:{labels},
+	components:{labels,biao,biao1,biao2,biao3},
     data(){
       return{
 		  size: 'ri',
+		  lists:[],
+		  show:false,
+		  show1:false,
+		  cake1:{},
+		  cake2:{},
+		  cake3:{},
+		  cake4:{}
       }
+	},
+	created(){
+		this.biao()
+		this.biao1()
 	},
 	methods:{
 		onChange(date, dateString) {
       		console.log(date, dateString);
     	},
+		biao(){
+			return revenues({}).then(res =>{
+				this.lists = res.data
+				
+				this.show = true
+			})
+		},
+		biao1(){
+			return oilingStatistics({time_type:1}).then(res =>{
+				this.cake1 = res.data.cake1
+				this.cake2 = res.data.cake2
+				this.cake3 = res.data.cake3
+				this.cake4 = res.data.cake4
+				this.show1 = true
+			})
+		}
 	}
 }
 </script>

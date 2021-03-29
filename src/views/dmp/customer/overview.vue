@@ -13,7 +13,7 @@
               <shujian></shujian>
           </div>
           <div class="overview_a2">
-              <biao></biao>
+              <biao :lists='lists' :arr='arr' v-if="show"></biao>
           </div>
       </div>
   </div>
@@ -22,14 +22,38 @@
 <script>
 import shujian from './shujian'
 import biao from './biao'
+import {customer} from '@/api/data'
+import {customerStatistics} from '@/api/data'
 export default {
     name: 'Coverview',
     components:{shujian,biao},
     data(){
         return{
-           
+            lists:[],
+            lineChart1:[],
+            arr:[],
+            show:false
         }
-    }
+    },
+    created(){
+        this.customers()
+        this.customerStatisticss()
+    },
+    methods:{
+        customers(){
+            return  customer({}).then(res=>{
+                this.lists = res.data
+                console.log(this.lists)
+            })
+        },
+        customerStatisticss(){
+            return customerStatistics({ time_type:1}).then(res=>{
+                this.arr = res.data
+                this.show = true
+                console.log(this.arr)
+            })
+        }
+    },
 }
 </script>
 <style lang="scss" scoped>

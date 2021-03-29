@@ -4,7 +4,7 @@
     <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
       <div class="head-title">
         <span>
-          免审核用户列表
+          {{itemData.level_name}}用户列表
         </span>
         <a-button @click="exit"> 返回上一页 </a-button>
       </div>
@@ -13,7 +13,7 @@
       <div class="table-header">
         
         <div class="searchBox">
-          <a-input-search placeholder="请输入会员手机号" style="width: 200px" />
+          <a-input-search v-model="mobile" @search="$refs.table.refresh()" placeholder="请输入会员手机号" style="width: 200px" />
         </div>
         <div class="sub-title"></div>
       </div>
@@ -23,13 +23,18 @@
         <s-table
           ref="table"
           size="default"
-          rowKey="key"
+          rowKey="id"
           :columns="columns"
           :data="loadData"
         >
+          <div slot="id" slot-scope="text, record">
+            <template>
+              <div class="handle-btn" style="margin: 0px;">{{text}}</div>
+            </template>
+          </div>
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">删除</a>
+              <a @click="delUser(record)">删除</a>
             </template>
           </span>
         </s-table>
@@ -40,46 +45,53 @@
 
 <script>
 import { STable } from '@/components'
-import { getServiceList } from '@/api/manage'
+import { queryUserList } from '@/api/crm'
 
 export default {
   name: 'FixedUserList',
   components: {
     STable
   },
+  props:{
+    itemData:{
+      type: Object
+    }
+  },
   data () {
     return {
       // 查询参数
       queryParam: { },
+      mobile: '',
       // 表头
       columns: [
         {
           title: '客户子编号',
-          dataIndex: 'no'
+          dataIndex: 'id',
+          scopedSlots: { customRender: 'id' }
         },
         {
           title: '手机号',
-          // dataIndex: 'no'
+          dataIndex: 'mobile'
         },
         {
           title: '姓名',
-        //   dataIndex: 'status',
+          dataIndex: 'user_id',
         },
         {
           title: '车牌号',
-        //   dataIndex: 'status',
+          dataIndex: 'license_plate',
         },
         {
           title: '获取等级渠道',
-          dataIndex: 'description'
+          dataIndex: 'certification_name'
         },
         {
           title: '获取等级时间',
-          dataIndex: 'status',
+          dataIndex: 'create_time',
         },
         {
           title: '到期时间',
-        //   dataIndex: 'time',
+          // dataIndex: 'create_time',
         },
         {
           title: '操作',
@@ -89,10 +101,25 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
+        console.log(this.itemData)
+        let params = {
+          level_id: this.itemData.id,
+          page: parameter.pageNo, // 页码
+          limit: parameter.pageSize, // 每页页数
+        }
+        if (this.mobile!=='') {
+          params.mobile = this.mobile
+        }
+        return queryUserList(params)
           .then(res => {
-            return res.result
+            
+            return {
+              data: res.data, // 列表数组
+              pageNo: parameter.pageNo,  // 当前页码
+              pageSize: parameter.pageSize,  // 每页页数
+              totalCount: res.countPage, // 列表总条数
+              totalPage: res.pageSize // 列表总页数
+            }
           })
       },
       
@@ -103,10 +130,11 @@ export default {
     exit(){
       this.$emit('exit')
     },
-    delTag () {
+    delUser (item) {
+      let that = this
       this.$confirm({
-        title: '温馨提示',
-        content: '删除会清除标签全部信息，是否删除？',
+        title: '是否删除该用户？',
+        content: `删除后该用户将不再是${that.itemData.level_name}`,
         onOk () {
           return new Promise((resolve, reject) => {
             resolve()
@@ -201,6 +229,11 @@ export default {
 }
 .select-all{
   margin-left: 16px;
+  cursor: pointer;
+}
+.handle-btn{
+  margin: 0 8px;
+  color: #7c7ee2;
   cursor: pointer;
 }
 

@@ -14,6 +14,7 @@
       <!-- 表格 -->
       <div class="showDataForTable">
         <s-table 
+          :scroll="{ x: 1300 }"
           ref="table" 
           size="default" 
           rowKey="id" 
@@ -21,11 +22,37 @@
           :columns="columns" 
           :data="loadData">
 
-          <div slot="discount_list" slot-scope="discount_list">
+          <span slot="template_icon" slot-scope="item, row">
+            <template>
+              <img :src="item" style="max-width: 104px; height: 55px; cursor: pointer;">
+            </template>
+          </span>
+
+          <div slot="group_name" >
+            <template>
+              {{userInfo.group_name}}
+            </template>
+          </div>
+          <div 
+            class="public_global_scroll"
+            style="max-height: 7.6em; overflow: auto;"
+            slot="discount_list" 
+            slot-scope="discount_list,row">
             <template>
               <div 
                 v-for="(item,index) in discount_list" 
-                :key="index">{{item.oils_name}}</div>
+                :key="index">
+                <span v-if="row.discount_type==1">{{item.oils_name}} 每升优惠{{item.oils_money}}元</span>
+                <span v-if="row.discount_type==2">{{item.oils_name}} 享{{item.oils_discount}}折</span>
+              </div>
+            </template>
+          </div>
+
+          <div slot="level_status" slot-scope="item, row">
+            <template>
+              <div v-if="item===1">永久</div>
+              <div v-if="item===2">{{row.expired_time}}天</div>
+              <div v-if="item===3">{{row.expired_time | moment}}过期</div>
             </template>
           </div>
 
@@ -40,9 +67,9 @@
             <template>
               <a @click="openEdit(record)">编辑</a>
               <a-divider type="vertical" />
-              <a @click="delTag(record)">删除</a>
+              <a @click="delFixedLevel(record)">删除</a>
               <a-divider type="vertical" />
-              <a @click="delTag(record)">下载等级码</a>
+              <a @click="download(record)">下载等级码</a>
             </template>
           </span>
 
@@ -53,13 +80,16 @@
     <FixedEdit 
       v-if="page=='add'||page=='edit'"
       @exit="page='level_list'"
+      :formData="item"
       :type="page"></FixedEdit>
 
     <FixedCertificationList 
+      :itemData="item"
       v-if="page=='certification_list'"
       @exit="page='level_list'"></FixedCertificationList>
 
     <FixedUserList 
+      :itemData="item"
       v-if="page=='user_list'"
       @exit="page='level_list'"></FixedUserList>
 
@@ -69,8 +99,8 @@
 <script>
 import { STable } from '@/components'
 
-
-import { queryFixedLevel } from '@/api/crm'
+import { mapGetters } from 'vuex'
+import { queryFixedLevel,delFixedLevel } from '@/api/crm'
 
 export default {
   name: 'Fixed',
@@ -89,64 +119,108 @@ export default {
       columns: [
         {
           title: '等级模板',
-          dataIndex: 'template_icon'
+          dataIndex: 'template_icon',
+          scopedSlots: { customRender: 'template_icon' },
+          width: 160
         },
         {
           title: '等级名称',
-          dataIndex: 'level_name'
+          dataIndex: 'level_name',
+          width: 160
         },
         {
           title: '生效油站',
-          dataIndex: 'group_id',
+          scopedSlots: { customRender: 'group_name' },
+          width: 160
         },
         {
           title: '等级优惠',
           key: 'discount_list',
           dataIndex: 'discount_list',
           scopedSlots: { customRender: 'discount_list' },
+          width: 160
         },
         {
           title: '等级有效期',
           dataIndex: 'level_status',
+          scopedSlots: { customRender: 'level_status' },
+          width: 160
         },
         {
           title: '最近修改人',
-          dataIndex: 'userId',
+          dataIndex: 'user_name',
+          width: 160
         },
         {
           title: '查看',
           dataIndex: 'watch',
-          scopedSlots: { customRender: 'watch' }
+          scopedSlots: { customRender: 'watch' },
+          fixed: 'right'
         },
         {
           title: '操作',
           dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
+          scopedSlots: { customRender: 'action' },
+          fixed: 'right'
         }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         // console.log('loadData.parameter', parameter)
         return queryFixedLevel({}).then((res)=>{
-          console.log(res.data)
+          // console.log(res.data)
           return {
             data: res.data, // 列表数组
           }
         })
-
-      }
+      },
+      item: {},
     }
   },
-  created () { },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
+  created () { 
+    console.log(this.userInfo)
+  },
   methods: {
     openEdit(item){
+      this.item = item
       this.page = 'edit'
     },
     openUserList(item){
+      this.item = item
       this.page = 'user_list'
     },
     openCertificationList(item){
+      this.item = item
       this.page = 'certification_list'
+    },
+    delFixedLevel (item) {
+      let that = this
+      this.$confirm({
+        title: '请注意',
+        content: '删除后该等级用户将转化为动态等级会员',
+        onOk () {
+          delFixedLevel(item.id).then((res)=>{
+            that.$message.success('删除成功')
+            that.$refs.table.refresh()
+          })
+        },
+        onCancel () {}
+      })
+    },
+    download (item) {
+      this.$confirm({
+        title: '操作提示',
+        content: '开发中...',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            resolve()
+          }).catch(() => console.log('Oops errors!'))
+        },
+        onCancel () {}
+      })
     },
     delTag () {
       this.$confirm({

@@ -66,7 +66,7 @@
 </template>
 
 <script>
-
+import { getSelectOption } from '@/api/crm'
 export default {
   name: 'CrmCrowdAdd',
   components: {},
@@ -139,7 +139,11 @@ export default {
       ]
     }
   },
-  created () {},
+  created () {
+    getSelectOption().then((res)=>{
+      console.log(res.data)
+    })
+  },
   methods: {
     handleChange (value) {
       console.log(value)

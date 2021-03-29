@@ -1,18 +1,18 @@
 <template>
   <div class="biao">
     <div class="box">
-      <div class="overflow_box" v-for="(a, index) in 6" :key="index">
+      <div class="overflow_box" v-for="(list, index) in arrs" :key="index">
         <div class="overflow_li">
           <div class="title">
-            <span>消费客户</span>
+            <span>{{list.number_members_name}}</span>
           </div>
           <div class="price_info">
-            <span class="price">100</span>
+            <span class="price">{{list.number_members_number}}</span>
             <span class="unit">人</span>
           </div>
           <div class="trend_info">
             <span>较上一周期</span>
-            <span class="percente percent-up">0.00%</span>
+            <span class="percente percent-up">{{list.day_before}}</span>
             <i class="trend">
               <a-icon type="arrow-down" />
             </i>
@@ -38,7 +38,7 @@
     </div>
     <div class="trend-box">
       <div class="canvas-box">
-        <canvas_box></canvas_box>
+        <canvas_box1 :lineChart='lineChart' v-if="show"></canvas_box1>
       </div>
       <div class="ranking-trend">
         <div class="rankingTrendText">
@@ -73,12 +73,21 @@
     <div class="pie-chart-box">
       <div class="a">
         <div class="pie-chart-canvas">
-          <span>图像</span>
+          <!-- <span>图像</span> -->
+          <bing3 :cake1='cake1' v-if="show"></bing3>
+         
+        </div>
+        <div style="width:200px;margin: 0 auto;text-align: center;">
+           <span>{{cake1.name}}</span>
         </div>
       </div>
       <div class="a">
         <div class="pie-chart-canvas">
-          <span>图像</span>
+          <!-- <span>图像</span> -->
+          <bing5 :cake2='cake2' v-if="show"></bing5>
+        </div>
+        <div style="width:200px;margin: 0 auto;text-align: center;">
+          <span>{{cake2.name}}</span>
         </div>
       </div>
     </div>
@@ -86,12 +95,46 @@
 </template>
 
 <script>
-import canvas_box from './canvas_box'
+import {customerMemberStatistic} from '@/api/data'
+import canvas_box1 from './canvas_box1'
+import bing3 from './bing3'
+import bing5 from './bing5'
 export default {
-  components: { canvas_box },
+  props:['arrs'],
+  components: { canvas_box1 ,bing3,bing5},
   data() {
-    return {}
+    return {
+      lists:[],
+      lineChart:{},
+      show:false,
+      cake1:{},
+      cake2:{}
+    }
   },
+  // watch:{
+  //   lists:{
+  //     handler(value){
+  //       this.lists = value
+  //     },
+  //     immediate:true,
+  //     deep:true
+  //   }
+  // },
+  created(){
+      this.biao()
+  },
+  methods:{
+     biao(){
+       return customerMemberStatistic({ time_type:1}).then(res =>{
+          
+          this.lineChart = res.data.lineChart1
+          this.cake1 = res.data.cake1
+          this.cake2 = res.data.cake2
+          console.log(this.cake1)
+          this.show = true
+       })
+     }
+  }
 }
 </script>
 
@@ -184,20 +227,14 @@ export default {
     display: flex;
     box-sizing: border-box;
     .canvas-box {
+      width: 80%;
       user-select: none;
       position: relative;
-      // height: 460px;
-      // border: 1px solid #eaeaf4;
-      // border-radius: 4px;
-
-    //   .trend {
-    //     position: absolute;
-    //     top: 24px;
-    //     left: 24px;
-    //   }
+      
     }
     .ranking-trend {
       display: flex;
+      width: 20%;
       flex-direction: column;
       align-items: center;
       margin-left: 3rem;

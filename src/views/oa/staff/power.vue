@@ -6,7 +6,7 @@
           <div class="title_model">
             <div class="main_label">员工角色操作权限管理</div>
             <span>根据员工的职能为账号赋予角色属性，根据角色进行权限设置，点击可查看</span>
-            <a href="https://mp.nlsaas.com/oa/staff/account">员工列表</a>
+            <a>员工列表</a>
           </div>
           <div class="content">
             <a-modal width="1300px" v-model="modal2Visible" centered @ok="() => (modal2Visible = false)" :footer="null">
@@ -69,50 +69,26 @@
                       <div style="margin-bottom: 60px">
                         <span>权限说明：拥有油站下的全部数据查看</span>
                         <span>权限及功能修改权限</span>
-                        <p>该角色目前已配置16个账号</p>
+                        <p>该角色目前已配置{{list.count}}个账号</p>
                       </div>
 
                       <div style="display: flex; justify-content: space-between">
                         <p>
                           角色权限
-                          <a-popover placement="right">
-                            <template slot="content">
-                              <a-tree show-line :default-expanded-keys="['0-0-0']" @select="onSelect">
-                                <a-icon slot="switcherIcon" type="down" />
-                                <a-tree-node key="0-0" title="商户平台">
-                                  <a-tree-node key="0-0-3" title="首页"> </a-tree-node>
-                                  <a-tree-node key="0-0-0" title="数据">
-                                    <a-tree-node key="0-0-0-0" title="员工绩效" />
-                                    <a-tree-node key="0-0-0-1" title="加油统计" />
-                                    <a-tree-node key="0-0-0-2" title="充值统计" />
-                                    <a-tree-node key="0-0-0-3" title="关注统计" />
-                                  </a-tree-node>
-                                  <a-tree-node key="0-0-1" title="概览">
-                                    <a-tree-node key="0-0-1-0" title="实时概览" />
-                                    <a-tree-node key="0-0-1-1" title="整体看板">
-                                      <a-tree-node key="0-0-2-0" title="查看整体看板" />
-                                      <a-tree-node key="0-0-2-1" title="查看订单概览" />
-                                      <a-tree-node key="0-0-2-2" title="导出报表" />
-                                    </a-tree-node>
-                                  </a-tree-node>
-                                  <a-tree-node key="0-0-2" title="营销">
-                                    <a-tree-node key="0-0-2-0" title="实时概览" />
-                                    <a-tree-node key="0-0-2-1" title="活动统计" />
-                                  </a-tree-node>
-                                </a-tree-node>
-                                <a-tree-node key="0-1" title="商户POS端">
-                                  <a-tree-node key="0-1-1" title="首页"> </a-tree-node>
-                                </a-tree-node>
-                                <a-tree-node key="0-2" title="商户小程序(商户端)">
-                                  <a-tree-node key="0-2-1" title="首页"> </a-tree-node>
-                                </a-tree-node>
-                                <a-tree-node key="0-3" title="OS">
-                                  <a-tree-node key="0-3-1" title="首页"> </a-tree-node>
-                                </a-tree-node>
-                              </a-tree>
-                            </template>
-                            <span style="color: #37f">详情</span>
-                          </a-popover>
+                          <span @click="showModal(list.id)" style="color: #37f">详情</span>
+                          <a-modal :mask="datas" v-model="modal2Visibles" centered :footer="null">
+                            <a-tree
+                              v-model="checkedKeys"
+                              checkable
+                              :expanded-keys="expandedKeys"
+                              :auto-expand-parent="autoExpandParent"
+                              :selected-keys="selectedKeys"
+                              :tree-data="treeDatas"
+                              :replaceFields="{ children: 'treeList', title: 'menu_title_code', key: 'menu_id' }"
+                              @expand="onExpand"
+                              @select="onSelect"
+                            />
+                          </a-modal>
                         </p>
                         <p>角色列表<a @click="xiang" style="color: #37f">详情</a></p>
                       </div>
@@ -121,7 +97,7 @@
                 </div>
                 <a-card hoverable style="width: 300px; margin: 10px 10px">
                   <div style="display: flex; flex-direction: column">
-                    <div style="margin: 32px auto">
+                    <div @click="tianjia" style="margin: 32px auto">
                       <a-icon style="font-size: 60px; color: #c7c7c7; cursor: pointer; margin: 35px 0" type="plus" />
                       <div style="margin: 20px 0 30px 0; text-align: center"></div>
                     </div>
@@ -135,28 +111,43 @@
                     <a-button @click="tianjia" style="margin: auto 75px 4px">添加角色</a-button>
                   </div>
                 </a-card>
-                <a-modal width='1300px' v-model="modal2Visible1" centered :footer="null" @ok="() => (modal2Visible = false)">
-					<div style="width:1000px;margin:0 auto;display: flex;">
-						<p style="width:100px;padding-top:5px">角色名称</p>
-						<a-input  placeholder="" />
-					</div>
-					<div style="width:1000px;margin:0 auto;">
-						<p>选择权限</p>
-					</div>
-					<div style="width:1000px;margin:0 auto;display: flex;">
-						<p style="width:100px;padding-top:5px">权限说明</p>
-						<a-textarea
-						v-model="value"
-						placeholder="请输入权限说明"
-						:auto-size="{ minRows: 3, maxRows: 5 }"
-						/>
-					</div>
-					<div style="width:200px;margin: 40px auto;">
-						 <a-button type="primary">
-							确定
-						</a-button>
-						<a-button style="margin-left:20px">取消</a-button>
-					</div>
+                <a-modal
+                  width="1300px"
+                  v-model="modal2Visible1"
+                  centered
+                  :footer="null"
+                  @ok="() => (modal2Visible = false)"
+                >
+                  <div style="width: 1000px; margin: 0 auto; display: flex">
+                    <p style="width: 100px; padding-top: 5px">角色名称</p>
+                    <a-input v-model="input" placeholder="" />
+                  </div>
+                  <div style="width: 1000px; margin: 0 auto; display: flex; margin-top: 20px">
+                    <p style="width: 100px; padding-top: 5px">选择权限</p>
+                    <div style="width: 950px">
+                      <div>
+						  <a-tree
+                              v-model="checkedKeys1"
+                              checkable
+                              :expanded-keys="expandedKeys1"
+                              :auto-expand-parent="autoExpandParent"
+                              :selected-keys="selectedKeys"
+                              :tree-data="treeDatas1"
+                              :replaceFields="{ children: 'treeList', title: 'menu_name', key: 'id' }"
+                              @expand="onExpands"
+                              @select="onSelect"
+                            />	
+                      </div>
+                    </div>
+                  </div>
+                  <div style="width: 1000px; margin: 0 auto; display: flex; margin-top: 20px">
+                    <p style="width: 100px; padding-top: 5px">权限说明</p>
+                    <a-textarea v-model="value" placeholder="请输入权限说明" :auto-size="{ minRows: 3, maxRows: 5 }" />
+                  </div>
+                  <div style="width: 200px; margin: 40px auto">
+                    <a-button type="primary" @click="yes"> 确定 </a-button>
+                    <a-button style="margin-left: 20px" @click="no">取消</a-button>
+                  </div>
                 </a-modal>
               </div>
             </div>
@@ -168,9 +159,100 @@
 </template>
 
 <script>
+const treeDatas = [
+  {
+    title: '0-0',
+    key: '0-0',
+    children: [
+      {
+        title: '0-0-0',
+        key: '0-0-0',
+        children: [
+          { title: '0-0-0-0', key: '0-0-0-0' },
+          { title: '0-0-0-1', key: '0-0-0-1' },
+          { title: '0-0-0-2', key: '0-0-0-2' },
+        ],
+      },
+      {
+        title: '0-0-1',
+        key: '0-0-1',
+        children: [
+          { title: '0-0-1-0', key: '0-0-1-0' },
+          { title: '0-0-1-1', key: '0-0-1-1' },
+          { title: '0-0-1-2', key: '0-0-1-2' },
+        ],
+      },
+      {
+        title: '0-0-2',
+        key: '0-0-2',
+      },
+    ],
+  },
+  {
+    title: '0-1',
+    key: '0-1',
+    children: [
+      { title: '0-1-0-0', key: '0-1-0-0' },
+      { title: '0-1-0-1', key: '0-1-0-1' },
+      { title: '0-1-0-2', key: '0-1-0-2' },
+    ],
+  },
+  {
+    title: '0-2',
+    key: '0-2',
+  },
+]
+
+
+const treeDatas1 = [
+  {
+    title: '0-0',
+    key: '0-0',
+    children: [
+      {
+        title: '0-0-0',
+        key: '0-0-0',
+        children: [
+          { title: '0-0-0-0', key: '0-0-0-0' },
+          { title: '0-0-0-1', key: '0-0-0-1' },
+          { title: '0-0-0-2', key: '0-0-0-2' },
+        ],
+      },
+      {
+        title: '0-0-1',
+        key: '0-0-1',
+        children: [
+          { title: '0-0-1-0', key: '0-0-1-0' },
+          { title: '0-0-1-1', key: '0-0-1-1' },
+          { title: '0-0-1-2', key: '0-0-1-2' },
+        ],
+      },
+      {
+        title: '0-0-2',
+        key: '0-0-2',
+      },
+    ],
+  },
+  {
+    title: '0-1',
+    key: '0-1',
+    children: [
+      { title: '0-1-0-0', key: '0-1-0-0' },
+      { title: '0-1-0-1', key: '0-1-0-1' },
+      { title: '0-1-0-2', key: '0-1-0-2' },
+    ],
+  },
+  {
+    title: '0-2',
+    key: '0-2',
+  },
+]
+
 import { rolemenu } from '@/api/work'
 import { rolelist } from '@/api/work'
 import { STable } from '@/components'
+import { rolesave } from '@/api/work'
+import { groupmenulistt } from '@/api/work'
 import { getlabellist, labeldel } from '@/api/crm'
 export default {
   name: 'Operformance',
@@ -179,7 +261,19 @@ export default {
   },
   data() {
     return {
-		 value: '',
+      obj: {},
+      expandedKeys: ['数据'],
+	  expandedKeys1:[],
+      autoExpandParent: false,
+      checkedKeys: [],
+	  checkedKeys1:[],
+      selectedKeys: [],
+      treeDatas,
+	  treeDatas1,
+      datas: false,
+      modal2Visibles: false,
+      input: '',
+      value: '',
       modal2Visible1: false,
       selectedRowKeys: [],
       selectedRows: [],
@@ -229,7 +323,6 @@ export default {
           size: parameter.pageSize, // 每页页数
         }
         return getlabellist(Object.assign(params)).then((res) => {
-          console.log(res.data.data)
           // 自定义出参
           // console.log(res.data.list)
           this.oldTotal = res.data.total
@@ -245,17 +338,84 @@ export default {
       lists: {},
       imgs: '',
       modal2Visible: false,
+	  arrs:[],
     }
   },
   created() {
     this.rolelist()
   },
+  computed: {
+    // treeData() {
+    //     get:function(){
+    //     }
+    //   return handleTreeData(treeData, this.targetKeys)
+    // },
+  },
+  watch: {
+    checkedKeys1(val) {
+		this.arrs = val
+      console.log('onCheck', val)
+    },
+  },
   methods: {
+    showModal(id) {
+      return rolemenu({ role_id: id }).then((res) => {
+        this.treeDatas = res.data
+        console.log(res.data)
+
+        this.modal2Visibles = true
+      })
+    },
+    onSelect(selectedKeys, info) {
+      console.log('onSelect', info)
+      this.selectedKeys = selectedKeys
+    },
+
+    onCheck(checkedKeys1) {
+      console.log(111)
+      this.checkedKeys1 = checkedKeys1
+    },
+    onExpand(expandedKeys) {
+      console.log('onExpand', expandedKeys)
+      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+      // or, you can remove all expanded children keys.
+      this.expandedKeys = expandedKeys
+      this.autoExpandParent = false
+    },
+	onExpands(expandedKeys) {
+      console.log('onExpand', expandedKeys)
+      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+      // or, you can remove all expanded children keys.
+      this.expandedKeys1 = expandedKeys
+      this.autoExpandParent = false
+    },
+
+    
+
+    yes() {
+      let data = {
+        role_name: this.input,
+        introduce: this.value,
+        menu: this.arrs,
+		role_image:'https://oilphp.ldyxx.com/images/fc58b4c0f928a76b797c5c687ea8fbdf.png'
+      }
+      return rolesave(data).then((res) => {
+        console.log(res)
+		this.rolelist()
+		this.modal2Visible1 = false
+      })
+    },
+    no() {
+      this.modal2Visible1 = false
+    },
     tianjia() {
-      this.modal2Visible1 = true
+      return groupmenulistt({}).then((res) => {
+        console.log(res.data.data)
+        this.treeDatas1 = res.data.data
+        this.modal2Visible1 = true
+      })
     },
     onSelectChange(selectedRowKeys, selectedRows) {
-      console.log()
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
@@ -281,25 +441,21 @@ export default {
     a() {
       console.log(111)
     },
-    onSelect(selectedKeys, info) {
-      console.log(111)
-      console.log('selected', selectedKeys, info)
-    },
+
     rolelist() {
       return rolelist({}).then((res) => {
         this.lists = res.data.data
-        console.log(this.imgs)
-      })
-    },
-    rolemenu(id) {
-      return rolemenu({ role_id: id }).then((res) => {
-        console.log(res)
+        console.log(this.lists)
       })
     },
   },
 }
 </script>
 <style lang="scss" scoped>
+.tree-transfer .ant-transfer-list:first-child {
+  width: 50%;
+  flex: none;
+}
 .mainContainreBox {
   position: relative;
   display: flex;
@@ -307,6 +463,7 @@ export default {
   width: 100%;
   flex: 1;
   box-sizing: border-box;
+
   .mainContainreBlock {
     padding-left: 24px;
     padding-right: 24px;

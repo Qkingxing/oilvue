@@ -1,26 +1,45 @@
 <template>
   <a-layout>
+    <ImportCreat v-if="$route.query.isCreate == 1"/>
     <a-layout-content
+      v-else
       :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
     >
       <div class="head-title">
         客户导入
       </div>
       <div class="actionBtns">
-        <a-button type="primary"> 导入 </a-button>
+        <router-link :to="{ path: '/crm/customer/import',query:{ isCreate: 1 } }">
+          <a-button type="primary"> 导入 </a-button>
+        </router-link>
+        
       </div>
 
       <!-- 表格 -->
       <div class="showDataForTable">
-        <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
+        <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData">
+          
+          <span slot="import_type" slot-scope="text, record">
+            <template>
+              <div>
+                {{text==null?'':importTypeList[text].text}}
+              </div>
+              
+            </template>
+          </span>
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">撤回</a>
+              <div class="action-group" style="text-align:center;">
+                <a @click="delTag(record)">下载错误数据</a><br>
+                <a @click="delTag(record)">撤回</a>
+              </div>
+              
             </template>
           </span>
         </s-table>
       </div>
     </a-layout-content>
+    
   </a-layout>
 </template>
 
@@ -28,60 +47,62 @@
 import { STable } from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
+import { getImportlist } from '@/api/crm'
 
 export default {
   name: 'Import',
   components: {
-    STable
+    STable,
+    ImportCreat: ()=>import('./import/creat')
   },
   data () {
     return {
+      importTypeList:[
+        { text: '', value: 0 },
+        { text: '成功', value: 1 },
+        { text: '失败', value: 2 },
+        { text: '已撤回', value: 3 },
+      ],
       // 查询参数
       queryParam: {},
       // 表头
       columns: [
         {
           title: '文件名称',
-          dataIndex: 'no'
+          dataIndex: 'report_name'
         },
         {
           title: '操作人',
-          dataIndex: 'description'
+          dataIndex: 'user_name'
         },
         {
           title: '成功数',
-          dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'success_number',
         },
         {
           title: '失败数',
-          dataIndex: 'time',
-          needTotal: true
+          dataIndex: 'error_number',
         },
         {
           title: '总积分',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'totalIntegral',
         },
         {
           title: '总余额',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'totalMoney',
         },
         {
           title: '加油卡名称',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'card_name',
         },
         {
           title: '导入状态',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'import_type',
+          scopedSlots: { customRender: 'import_type' }
         },
         {
           title: '导入时间',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'generate_time',
         },
         {
           title: '操作',
@@ -91,9 +112,22 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
+        let params = {
+          page: parameter.pageNo, // 页码
+          limit: parameter.pageSize, // 每页页数
+        }
+
+        return getImportlist(Object.assign(params))
+        .then((res)=>{
+          // 自定义出参
+          // console.log(res.data)
+          return {
+            data: res.data, // 列表数组
+            pageNo: parameter.pageNo,  // 当前页码
+            pageSize: parameter.pageSize,  // 每页页数
+            totalCount: res.pageSize, // 列表总条数
+            totalPage: res.countPage // 列表总页数
+          }
         })
       },
       selectedRowKeys: [],
