@@ -7,81 +7,87 @@
       </div>
       <div class="form-wrap">
         <a-form
-          :form="form"
+          :form="formData"
           v-bind="formItemLayout"
          
         >
         <a-form-item label="油站名称">
           <a-input
           
-          v-model="formData.name"
+          v-model="formData.site_name"
           />
         </a-form-item>
         <a-form-item label="油站简称">
           <a-input
-          disabled
+         v-model="formData.site_abbreviation"
           />
         </a-form-item>
         <a-form-item   label="所在城市">
           <a-select
-          style="width:100px"
-              
-              placeholder="选择区"
-            >
-            
-            <a-select-option value="usa">
-              U.S.A
-            </a-select-option>
-          </a-select>
-            <a-select
+          @change="shengChange"
+          v-model="province_id"
             style="width:100px;margin:0 10px;"
-                placeholder="选择区"
+              placeholder="请选择"
             >
-            <a-select-option value="usa">
-                U.S.A
+            <a-select-option :key="item.id" v-for="item in shengArr" :value="item.id">
+               {{item.name}}
               </a-select-option>
             </a-select>
             <a-select
+             @change="shiChange"
+             v-model="city_id"
+            v-if="shiArr.length"
+            style="width:100px;margin:0 10px;"
+              placeholder="请选择"
+            >
+            <a-select-option :key="item.id" v-for="item in shiArr" :value="item.id">
+               {{item.name}}
+              </a-select-option>
+            </a-select>
+            <a-select
+             v-model="district_id"
+            v-if="xianArr.length"
               style="width:100px"
                 placeholder="选择区"
               >
-              <a-select-option value="usa">
-                U.S.A
+               <a-select-option :key="item.id" v-for="item in xianArr" :value="item.id">
+               {{item.name}}
               </a-select-option>
             </a-select>
             </a-form-item>
             <a-form-item label="详细地址">
               <a-input
               v-model="formData.address"
-            :suffix="lastAddress"
-              
-              />
+              :suffix="lastAddress"/>
             </a-form-item>
             <a-form-item   label="经纬度">
               <a-input
               style="width:160px;margin-right:12px;"
-              
+               v-model="formData.longitude"
               />
             <a-input
             style="width:160px"
+            v-model="formData.latitude"
             />
             </a-form-item>
             <a-form-item   label="油站电话">
                   <a-input
+                  v-model="formData.site_tel"
               />
             </a-form-item>
             <a-form-item label="是否营业">
-            <a-radio-group v-decorator="['radio-group']">
-              <a-radio value="a">
+            <a-radio-group v-model="formData.is_business">
+              <a-radio :value="1">
                开业中
               </a-radio>
-              <a-radio value="b">
+              <a-radio :value="0">
                暂停营业
               </a-radio>
             </a-radio-group>
           </a-form-item>
           <a-form-item label="标签">
             <a-input
+            v-model="formData.label"
               :suffix="lastIndex"
             />
           </a-form-item>
@@ -108,22 +114,22 @@
                 可上传5张，图片建议尺寸850像素*350像素，大小不超过1M
                 </a-form-item>
             <a-form-item label="零管系统">
-            <a-radio-group v-decorator="['radio-group']">
-              <a-radio value="a">
+            <a-radio-group  v-model="formData.zerotube">
+              <a-radio :value="1">
                启用
               </a-radio>
-              <a-radio value="b">
+              <a-radio :value="0">
                禁用
               </a-radio>
              
             </a-radio-group>
           </a-form-item>
            <a-form-item label="ETC直扣注册">
-            <a-radio-group v-decorator="['radio-group']">
-              <a-radio value="a">
+            <a-radio-group v-model="formData.ETC">
+              <a-radio :value="1">
                需注册
               </a-radio>
-              <a-radio value="b">
+              <a-radio :value="0">
                关闭注册
               </a-radio>
              
@@ -142,48 +148,51 @@
          
         >
         <a-form-item label="微信公众号">
-            <a-radio-group v-decorator="['radio-group']">
-              <a-radio value="a">
+            <a-radio-group v-model="formData.woa_type">
+              <a-radio :value="1">
                使用中
               </a-radio>
-              <a-radio value="b">
+              <a-radio :value="0">
                未使用
               </a-radio>
              
             </a-radio-group>
           </a-form-item>
-         <a-form-item label="关联AppID">
+         <a-form-item label="关联AppID" v-show="formData.woa_type">
           <a-input
+          v-model="formData.woaAppID"
           />
         </a-form-item>
           <a-form-item label="微信小程序">
-            <a-radio-group v-decorator="['radio-group']">
-              <a-radio value="a">
+            <a-radio-group  v-model="formData.aow_type">
+              <a-radio :value="1">
                使用中
               </a-radio>
-              <a-radio value="b">
+              <a-radio :value="0">
                未使用
               </a-radio>
             </a-radio-group>
           </a-form-item>
-         <a-form-item   label="关联AppID">
+         <a-form-item v-show="formData.aow_type"   label="关联AppID">
                <a-input
+               v-model="formData.aowAppID"
           />
         </a-form-item>
-        <a-form-item label="微信公众号">
-            <a-radio-group v-decorator="['radio-group']">
-              <a-radio value="a">
+        <a-form-item label="支付宝小程序">
+            <a-radio-group v-model="formData.payapplet_type">
+              <a-radio :value="1">
                使用中
               </a-radio>
-              <a-radio value="b">
+              <a-radio :value="0">
                未使用
               </a-radio>
              
             </a-radio-group>
           </a-form-item>
        
-         <a-form-item label="关联AppID">
+         <a-form-item v-show="formData.payapplet_type" label="关联AppID">
           <a-input
+          v-model="formData.payappletAppID"
           />
         </a-form-item>
           <a-form-item :wrapper-col="{ span: 12, offset: 6 }">
@@ -198,13 +207,23 @@
 </template>
 
 <script>
+import api from '../../api/set.js'
 export default {
     name: 'Basis',
      data: () => ({
        formData:{
+         province_id:'',
          name:'',
-         address:''
+         district_id:'',
+         address:'',
+         city_id:''
        },
+       city_id:'',
+       district_id:'',
+       province_id:'',
+       shengArr:[],
+       shiArr:[],
+       xianArr:[],
        lastIndex:'',
       formItemLayout: {
         labelCol: { span: 3 },
@@ -221,8 +240,10 @@ export default {
         }
       ]
   }),
-  beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'validate_other' });
+  
+  created(){
+    this.userGetProvince(0,'sheng')
+    this.setBasicslist()
   },
   computed:{
     lastAddress(){
@@ -231,8 +252,65 @@ export default {
     }
   },
   methods: {
+    shiChange(val){
+      this.district_id=''
+      this.xianArr=[]
+      this.userGetProvince(val,'xian')
+    },
+    shengChange(val){
+      this.city_id=''
+      this.district_id=''
+      this.shiArr=[]
+      this.xianArr=[]
+      this.userGetProvince(val,'shi')
+    },
+    setBasicslist(){
+      let that=this
+      api.setBasicslist()
+        .then(res => {
+            that.formData=res.data
+            that.city_id=res.data.city_id
+            that.district_id=res.data.district_id
+            that.province_id=res.data.province_id
+        })
+      },
+    userGetProvince(pid,type){
+      let that=this
+      api.userGetProvince({
+    "pid":pid})
+      .then(res => {
+        switch(type){
+          case 'sheng':
+            that.shengArr=res.data
+            
+            
+          break;
+          case 'shi':
+            that.shiArr=res.data
+          break;
+          case 'xian':
+            that.xianArr=res.data
+          break;
+        }
+        console.log(res)
+        
+      })
+    },
     store(){
-      console.log(this.formData)
+     
+      let that=this
+      console.log(that.formData)
+      // that.formData.files=that.formData.file.map(item=>{
+      //   delete item.size_file_id
+      //   return item
+      // })
+      that.formData.files=[]
+      delete that.formData.file
+      api.setBasicsset(that.formData)
+        .then(res => {
+           
+        })
+      
     },
      handleCancel() {
       this.previewVisible = false;
