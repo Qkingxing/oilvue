@@ -69,6 +69,7 @@
             style="width:160px"
             v-model="formData.latitude"
             />
+            <img @click="mapLog=true" class="map-png" src="./map.png" alt="">
             </a-form-item>
             <a-form-item   label="油站电话">
                   <a-input
@@ -93,10 +94,10 @@
           </a-form-item>
           <a-form-item label="油站图片">
             <a-upload
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              action="https://oiljava.ldyxx.com:4435/goods/FileImg"
               list-type="picture-card"
               :file-list="fileList"
-              @preview="handlePreview"
+              name="file"
               @change="handleChange"
             >
             <div v-if="fileList.length < 8">
@@ -126,10 +127,10 @@
           </a-form-item>
            <a-form-item label="ETC直扣注册">
             <a-radio-group v-model="formData.ETC">
-              <a-radio :value="1">
+              <a-radio value="1">
                需注册
               </a-radio>
-              <a-radio :value="0">
+              <a-radio value="0">
                关闭注册
               </a-radio>
              
@@ -203,6 +204,17 @@
         </a-form>
       </div>
     </div>
+
+
+     <a-modal
+      title="选择坐标后进行复制"
+      :visible="mapLog"
+      width="800px"
+      @ok="mapLog=false"
+      @cancel="mapLog=false"
+    >
+      <iframe src="https://lbs.amap.com/tools/picker" height="600px"  width="100%" id="iframe" style="border:0px;padding:0px;margin:0px"></iframe>
+    </a-modal>
   </div>
 </template>
 
@@ -211,6 +223,7 @@ import api from '../../api/set.js'
 export default {
     name: 'Basis',
      data: () => ({
+       mapLog:false,
        formData:{
          province_id:'',
          name:'',
@@ -231,14 +244,7 @@ export default {
       },
       previewVisible: false,
       previewImage: '',
-      fileList: [
-        {
-          uid: '-1',
-          name: 'image.png',
-          status: 'done',
-          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        }
-      ]
+      fileList: []
   }),
   
   created(){
@@ -269,6 +275,13 @@ export default {
       api.setBasicslist()
         .then(res => {
             that.formData=res.data
+            that.fileList=res.data.file.map(item=>{
+              item.url=item.path;
+              item.status='done'
+              item.uid=item.path
+              return item
+            })
+
             that.city_id=res.data.city_id
             that.district_id=res.data.district_id
             that.province_id=res.data.province_id
@@ -299,12 +312,14 @@ export default {
     store(){
      
       let that=this
-      console.log(that.formData)
-      // that.formData.files=that.formData.file.map(item=>{
-      //   delete item.size_file_id
-      //   return item
-      // })
       that.formData.files=[]
+      for(let i=0;i<that.fileList.length;i++){
+        let obj={
+          path:that.fileList[i].response?that.fileList[i].response.data:that.fileList[i].url
+        }
+        that.formData.files.push(obj)
+      }
+      
       delete that.formData.file
       api.setBasicsset(that.formData)
         .then(res => {
@@ -312,34 +327,26 @@ export default {
         })
       
     },
+    mapClick(){
+
+    },
      handleCancel() {
       this.previewVisible = false;
     },
-    async handlePreview(file) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
+    handleChange({ file,fileList }) {
+      console.log(file)
+      this.fileList = fileList
+      if(file.status=='error'){
+        this.$message.error('上传失败');
+        this.fileList = fileList.filter(item=>{
+          return item.status=='done'
+        });
       }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
-    },
-    handleChange({ fileList }) {
-      this.fileList = fileList;
-    },
-    handleSubmit(e) {
-      e.preventDefault();
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          console.log('Received values of form: ', values);
-        }
-      });
-    },
-    normFile(e) {
-      console.log('Upload event:', e);
-      if (Array.isArray(e)) {
-        return e;
+      if(file.status=='done'){
+        this.$message.success(file.response.msg);
       }
-      return e && e.fileList;
-    },
+      
+    }
   }
 }
 </script>
@@ -355,6 +362,12 @@ export default {
     font-size:18px;
     font-weight:bold;
     border-bottom:1px solid #ccc;
+  }
+  .map-png{
+    width:44px;
+    margin-left:10px;
+    display:inline-block;
+    cursor:pointer;
   }
   .ant-form-item{
     width:800px;
