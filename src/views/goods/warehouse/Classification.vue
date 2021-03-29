@@ -216,11 +216,10 @@ export default {
               'sorting': this.sortInfo.sorting
           }]
       }
-      console.log(_post.up_sorting)
       modifyGoodsCategorySorting(_post).then(res => {
         this.$message.success('修改成功')
         this.sortVisible = false
-        this.sortVisibleConfirmLoading = false
+        this.sortConfirmLoading = false
         this.$refs.table.refresh()
       })
     },
