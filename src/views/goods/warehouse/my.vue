@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my">
    <a-layout v-if="$route.name=='my' && !isAdd && !isModify">
      <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
        <a-button type="primary" @click="toAddGoods()">新增商品</a-button>
@@ -84,7 +84,7 @@
   const columns = [
     { title: '商品ID', dataIndex: 'id', key: '1' },
     {
-      title: 'img',
+      title: '商品图片',
       key: '2',
       scopedSlots: { customRender: 'img' },
     },
@@ -209,3 +209,8 @@
 		}
 	}
 </script>
+<style scoped="scoped">
+  .my img{
+    width: 50px;
+  }
+</style>
