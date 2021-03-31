@@ -95,8 +95,7 @@
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
 
-          <a-button type="primary" style="margin-right: 10px;" v-if="type=='add'" @click="submit"> 新增 </a-button>
-          <a-button type="primary" style="margin-right: 10px;" v-else> 编辑 </a-button>
+          <a-button type="primary" style="margin-right: 10px;" @click="submit">{{type=='add'?'新增':'编辑'}}</a-button>
 
           <a-button @click="exit"> 取消 </a-button>
 
@@ -142,6 +141,10 @@ export default {
   props:{
     type:{
       type: String
+    },
+    itemData:{
+      type:Object,
+      default:null
     }
   },
   created () {

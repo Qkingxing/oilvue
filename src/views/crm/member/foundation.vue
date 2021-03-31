@@ -34,12 +34,9 @@
     </a-layout-content>
 
     <FoundationAdd 
-      v-if="type=='add'" 
+      v-if="type=='add'||type=='edit'" 
       :type="type"
-      @exit="type='list'"></FoundationAdd>
-    <FoundationAdd 
-      v-if="type=='edit'" 
-      :type="type"
+      :itemData="itemData"
       @exit="type='list'"></FoundationAdd>
     
   </a-layout>
@@ -100,7 +97,7 @@ export default {
         }
 
         return getUserBasicslist(Object.assign(params)).then(res=>{
-          // console.log(res.data)
+          console.log(res.data.list)
           // 自定义出参
           return {
             data: res.data.list, // 列表数组
@@ -111,6 +108,7 @@ export default {
           }
         })
       },
+      itemData: null,
 
     }
   },
@@ -130,6 +128,8 @@ export default {
     },
     editItem(item){
       console.log(item)
+      this.itemData = item
+      this.type = 'edit'
     }
   }
 }
