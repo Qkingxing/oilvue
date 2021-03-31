@@ -216,7 +216,7 @@ import { mapGetters } from 'vuex'
 import moment from 'moment';
 import { getPayList } from '@/api/base'
 import { getGroupolilist } from '@/api/oil'
-import { addMemberSpalevel } from '@/api/crm'
+import { addMemberSpalevel,editMemberSpalevel } from '@/api/crm'
 
 export default {
   name: 'GrowEdit',
@@ -267,6 +267,12 @@ export default {
   props:{
     pageType:{
       type: String
+    },
+    total:{
+      type: Number
+    },
+    itemData:{
+      type: Object
     }
   },
   computed:{
@@ -294,21 +300,76 @@ export default {
         id: 'ALL_SELECT'
       })
 
+      if (this.pageType==='edit') {
+        console.log(this.itemData)
+        let form = _.cloneDeep(this.itemData)
+
+        form.date = form.star_time
+
+        let { zf_type, rules_oils_id } = form
+        let { deductions_deductions } = form.dataList[0]
+
+        zf_type = zf_type.split(',').map(Number)
+        form.zf_type = zf_type
+
+        rules_oils_id = rules_oils_id.map(e=>{
+          return e.id
+        })
+        form.rules_oils_id = rules_oils_id
+        form.deductions_deductions = deductions_deductions
+
+        form.levelList = form.dataList
+
+        form.levelList.forEach((e,i)=>{
+          e.oldChooseData = []
+          e.oils_id = e.oils_list.map((e2)=>{
+            return e2.id
+          })
+        })
+        
 
 
-
-
-
+        this.$set(this,'form',form)
+        // console.log(form)
+      }
 
     },
     save(){
+      let that = this
       // console.log(this.form)
       this.checkForm().then((total_data)=>{
-        console.log(total_data)
-        addMemberSpalevel(total_data).then((res)=>{
-          console.log(res)
-        })
+        
+        // 新增
+        if (this.pageType==='add') {
+          if (this.total===1) {
+            addMemberSpalevel(total_data).then((res)=>{
+              // console.log(res)
+              this.back()
+            })
+          }else{
+            this.$confirm({
+              title: '温馨提示',
+              content: '集团当前已有定级规则继续创建将覆盖已有的定级规则',
+              onOk () {
+                addMemberSpalevel(total_data).then((res)=>{
+                  // console.log(res)
+                  that.back()
+                })
+              },
+              onCancel () {}
+            })
+          }
+        }else{
+        // 修改编辑
+          console.log(total_data)
 
+          editMemberSpalevel(total_data).then(()=>{
+            that.back()
+          })
+
+        }
+        
+        
 
       }).catch(()=>{})
     },

@@ -192,11 +192,11 @@ export function addMemberSpalevel (total_data) {
   })
 }
 // 修改动态等级
-export function editMemberSpalevel (data) {
+export function editMemberSpalevel (total_data) {
   return JavaRequest({
     url: '/customer/update_MemberSpalevel',
     method: 'post',
-    data
+    data:{total_data}
   })
 }
 // 删除动态等级

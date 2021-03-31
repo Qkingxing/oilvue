@@ -14,7 +14,7 @@
         <a-button type="primary" @click="addRule"> 新增会员规则 </a-button>
       </div>
       <div class="list">
-        <div class="page-block" v-show="total===1">
+        <div class="page-block" v-if="total===1">
           <div class="head-title">
             成长值设置
             <span class="rule-status">{{effectText(rule.effect).label}}</span>
@@ -29,6 +29,10 @@
               <div class="setting-item">
                 <div class="setting-title">生效油站</div>
                 <div class="setting-content">{{rule.group_id}}</div>
+              </div>
+              <div class="setting-item">
+                <div class="setting-title">支付限制</div>
+                <div class="setting-content">{{payListText(rule.zf_type)}}</div>
               </div>
               <div class="setting-item">
                 <div class="setting-title">成长值累积门槛</div>
@@ -49,6 +53,7 @@
                 <a-table 
                   rowKey="id" 
                   size="default"
+                  :pagination="false"
                   :columns="columns" 
                   :data-source="data">
                   <div slot="level" slot-scope="item, row">
@@ -83,7 +88,7 @@
           </div>
           <div class="page-foot">
             <a-button v-if="rule.effect===1" @click="stop">立即停用</a-button>
-            <a-button type="primary" v-if="rule.effect===2||rule.effect===3">编辑</a-button>
+            <a-button type="primary" v-if="rule.effect===2||rule.effect===3" @click="editRule(rule)">编辑</a-button>
             <a-button v-if="rule.effect===2" @click="delRule(rule.effect)">删除</a-button>
             <a-button v-if="rule.effect===3">使用推荐</a-button>
           </div>
@@ -106,6 +111,10 @@
                   <div class="setting-item">
                     <div class="setting-title">生效油站</div>
                     <div class="setting-content">{{rule.group_id}}</div>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-title">支付限制</div>
+                    <div class="setting-content">{{payListText(rule.zf_type)}}</div>
                   </div>
                   <div class="setting-item">
                     <div class="setting-title">成长值累积门槛</div>
@@ -163,7 +172,7 @@
               </div>
               <div class="page-foot">
                 <a-button v-if="rule.effect===1" @click="stop">立即停用</a-button>
-                <a-button type="primary" v-if="rule.effect===2||rule.effect===3">编辑</a-button>
+                <a-button type="primary" v-if="rule.effect===2||rule.effect===3" @click="editRule(rule)">编辑</a-button>
                 <a-button v-if="rule.effect===2" @click="delRule(rule.effect)">删除</a-button>
                 <a-button v-if="rule.effect===3">使用推荐</a-button>
               </div>
@@ -185,6 +194,10 @@
                   <div class="setting-item">
                     <div class="setting-title">生效油站</div>
                     <div class="setting-content">{{rule2.group_id}}</div>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-title">支付限制</div>
+                    <div class="setting-content">{{payListText(rule2.zf_type)}}</div>
                   </div>
                   <div class="setting-item">
                     <div class="setting-title">成长值累积门槛</div>
@@ -241,7 +254,7 @@
               </div>
               <div class="page-foot">
                 <a-button v-if="rule2.effect===1" @click="stop">立即停用</a-button>
-                <a-button type="primary" v-if="rule2.effect===2||rule2.effect===3">编辑</a-button>
+                <a-button type="primary" v-if="rule2.effect===2||rule2.effect===3" @click="editRule(rule2)">编辑</a-button>
                 <a-button v-if="rule2.effect===2" @click="delRule(rule2.effect)">删除</a-button>
                 <a-button v-if="rule2.effect===3">使用推荐</a-button>
               </div>
@@ -256,7 +269,10 @@
 
     <GrowEdit 
       v-if="pageType=='add'||pageType=='edit'"
-      @back="pageType='list'"/>
+      :pageType="pageType"
+      :total="total"
+      :itemData="itemData"
+      @back="back"/>
   </a-layout>
 </template>
 
@@ -264,7 +280,7 @@
 import { STable } from '@/components'
 import { mapGetters } from 'vuex'
 import _ from 'lodash'
-
+import { getPayList } from '@/api/base'
 import { queryMemberSpalevel,stopMemberSpalevel,delMemberSpalevel } from '@/api/crm'
 
 export default {
@@ -329,6 +345,8 @@ export default {
         {label: '待启用',value: 3},
       ],
       loading: false,
+      itemData:null,
+      payList:[],
       
     }
   },
@@ -336,19 +354,26 @@ export default {
     ...mapGetters(['userInfo'])
   },
   created () {
-    console.log(this.userInfo)
+    // console.log(this.userInfo)
     this.Init()
   },
   methods: {
     async Init(){
       this.loading = true
-      let res = await queryMemberSpalevel({effect:1})
+      // 获取支付方式列表
+      let payRes = await getPayList()
+      // console.log(payRes.data)
+      if (payRes) {
+        this.payList = payRes.data
+      }
+      let res = await queryMemberSpalevel({})
       if (res) {
-        console.log(res.data)
-        this.total = res.data.length
+        // console.log(res.data)
+        this.total = 1
         this.rule = res.data[0]
         this.data = res.data[0].dataList
-        if (this.total===2) {
+        if (res.data.length===2&&res.data[1].dataList.length) {
+          this.total = 2
           this.rule2 = res.data[1]
           this.data2 = res.data[1].dataList
         }
@@ -359,6 +384,33 @@ export default {
       stopMemberSpalevel().then((res)=>{
         this.Init()
       })
+    },
+    editRule(itemData){
+      this.itemData = itemData
+      this.pageType = 'edit'
+    },
+    back(){
+      this.pageType = 'list'
+      this.Init()
+    },
+    // 支付方式转换中文
+    payListText(ids){
+      // console.log(ids)
+      if (!ids) {
+        return
+      }
+      let idsArr = ids.split(',').map(Number)
+      // console.log(idsArr)
+      // console.log(this.payList)
+      let arr = this.payList.filter(e=>{
+        return idsArr.includes(e.id)
+      })
+      arr = arr.map(e=>{
+        return e.name
+      })
+      let str = arr.join('、')
+      // console.log(str)
+      return str
     },
     // 油品名称
     oilText(oils){
@@ -403,7 +455,7 @@ export default {
             group_id: that.userInfo.group_id
           }).then((res)=>{
             // console.log(res)
-            that.$message.success(`上传成功`);
+            that.$message.success(`删除成功`);
             that.Init()
           })
         },
