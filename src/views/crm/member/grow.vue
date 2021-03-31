@@ -2,6 +2,7 @@
   <a-layout>
     <a-layout-content
       v-if="pageType=='list'"
+      v-loading="loading"
       :style="{
         padding: '0 24px 24px 24px',
         background: '#fff',
@@ -81,7 +82,7 @@
             </div>
           </div>
           <div class="page-foot">
-            <a-button v-if="rule.effect===1">立即停用</a-button>
+            <a-button v-if="rule.effect===1" @click="stop">立即停用</a-button>
             <a-button type="primary" v-if="rule.effect===2||rule.effect===3">编辑</a-button>
             <a-button v-if="rule.effect===2">删除</a-button>
             <a-button v-if="rule.effect===3">使用推荐</a-button>
@@ -161,7 +162,7 @@
                 </div>
               </div>
               <div class="page-foot">
-                <a-button v-if="rule.effect===1">立即停用</a-button>
+                <a-button v-if="rule.effect===1" @click="stop">立即停用</a-button>
                 <a-button type="primary" v-if="rule.effect===2||rule.effect===3">编辑</a-button>
                 <a-button v-if="rule.effect===2">删除</a-button>
                 <a-button v-if="rule.effect===3">使用推荐</a-button>
@@ -239,7 +240,7 @@
                 </div>
               </div>
               <div class="page-foot">
-                <a-button v-if="rule2.effect===1">立即停用</a-button>
+                <a-button v-if="rule2.effect===1" @click="stop">立即停用</a-button>
                 <a-button type="primary" v-if="rule2.effect===2||rule2.effect===3">编辑</a-button>
                 <a-button v-if="rule2.effect===2">删除</a-button>
                 <a-button v-if="rule2.effect===3">使用推荐</a-button>
@@ -264,7 +265,7 @@ import { STable } from '@/components'
 import { mapGetters } from 'vuex'
 import _ from 'lodash'
 
-import { queryMemberSpalevel } from '@/api/crm'
+import { queryMemberSpalevel,stopMemberSpalevel } from '@/api/crm'
 
 export default {
   name: 'Grow',
@@ -326,7 +327,8 @@ export default {
         {label: '生效中',value: 1},
         {label: '待生效',value: 2},
         {label: '待启用',value: 3},
-      ]
+      ],
+      loading: false,
       
     }
   },
@@ -339,6 +341,7 @@ export default {
   },
   methods: {
     async Init(){
+      this.loading = true
       let res = await queryMemberSpalevel({})
       if (res) {
         console.log(res.data)
@@ -350,7 +353,12 @@ export default {
           this.data2 = res.data[1].dataList
         }
       }
-
+      this.loading = false
+    },
+    stop(){
+      stopMemberSpalevel().then((res)=>{
+        this.Init()
+      })
     },
     // 油品名称
     oilText(oils){

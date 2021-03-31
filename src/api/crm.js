@@ -191,6 +191,13 @@ export function addMemberSpalevel (total_data) {
     data: {total_data}
   })
 }
+// 停用动态等级
+export function stopMemberSpalevel () {
+  return JavaRequest({
+    url: '/customer/updateEffect',
+    method: 'post',
+  })
+}
 // 获取积分设置
 export function getIntegrallist () {
   let data = {}
