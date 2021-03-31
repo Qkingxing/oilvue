@@ -159,6 +159,22 @@ export function getFixedLevelDetail (id) {
     data: {id}
   })
 }
+// 查询固定等级-认证列表
+export function queryCertification (data) {
+  return JavaRequest({
+    url: '/customer/queryCertification',
+    method: 'post',
+    data
+  })
+}
+// 查询固定等级-用户列表
+export function queryUserList (data) {
+  return JavaRequest({
+    url: '/customer/queryUserList',
+    method: 'post',
+    data
+  })
+}
 // 查询动态等级信息
 export function queryMemberSpalevel (data) {
   return JavaRequest({
@@ -167,20 +183,12 @@ export function queryMemberSpalevel (data) {
     data
   })
 }
-// 查询动态等级-认证列表
-export function queryCertification (data) {
+// 新增动态等级
+export function addMemberSpalevel (total_data) {
   return JavaRequest({
-    url: '/customer/queryCertification',
+    url: '/customer/addMemberSpalevel',
     method: 'post',
-    data
-  })
-}
-// 查询动态等级-用户列表
-export function queryUserList (data) {
-  return JavaRequest({
-    url: '/customer/queryUserList',
-    method: 'post',
-    data
+    data: {total_data}
   })
 }
 // 获取积分设置
