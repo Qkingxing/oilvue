@@ -47,7 +47,7 @@
               <div class="level-title">会员规则设置</div>
               <div class="level-content">
                 <a-table 
-                  rowKey="level" 
+                  rowKey="id" 
                   size="default"
                   :columns="columns" 
                   :data-source="data">
@@ -84,7 +84,7 @@
           <div class="page-foot">
             <a-button v-if="rule.effect===1" @click="stop">立即停用</a-button>
             <a-button type="primary" v-if="rule.effect===2||rule.effect===3">编辑</a-button>
-            <a-button v-if="rule.effect===2">删除</a-button>
+            <a-button v-if="rule.effect===2" @click="delRule(rule.effect)">删除</a-button>
             <a-button v-if="rule.effect===3">使用推荐</a-button>
           </div>
         </div>
@@ -125,7 +125,7 @@
                   <div class="level-content">
                     <a-table 
                       ref="table" 
-                      rowKey="level" 
+                      rowKey="id" 
                       size="default"
                       :pagination="false"
                       :columns="columns" 
@@ -164,7 +164,7 @@
               <div class="page-foot">
                 <a-button v-if="rule.effect===1" @click="stop">立即停用</a-button>
                 <a-button type="primary" v-if="rule.effect===2||rule.effect===3">编辑</a-button>
-                <a-button v-if="rule.effect===2">删除</a-button>
+                <a-button v-if="rule.effect===2" @click="delRule(rule.effect)">删除</a-button>
                 <a-button v-if="rule.effect===3">使用推荐</a-button>
               </div>
             </div>
@@ -204,7 +204,7 @@
                   <div class="level-content">
                     <a-table 
                       ref="table" 
-                      rowKey="level" 
+                      rowKey="id" 
                       size="default"
                       :pagination="false"
                       :columns="columns" 
@@ -242,7 +242,7 @@
               <div class="page-foot">
                 <a-button v-if="rule2.effect===1" @click="stop">立即停用</a-button>
                 <a-button type="primary" v-if="rule2.effect===2||rule2.effect===3">编辑</a-button>
-                <a-button v-if="rule2.effect===2">删除</a-button>
+                <a-button v-if="rule2.effect===2" @click="delRule(rule2.effect)">删除</a-button>
                 <a-button v-if="rule2.effect===3">使用推荐</a-button>
               </div>
             </div>
@@ -265,7 +265,7 @@ import { STable } from '@/components'
 import { mapGetters } from 'vuex'
 import _ from 'lodash'
 
-import { queryMemberSpalevel,stopMemberSpalevel } from '@/api/crm'
+import { queryMemberSpalevel,stopMemberSpalevel,delMemberSpalevel } from '@/api/crm'
 
 export default {
   name: 'Grow',
@@ -342,7 +342,7 @@ export default {
   methods: {
     async Init(){
       this.loading = true
-      let res = await queryMemberSpalevel({})
+      let res = await queryMemberSpalevel({effect:1})
       if (res) {
         console.log(res.data)
         this.total = res.data.length
@@ -390,14 +390,22 @@ export default {
     addRule(){
       this.pageType = 'add'
     },
-    delTag () {
+    // 删除
+    delRule (effect) {
+      console.log(effect)
+      let that = this
       this.$confirm({
-        title: '操作提示',
-        content: '撤回后将删除本次导入的客户数据，用户已授权的数据不会删除，请确认是否继续',
+        title: '温馨提示',
+        content: '确认是否将该定级规则进行删除',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          delMemberSpalevel({
+            effect,
+            group_id: that.userInfo.group_id
+          }).then((res)=>{
+            // console.log(res)
+            that.$message.success(`上传成功`);
+            that.Init()
+          })
         },
         onCancel () {}
       })
