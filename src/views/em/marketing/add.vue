@@ -48,7 +48,7 @@
                    style="width: 100%"
                    :tree-data="treeData"
                    tree-checkable
-                    :replace-fields="{children:'treeList', key:'id', value: 'id', title: 'name'}"
+                   :replace-fields="{children:'treeList', key:'name', value: 'id', title: 'name'}"
                    search-placeholder="Please select"
                  />
                </div>
@@ -86,7 +86,7 @@
                </a-radio-group>
                <div v-if="amount_type==1" style="width: 500px;height: 80px;line-height: 80px; background-color: #fafafa;text-align: center;">
                  <span>固定金额</span>
-                 <a-input-number style="margin: 0 10px;" :min="1" :max="1001" :value="gdjeValue" @change="handleGdjeChange" />
+                 <a-input-number style="margin: 0 10px;" :min="1" :max="1000" v-model="gdjeValue" @change="handleGdjeChange" />
                  <span>元</span>
                  <span style="color: #c7c7c7;margin-left: 10px;">最多支持一千元与两位小数，例：5.21元</span>
                </div>
@@ -291,9 +291,12 @@ export default {
       return result;
     },
     laodLevel(){
-      getlevelAlls().then(res=>{
+      let _params={
+        type:''
+      }
+      getlevelAlls(_params).then(res=>{
         this.treeData = res.data
-        console.log(this.treeData)
+        console.log(res.data)
       })
     },
     handleGdjeChange(){
@@ -335,6 +338,19 @@ export default {
         this.$message.error("请输入优惠券名称")
         return;
       }
+      if(this._dynamic_id != 1){
+        let _fixed_id=[]
+        let _dynamic_id=[]
+        this.activePersons.forEach((item)=>{
+          if(item.id.includes("1_")){
+            _fixed_id.push(item.id)
+          }else{
+            _dynamic_id.push(item.id)
+          }
+        })
+        this.post_obj._fixed_id = _fixed_id.join(",")
+        this.post_obj._dynamic_id = _dynamic_id.join(",")
+      }
       this.post_obj.coupons_name = this.coupons_name
       this.post_obj.activity_type = this.activity_type
       this.post_obj.volume_type = this.volume_type
@@ -344,6 +360,13 @@ export default {
           return;
         }
       }
+      if(this.amount_type == 1){
+        if(this.gdjeValue == "" ){
+          this.$message.error("请输入固定金额")
+          return;
+        }
+      }
+      
       this.post_obj.min = this.sjMin
       this.post_obj.max = this.sjMax
       // 券有效期
@@ -362,7 +385,16 @@ export default {
       
     },
     nextTwo(){
-      
+     if(this.coupons_limit.length == 2){
+       this.post_obj.coupons_limit = 3
+     }
+     if(this.coupons_limit.length == 1){
+       this.post_obj.coupons_limit = this.coupons_limit[0]
+     }
+     if(this.coupons_limit.length == 0){
+       this.$message.error("请选择使用限制")
+       return
+     }
     },
     handleChange(e) {
       this.checkNick = e.target.checked;
