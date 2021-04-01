@@ -56,12 +56,12 @@
                   :pagination="false"
                   :columns="columns" 
                   :data-source="data">
-                  <div slot="level" slot-scope="item, row">
+                  <div slot="level" slot-scope="item">
                     <template>
                       Lv{{item}}
                     </template>
                   </div>
-                  <div slot="level_icon" slot-scope="item, row" class="template-img">
+                  <div slot="level_icon" slot-scope="item" class="template-img">
                     <template>
                       <img :src="item">
                     </template>
@@ -139,12 +139,12 @@
                       :pagination="false"
                       :columns="columns" 
                       :data-source="data">
-                      <div slot="level" slot-scope="item, row">
+                      <div slot="level" slot-scope="item">
                         <template>
                           Lv{{item}}
                         </template>
                       </div>
-                      <div slot="level_icon" slot-scope="item, row" class="template-img">
+                      <div slot="level_icon" slot-scope="item" class="template-img">
                         <template>
                           <img :src="item">
                         </template>
@@ -222,12 +222,12 @@
                       :pagination="false"
                       :columns="columns" 
                       :data-source="data2">
-                      <div slot="level" slot-scope="item, row">
+                      <div slot="level" slot-scope="item">
                         <template>
                           Lv{{item}}
                         </template>
                       </div>
-                      <div slot="level_icon" slot-scope="item, row" class="template-img">
+                      <div slot="level_icon" slot-scope="item" class="template-img">
                         <template>
                           <img :src="item">
                         </template>
