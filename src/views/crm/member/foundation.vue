@@ -150,9 +150,7 @@ export default {
   align-items: center;
   justify-content: flex-end;
   margin: 16px 0;
-  button {
-    // margin-right: 8px;
-  }
+
 }
 .screen-box {
   padding: 27px 0 24px 0;
