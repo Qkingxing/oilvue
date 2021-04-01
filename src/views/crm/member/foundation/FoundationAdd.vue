@@ -120,7 +120,7 @@ export default {
         id: undefined,	 //[string]		修改的时候使用		
         member_type: 1,
         //[string]	是	会员注册1是注册即会员 2授权手机号		
-        member_id: null,
+        member_id: undefined,
         //[string]	是	初始会员等级		
         initial_day: 7,
         //[string]	是	初始等级有效期
