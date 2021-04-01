@@ -106,9 +106,9 @@ export default {
   name: 'Fixed',
   components: {
     STable,
-    FixedEdit: ()=>import('./components/FixedEdit'),
-    FixedCertificationList: ()=>import('./components/FixedCertificationList'),
-    FixedUserList: ()=>import('./components/FixedUserList'),
+    FixedEdit: ()=>import('./fixed/FixedEdit'),
+    FixedCertificationList: ()=>import('./fixed/FixedCertificationList'),
+    FixedUserList: ()=>import('./fixed/FixedUserList'),
   },
   data () {
     return {

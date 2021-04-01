@@ -51,7 +51,7 @@ export default {
   name: 'Foundation',
   components: {
     STable,
-    FoundationAdd: ()=> import('./components/FoundationAdd')
+    FoundationAdd: ()=> import('./foundation/FoundationAdd')
   },
   data () {
     return {
