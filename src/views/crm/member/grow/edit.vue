@@ -614,7 +614,9 @@ export default {
     },
    // 禁止选择今天之前的时间
     disabledDate(current) {
-      return current && current < moment().endOf('day');
+       // 正式上线要改回来
+      return current && current < moment().startOf('day');
+      // return current && current < moment().endOf('day');
     },
     // 上传图片回调
     handleChange(info,index){

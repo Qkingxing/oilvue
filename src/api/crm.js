@@ -214,6 +214,17 @@ export function stopMemberSpalevel () {
     method: 'post',
   })
 }
+// 动态等级-使用推荐
+export function updateMemberSpalevel (star_time) {
+  return JavaRequest({
+    url: '/customer/updateMemberSpalevel',
+    method: 'post',
+    data: {
+      group_id: store.getters.group_id,
+      star_time
+    }
+  })
+}
 // 获取积分设置
 export function getIntegrallist () {
   let data = {}

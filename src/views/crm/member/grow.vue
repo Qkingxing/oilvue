@@ -89,8 +89,8 @@
           <div class="page-foot">
             <a-button v-if="rule.effect===1" @click="stop">立即停用</a-button>
             <a-button type="primary" v-if="rule.effect===2||rule.effect===3" @click="editRule(rule)">编辑</a-button>
-            <a-button v-if="rule.effect===2" @click="delRule(rule.effect)">删除</a-button>
-            <a-button v-if="rule.effect===3">使用推荐</a-button>
+            <a-button v-if="rule.effect===2||rule.effect===3" @click="delRule(rule.effect)">删除</a-button>
+            <a-button v-if="rule.effect===3" @click="openModal">使用推荐</a-button>
           </div>
         </div>
 
@@ -173,8 +173,8 @@
               <div class="page-foot">
                 <a-button v-if="rule.effect===1" @click="stop">立即停用</a-button>
                 <a-button type="primary" v-if="rule.effect===2||rule.effect===3" @click="editRule(rule)">编辑</a-button>
-                <a-button v-if="rule.effect===2" @click="delRule(rule.effect)">删除</a-button>
-                <a-button v-if="rule.effect===3">使用推荐</a-button>
+                <a-button v-if="rule.effect===2||rule.effect===3" @click="delRule(rule.effect)">删除</a-button>
+                <a-button v-if="rule.effect===3" @click="openModal">使用推荐</a-button>
               </div>
             </div>
           </a-tab-pane>
@@ -255,8 +255,8 @@
               <div class="page-foot">
                 <a-button v-if="rule2.effect===1" @click="stop">立即停用</a-button>
                 <a-button type="primary" v-if="rule2.effect===2||rule2.effect===3" @click="editRule(rule2)">编辑</a-button>
-                <a-button v-if="rule2.effect===2" @click="delRule(rule2.effect)">删除</a-button>
-                <a-button v-if="rule2.effect===3">使用推荐</a-button>
+                <a-button v-if="rule2.effect===2||rule2.effect===3" @click="delRule(rule2.effect)">删除</a-button>
+                <a-button v-if="rule2.effect===3" @click="openModal">使用推荐</a-button>
               </div>
             </div>
           </a-tab-pane>
@@ -273,6 +273,9 @@
       :total="total"
       :itemData="itemData"
       @back="back"/>
+
+    <GrowModal ref="GrowModal" @back="back"/>
+
   </a-layout>
 </template>
 
@@ -287,7 +290,8 @@ export default {
   name: 'Grow',
   components: {
     STable,
-    GrowEdit: ()=> import('./grow/edit')
+    GrowEdit: ()=> import('./grow/edit'),
+    GrowModal: ()=> import('./grow/modal')
   },
   data () {
     return {
@@ -379,6 +383,10 @@ export default {
         }
       }
       this.loading = false
+    },
+    // 打开使用推荐
+    openModal(){
+      this.$refs['GrowModal'].show()
     },
     stop(){
       stopMemberSpalevel().then((res)=>{
