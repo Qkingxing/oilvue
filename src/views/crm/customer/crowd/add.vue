@@ -59,7 +59,7 @@
 
       <div class="btn-box">
         <a-button type="primary" size="large"> 确认 </a-button>
-        <a-button style="margin-left: 8px;" size="large" @click="$router.go(-1)"> 取消 </a-button>
+        <a-button style="margin-left: 8px;" size="large" @click="exit"> 取消 </a-button>
       </div>
     </a-layout-content>
   </a-layout>
@@ -139,6 +139,11 @@ export default {
       ]
     }
   },
+  props:{
+    pageType:{
+      type: String
+    }
+  },
   created () {
     getSelectOption().then((res)=>{
       console.log(res.data)
@@ -147,6 +152,14 @@ export default {
   methods: {
     handleChange (value) {
       console.log(value)
+    },
+    exit(){
+      if (this.pageType==='edit') {
+        this.$emit('back')
+      }else{
+        this.$emit('back')
+        this.$router.go(-1)
+      }
     }
   }
 }
