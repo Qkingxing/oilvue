@@ -347,3 +347,11 @@ export function changeCardStatus (data) {
     data
   })
 }
+// 获取个人卡列表
+export function oneselfcardlist (data) {
+  return PhpRequest({
+    url: '/user/oneselfcardlist',
+    method: 'post',
+    data
+  })
+}

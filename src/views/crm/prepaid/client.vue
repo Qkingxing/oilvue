@@ -13,17 +13,17 @@
             <div class="label">卡搜索</div>
             <a-input
               style="width: 100%"
-              v-model="queryParam.keywords"
+              v-model="cardNumber"
               placeholder="请输入搜索内容"
             >
               <a-select
                 slot="addonBefore"
                 style="width: 93px"
-                default-value="86"
+                v-model="searchCardKey"
               >
-                <a-select-option value="85"> 卡号 </a-select-option>
-                <a-select-option value="86"> 卡面号 </a-select-option>
-                <a-select-option value="87"> 手机号 </a-select-option>
+                <a-select-option value="card_no"> 卡号 </a-select-option>
+                <a-select-option value="card_face"> 卡面号 </a-select-option>
+                <a-select-option value="mobile"> 手机号 </a-select-option>
               </a-select>
             </a-input>
           </div>
@@ -32,11 +32,9 @@
             <a-select
               slot="addonBefore"
               style="width: 240px"
-              default-value="86"
+              default-value="85"
             >
-              <a-select-option value="85"> 卡号 </a-select-option>
-              <a-select-option value="86"> 卡面号 </a-select-option>
-              <a-select-option value="87"> 手机号 </a-select-option>
+              <a-select-option value="85"> 个人卡 </a-select-option>
             </a-select>
           </div>
           <div class="select-item">
@@ -44,20 +42,23 @@
             <a-select
               slot="addonBefore"
               style="width: 240px"
-              default-value="86"
+              default-value="85"
             >
-              <a-select-option value="85"> 卡号 </a-select-option>
+              <a-select-option value="85"> 全部 </a-select-option>
               <a-select-option value="86"> 卡面号 </a-select-option>
               <a-select-option value="87"> 手机号 </a-select-option>
             </a-select>
           </div>
           <div class="select-item">
             <div class="label">开卡时间</div>
-            <a-range-picker style="width: 240px"/>
+            <a-range-picker 
+              v-model="date" 
+              style="width: 240px"
+              @change="onChangeDate"/>
           </div>
         </div>
         <div class="action-btns">
-          <a-button type="primary" class="search-btn">查询</a-button>
+          <a-button type="primary" class="search-btn" @click="search">查询</a-button>
           <a-button>导出</a-button>
         </div>
       </div>
@@ -65,115 +66,182 @@
 
       <!-- 表格 -->
       <div class="showDataForTable">
-        <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
-          <span slot="action" slot-scope="text, record">
+        <s-table 
+          ref="table" 
+          size="default" 
+          rowKey="id" 
+          :columns="columns" 
+          :data="loadData">
+
+          <span slot="card_status" slot-scope="text, record">
             <template>
-              <a @click="delTag(record)">撤回</a>
+              {{text==1?'正常':'已销户'}}
             </template>
           </span>
+          
+          <span slot="action" slot-scope="text, record">
+            <template>
+              <span 
+                @click="Recharge(record)"
+                style="margin-right: 10px; color: #7c7ee2; cursor: pointer;">
+                充值</span>
+              <span 
+                @click="frozen(record)"
+                style="margin-right: 10px; color: #7c7ee2; cursor: pointer;">
+                冻结</span>
+              <span 
+                @click="cancellation(record)"
+                style="margin-right: 10px; color: #7c7ee2; cursor: pointer;">
+                销户</span>
+            </template>
+          </span>
+
         </s-table>
       </div>
     </a-layout-content>
+    <RechargeModal ref="RechargeModal"/>
   </a-layout>
 </template>
 
 <script>
 import { STable } from '@/components'
 
-import { getRoleList, getServiceList } from '@/api/manage'
+import { oneselfcardlist } from '@/api/crm'
 
 export default {
   name: 'Client',
   components: {
-    STable
+    STable,
+    RechargeModal:()=>import('./client/RechargeModal')
   },
   data () {
     return {
+      searchCardKey: 'card_no',
+      cardNumber: undefined,
+      date: [],
       // 查询参数
       queryParam: {
-        keywords: '',
-        keyType: '86'
+        card_no: undefined,
+        //[string]	是	卡号		
+        card_face: undefined,	
+        //[string]	是	卡面号		
+        mobile: undefined,	
+        //[string]	是	手机号		
+        card_id: undefined,	
+        //[string]	是	卡名称 传递过来是ID		
+        create_time1: undefined,	
+        //[string]	是	开卡时间（小）		
+        create_time2: undefined,	
+        //[string]	是	开卡时间（大）
       },
       // 表头
       columns: [
         {
-          title: '文件名称',
-          dataIndex: 'no'
+          title: '卡号',
+          dataIndex: 'card_no'
         },
         {
-          title: '操作人',
-          dataIndex: 'description'
+          title: '卡面号',
+          dataIndex: 'card_face'
         },
         {
-          title: '成功数',
-          dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '失败数',
-          dataIndex: 'time',
-          needTotal: true
-        },
-        {
-          title: '总积分',
+          title: '卡名称',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
-          title: '总余额',
-          // dataIndex: 'status',
-          needTotal: true
+          title: '手机号',
+          dataIndex: 'mobile',
         },
         {
-          title: '加油卡名称',
+          title: '姓名',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
-          title: '导入状态',
-          // dataIndex: 'status',
-          needTotal: true
+          title: '卡内余额',
+          dataIndex: 'money',
         },
         {
-          title: '导入时间',
+          title: '赠送余额',
           // dataIndex: 'status',
-          needTotal: true
+        },
+        {
+          title: '开卡时间',
+          dataIndex: 'create_time',
+        },
+        {
+          title: '状态',
+          dataIndex: 'card_status',
+          scopedSlots: { customRender: 'card_status' }
         },
         {
           title: '操作',
-          dataIndex: 'action',
           scopedSlots: { customRender: 'action' }
         }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
+        // console.log('loadData.parameter', parameter)
+        // console.log(this.searchCardKey)
+        // console.log(this.cardNumber)
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+          create_time1: this.queryParam.create_time1,
+          create_time2: this.queryParam.create_time2,
+        }
+        params[this.searchCardKey] = this.cardNumber
+
+        return oneselfcardlist(Object.assign(params))
+        .then(res => {
+          console.log(res.data.list)
+          return {
+            data: res.data.list, // 列表数组
+            pageNo: parameter.pageNo,  // 当前页码
+            pageSize: parameter.pageSize,  // 每页页数
+            totalCount: res.data.totalCount, // 列表总条数
+            totalPage: 1 // 列表总页数
+          }
         })
       },
-      selectedRowKeys: [],
-      selectedRows: [],
-
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
     }
   },
   created () {
-    this.tableOption()
-    getRoleList({ t: new Date() })
+
   },
   methods: {
-    delTag () {
+    // 更换时间
+    onChangeDate(date,text){
+      // console.log(date)
+      // console.log(text)
+      if (date.length) {
+        this.queryParam.create_time1 = text[0]
+        this.queryParam.create_time2 = text[1]
+      }else{
+        this.queryParam.create_time1 = undefined
+        this.queryParam.create_time2 = undefined
+      }
+    },
+    // 搜索
+    search(){
+      this.$refs.table.refresh()
+    },
+    // 充值
+    Recharge(item){
+      this.$refs['RechargeModal'].show(item.id)
+    },
+    // 冻结
+    frozen (item) {
+      let that = this
+
       this.$confirm({
-        title: '操作提示',
-        content: '撤回后将删除本次导入的客户数据，用户已授权的数据不会删除，请确认是否继续',
+        centered: true,
+        title: '温馨提示',
+        content: (
+          <div>
+            <p style="margin: 0px;">加油卡冻结后，将无法再进行支付</p>
+            <p>是否确认冻结该加油卡</p>
+          </div>
+        ),
         onOk () {
           return new Promise((resolve, reject) => {
             resolve()
@@ -182,27 +250,29 @@ export default {
         onCancel () {}
       })
     },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
+    // 注销
+    cancellation (item) {
+      let that = this
+
+      this.$confirm({
+        centered: true,
+        title: '温馨提示',
+        content: (
+          <div>
+            <p style="margin: 0px;">加油卡销户后，用户的加油卡将被删除</p>
+            <p>是否确认继续操作</p>
+          </div>
+        ),
+        onOk () {
+          return new Promise((resolve, reject) => {
+            resolve()
+          }).catch(() => console.log('Oops errors!'))
+        },
+        onCancel () {}
+      })
     },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
-    }
+
+   
   }
 }
 </script>
