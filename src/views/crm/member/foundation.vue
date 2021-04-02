@@ -21,6 +21,11 @@
           :columns="columns" 
           :data="loadData">
 
+          <span slot="member_type" slot-scope="text">
+            <template>
+              {{text==1?'支付即会员':'授权手机号'}}
+            </template>
+          </span>
           <span slot="action" slot-scope="text, record">
             <template>
               <a @click="editItem(record)">编辑</a>
@@ -36,6 +41,7 @@
     <FoundationAdd 
       v-if="type=='add'||type=='edit'" 
       :type="type"
+      :total="total"
       :itemData="itemData"
       @exit="type='list'"></FoundationAdd>
     
@@ -64,22 +70,20 @@ export default {
         },
         {
           title: '会员注册',
-          dataIndex: 'member_type'
+          dataIndex: 'member_type',
+          scopedSlots: { customRender: 'member_type' }
         },
         {
           title: '初始会员等级',
-          dataIndex: 'level_name',
-          needTotal: true
+          dataIndex: 'level_name'
         },
         {
           title: '初始等级有效期',
           dataIndex: 'initial_day',
-          needTotal: true
         },
         {
           title: '最近修改人',
           dataIndex: 'user_name',
-          needTotal: true
         },
         {
           title: '操作',
@@ -98,6 +102,7 @@ export default {
 
         return getUserBasicslist(Object.assign(params)).then(res=>{
           console.log(res.data.list)
+          this.total = res.data.list.length
           // 自定义出参
           return {
             data: res.data.list, // 列表数组
@@ -109,6 +114,7 @@ export default {
         })
       },
       itemData: null,
+      total: 0,
 
     }
   },
@@ -127,7 +133,7 @@ export default {
       })
     },
     editItem(item){
-      console.log(item)
+      // console.log(item)
       this.itemData = item
       this.type = 'edit'
     }

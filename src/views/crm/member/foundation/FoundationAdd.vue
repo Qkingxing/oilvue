@@ -77,7 +77,7 @@
             </a-radio>
           </a-radio-group>
           
-          <span v-if="initial_day_type==3">
+          <span v-show="initial_day_type==3">
             <a-input-number v-model="form.initial_day" :min="1"/>
             <span style="margin-left: 10px;">天</span>
           </span>
@@ -137,29 +137,79 @@ export default {
     type:{
       type: String
     },
+    total:{
+      type: Number
+    },
     itemData:{
       type:Object,
       default:null
     }
   },
   created () {
-    // console.log(this.userInfo)
+    // console.log(this.total)
 
     this.Init()
   },
   methods: {
     async Init(){
       let res = await getlevelAlls({type:2})
-      console.log(res.data)
+      // console.log(res.data)
       if(res){
         this.levelList = res.data
       }
+      if (this.type === 'edit') {
+        // console.log(this.itemData)
+        this.form = {
+          id: this.itemData.id,	 //[string]		修改的时候使用		
+          member_type: this.itemData.member_type,
+          //[string]	是	会员注册1是注册即会员 2授权手机号		
+          member_id: this.itemData.member_id,
+          //[string]	是	初始会员等级		
+          initial_day: this.itemData.initial_day,
+          //[string]	是	初始等级有效期
+        }
+
+        switch (this.form.initial_day) {
+          case 7:
+            this.initial_day_type = 1
+            break;
+          case 30:
+            this.initial_day_type = 2
+            break;
+          default:
+            this.initial_day_type = 3
+            break;
+        }
+      }
     },
     submit(){
-      console.log(this.form)
-      postBasicsset(this.form).then((res)=>{
-        this.exit()
-      })
+      let that = this
+      if (this.initial_day_type===3&&!this.form.initial_day) {
+        this.$message.error('请先填写完整信息')
+        return
+      }
+      // console.log(this.form)
+      if (this.total&&this.type==='add') {
+        this.$confirm({
+          title: '温馨提示',
+          content: '集团目前已有会员基础设置继续创建将覆盖',
+          okText: '继续',
+          cancelText: '取消',
+          onOk () {
+            that.form.isContinue = true
+            postBasicsset(that.form).then((res)=>{
+              that.exit()
+            })
+          },
+          onCancel () {}
+        })
+      }else{
+        postBasicsset(this.form).then((res)=>{
+          this.exit()
+        })
+      }
+      
+     
     },
     changeDayType(){
       // this.initial_day_type
