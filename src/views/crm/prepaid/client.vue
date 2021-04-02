@@ -73,7 +73,7 @@
           :columns="columns" 
           :data="loadData">
 
-          <span slot="card_status" slot-scope="text, record">
+          <span slot="card_status" slot-scope="text">
             <template>
               {{text==1?'正常':'已销户'}}
             </template>
