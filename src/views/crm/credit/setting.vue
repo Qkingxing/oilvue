@@ -110,7 +110,9 @@ export default {
 
       this.time_type = expiration_time==1?1:2
 
-      this.checkboxValue = cannot_cause.split(',').map(Number);
+      // console.log(cannot_cause)
+
+      this.checkboxValue = cannot_cause?cannot_cause.split(',').map(Number):[];
       // console.log(this.checkboxValue)
       this.loading = false
 

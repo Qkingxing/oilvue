@@ -102,13 +102,20 @@ export function getImportlist (data) {
     data
   })
 }
-
 // 新增会员基础设置或修改
 export function postBasicsset (data) {
   return PhpRequest({
     url: '/user/basicsset',
     method: 'post',
     data
+  })
+}
+// 删除会员基础设置
+export function delBasicsset (id) {
+  return PhpRequest({
+    url: '/user/basicsdel',
+    method: 'post',
+    data:{id}
   })
 }
 // 会员基础设置列表
@@ -239,6 +246,21 @@ export function getIntegrallist () {
     data
   })
 }
+// 享受优惠不可获积分列表
+export function getCannotintegral () {
+  return PhpRequest({
+    url: '/user/cannotintegral',
+    method: 'post'
+  })
+}
+// 提交积分设置
+export function postIntegralset (data) {
+  return PhpRequest({
+    url: '/user/integralset',
+    method: 'post',
+    data
+  })
+}
 // 新增、修改积分规则
 export function addIntegralruleset (data) {
   return PhpRequest({
@@ -275,21 +297,6 @@ export function getIntegrallists (id) {
 export function ruleConflict (data) {
   return PhpRequest({
     url: '/user/ruleConflict',
-    method: 'post',
-    data
-  })
-}
-// 享受优惠不可获积分列表
-export function getCannotintegral () {
-  return PhpRequest({
-    url: '/user/cannotintegral',
-    method: 'post'
-  })
-}
-// 提交积分设置
-export function postIntegralset (data) {
-  return PhpRequest({
-    url: '/user/integralset',
     method: 'post',
     data
   })

@@ -30,7 +30,7 @@
             <template>
               <a @click="editItem(record)">编辑</a>
               <a-divider type="vertical" />
-              <a @click="delTag(record)">删除</a>
+              <a @click="delItem(record)">删除</a>
             </template>
           </span>
           
@@ -51,7 +51,7 @@
 <script>
 import { STable } from '@/components'
 
-import { getUserBasicslist } from '@/api/crm'
+import { getUserBasicslist,delBasicsset } from '@/api/crm'
 
 export default {
   name: 'Foundation',
@@ -120,14 +120,15 @@ export default {
   },
   created () {},
   methods: {
-    delTag () {
+    delItem (item) {
+      let that = this
       this.$confirm({
         title: '操作提示',
-        content: '撤回后将删除本次导入的客户数据，用户已授权的数据不会删除，请确认是否继续',
+        content: '删除不可恢复，请确认是否继续',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          delBasicsset(item.id).then(()=>{
+            that.$refs.table.refresh()
+          })
         },
         onCancel () {}
       })
