@@ -21,11 +21,16 @@
           :columns="columns" 
           :data="loadData">
 
+          <span slot="member_type" slot-scope="text">
+            <template>
+              {{text==1?'支付即会员':'授权手机号'}}
+            </template>
+          </span>
           <span slot="action" slot-scope="text, record">
             <template>
               <a @click="editItem(record)">编辑</a>
               <a-divider type="vertical" />
-              <a @click="delTag(record)">删除</a>
+              <a @click="delItem(record)">删除</a>
             </template>
           </span>
           
@@ -36,6 +41,7 @@
     <FoundationAdd 
       v-if="type=='add'||type=='edit'" 
       :type="type"
+      :total="total"
       :itemData="itemData"
       @exit="type='list'"></FoundationAdd>
     
@@ -45,13 +51,13 @@
 <script>
 import { STable } from '@/components'
 
-import { getUserBasicslist } from '@/api/crm'
+import { getUserBasicslist,delBasicsset } from '@/api/crm'
 
 export default {
   name: 'Foundation',
   components: {
     STable,
-    FoundationAdd: ()=> import('./components/FoundationAdd')
+    FoundationAdd: ()=> import('./foundation/FoundationAdd')
   },
   data () {
     return {
@@ -64,22 +70,20 @@ export default {
         },
         {
           title: '会员注册',
-          dataIndex: 'member_type'
+          dataIndex: 'member_type',
+          scopedSlots: { customRender: 'member_type' }
         },
         {
           title: '初始会员等级',
-          dataIndex: 'level_name',
-          needTotal: true
+          dataIndex: 'level_name'
         },
         {
           title: '初始等级有效期',
           dataIndex: 'initial_day',
-          needTotal: true
         },
         {
           title: '最近修改人',
           dataIndex: 'user_name',
-          needTotal: true
         },
         {
           title: '操作',
@@ -98,6 +102,7 @@ export default {
 
         return getUserBasicslist(Object.assign(params)).then(res=>{
           console.log(res.data.list)
+          this.total = res.data.list.length
           // 自定义出参
           return {
             data: res.data.list, // 列表数组
@@ -109,25 +114,27 @@ export default {
         })
       },
       itemData: null,
+      total: 0,
 
     }
   },
   created () {},
   methods: {
-    delTag () {
+    delItem (item) {
+      let that = this
       this.$confirm({
         title: '操作提示',
-        content: '撤回后将删除本次导入的客户数据，用户已授权的数据不会删除，请确认是否继续',
+        content: '删除不可恢复，请确认是否继续',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          delBasicsset(item.id).then(()=>{
+            that.$refs.table.refresh()
+          })
         },
         onCancel () {}
       })
     },
     editItem(item){
-      console.log(item)
+      // console.log(item)
       this.itemData = item
       this.type = 'edit'
     }
@@ -150,9 +157,7 @@ export default {
   align-items: center;
   justify-content: flex-end;
   margin: 16px 0;
-  button {
-    // margin-right: 8px;
-  }
+
 }
 .screen-box {
   padding: 27px 0 24px 0;

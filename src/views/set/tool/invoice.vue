@@ -19,7 +19,7 @@
             v-bind="formItemLayout"
           >
           <a-form-item  label="开票有效期">
-          <a-radio-group   v-decorator="['time', { rules: [{ required: true, message: '请选择开票有效期' }] }]" style="width: 100%;">
+          <a-radio-group   v-decorator="['valid_life', { rules: [{ required: true, message: '请选择开票有效期' }] }]" style="width: 100%;">
            
           <a-row class="item-wrap">
             <span style="opacity:0">开票有效期</span>
@@ -51,34 +51,34 @@
         </a-radio-group>
       </a-form-item>
        <a-form-item label="开票入口">
-      <a-radio-group
-        v-decorator="['rukou', { rules: [{ required: true, message: '请选择开票入口' }] }]"
+      <a-checkbox-group
+        v-decorator="['invoice_entrance_', { rules: [{ required: true, message: '请选择开票入口' }] }]"
         style="width: 100%;"
       >
         <a-row class="item-wrap">
            <span style="opacity:0">开票入口</span>
           <a-col :span="4">
-            <a-radio value="A">
+            <a-checkbox value="1">
               支付完成页
-            </a-radio>
+            </a-checkbox>
           </a-col>
           <a-col :span="4">
-            <a-radio  value="B">
+            <a-checkbox  value="2">
               订单详情页
-            </a-radio>
+            </a-checkbox>
           </a-col>
           <a-col :span="4">
-            <a-radio value="C">
+            <a-checkbox value="3">
              支付小票
-            </a-radio>
+            </a-checkbox>
           </a-col>
           <a-col :span="4">
-            <a-radio value="D">
+            <a-checkbox value="4">
              订单记录
-            </a-radio>
+            </a-checkbox>
           </a-col>
         </a-row>
-      </a-radio-group>
+      </a-checkbox-group>
       </a-form-item>
       <a-form-item label="可开票类型">
       <a-radio-group
@@ -90,12 +90,12 @@
          
           <span style="opacity:0">可开票类型</span>
           <a-col :span="4">
-            <a-radio value="A">
+            <a-radio value="1">
               电票
             </a-radio>
           </a-col>
           <a-col :span="4">
-            <a-radio  value="B">
+            <a-radio  value="2">
               纸票
             </a-radio>
           </a-col>
@@ -141,30 +141,26 @@
       <a-form-item
         label="油站法人"
       >
-      <a-input  v-decorator="['note', { rules: [{ required: true, message: '请输入油站法人姓名' }] }]" style="width:270px" placeholder="请输入油站法人姓名" />
+      <a-input  v-decorator="['site_principal_people', { rules: [{ required: true, message: '请输入油站法人姓名' }] }]" style="width:270px" placeholder="请输入油站法人姓名" />
       </a-form-item>
       <a-form-item
         label="营业执照"
       >
+
+
       <a-upload
-      name="avatar"
-  
-      list-type="picture-card"
-      
-      :show-upload-list="false"
-      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-      v-decorator="['fileimg', { rules: [{ required: true, message: '请上传营业执照' }] }]"
-      @change="handleChange"
-    >
-      <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-      <div v-else>
-        <a-icon :type="loading ? 'loading' : 'plus'" />
-        <div class="ant-upload-text">
-          点击上传
+        action="https://oiljava.ldyxx.com:4435/goods/FileImg"
+        list-type="picture-card"
+        :file-list="fileList"
+        name="file"
+        @change="handleChange"
+      >
+      <div v-if="fileList.length < 1">
+        <a-icon type="plus" />
+          <div class="ant-upload-text">
+          </div>
         </div>
-      </div>
-    </a-upload>
-     
+      </a-upload>
     </a-form-item>
     <a-form-item label="提示">
       请上传营业执照，图片大小不超过3M（必填）
@@ -231,12 +227,12 @@
           <a-row class="item-wrap">
             <span style="opacity:0">开票审核</span>
             <a-col :span="4">
-              <a-radio value="A">
+              <a-radio value="1">
                 免审核
               </a-radio>
             </a-col>
             <a-col :span="4">
-              <a-radio  value="B">
+              <a-radio  value="0">
                 人工审核
               </a-radio>
             </a-col>
@@ -253,12 +249,12 @@
           
             <span style="opacity:0">自助机电票打印</span>
             <a-col :span="4">
-              <a-radio value="A">
+              <a-radio value="0">
                 不支持
               </a-radio>
             </a-col>
             <a-col :span="4">
-              <a-radio  value="B">
+              <a-radio  value="1">
                 支持
               </a-radio>
             </a-col>
@@ -382,12 +378,12 @@
           <a-row class="item-wrap">
             <span style="opacity:0">开票审核</span>
             <a-col :span="4">
-              <a-radio value="A">
+              <a-radio value="1">
                 免审核
               </a-radio>
             </a-col>
             <a-col :span="4">
-              <a-radio  value="B">
+              <a-radio  value="0">
                 人工审核
               </a-radio>
             </a-col>
@@ -404,12 +400,12 @@
           
             <span style="opacity:0">自助机电票打印</span>
             <a-col :span="4">
-              <a-radio value="A">
+              <a-radio value="0">
                 不支持
               </a-radio>
             </a-col>
             <a-col :span="4">
-              <a-radio  value="B">
+              <a-radio  value="1">
                 支持
               </a-radio>
             </a-col>
@@ -473,7 +469,7 @@
           上一步
         </a-button>
         <a-button @click="nextPage(4)" type="primary">
-          下一步
+          保存
         </a-button>
       </a-form-item>
           </a-form>
@@ -488,12 +484,17 @@
 </template>
 
 <script>
+import api from '../../../api/set.js'
 export default {
     name: 'invoice',
     data(){
       return{
          loading: false,
-      imageUrl: '',
+         subData:{
+          p_invoice:[],
+          e_invoice:[]
+         },
+        imageUrl: '',
         e_invoice:{
           tax_type:'',
           extension_num:'',
@@ -569,38 +570,51 @@ export default {
       }
     },
     methods:{
-       handleChange(info) {
-        if (info.file.status === 'uploading') {
-          this.loading = true;
-          return;
-        }
-        if (info.file.status === 'done') {
-         this.loading = false;
-        }
-      },
+       handleChange({ file,fileList }) {
+      this.fileList = fileList
+      if(file.status=='error'){
+        this.$message.error('上传失败');
+        this.fileList = fileList.filter(item=>{
+          return item.status=='done'
+        });
+      }
+      if(file.status=='done'){
+        this.$message.success(file.response.msg);
+      }
+      console.log(this.fileList)
+      
+    },
       nextPage(val){
        
         let that=this
         switch(val){
           case 1:
-            this.formOne.validateFields(err => {
+            this.formOne.validateFields((err,values) => {
+              
+              
               if (!err) {
+                
                 that.current=1
                 that.nowindex=2
+                let data=JSON.parse(JSON.stringify(values))
+               
+                data.invoice_entrance=data.invoice_entrance_.join(',')
+                delete data.invoice_entrance_
+                that.subData=data
+                that.subData.p_invoice=[]
+                that.subData.e_invoice=[]
+                console.log(that.subData)
               }
             });
             break;
           case 2:
            
-            this.formTwo.validateFields(err => {
+            this.formTwo.validateFields((err,values) => {
               if (!err) {
-                this.formFour.validateFields(err => {
-                if (!err) {
                   that.activeKey='2'
+                  values.paper_type=2
+                  that.subData.p_invoice.push(values)
                 }
-              });
-                 
-              }
             });
             break;
           case 3:
@@ -609,9 +623,17 @@ export default {
             break;
             case 4:
             
-            this.formThree.validateFields(err => {
+            this.formThree.validateFields((err,values) => {
               if (!err) {
                  that.activeKey='2'
+                 values.paper_type=1
+                that.subData.e_invoice.push(values)
+                api.setInvoiceset(that.subData)
+                .then(res => {
+                  console.log(res)
+                }).catch(err=>{
+                  console.log(err)
+                })
               }
             });
             break;

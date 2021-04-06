@@ -334,7 +334,6 @@ export default {
       this.previewVisible = false;
     },
     handleChange({ file,fileList }) {
-      console.log(file)
       this.fileList = fileList
       if(file.status=='error'){
         this.$message.error('上传失败');
@@ -345,6 +344,7 @@ export default {
       if(file.status=='done'){
         this.$message.success(file.response.msg);
       }
+      console.log(this.fileList)
       
     }
   }

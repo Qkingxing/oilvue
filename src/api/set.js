@@ -130,7 +130,32 @@ function setBasicsset(parameter){
     data: parameter
   })
 }
+function setReceiptstylelist(parameter){
+  return PhpRequest({
+    url: 'set/receiptstylelist',
+    method: 'post',
+    data: parameter
+  })
+}
+//setReceiptstyleset
+function setReceiptstyleset(parameter){
+  return PhpRequest({
+    url: 'set/receiptstyleset',
+    method: 'post',
+    data: parameter
+  })
+}
+function setInvoiceset(parameter){
+  return PhpRequest({
+    url: 'set/invoiceset',
+    method: 'post',
+    data: parameter
+  })
+}
 const api = {
+  setInvoiceset,
+  setReceiptstyleset,
+  setReceiptstylelist,
   setBasicsset,
   setBasicslist,
   userGetProvince,

@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <a-layout v-if="$route.name=='crowd'">
+    <a-layout v-if="$route.name=='crowd'&&pageType=='list'">
       <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
         <div class="actionBtns">
           <div class="left-btns">
@@ -37,7 +37,7 @@
               <template>
                 <a @click="delTag(record)">刷新</a>
                 <a-divider type="vertical" />
-                <a @click="delTag(record)">编辑</a>
+                <a @click="edit(record)">编辑</a>
                 <a-divider type="vertical" />
                 <a @click="delTag(record)">删除</a>
               </template>
@@ -47,7 +47,13 @@
       </a-layout-content>
 
     </a-layout>
-    <router-view />
+    <router-view @back="pageType='list'"/>
+
+    <CrmCrowdAdd 
+      v-if="pageType=='edit'"
+      @back="pageType='list'"
+      :pageType="pageType" />
+
   </div>
 </template>
 
@@ -59,10 +65,12 @@ import { getGroupinglist } from '@/api/crm'
 export default {
   name: 'Crowd',
   components: {
-    STable
+    STable,
+    CrmCrowdAdd: ()=>import('./add')
   },
   data () {
     return {
+      pageType: 'list',
       // 查询参数
       queryParam: { },
       // 表头
@@ -148,6 +156,9 @@ export default {
     this.tableOption()
   },
   methods: {
+    edit(){
+      this.pageType = 'edit'
+    },
     delTag () {
       this.$confirm({
         title: '温馨提示',
@@ -161,6 +172,7 @@ export default {
       })
     },
     openAdd () {
+      this.pageType = 'add'
       this.$router.push({
         name: 'CrmCrowdAdd'
       })
