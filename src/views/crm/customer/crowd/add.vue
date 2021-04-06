@@ -1,6 +1,6 @@
 
 <template>
-  <a-layout>
+  <a-layout v-loading="loading">
     <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '600px' }">
       <div class="head-title">
         <span>
@@ -9,12 +9,18 @@
       </div>
       <div class="select-info">
         <div class="label">客群名称</div>
-        <a-form layout="inline">
-          <a-form-item>
+        <a-form-model layout="inline" ref="form" :model="form">
+          <a-form-model-item
+            prop="grouping_name"
+            :rules="{
+            required: true,
+            message: '请输入人群名称',
+            trigger: 'blur',
+          }">
             <a-input v-model="form.grouping_name" :maxLength="10" placeholder="请输入人群名称" style="width:300px;"/>
-            <span style="margin-left: -45px; color: rgb(199, 199, 199); position: relative;">10/10</span>
-          </a-form-item>
-        </a-form>
+            <span style="margin-left: -45px; color: rgb(199, 199, 199); position: relative;">{{form.grouping_name.length}}/10</span>
+          </a-form-model-item>
+        </a-form-model>
       </div>
       <div class="select-info">
         <div class="label">
@@ -80,7 +86,7 @@
             </div>
             <div class="sub-comtent">
               <!-- 多选 -->
-              <a-checkbox-group v-if="cItem.type===2">
+              <a-checkbox-group v-model="cItem.data" v-if="cItem.type===2">
                 <a-checkbox 
                   class="ant-checkbox-group-item"
                   v-for="(checkItem,checkIndex) in cItem.info"
@@ -224,7 +230,7 @@
 
 <script>
 import _ from 'lodash'
-import { getSelectOption } from '@/api/crm'
+import { getSelectOption,addGrouping,getdefaultGroup,updateGrouping } from '@/api/crm'
 
 export default {
   name: 'CrmCrowdAdd',
@@ -238,11 +244,15 @@ export default {
         grouping_type: 0,//客群类型 0：固定人群，1：条件人群
         conditions: [],
       },
+      loading: false,
     }
   },
   props:{
     pageType:{
       type: String
+    },
+    itemId:{
+      type: Number
     }
   },
   created () {
@@ -251,17 +261,61 @@ export default {
   },
   methods: {
     async Init(){
+      this.loading = true
       let res = await getSelectOption(this.form.grouping_type)
-      console.log(res.data)
+      // console.log(res.data)
       this.options = res.data
 
       this.form.conditions = _.cloneDeep(res.data)
 
+      if(this.pageType==='edit'){
+        // console.log(this.itemId)
+        let formRes = await getdefaultGroup(this.itemId)
+        console.log(formRes.data)
+        this.form = formRes.data
+        let value = []
+        this.form.conditions.forEach((e,i)=>{
+          e.treelist.forEach((ele,ind)=>{
+            if(ele.isShow){
+              let arr = [e.id, ele.id]
+              value.push(arr)
+            }
+          })
+        })
+        this.value = value
 
 
+
+
+
+      }
+
+
+      this.loading = false
     },
     save(){
-      console.log(this.form)
+      let that = this
+      
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          if (that.pageType ==='add') {
+            addGrouping(that.form).then(()=>{
+              that.exit()
+            })
+          }
+          if (that.pageType ==='edit') {
+            updateGrouping(that.form).then(()=>{
+              that.exit()
+            })
+          }
+          // console.log(this.form)
+          
+
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
     // 变更客群类型
     onChangeType(){

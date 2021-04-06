@@ -52,6 +52,7 @@
     <CrmCrowdAdd 
       v-if="pageType=='edit'"
       @back="pageType='list'"
+      :itemId="itemId"
       :pageType="pageType" />
 
   </div>
@@ -149,14 +150,16 @@ export default {
           onChange: this.onSelectChange
         }
       },
-      optionAlertShow: false
+      optionAlertShow: false,
+      itemId:null,
     }
   },
   created () {
     this.tableOption()
   },
   methods: {
-    edit(){
+    edit(item){
+      this.itemId = item.id
       this.pageType = 'edit'
     },
     delTag () {
