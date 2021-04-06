@@ -93,6 +93,30 @@ export function getSelectOption (type) {
     data: { type }
   })
 }
+// 获取客群详情
+export function getdefaultGroup (id) {
+  return PhpRequest({
+    url: '/user/getdefaultGroup',
+    method: 'post',
+    data: { id }
+  })
+}
+// 新增客户群体
+export function addGrouping (data) {
+  return JavaRequest({
+    url: '/customer/addGrouping',
+    method: 'post',
+    data
+  })
+}
+// 编辑客户群体
+export function updateGrouping (data) {
+  return PhpRequest({
+    url: '/user/updateGrouping',
+    method: 'post',
+    data
+  })
+}
 
 // 客户导入列表
 export function getImportlist (data) {
