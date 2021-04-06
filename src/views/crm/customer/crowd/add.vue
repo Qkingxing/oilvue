@@ -27,11 +27,11 @@
             <a-icon style="color: rgb(153, 153, 153);" type="question-circle" />
           </a-popover>
         </div>
-        <a-radio-group name="radioGroup" :default-value="1" style="line-height: 40px;">
-          <a-radio :value="1" style="margin-right: 70px;">
+        <a-radio-group name="radioGroup" v-model="form.grouping_type" style="line-height: 40px;">
+          <a-radio :value="0" style="margin-right: 70px;">
             固定人群
           </a-radio>
-          <a-radio :value="2">
+          <a-radio :value="1">
             条件人群
           </a-radio>
         </a-radio-group>
@@ -42,7 +42,13 @@
           style="width: 700px;"
           v-model="value"
           :options="options"
-          :props="{ expandTrigger: 'hover', multiple: true }"
+          :props="{ 
+            expandTrigger: 'hover', 
+            multiple: true ,
+            value: 'id',
+            label: 'name',
+            children: 'treeList',
+          }"
           @change="handleChange"
         ></el-cascader>
         <span class="select_count">已选择{{value.length}}项</span>
@@ -73,67 +79,30 @@ export default {
   data () {
     return {
       value: [],
-      options: [
+      options: [],
+      form:{
+        grouping_name: "星哥的群10",//客群名称
+        grouping_type: 0,//客群类型 0：固定人群，1：条件人群
+        conditions: [
+
+        ]
+      },
+      list:[//基础属性
         {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-              label: '设计原则'
-            },
-            {
-              value: 'daohang',
-              label: '导航'
-            }
-          ]
+          code: 'sex',//性别
+          type: 'radio',
+          value: 0
         },
         {
-          value: 'zujian',
-          label: '组件',
-          children: [
-            {
-              value: 'basic',
-              label: 'Basic'
-            },
-            {
-              value: 'form',
-              label: 'Form'
-            },
-            {
-              value: 'data',
-              label: 'Data'
-            },
-            {
-              value: 'notice',
-              label: 'Notice'
-            },
-            {
-              value: 'navigation',
-              label: 'Navigation'
-            },
-            {
-              value: 'others',
-              label: 'Others'
-            }
-          ]
+          code: 'love_site_id',//油品偏好
+          type: 'select',
+          value: [0,1,2,3]
         },
         {
-          value: 'ziyuan',
-          label: '资源',
-          children: [
-            {
-              value: 'axure',
-              label: 'Axure Components'
-            },
-            {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            },
-            {
-              value: 'jiaohu',
-              label: '组件交互文档'
-            }
+          code: 'car_count',
+          type: 'list',
+          value: [
+            {  }
           ]
         }
       ]
@@ -145,11 +114,22 @@ export default {
     }
   },
   created () {
-    getSelectOption().then((res)=>{
-      console.log(res.data)
-    })
+    this.Init()
+
   },
   methods: {
+    async Init(){
+      let res = await getSelectOption(this.form.grouping_type)
+      console.log(res.data)
+      this.options = res.data
+
+
+
+
+
+
+
+    },
     handleChange (value) {
       console.log(value)
     },
