@@ -86,11 +86,11 @@ export function getGroupinglist (data) {
   })
 }
 // 获取客户分群中的条件
-export function getSelectOption () {
-  return JavaRequest({
-    url: '/customer/query_user_group_set',
+export function getSelectOption (type) {
+  return PhpRequest({
+    url: '/user/query_user_group_set',
     method: 'post',
-    data: { pid: 0 }
+    data: { type }
   })
 }
 
