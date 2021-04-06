@@ -87,8 +87,8 @@ export function getGroupinglist (data) {
 }
 // 获取客户分群中的条件
 export function getSelectOption (type) {
-  return JavaRequest({
-    url: '/customer/query_user_group_set',
+  return PhpRequest({
+    url: '/user/query_user_group_set',
     method: 'post',
     data: { type }
   })
