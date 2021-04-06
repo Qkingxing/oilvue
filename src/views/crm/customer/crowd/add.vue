@@ -11,7 +11,7 @@
         <div class="label">客群名称</div>
         <a-form layout="inline">
           <a-form-item>
-            <a-input :maxLength="10" placeholder="请输入标签名称" style="width:300px;"/>
+            <a-input v-model="form.grouping_name" :maxLength="10" placeholder="请输入人群名称" style="width:300px;"/>
             <span style="margin-left: -45px; color: rgb(199, 199, 199); position: relative;">10/10</span>
           </a-form-item>
         </a-form>
@@ -39,6 +39,7 @@
       <div class="head-title" style="margin-top: 20px;"><span>筛选条件</span></div>
       <div class="select_wrap">
         <el-cascader
+          placeholder="请选择人群"
           style="width: 700px;"
           v-model="value"
           :options="options"
@@ -54,9 +55,9 @@
         ></el-cascader>
         <span class="select_count">已选择{{value.length}}项</span>
       </div>
-      <!-- <div class="customer-attr-info">
+      <div class="customer-attr-info" v-show="!value.length">
         <a-empty />
-      </div> -->
+      </div>
       <div 
         class="select-attr-box"
         v-for="(value,index) in form.conditions"
@@ -82,21 +83,105 @@
                   :key="checkIndex"
                   :value="checkItem.id">{{checkItem.name}}</a-checkbox>
               </a-checkbox-group>
-              <!-- 可扩展 -->
+              <!-- 可扩展(下拉+数字) -->
               <div class="custom" v-if="cItem.type===3">
-                <div class="custom-item">
-                  <a-select style="width: 120px; margin-right: 8px;">
-                    <a-select-option value="jack">
-                      Jack
+                <div 
+                  v-for="(customItem, customIndex) in cItem.info"
+                  :key="customIndex"
+                  class="custom-item">
+                  <a-select v-model="customItem.name" style="width: 120px; margin-right: 8px;" placeholder="请选择">
+                    <a-select-option 
+                      v-for="(selectItem, selectIndex) in customItem.list"
+                      :key="selectIndex"
+                      :value="selectItem.name">
+                      {{selectItem.name}}
                     </a-select-option>
                   </a-select>
+
                   <a-form-item>
-                    <a-input-number :min="0" style="margin-right: 8px;"/>
+                    <a-input-number v-model="customItem.areaLeft" :min="0" style="margin-right: 8px;" placeholder="数字"/>
                   </a-form-item>
-                  <div class="unit">个</div>
+
+                  <div class="bt" v-if="customItem.name==='区间'">
+                    <span style="margin-right: 8px;">至</span>
+                    <a-input-number v-model="customItem.arearight" :min="0" style="margin-right: 8px;" placeholder="数字"/>
+                  </div>
+
+                  <div class="unit">{{customItem.unit}}</div>
                   <div class="action-btns">
-                    <a-icon type="minus-circle" style="font-size: 16px; cursor: pointer; color: rgb(62, 75, 110);"/>
-                    <a-icon type="plus-circle" style="font-size: 16px; cursor: pointer; color: rgb(62, 75, 110); margin-left: 8px;"/>
+                    <a-icon
+                      :class="{'del-disabled': cItem.info.length==1}"
+                      @click="delSelectItem(index, cIndex,customIndex)"
+                      type="minus-circle" 
+                      style="font-size: 16px; cursor: pointer; color: rgb(62, 75, 110);"/>
+                    <a-icon 
+                      v-if="customIndex==cItem.info.length-1"
+                      @click="addSelectItem(index, cIndex,customIndex)"
+                      type="plus-circle" 
+                      style="font-size: 16px; cursor: pointer; color: rgb(62, 75, 110); margin-left: 8px;"/>
+                  </div>
+                </div>
+              </div>
+              <!-- 下拉 -->
+              <el-select 
+                v-if="cItem.type===4"
+                multiple 
+                collapse-tags 
+                v-model="cItem.data"
+                @change="(val)=>selectAll(val,index,cIndex)"
+                placeholder="请选择" 
+                style="width: 240px;">
+                <el-option 
+                  v-for="(selectItem, selectIndex) in cItem.info" 
+                  :key="selectIndex" 
+                  :label="selectItem.name" 
+                  :value="selectItem.id"></el-option>
+              </el-select>
+              <!-- 可扩展(下拉+下拉+数字) -->
+              <div class="custom" v-if="cItem.type===5">
+                <div 
+                  v-for="(customItem, customIndex) in cItem.info"
+                  :key="customIndex"
+                  class="custom-item custom-item-plus">
+                  <a-select v-model="customItem.name2" style="width: 120px; margin-right: 8px;" placeholder="请选择">
+                    <a-select-option 
+                      v-for="(selectItem, selectIndex) in customItem.areas"
+                      :key="selectIndex"
+                      :value="selectItem.name">
+                      {{selectItem.name}}
+                    </a-select-option>
+                  </a-select>
+
+                  <a-select v-model="customItem.name" style="width: 120px; margin-right: 8px;" placeholder="请选择">
+                    <a-select-option 
+                      v-for="(selectItem, selectIndex) in customItem.list"
+                      :key="selectIndex"
+                      :value="selectItem.name">
+                      {{selectItem.name}}
+                    </a-select-option>
+                  </a-select>
+
+                  <a-form-item>
+                    <a-input-number v-model="customItem.areaLeft" :min="0" style="margin-right: 8px;" placeholder="数字"/>
+                  </a-form-item>
+
+                  <div class="bt" v-if="customItem.name==='区间'">
+                    <span style="margin-right: 8px;">至</span>
+                    <a-input-number v-model="customItem.arearight" :min="0" style="margin-right: 8px;" placeholder="数字"/>
+                  </div>
+
+                  <div class="unit">{{customItem.unit}}</div>
+                  <div class="action-btns">
+                    <a-icon
+                      :class="{'del-disabled': cItem.info.length==1}"
+                      @click="delSelectItem(index, cIndex,customIndex)"
+                      type="minus-circle" 
+                      style="font-size: 16px; cursor: pointer; color: rgb(62, 75, 110);"/>
+                    <a-icon 
+                      v-if="customIndex==cItem.info.length-1"
+                      @click="addSelectItem(index, cIndex,customIndex)"
+                      type="plus-circle" 
+                      style="font-size: 16px; cursor: pointer; color: rgb(62, 75, 110); margin-left: 8px;"/>
                   </div>
                 </div>
               </div>
@@ -110,7 +195,7 @@
       </div>
 
       <div class="btn-box">
-        <a-button type="primary" size="large"> 确认 </a-button>
+        <a-button type="primary" size="large" @click="save"> 确认 </a-button>
         <a-button style="margin-left: 8px;" size="large" @click="exit"> 取消 </a-button>
       </div>
     </a-layout-content>
@@ -129,7 +214,7 @@ export default {
       value: [],
       options: [],
       form:{
-        grouping_name: "星哥的群10",//客群名称
+        grouping_name: "",//客群名称
         grouping_type: 0,//客群类型 0：固定人群，1：条件人群
         conditions: [],
       },
@@ -155,8 +240,53 @@ export default {
 
 
     },
+    save(){
+      console.log(this.form)
+    },
+    // 全选select
+    selectAll (val,index,cIndex) {
+      let item = this.form.conditions[index].treelist[cIndex]
+      const allValues = item.info.map(item => {
+        return item.id;
+      });
+      if (!item.oldChooseData) {
+        item.oldChooseData = []
+      }
+      // 用来储存上一次选择的值，可进行对比
+      const oldVal = item.oldChooseData.length > 0 ? item.oldChooseData : [];
+ 
+      // 若选择全部
+      if (val.includes(0)) {
+        item.data = allValues;
+      }
+      // console.log(oldVal)
+      // 取消全部选中， 上次有， 当前没有， 表示取消全选
+      if (oldVal.includes(0) && !val.includes(0)) {
+        item.data = [];
+      }
+ 
+      // 点击非全部选中，需要排除全部选中 以及 当前点击的选项
+      // 新老数据都有全部选中
+      if (oldVal.includes(0) && val.includes(0)) {
+        const index = val.indexOf(0);
+        val.splice(index, 1); // 排除全选选项
+        item.data = val;
+      }
+ 
+      // 全选未选，但是其他选项都全部选上了，则全选选上
+      if (!oldVal.includes(0) && !val.includes(0)) {
+        if (val.length === allValues.length - 1) {
+          item.data = [0].concat(val);
+        }
+      }
+
+      // 储存当前选择的最后结果 作为下次的老数据
+      item.oldChooseData = item.data;
+
+    },
     // 删除一条
     delTree(index,cIndex){
+      // 同步联级选择器
       let arr = [
         this.form.conditions[index].id, 
         this.form.conditions[index].treelist[cIndex].id
@@ -167,14 +297,40 @@ export default {
         return e[0]!==arr[0]||e[1]!==arr[1]
       })
       this.value = value
-
+      // 隐藏本节点
       this.form.conditions[index].treelist[cIndex].isShow = false
+      // 隐藏父节点
       let showArr = this.form.conditions[index].treelist.map(e=>{
         return e.isShow
       })
       if (!showArr.includes(true)) {
         this.form.conditions[index].isShow = false
       }
+    },
+    // 增加一个区间小条目
+    addSelectItem(index, cIndex,customIndex){
+      // console.log(this.form.conditions[index].treelist[cIndex].info[customIndex])
+      let obj = _.cloneDeep(this.form.conditions[index].treelist[cIndex].info[customIndex])
+
+      // console.log(obj)
+      obj.areaLeft = null
+      obj.arearight = null
+      obj.name = ''
+      if (this.form.conditions[index].treelist[cIndex].info.length===8) {
+        return
+      }
+      this.form.conditions[index].treelist[cIndex].info.push(obj)
+
+    },
+    // 删除一个区间小条目
+    delSelectItem(index, cIndex,customIndex){
+      // console.log(this.form.conditions[index].treelist[cIndex].info[customIndex])
+
+      if (this.form.conditions[index].treelist[cIndex].info.length===1) {
+        return
+      }
+      this.form.conditions[index].treelist[cIndex].info.splice(customIndex,1)
+
     },
     handleChange (value) {
       // console.log(value)
@@ -301,6 +457,9 @@ export default {
     }
   }
   .custom{
+    .custom-item-plus{
+      width: 520px!important;
+    }
     .custom-item{
       width: 400px;
       min-height: 56px;
@@ -317,6 +476,10 @@ export default {
         width: 40px;
         position: absolute;
         right: -48px;
+        .del-disabled{
+          color: #cad5e9!important;
+          pointer-events: none;
+        }
       }
     }
   }
