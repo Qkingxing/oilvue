@@ -27,7 +27,11 @@
             <a-icon style="color: rgb(153, 153, 153);" type="question-circle" />
           </a-popover>
         </div>
-        <a-radio-group name="radioGroup" v-model="form.grouping_type" style="line-height: 40px;">
+        <a-radio-group 
+          name="radioGroup" 
+          v-model="form.grouping_type" 
+          @change="onChangeType"
+          style="line-height: 40px;">
           <a-radio :value="0" style="margin-right: 70px;">
             固定人群
           </a-radio>
@@ -99,12 +103,20 @@
                   </a-select>
 
                   <a-form-item>
-                    <a-input-number v-model="customItem.areaLeft" :min="0" style="margin-right: 8px;" placeholder="数字"/>
+                    <a-input-number 
+                      v-model="customItem.areaLeft" 
+                      :min="0"
+                      :precision="customItem.precision" 
+                      style="margin-right: 8px;" placeholder="数字"/>
                   </a-form-item>
 
                   <div class="bt" v-if="customItem.name==='区间'">
                     <span style="margin-right: 8px;">至</span>
-                    <a-input-number v-model="customItem.arearight" :min="0" style="margin-right: 8px;" placeholder="数字"/>
+                    <a-input-number 
+                      v-model="customItem.arearight" 
+                      :min="0"
+                      :precision="customItem.precision" 
+                      style="margin-right: 8px;" placeholder="数字"/>
                   </div>
 
                   <div class="unit">{{customItem.unit}}</div>
@@ -162,12 +174,20 @@
                   </a-select>
 
                   <a-form-item>
-                    <a-input-number v-model="customItem.areaLeft" :min="0" style="margin-right: 8px;" placeholder="数字"/>
+                    <a-input-number 
+                      v-model="customItem.areaLeft" 
+                      :min="0" 
+                      :precision="customItem.precision" 
+                      style="margin-right: 8px;" placeholder="数字"/>
                   </a-form-item>
 
                   <div class="bt" v-if="customItem.name==='区间'">
                     <span style="margin-right: 8px;">至</span>
-                    <a-input-number v-model="customItem.arearight" :min="0" style="margin-right: 8px;" placeholder="数字"/>
+                    <a-input-number 
+                      v-model="customItem.arearight" 
+                      :min="0"
+                      :precision="customItem.precision" 
+                      style="margin-right: 8px;" placeholder="数字"/>
                   </div>
 
                   <div class="unit">{{customItem.unit}}</div>
@@ -242,6 +262,13 @@ export default {
     },
     save(){
       console.log(this.form)
+    },
+    // 变更客群类型
+    onChangeType(){
+      getSelectOption(this.form.grouping_type).then((res)=>{
+        this.options = res.data
+        this.form.conditions = _.cloneDeep(res.data)
+      })
     },
     // 全选select
     selectAll (val,index,cIndex) {
