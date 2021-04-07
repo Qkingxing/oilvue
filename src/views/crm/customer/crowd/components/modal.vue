@@ -78,8 +78,10 @@ export default {
   },
   methods: {
     show(form) {
+      this.form = null
+
       this.form = form
-      console.log(this.form)
+      // console.log(this.form)
       this.visible = true
     },
     // 双下拉
@@ -119,6 +121,9 @@ export default {
       return arr
     },
     selectList(target, data){
+      if (!target) {
+        return
+      }
       // console.log(target)
       // console.log(data)
       let arr = data.filter(e=>{
@@ -133,6 +138,10 @@ export default {
     },
     checkboxText(target,cIndex,index){
       let item = this.form.conditions[index].treelist[cIndex]
+      // console.log(target)
+      if (!target) {
+        return
+      }
       let arr = item.info.filter(e=>{
         return target.includes(e.id)
       }).map(e=>{
@@ -147,11 +156,13 @@ export default {
 
       this.visible = false
       this.confirmLoading = false
+      this.form=null
       this.$emit('ok')
     },
     handleCancel(e) {
       // console.log('Clicked cancel button')
       this.visible = false
+      this.form=null
     },
   },
 }

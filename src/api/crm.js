@@ -125,6 +125,22 @@ export function delGrouping (id) {
     data: {id}
   })
 }
+// 刷新客户群体
+export function RefreshGrouping (id) {
+  return PhpRequest({
+    url: '/user/RefreshGrouping',
+    method: 'post',
+    data: {id}
+  })
+}
+// 固定客户群体-用户列表
+export function defaultGrouping (data) {
+  return PhpRequest({
+    url: '/user/defaultGrouping',
+    method: 'post',
+    data
+  })
+}
 
 // 客户导入列表
 export function getImportlist (data) {
