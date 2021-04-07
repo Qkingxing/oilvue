@@ -123,6 +123,7 @@
                   <div class="bt" v-if="customItem.name==='区间'">
                     <span style="margin-right: 8px;">至</span>
                     <a-input-number 
+                      @change="onChangeNum(index, cIndex,customIndex)"
                       v-model="customItem.arearight" 
                       :min="0"
                       :precision="customItem.precision" 
@@ -183,8 +184,11 @@
                     </a-select-option>
                   </a-select>
 
-                  <a-form-item>
+                  <a-form-item
+                    :validate-status="customItem.validateStatus"
+                    :help="customItem.help">
                     <a-input-number 
+                      @change="onChangeNum(index, cIndex,customIndex)"
                       v-model="customItem.areaLeft" 
                       :min="0" 
                       :precision="customItem.precision" 
@@ -194,6 +198,7 @@
                   <div class="bt" v-if="customItem.name==='区间'">
                     <span style="margin-right: 8px;">至</span>
                     <a-input-number 
+                      @change="onChangeNum(index, cIndex,customIndex)"
                       v-model="customItem.arearight" 
                       :min="0"
                       :precision="customItem.precision" 
@@ -229,6 +234,8 @@
         <a-button style="margin-left: 8px;" size="large" @click="exit"> 取消 </a-button>
       </div>
     </a-layout-content>
+
+    <CrowdAddModal ref="CrowdAddModal" @ok="saveAfter"/>
   </a-layout>
 </template>
 
@@ -238,7 +245,9 @@ import { getSelectOption,addGrouping,getdefaultGroup,updateGrouping } from '@/ap
 
 export default {
   name: 'CrmCrowdAdd',
-  components: {},
+  components: {
+    CrowdAddModal:()=>import('./components/modal')
+  },
   data () {
     return {
       value: [],
@@ -275,7 +284,7 @@ export default {
       if(this.pageType==='edit'){
         // console.log(this.itemId)
         let formRes = await getdefaultGroup(this.itemId)
-        console.log(formRes.data)
+        // console.log(formRes.data)
         this.form = formRes.data
         let value = []
         this.form.conditions.forEach((e,i)=>{
@@ -284,12 +293,30 @@ export default {
               let arr = [e.id, ele.id]
               value.push(arr)
             }
+            // 洗掉数值报错信息
+            ele.info.forEach(eee=>{
+              eee.help = ''
+              eee.validateStatus = ''
+            })
           })
         })
         this.value = value
 
       }
       this.loading = false
+    },
+    saveAfter(){
+      let that = this
+      if (that.pageType ==='add'||!that.pageType) {
+        addGrouping(that.form).then(()=>{
+          that.exit()
+        })
+      }
+      if (that.pageType ==='edit') {
+        updateGrouping(that.form).then(()=>{
+          that.exit()
+        })
+      }
     },
     save(){
       
@@ -299,16 +326,7 @@ export default {
         if (valid) {
           that.checkForm().then(()=>{
 
-            if (that.pageType ==='add'||!that.pageType) {
-              addGrouping(that.form).then(()=>{
-                that.exit()
-              })
-            }
-            if (that.pageType ==='edit') {
-              updateGrouping(that.form).then(()=>{
-                that.exit()
-              })
-            }
+            that.$refs.CrowdAddModal.show(that.form)
 
           }).catch(()=>{})
         
@@ -372,6 +390,7 @@ export default {
       getSelectOption(this.form.grouping_type).then((res)=>{
         this.options = res.data
         this.form.conditions = _.cloneDeep(res.data)
+        this.value = []
       })
     },
     // 全选select
@@ -457,8 +476,11 @@ export default {
     onChangeNum(index, cIndex,customIndex){
       let obj = this.form.conditions[index].treelist[cIndex].info[customIndex]
       // console.log(obj)
-      if (obj.name==='区间'&&obj.arearight) {
-        if (obj.areaLeft>obj.arearight) {
+      if (obj.name==='区间'&&obj.areaLeft&&obj.arearight) {
+        
+        if (obj.areaLeft > obj.arearight) {
+          console.log(obj.areaLeft)
+          console.log(obj.arearight)
           obj.help = '左边不能大于右边'
           obj.validateStatus = 'error'
         }else{
