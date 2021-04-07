@@ -117,6 +117,14 @@ export function updateGrouping (data) {
     data
   })
 }
+// 删除客户群体
+export function delGrouping (id) {
+  return PhpRequest({
+    url: '/user/delGrouping',
+    method: 'post',
+    data: {id}
+  })
+}
 
 // 客户导入列表
 export function getImportlist (data) {

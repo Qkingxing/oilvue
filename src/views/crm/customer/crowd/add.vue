@@ -103,13 +103,17 @@
                     <a-select-option 
                       v-for="(selectItem, selectIndex) in customItem.list"
                       :key="selectIndex"
-                      :value="selectItem.name">
+                      :value="selectItem.name"
+                      :disabled="disabled(index, cIndex,customIndex,selectItem.name)">
                       {{selectItem.name}}
                     </a-select-option>
                   </a-select>
 
-                  <a-form-item>
+                  <a-form-item
+                    :validate-status="customItem.validateStatus"
+                    :help="customItem.help">
                     <a-input-number 
+                      @change="onChangeNum(index, cIndex,customIndex)"
                       v-model="customItem.areaLeft" 
                       :min="0"
                       :precision="customItem.precision" 
@@ -284,38 +288,84 @@ export default {
         })
         this.value = value
 
-
-
-
-
       }
-
-
       this.loading = false
     },
     save(){
+      
       let that = this
       
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (that.pageType ==='add') {
-            addGrouping(that.form).then(()=>{
-              that.exit()
-            })
-          }
-          if (that.pageType ==='edit') {
-            updateGrouping(that.form).then(()=>{
-              that.exit()
-            })
-          }
-          // console.log(this.form)
-          
+          that.checkForm().then(()=>{
 
+            if (that.pageType ==='add'||!that.pageType) {
+              addGrouping(that.form).then(()=>{
+                that.exit()
+              })
+            }
+            if (that.pageType ==='edit') {
+              updateGrouping(that.form).then(()=>{
+                that.exit()
+              })
+            }
+
+          }).catch(()=>{})
+        
         } else {
           console.log('error submit!!');
           return false;
         }
       });
+    },
+    // 表单校验
+    checkForm(){
+      return new Promise((resolve, reject)=>{
+        let isError = false
+        let erroeText = '请至少添加一项信息筛选!'
+
+        if (!this.value.length&&!isError) {
+          isError = true
+        }
+
+        this.form.conditions.forEach((element,index)=>{
+          element.treelist.forEach((ele,i)=>{
+            if (ele.isShow) {
+              // 多选
+              if (ele.type===2&&(!ele.data||!ele.data.length)&&!isError) {
+                isError = true
+              }
+              // 下拉
+              if (ele.type===4&&(!ele.data||!ele.data.length)&&!isError) {
+                isError = true
+              }
+              ele.info.forEach((e,j)=>{
+                // 组合（下拉+数字）
+                if (ele.type===3&&!isError&&(e.name===''||!e.areaLeft)) {
+                  isError = true
+                }
+                if (ele.type===3&&!isError&&e.name==='区间'&&(!e.areaLeft||!e.arearight||e.areaLeft>e.arearight)) {
+                  isError = true
+                }
+                // 组合（下拉+下拉+数字）
+                if (ele.type===5&&!isError&&(e.name2===''||e.name===''||!e.areaLeft)) {
+                  isError = true
+                }
+                if (ele.type===5&&!isError&&e.name==='区间'&&(e.name2===''||!e.areaLeft||!e.arearight||e.areaLeft>e.arearight)) {
+                  isError = true
+                }
+              })
+            }
+          })
+        })
+
+        if (isError) {
+          this.$message.error(erroeText)
+          reject()
+        }else{
+          resolve()
+        }
+      })
     },
     // 变更客群类型
     onChangeType(){
@@ -388,6 +438,38 @@ export default {
         this.form.conditions[index].isShow = false
       }
     },
+    // 禁用选项
+    disabled(index, cIndex,customIndex,name){
+      let arr = this.form.conditions[index].treelist[cIndex].info.map(e=>{
+        return e.name
+      })
+
+      if (name==='区间') {
+        return false
+      }
+      
+      if (arr.includes(name)) {
+        return true
+      }
+
+    },
+    // 校验区间数字
+    onChangeNum(index, cIndex,customIndex){
+      let obj = this.form.conditions[index].treelist[cIndex].info[customIndex]
+      // console.log(obj)
+      if (obj.name==='区间'&&obj.arearight) {
+        if (obj.areaLeft>obj.arearight) {
+          obj.help = '左边不能大于右边'
+          obj.validateStatus = 'error'
+        }else{
+          obj.help = ''
+          obj.validateStatus = ''
+        }
+      }else{
+        obj.help = ''
+        obj.validateStatus = ''
+      }
+    },
     // 增加一个区间小条目
     addSelectItem(index, cIndex,customIndex){
       // console.log(this.form.conditions[index].treelist[cIndex].info[customIndex])
@@ -396,7 +478,7 @@ export default {
       // console.log(obj)
       obj.areaLeft = null
       obj.arearight = null
-      obj.name = ''
+      obj.name = undefined
       if (this.form.conditions[index].treelist[cIndex].info.length===8) {
         return
       }
@@ -454,6 +536,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+
 .ant-form-item{
   margin-bottom: 0;
 }
@@ -601,5 +684,10 @@ export default {
   padding: 0 19px;
   height: 40px;
   line-height: 40px;
+}
+</style>
+<style lang="less">
+.el-cascader-menu__wrap{
+  height: 240px;
 }
 </style>

@@ -12,7 +12,7 @@
             <a-button disabled> 创建短信 </a-button>
           </div>
           <div class="right-btns" v-if="selectedRows.length>0">
-            <a-button> 删除 </a-button>
+            <a-button @click="delAll"> 删除 </a-button>
             <a-button> 导出数据 </a-button>
           </div>
           
@@ -35,11 +35,11 @@
             </span>
             <span slot="action" slot-scope="text, record">
               <template>
-                <a @click="delTag(record)">刷新</a>
+                <a >刷新</a>
                 <a-divider type="vertical" />
                 <a @click="edit(record)">编辑</a>
                 <a-divider type="vertical" />
-                <a @click="delTag(record)">删除</a>
+                <a @click="delGroup(record)">删除</a>
               </template>
             </span>
           </s-table>
@@ -61,7 +61,7 @@
 <script>
 import { STable } from '@/components'
 
-import { getGroupinglist } from '@/api/crm'
+import { getGroupinglist,delGrouping } from '@/api/crm'
 
 export default {
   name: 'Crowd',
@@ -162,14 +162,34 @@ export default {
       this.itemId = item.id
       this.pageType = 'edit'
     },
-    delTag () {
+    delAll(){
+      
+      let id = this.selectedRows.map(e=>{
+        return e.id
+      })
+
+      let that = this
       this.$confirm({
         title: '温馨提示',
-        content: '删除会清除标签全部信息，是否删除？',
+        content: '删除会清除群组全部信息，是否删除？',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          delGrouping(id).then(()=>{
+            that.$refs.table.refresh()
+          })
+        },
+        onCancel () {}
+      })
+    },
+    // 删除群组
+    delGroup (item) {
+      let that = this
+      this.$confirm({
+        title: '温馨提示',
+        content: '删除会清除群组全部信息，是否删除？',
+        onOk () {
+          delGrouping([item.id]).then(()=>{
+            that.$refs.table.refresh()
+          })
         },
         onCancel () {}
       })
