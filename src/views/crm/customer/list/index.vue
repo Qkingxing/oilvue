@@ -4,7 +4,7 @@
     <a-layout v-if="$route.name=='Clist'">
       <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
         <div class="client-tab-btns">
-          <a-radio-group v-model="radioValue">
+          <a-radio-group v-model="radioValue" @change="onChangeType">
             <a-radio-button value="old"> 已有客户 </a-radio-button>
             <a-radio-button value="new"> 新增客户 </a-radio-button>
           </a-radio-group>
@@ -13,7 +13,7 @@
           <a-form layout="inline">
             <a-row :gutter="48">
               <a-col :sm="24" :md="12">
-                <a-form-item label="客户搜索" class="screen-item">
+                <a-form-item label="客户搜索" :colon="false" class="screen-item">
                   <!-- <a-input v-model="oldqueryParam.keywords" placeholder="请输入搜索内容" /> -->
                   <a-input
                     style="width: 100%"
@@ -32,7 +32,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="12" :sm="24">
-                <a-form-item label="是否消费" class="screen-item">
+                <a-form-item label="是否消费" :colon="false" class="screen-item">
                   <a-select v-model="oldqueryParam.is_consumption" style="width: 264px">
                     <a-select-option 
                       :value="item.value"
@@ -45,7 +45,7 @@
               </a-col>
 
               <a-col :md="12" :sm="24">
-                <a-form-item label="偏好油站" class="screen-item">
+                <a-form-item label="偏好油站" :colon="false" class="screen-item">
                   <a-select v-model="oldqueryParam.love_site_id" style="width: 264px">
                     <a-select-option
                       :value="item.id"
@@ -57,7 +57,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="12" :sm="24">
-                <a-form-item label="偏好油品" class="screen-item">
+                <a-form-item label="偏好油品" :colon="false" class="screen-item">
                   <a-select v-model="oldqueryParam.oil_id" style="width: 264px">
                     <a-select-option
                       :value="item.id"
@@ -71,7 +71,7 @@
               </a-col>
 
               <a-col :md="12" :sm="24">
-                <a-form-item label="会员等级" class="screen-item">
+                <a-form-item label="会员等级" :colon="false" class="screen-item">
                   <a-select v-model="oldqueryParam.spalevel_id" style="width: 264px">
                     <a-select-option
                       :value="item.id"
@@ -84,7 +84,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="12" :sm="24">
-                <a-form-item label="客户身份" class="screen-item">
+                <a-form-item label="客户身份" :colon="false" class="screen-item">
                   <a-select v-model="oldqueryParam.identity_id" style="width: 264px">
                     <a-select-option
                       :value="item.value"
@@ -98,13 +98,14 @@
               </a-col>
 
               <a-col :md="12" :sm="24">
-                <a-form-item label="最近加油时间" class="screen-item">
+                <a-form-item label="最近加油时间" :colon="false" class="screen-item">
                   <a-range-picker @change="onChangeTime"/>
                 </a-form-item>
               </a-col>
               <a-col :md="12" :sm="24">
                 <a-form-item
                   label="加油升数"
+                  :colon="false"
                   class="screen-item">
                   <a-input-group compact >
                     <a-input-number 
@@ -122,7 +123,7 @@
               </a-col>
 
               <a-col :md="12" :sm="24">
-                <a-form-item label="加油次数" class="screen-item">
+                <a-form-item label="加油次数" :colon="false" class="screen-item">
                   <a-input-group compact>
                     <a-input v-model="oldqueryParam.l_count1" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">至</span>
@@ -132,7 +133,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="12" :sm="24">
-                <a-form-item label="现有积分" class="screen-item">
+                <a-form-item label="现有积分" :colon="false" class="screen-item">
                   <a-input-group compact>
                     <a-input v-model="oldqueryParam.integral1" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">至</span>
@@ -143,7 +144,7 @@
               </a-col>
 
               <a-col :md="12" :sm="24">
-                <a-form-item label="加油卡余额" class="screen-item">
+                <a-form-item label="加油卡余额" :colon="false" class="screen-item">
                   <a-input-group compact>
                     <a-input v-model="oldqueryParam.money1" style="width:88px;" placeholder="数字"/>
                     <span style="margin: 0px 8px;line-height:32px;">至</span>
@@ -165,7 +166,7 @@
           <a-form layout="inline" >
             <a-row :gutter="48">
               <a-col :md="24" :sm="24">
-                <a-form-item label="客户搜索" class="screen-item">
+                <a-form-item label="客户搜索" :colon="false" class="screen-item">
                   <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
                   <a-input
                     style="width: 100%"
@@ -192,7 +193,7 @@
           </a-form>
         </div>
         <!-- 表格 -->
-        <div class="showDataForTable" v-if="radioValue=='old'">
+        <div class="showDataForTable" v-if="radioValue==='old'">
           <div class="showSearchAndTotal">
             <span class="title">
               客户列表
@@ -207,7 +208,11 @@
             </span>
             <div>
               <a-button :disabled="!oldselectedRowKeys.length">发优惠券</a-button>
-              <a-button v-if="oldselectedRowKeys.length>0" style="margin-left: 8px;">加标签</a-button>
+              
+              <a-button 
+                v-if="oldselectedRowKeys.length>0&&userInfo.site_id!=-1" 
+                style="margin-left: 8px;">加标签</a-button>
+
               <a-button style="margin-left: 8px;">导出报表</a-button>
               <a-button style="margin-left: 8px;" icon="setting" @click="openColSetting"/>
             </div>
@@ -220,7 +225,36 @@
             :data="oldloadData"
             :rowSelection="{ selectedRowKeys: oldselectedRowKeys, onChange: oldonSelectChange }"
           >
-
+            <span slot="id" slot-scope="text, record">
+              <template>
+                <router-link
+                  v-if="text" 
+                  :to="{
+                    path:'/crm/customer/list/detail',
+                    query:{
+                      id: record.id
+                    }
+                  }">
+                  {{text}}
+                </router-link>
+                <span v-else>-</span>
+              </template>
+            </span>
+            <span slot="sonnumber" slot-scope="text, record">
+              <template>
+                <router-link 
+                  v-if="text"
+                  :to="{
+                    path:'/crm/customer/list/detail',
+                    query:{
+                      id: record.id
+                    }
+                  }">
+                  {{text}}
+                </router-link>
+                <span v-else>-</span>
+              </template>
+            </span>
           </s-table>
         </div>
 
@@ -231,7 +265,7 @@
               <span class="dec">
                 符合当前条件客户共「
                 <span class="themeColor">
-                  3
+                  {{newTotal}}
                 </span>
                 」位
                 <!-- <span class="themeColor select-all" @click="showEditTag('all')">
@@ -241,7 +275,11 @@
             </span>
             <div>
               <a-button :disabled="!selectedRowKeys.length">发优惠券</a-button>
-              <a-button v-if="selectedRowKeys.length>0" style="margin-left: 8px;">加标签</a-button>
+
+              <a-button 
+                v-if="selectedRowKeys.length>0&&userInfo.site_id!=-1" 
+                style="margin-left: 8px;">加标签</a-button>
+
               <a-button style="margin-left: 8px;">导出报表</a-button>
               <a-button style="margin-left: 8px;" icon="setting" v-if="radioValue=='old'"/>
             </div>
@@ -276,7 +314,6 @@
 import { mapGetters } from 'vuex'
 import { STable } from '@/components'
 
-import { getServiceList } from '@/api/manage'
 import { getOldUserList, getSonoillist, getSonsitelist,getlevelAll,getNewUserList } from '@/api/crm'
 
 import EditTag from '../components/EditTag'
@@ -332,112 +369,92 @@ export default {
         {
           title: '客户编号',
           dataIndex: 'id',
-          key: 'id',
+          scopedSlots: { customRender: 'id' }
         },
         {
           title: '客户子编号',
           dataIndex: 'sonnumber',
-          key: 'sonnumber',
+          scopedSlots: { customRender: 'sonnumber' }
         },
         {
           title: '手机号',
           dataIndex: 'mobile',
-          key: 'mobile',
         },
         {
           title: '偏好油站',
           dataIndex: 'name',
-          key: 'name',
         },
         {
           title: '昵称',
           dataIndex: 'nickname',
-          key: 'nickname',
         },
         {
           title: '是否消费油品',
           dataIndex: 'is_consumption',
-          key: 'is_consumption',
         },
         {
           title: '加油升数',
           dataIndex: 'l_number',
-          key: 'l_number',
         },
         {
           title: '加油次数',
           dataIndex: 'l_count',
-          key: 'l_count',
         },
         // {
         //   title: '最近加油时间',
         //   dataIndex: 'last_time',
-        //   key: 'last_time',
         // },
         // {
         //   title: '偏好油品',
         //   dataIndex: 'name',
-        //   key: 'name',
         // },
         // {
         //   title: '会员等级',
         //   dataIndex: 'level_id',
-        //   key: 'level_id',
         // },
         // {
         //   title: '现有积分',
         //   dataIndex: 'integral',
-        //   key: 'integral',
         // },
         // {
         //   title: '加油卡余额',
         //   dataIndex: 'money',
-        //   key: 'money',
         // },
         // {
         //   title: '客户身份',
         //   dataIndex: 'type',
-        //   key: 'type',
         // },
         // {
         //   title: '车牌号',
         //   dataIndex: 'plate_number',
-        //   key: 'plate_number',
         // },
         // {
         //   title: '近30天消费金额',
         //   dataIndex: 'plate_number',
-        //   key: 'plate_number',
         // },
         // {
         //   title: '近60天消费金额',
         //   dataIndex: 'plate_number',
-        //   key: 'plate_number',
         // },
         // {
         //   title: '近30天消费升数',
         //   dataIndex: 'plate_number',
-        //   key: 'plate_number',
         // },
         // {
         //   title: '近60天消费升数',
         //   dataIndex: 'plate_number',
-        //   key: 'plate_number',
         // },
         // {
         //   title: '近30天消费次数',
         //   dataIndex: 'plate_number',
-        //   key: 'plate_number',
         // },
         // {
         //   title: '近60天消费次数',
         //   dataIndex: 'plate_number',
-        //   key: 'plate_number',
         // },
         // {
         //   title: '注册时间',
         //   dataIndex: 'plate_number',
-        //   key: 'plate_number',
         // },
 
       ],
@@ -488,10 +505,7 @@ export default {
             totalPage: res.data.totalPage // 列表总页数
           }
         })
-        // return getServiceList(Object.assign(parameter, this.queryParam))
-        //   .then(res => {
-        //     return res.result
-        //   })
+
       },
       oldselectedRowKeys: [],
       oldselectedRows: [],
@@ -522,22 +536,18 @@ export default {
         {
           title: '消费次数',
           dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '会员等级',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '现有积分',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '加油卡余额',
           // dataIndex: 'status',
-          needTotal: true
         },
         {
           title: '标签',
@@ -545,6 +555,7 @@ export default {
           scopedSlots: { customRender: 'action' }
         }
       ],
+      newTotal: 0,
       loadData: parameter => {
         let params = {
           page: parameter.pageNo, // 页码
@@ -556,7 +567,7 @@ export default {
         .then((res)=>{
           // 自定义出参
           // console.log(res)
-          this.oldTotal = res.data.total
+          this.newTotal = res.data.total
           return {
             data: res.data.data, // 列表数组
             pageNo: res.data.current_page,  // 当前页码
@@ -607,7 +618,18 @@ export default {
     
   },
   methods: {
-
+    onChangeType(){
+      // console.log(this.radioValue)
+      if (this.radioValue==='old') {
+        this.$nextTick(()=>{
+          this.$refs.table.refresh()
+        })
+      }else{
+        this.$nextTick(()=>{
+          this.$refs.table2.refresh()
+        })
+      }
+    },
     // 最近加油时间变更
     onChangeTime(date, dateString){
       // console.log(date.length)
