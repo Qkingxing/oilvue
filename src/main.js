@@ -11,27 +11,20 @@ import { VueAxios } from './utils/request'
 import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import themePluginConfig from '../config/themePluginConfig'
 
-// 添加 echarts 
+// 添加 echarts
 import echarts from 'echarts'
-Vue.prototype.$echarts = echarts
 
 // 数字跳动
 import countTo from 'vue-count-to'
-Vue.component('countTo', countTo)
 // element-ui
 // 禁止全局引入，跟ant冲突
-import { 
+import {
   Cascader, CascaderPanel,
   Select, Option,
-  Loading
- 
+  Loading, CheckboxGroup, CheckboxButton
+
 } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-
-Vue.use(Cascader).use(CascaderPanel)
-   .use(Select).use(Option)
-   .use(Loading)
- 
 
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
@@ -42,7 +35,16 @@ import bootstrap from './core/bootstrap'
 import './core/use' // use all components
 import './permission' // permission control
 import './utils/filter' // global filter
-import './global.less' // global style
+import './global.less'
+
+// 引入自定义阿里图标库
+import { Icon } from 'ant-design-vue'
+Vue.prototype.$echarts = echarts
+Vue.component('countTo', countTo)
+
+Vue.use(Cascader).use(CascaderPanel)
+   .use(Select).use(Option)
+   .use(Loading).use(CheckboxGroup).use(CheckboxButton) // global style
 
 Vue.config.productionTip = false
 
@@ -52,14 +54,10 @@ Vue.use(VueAxios)
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
-
-// 引入自定义阿里图标库
-import { Icon } from 'ant-design-vue';
 const IconFont = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2354010_4avtv0xexi5.js',
-});
+  scriptUrl: '//at.alicdn.com/t/font_2354010_4avtv0xexi5.js'
+})
 Vue.component('icon-font', IconFont)
-
 
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
 
