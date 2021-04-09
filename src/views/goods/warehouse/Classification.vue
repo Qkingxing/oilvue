@@ -212,8 +212,8 @@ export default {
       this.sortConfirmLoading = true
       const _post = {
          'up_sorting': [{
-              'id': this.sortInfo.id,
-              'sorting': this.sortInfo.sorting
+            'id': this.sortInfo.id,
+            'sorting': this.sortInfo.sorting
           }]
       }
       modifyGoodsCategorySorting(_post).then(res => {

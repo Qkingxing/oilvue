@@ -458,7 +458,7 @@
 <script>
 // import _ from 'lodash'
 import {cardTypeList} from '@/utils/select'
-import { getSitelist,gasfillingcardsave } from '@/api/crm'
+import { getSitelist, gasfillingcardsave } from '@/api/crm'
 import { getSiteoillist } from '@/api/oil'
 import { mapGetters } from 'vuex'
 //参数str判断的字符串 m最小值 n最大值

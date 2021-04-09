@@ -1,122 +1,186 @@
 
 <template>
   <a-layout>
-    <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
+    <a-layout-content 
+      v-if="pageType=='list'"
+      :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '700px', position: 'relative' }">
       <div class="addRuleBtn">
-        <a-button type="primary">
+        <a-button type="primary" @click="addRule">
           新增积分规则
         </a-button>
       </div>
-      <a-tabs default-active-key="1" size="large" @change="onChangeTab">
-        <a-tab-pane key="1" tab="进行中">
+      <a-tabs v-model="active" size="large">
+        <a-tab-pane :key="1" tab="进行中">
           <s-table
+            v-show="userInfo.site_id===-1"
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
           >
+            <div slot="time" slot-scope="item, row">
+              <template>
+                {{row.start_time}} 至 {{row.end_time}}
+              </template>
+            </div>
+            <div slot="site_ids" slot-scope="item, row">
+              <template>
+                <div
+                  v-for="(it,index) in item"
+                  :key="index">
+                  {{it.site_name}}
+                </div>
+              </template>
+            </div>
+
+            <div slot="id" slot-scope="item, row">
+              <template>
+                <a @click="watch(row)">查看</a>
+              </template>
+            </div>
+
             <span slot="action" slot-scope="text, record">
               <template>
-                <a @click="delTag(record)">撤回</a>
+                <a @click="stop(record)">结束</a>
+              </template>
+            </span>
+          </s-table>
+
+          <siteDetail 
+            v-if="itemData&&userInfo.site_id!==-1"
+            :itemData="itemData"
+            :active="active"
+            @reset="$refs.table.refresh()"/>
+
+          <div v-if="!itemData&&userInfo.site_id!==-1" class="empty_wrap">
+            <a-empty />
+          </div>
+
+        </a-tab-pane>
+        <a-tab-pane :key="2" tab="待开始">
+          <s-table
+            ref="table2"
+            size="default"
+            rowKey="id"
+            :columns="columns"
+            :data="loadData2"
+          >
+            <div slot="time" slot-scope="item, row">
+              <template>
+                {{row.start_time}} 至 {{row.end_time}}
+              </template>
+            </div>
+            <div slot="site_ids" slot-scope="item, row">
+              <template>
+                <div
+                  v-for="(it,index) in item"
+                  :key="index">
+                  {{it.site_name}}
+                </div>
+              </template>
+            </div>
+
+            <div slot="id" slot-scope="item, row">
+              <template>
+                <a @click="watch(row)">查看</a>
+              </template>
+            </div>
+
+            <span slot="action" slot-scope="text, record">
+              <template>
+                <a @click="editRule(record)">编辑</a>
+                <a @click="delItem(record)">删除</a>
               </template>
             </span>
           </s-table>
         </a-tab-pane>
-        <a-tab-pane key="2" tab="待开始">
+        <a-tab-pane :key="3" tab="已结束">
           <s-table
-            ref="table"
+            ref="table3"
             size="default"
-            rowKey="key"
-            :columns="columns"
-            :data="loadData"
+            rowKey="id"
+            :columns="columns3"
+            :data="loadData3"
           >
-            <span slot="action" slot-scope="text, record">
+            <div slot="time" slot-scope="item, row">
               <template>
-                <a @click="delTag(record)">撤回</a>
+                {{row.start_time}} 至 {{row.end_time}}
               </template>
-            </span>
-          </s-table>
-        </a-tab-pane>
-        <a-tab-pane key="3" tab="已结束">
-          <s-table
-            ref="table"
-            size="default"
-            rowKey="key"
-            :columns="columns"
-            :data="loadData"
-          >
-            <span slot="action" slot-scope="text, record">
+            </div>
+            <div slot="site_ids" slot-scope="item, row">
               <template>
-                <a @click="delTag(record)">撤回</a>
+                <div
+                  v-for="(it,index) in item"
+                  :key="index">
+                  {{it.site_name}}
+                </div>
               </template>
-            </span>
+            </div>
+
+            <div slot="id" slot-scope="item, row">
+              <template>
+                <a @click="watch(row)">查看</a>
+              </template>
+            </div>
+
           </s-table>
         </a-tab-pane>
       </a-tabs>
     </a-layout-content>
 
+    <RuleDetail 
+      v-if="pageType=='detail'" 
+      :pageType="pageType" 
+      :itemData="itemData"
+      :active="active"
+      @back="pageType='list'"/>
+    
+    <RuleEdit 
+      v-if="pageType=='edit'||pageType=='add'" 
+      :pageType="pageType" 
+      :itemData="itemData"
+      @back="pageType='list'"/>
   </a-layout>
 </template>
 
 <script>
 import { STable } from '@/components'
 
-import { getServiceList } from '@/api/manage'
-import { getIntegralrulelist } from '@/api/crm'
+import { getIntegralrulelist,delIntegralruleset,stopIntegralruleset } from '@/api/crm'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Rule',
   components: {
-    STable
+    STable,
+    RuleDetail: ()=>import('./rule/detail'),
+    siteDetail: ()=>import('./rule/siteDetail'),
+    RuleEdit: ()=>import('./rule/edit'),
   },
   data () {
     return {
-      type: 1,
+      pageType: 'list',
+      active: 1,
       // 表头
       columns: [
         {
-          title: '文件名称',
-          dataIndex: 'no'
+          title: '活动时间',
+          scopedSlots: { customRender: 'time' }
+        },
+        {
+          title: '活动油站',
+          dataIndex: 'site_ids',
+          scopedSlots: { customRender: 'site_ids' }
+        },
+        {
+          title: '积分规则',
+          dataIndex: 'id',
+          scopedSlots: { customRender: 'id' }
         },
         {
           title: '操作人',
-          dataIndex: 'description'
-        },
-        {
-          title: '成功数',
-          dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '失败数',
-          dataIndex: 'time',
-          needTotal: true
-        },
-        {
-          title: '总积分',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '总余额',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '加油卡名称',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '导入状态',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '导入时间',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'user_name',
         },
         {
           title: '操作',
@@ -124,18 +188,43 @@ export default {
           scopedSlots: { customRender: 'action' }
         }
       ],
+      columns3: [
+        {
+          title: '活动时间',
+          scopedSlots: { customRender: 'time' }
+        },
+        {
+          title: '活动油站',
+          dataIndex: 'site_ids',
+          scopedSlots: { customRender: 'site_ids' }
+        },
+        {
+          title: '积分规则',
+          dataIndex: 'id',
+          scopedSlots: { customRender: 'id' }
+        },
+        {
+          title: '操作人',
+          dataIndex: 'user_name',
+        }
+      ],
+
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
+
         let params = {
           page: parameter.pageNo, // 页码
           size: parameter.pageSize, // 每页页数
-          type: this.type
+          type: 1
         }
         return getIntegralrulelist(Object.assign(params)).then(res=>{
-          console.log(res)
+          console.log(res.data.list)
           // 自定义出参
-          // console.log(res.data.list)
-          this.oldTotal = res.data.totalCount
+          // 单站模式
+          if (this.userInfo.site_id!==(-1)) {
+            this.itemData = res.data.list[0] || null
+          }
+
           return {
             data: res.data.list, // 列表数组
             pageNo: res.data.pageNo,  // 当前页码
@@ -145,16 +234,98 @@ export default {
           }
         })
       },
+      loadData2: parameter => {
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+          type: 2
+        }
+        return getIntegralrulelist(Object.assign(params)).then(res=>{
+          // console.log(res.data.list)
+          // 自定义出参
+
+          return {
+            data: res.data.list, // 列表数组
+            pageNo: res.data.pageNo,  // 当前页码
+            pageSize: res.data.pageSize,  // 每页页数
+            totalCount: res.data.totalCount, // 列表总条数
+            totalPage: res.data.totalPage // 列表总页数
+          }
+        })
+      },
+      loadData3: parameter => {
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+          type: 3
+        }
+        return getIntegralrulelist(Object.assign(params)).then(res=>{
+          // console.log(res.data.list)
+          // 自定义出参
+
+          return {
+            data: res.data.list, // 列表数组
+            pageNo: res.data.pageNo,  // 当前页码
+            pageSize: res.data.pageSize,  // 每页页数
+            totalCount: res.data.totalCount, // 列表总条数
+            totalPage: res.data.totalPage // 列表总页数
+          }
+        })
+      },
+      itemData: null
 
     }
   },
+  computed:{
+    ...mapGetters(['userInfo'])
+  },
   created () {
-
+    console.log(this.userInfo)
   },
   methods: {
-    onChangeTab(type){
-      console.log(type)
+    editRule(item){
+      this.itemData = item
+      this.pageType = 'edit'
     },
+    // 新增规则
+    addRule(){  
+      this.pageType = 'add'
+    },
+    watch(item){
+      // console.log(item)
+      this.itemData = item
+      this.pageType = 'detail'
+    },
+    // 结束规则
+    stop(item){
+      let that = this
+      this.$confirm({
+        title: '温馨提示',
+        content: '积分规则停用后将不再生效，是否确认停用',
+        onOk () {
+          stopIntegralruleset(item.id).then(()=>{
+            that.$message.success('结束成功')
+            that.$refs.table.refresh()
+          })
+        },
+        onCancel () {}
+      })
+    },
+    // 删除规则
+    delItem(item){
+      let that = this
+      this.$confirm({
+        title: '是否删除积分规则',
+        content: '积分规则删除后将不可恢复',
+        onOk () {
+          delIntegralruleset(item.id).then(()=>{
+            that.$message.success('删除成功')
+            that.$refs.table2.refresh()
+          })
+        },
+        onCancel () {}
+      })
+    }
 
   }
 }
@@ -165,5 +336,14 @@ export default {
   right: 24px;
   top: 12px;
   z-index: 70;
+}
+a{
+  margin: 0 5px;
+}
+.empty_wrap{
+  min-height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

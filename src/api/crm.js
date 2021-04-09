@@ -86,11 +86,59 @@ export function getGroupinglist (data) {
   })
 }
 // 获取客户分群中的条件
-export function getSelectOption () {
-  return JavaRequest({
-    url: '/customer/query_user_group_set',
+export function getSelectOption (type) {
+  return PhpRequest({
+    url: '/user/query_user_group_set',
     method: 'post',
-    data: { pid: 0 }
+    data: { type }
+  })
+}
+// 获取客群详情
+export function getdefaultGroup (id) {
+  return PhpRequest({
+    url: '/user/getdefaultGroup',
+    method: 'post',
+    data: { id }
+  })
+}
+// 新增客户群体
+export function addGrouping (data) {
+  return JavaRequest({
+    url: '/customer/addGrouping',
+    method: 'post',
+    data
+  })
+}
+// 编辑客户群体
+export function updateGrouping (data) {
+  return PhpRequest({
+    url: '/user/updateGrouping',
+    method: 'post',
+    data
+  })
+}
+// 删除客户群体
+export function delGrouping (id) {
+  return PhpRequest({
+    url: '/user/delGrouping',
+    method: 'post',
+    data: {id}
+  })
+}
+// 刷新客户群体
+export function RefreshGrouping (id) {
+  return PhpRequest({
+    url: '/user/RefreshGrouping',
+    method: 'post',
+    data: {id}
+  })
+}
+// 固定客户群体-用户列表
+export function defaultGrouping (data) {
+  return PhpRequest({
+    url: '/user/defaultGrouping',
+    method: 'post',
+    data
   })
 }
 
@@ -102,13 +150,20 @@ export function getImportlist (data) {
     data
   })
 }
-
 // 新增会员基础设置或修改
 export function postBasicsset (data) {
   return PhpRequest({
     url: '/user/basicsset',
     method: 'post',
     data
+  })
+}
+// 删除会员基础设置
+export function delBasicsset (id) {
+  return PhpRequest({
+    url: '/user/basicsdel',
+    method: 'post',
+    data:{id}
   })
 }
 // 会员基础设置列表
@@ -127,6 +182,54 @@ export function queryFixedLevel (data) {
     data
   })
 }
+// 新增固定等级
+export function addFixedLevel (data) {
+  return JavaRequest({
+    url: '/customer/addFixedLevel',
+    method: 'post',
+    data
+  })
+}
+// 修改固定等级
+export function editFixedLevel (data) {
+  return JavaRequest({
+    url: '/customer/updateFixedLevel',
+    method: 'post',
+    data
+  })
+}
+// 删除固定等级
+export function delFixedLevel (id) {
+  return JavaRequest({
+    url: '/customer/delFixedLevel',
+    method: 'post',
+    data: {id}
+  })
+}
+// 固定等级-详情
+export function getFixedLevelDetail (id) {
+  return JavaRequest({
+    url: '/customer/query_fixedLevel_list',
+    method: 'post',
+    data: {id}
+  })
+}
+// 查询固定等级-认证列表
+export function queryCertification (data) {
+  return JavaRequest({
+    url: '/customer/queryCertification',
+    method: 'post',
+    data
+  })
+}
+// 查询固定等级-用户列表
+export function queryUserList (data) {
+  return JavaRequest({
+    url: '/customer/queryUserList',
+    method: 'post',
+    data
+  })
+}
 // 查询动态等级信息
 export function queryMemberSpalevel (data) {
   return JavaRequest({
@@ -135,15 +238,60 @@ export function queryMemberSpalevel (data) {
     data
   })
 }
-// 获取积分设置
-export function getIntegrallist () {
-  return PhpRequest({
-    url: '/user/integrallist',
+// 新增动态等级
+export function addMemberSpalevel (total_data) {
+  return JavaRequest({
+    url: '/customer/addMemberSpalevel',
+    method: 'post',
+    data: {total_data}
+  })
+}
+// 修改动态等级
+export function editMemberSpalevel (total_data) {
+  return JavaRequest({
+    url: '/customer/update_MemberSpalevel',
+    method: 'post',
+    data:{total_data}
+  })
+}
+// 删除动态等级
+export function delMemberSpalevel (data) {
+  return JavaRequest({
+    url: '/customer/delMemberSpalevel',
+    method: 'post',
+    data
+  })
+}
+// 停用动态等级
+export function stopMemberSpalevel () {
+  return JavaRequest({
+    url: '/customer/updateEffect',
+    method: 'post',
+  })
+}
+// 动态等级-使用推荐
+export function updateMemberSpalevel (star_time) {
+  return JavaRequest({
+    url: '/customer/updateMemberSpalevel',
     method: 'post',
     data: {
       group_id: store.getters.group_id,
-      site_id: store.getters.site_id
+      star_time
     }
+  })
+}
+// 获取积分设置
+export function getIntegrallist () {
+  let data = {}
+  if (store.getters.site_id===(-1)) {
+    data.group_id = store.getters.group_id
+  }else{
+    data.site_id = store.getters.site_id
+  }
+  return PhpRequest({
+    url: '/user/integrallist',
+    method: 'post',
+    data
   })
 }
 // 享受优惠不可获积分列表
@@ -161,8 +309,53 @@ export function postIntegralset (data) {
     data
   })
 }
+// 新增、修改积分规则
+export function addIntegralruleset (data) {
+  return PhpRequest({
+    url: '/user/integralruleset',
+    method: 'post',
+    data
+  })
+}
+// 删除积分规则
+export function delIntegralruleset (id) {
+  return PhpRequest({
+    url: '/user/integralruledel',
+    method: 'post',
+    data: {id}
+  })
+}
+// 结束积分规则
+export function stopIntegralruleset (id) {
+  return PhpRequest({
+    url: '/user/integralruleover',
+    method: 'post',
+    data: {id}
+  })
+}
+// 积分规则-详情
+export function getIntegrallists (id) {
+  return PhpRequest({
+    url: '/user/integrallists',
+    method: 'post',
+    data:{id}
+  })
+}
+// 查询积分规则是否冲突
+export function ruleConflict (data) {
+  return PhpRequest({
+    url: '/user/ruleConflict',
+    method: 'post',
+    data
+  })
+}
 // 积分规则列表
 export function getIntegralrulelist (data) {
+  if (store.getters.site_id===(-1)) {
+    data.group_id = store.getters.group_id
+  }else{
+    data.site_id = store.getters.site_id
+  }
   return PhpRequest({
     url: '/user/integralrulelist',
     method: 'post',
@@ -205,6 +398,14 @@ export function deleteCard (id) {
 export function changeCardStatus (data) {
   return PhpRequest({
     url: '/user/cardopensave',
+    method: 'post',
+    data
+  })
+}
+// 获取个人卡列表
+export function oneselfcardlist (data) {
+  return PhpRequest({
+    url: '/user/oneselfcardlist',
     method: 'post',
     data
   })

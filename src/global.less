@@ -29,7 +29,48 @@ ul,
 ol {
   list-style: none;
 }
-
+// 滚动条样式
+.public_global_scroll{
+  white-space: normal;
+  &::-webkit-scrollbar{
+    display: block;
+    width: 0;
+    height: 0
+  }
+  &[keepwidth=true]::-webkit-scrollbar {
+    width: 4px;
+    height: 4px
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 10px
+  }
+  &::-webkit-scrollbar-thumb {
+    width: 4px;
+    height: 4px;
+    -webkit-transition: .5s;
+    transition: .5s;
+    border-radius: 10px;
+    background-color: transparent
+  }
+  &:hover::-webkit-scrollbar {
+    display: block;
+    width: 4px;
+    height: 4px
+  }
+  &:hover::-webkit-scrollbar-track {
+    border-radius: 10px
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    -webkit-transition: .5s;
+    transition: .5s;
+    border-radius: 10px;
+    background-color: #d7d7e1
+  }
+  span{
+    white-space: nowrap
+  }
+  
+}
 // 数据列表 样式
 .table-alert {
   margin-bottom: 16px;

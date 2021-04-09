@@ -7,17 +7,17 @@
         会员基础设置
       </div>
 
-      <a-form layout="inline" class="form-wrap">
+      <a-form-model layout="inline" class="form-wrap">
 
 
-        <a-form-item 
+        <a-form-model-item 
           label="生效油站" 
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
           {{userInfo.group_name}}
-        </a-form-item>
+        </a-form-model-item>
 
-        <a-form-item 
+        <a-form-model-item 
           label="会员注册" 
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
@@ -29,9 +29,9 @@
               授权手机号
             </a-radio>
           </a-radio-group>
-        </a-form-item>
+        </a-form-model-item>
 
-        <a-form-item 
+        <a-form-model-item 
           label="初始会员等级" 
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
@@ -43,19 +43,14 @@
               </a-radio>
             </a-radio-group>
 
-            <a-select default-value="lucy" style="width: 120px" >
-              <a-select-option value="jack">
-                Jack
+            <a-select v-model="form.member_id" style="width: 160px" placeholder="请选择">
+              <a-select-option 
+                v-for="(item, index) in levelList"
+                :key="index"
+                :value="item.id">
+                {{item.name}}
               </a-select-option>
-              <a-select-option value="lucy">
-                Lucy
-              </a-select-option>
-              <a-select-option value="disabled">
-                Disabled
-              </a-select-option>
-              <a-select-option value="Yiminghe">
-                yiminghe
-              </a-select-option>
+
             </a-select>
 
             <div class="tips">没有合适的会员等级？
@@ -64,9 +59,9 @@
             </div>
           </div>
 
-        </a-form-item>
+        </a-form-model-item>
 
-        <a-form-item 
+        <a-form-model-item 
           label="初始等级有效期" 
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
@@ -82,27 +77,26 @@
             </a-radio>
           </a-radio-group>
           
-          <span v-if="initial_day_type==3">
+          <span v-show="initial_day_type==3">
             <a-input-number v-model="form.initial_day" :min="1"/>
             <span style="margin-left: 10px;">天</span>
           </span>
-        </a-form-item>
+        </a-form-model-item>
 
-        <a-form-item 
+        <a-form-model-item 
           label="    " 
           :colon="false"
           class="handle-btn-group"
           :labelCol="{md: {span: 4}}" 
           :wrapperCol="{md: {span: 20}}">
 
-          <a-button type="primary" style="margin-right: 10px;" v-if="type=='add'" @click="submit"> 新增 </a-button>
-          <a-button type="primary" style="margin-right: 10px;" v-else> 编辑 </a-button>
+          <a-button type="primary" style="margin-right: 10px;" @click="submit">{{type=='add'?'新增':'编辑'}}</a-button>
 
           <a-button @click="exit"> 取消 </a-button>
 
-        </a-form-item>
+        </a-form-model-item>
 
-      </a-form>
+      </a-form-model>
 
     </a-layout-content>
 
@@ -112,6 +106,7 @@
 import { STable } from '@/components'
 
 import { postBasicsset } from '@/api/crm'
+import { getlevelAlls } from '@/api/user'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -123,8 +118,6 @@ export default {
     return {
       form:{
         id: undefined,	 //[string]		修改的时候使用		
-        group_name: '',
-        //[string]	是	生效油站名称		
         member_type: 1,
         //[string]	是	会员注册1是注册即会员 2授权手机号		
         member_id: undefined,
@@ -132,7 +125,8 @@ export default {
         initial_day: 7,
         //[string]	是	初始等级有效期
       },
-      initial_day_type: 1
+      initial_day_type: 1,
+      levelList: []
 
     }
   },
@@ -142,14 +136,80 @@ export default {
   props:{
     type:{
       type: String
+    },
+    total:{
+      type: Number
+    },
+    itemData:{
+      type:Object,
+      default:null
     }
   },
   created () {
-    console.log(this.userInfo)
+    // console.log(this.total)
+
+    this.Init()
   },
   methods: {
+    async Init(){
+      let res = await getlevelAlls({type:2})
+      // console.log(res.data)
+      if(res){
+        this.levelList = res.data
+      }
+      if (this.type === 'edit') {
+        // console.log(this.itemData)
+        this.form = {
+          id: this.itemData.id,	 //[string]		修改的时候使用		
+          member_type: this.itemData.member_type,
+          //[string]	是	会员注册1是注册即会员 2授权手机号		
+          member_id: this.itemData.member_id,
+          //[string]	是	初始会员等级		
+          initial_day: this.itemData.initial_day,
+          //[string]	是	初始等级有效期
+        }
+
+        switch (this.form.initial_day) {
+          case 7:
+            this.initial_day_type = 1
+            break;
+          case 30:
+            this.initial_day_type = 2
+            break;
+          default:
+            this.initial_day_type = 3
+            break;
+        }
+      }
+    },
     submit(){
-      console.log(this.form)
+      let that = this
+      if (this.initial_day_type===3&&!this.form.initial_day) {
+        this.$message.error('请先填写完整信息')
+        return
+      }
+      // console.log(this.form)
+      if (this.total&&this.type==='add') {
+        this.$confirm({
+          title: '温馨提示',
+          content: '集团目前已有会员基础设置继续创建将覆盖',
+          okText: '继续',
+          cancelText: '取消',
+          onOk () {
+            that.form.isContinue = true
+            postBasicsset(that.form).then((res)=>{
+              that.exit()
+            })
+          },
+          onCancel () {}
+        })
+      }else{
+        postBasicsset(this.form).then((res)=>{
+          this.exit()
+        })
+      }
+      
+     
     },
     changeDayType(){
       // this.initial_day_type
@@ -169,6 +229,7 @@ export default {
       }
     },
     openModal(){
+      let that = this
       let routerJump = this.$router.resolve({ path: '/crm/member/grow' });
       window.open(routerJump.href, '_blank');
 
@@ -177,9 +238,7 @@ export default {
         title: '操作提示',
         content: '动态等级会员等级是否创建成功？',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          that.Init()
         },
         onCancel () {}
       })

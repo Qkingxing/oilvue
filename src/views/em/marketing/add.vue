@@ -42,7 +42,16 @@
                    部分不可参与
                  </a-radio>
                </a-radio-group>
-               <div v-if="activity_type != 1" style="width: 400px;height: 80px;background-color: #fafafa;"></div>
+               <div v-if="activity_type != 1" style="width: 400px;height: 80px;background-color: #fafafa;">
+                 <a-tree-select
+                   v-model="activePersons"
+                   style="width: 100%"
+                   :tree-data="treeData"
+                   tree-checkable
+                    :replace-fields="{children:'treeList', key:'id', value: 'id', title: 'name'}"
+                   search-placeholder="Please select"
+                 />
+               </div>
              </a-form-item>
              <a-form-item
                :label-col="formItemLayout.labelCol"
@@ -235,6 +244,7 @@ const formTailLayout = {
   wrapperCol: { span: 10, offset: 4 },
 };
 import { getRoleList, getServiceList } from '@/api/manage'
+import { getlevelAlls } from '@/api/user'
 export default {
   name: 'Clist',
   components: {
@@ -242,7 +252,11 @@ export default {
   data () {
     return {
       post_obj:{},
+      treeData:{},
       coupons_name:'',
+      fixed_id:'',
+      dynamic_id:'',
+      activePersons:[],
       coupons_limit:['1','2'],
       validity_type:1,
       limit_time:1,
@@ -260,10 +274,13 @@ export default {
       formItemLayout,
       formTailLayout,
       step:0,
-      yxqValue:[]
+      yxqValue:[],
+      
     }
   },
-  created () {},
+  created () {
+    this.laodLevel()
+  },
   methods: {
     moment,
     range(start, end) {
@@ -272,6 +289,12 @@ export default {
         result.push(i);
       }
       return result;
+    },
+    laodLevel(){
+      getlevelAlls().then(res=>{
+        this.treeData = res.data
+        console.log(this.treeData)
+      })
     },
     handleGdjeChange(){
       

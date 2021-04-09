@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <a-layout v-if="$route.name=='crowd'">
+    <a-layout v-if="$route.name=='crowd'&&pageType=='list'">
       <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
         <div class="actionBtns">
           <div class="left-btns">
@@ -12,8 +12,8 @@
             <a-button disabled> 创建短信 </a-button>
           </div>
           <div class="right-btns" v-if="selectedRows.length>0">
-            <a-button> 删除 </a-button>
-            <a-button> 导出数据 </a-button>
+            <a-button @click="delAll"> 删除 </a-button>
+            <a-button @click="exportAll"> 导出数据 </a-button>
           </div>
           
         </div>
@@ -30,16 +30,21 @@
           >
             <span slot="grouping_name" slot-scope="text, record">
               <template>
-                <router-link :to="{name:'CrmCrowdDetail',query:{id:record.group_id}}">{{text}}</router-link>
+                <router-link :to="{name:'CrmCrowdDetail',query:{id:record.id}}">{{text}}</router-link>
+              </template>
+            </span>
+            <span slot="grouping_type" slot-scope="text">
+              <template>
+                {{text==0?'固定':'条件'}}
               </template>
             </span>
             <span slot="action" slot-scope="text, record">
               <template>
-                <a @click="delTag(record)">刷新</a>
+                <a @click="RefreshGrouping(record)">刷新</a>
                 <a-divider type="vertical" />
-                <a @click="delTag(record)">编辑</a>
+                <a @click="edit(record)">编辑</a>
                 <a-divider type="vertical" />
-                <a @click="delTag(record)">删除</a>
+                <a @click="delGroup(record)">删除</a>
               </template>
             </span>
           </s-table>
@@ -47,62 +52,65 @@
       </a-layout-content>
 
     </a-layout>
-    <router-view />
+    <router-view @back="pageType='list'"/>
+
+    <CrmCrowdAdd 
+      v-if="pageType=='edit'"
+      @back="pageType='list'"
+      :itemId="itemId"
+      :pageType="pageType" />
+
   </div>
 </template>
 
 <script>
 import { STable } from '@/components'
 
-import { getGroupinglist } from '@/api/crm'
+import { getGroupinglist,delGrouping,RefreshGrouping } from '@/api/crm'
 
 export default {
   name: 'Crowd',
   components: {
-    STable
+    STable,
+    CrmCrowdAdd: ()=>import('./add')
   },
   data () {
     return {
+      pageType: 'list',
       // 查询参数
       queryParam: { },
       // 表头
       columns: [
         {
           title: '客户群ID',
-          dataIndex: 'group_id',
-          key: 'group_id',
+          dataIndex: 'id',
         },
         {
           title: '客户群名称',
           dataIndex: 'grouping_name',
-          key: 'grouping_name',
           scopedSlots: { customRender: 'grouping_name' }
         },
         {
           title: '人数',
           dataIndex: 'peo_count',
-          key: 'peo_count',
         },
         {
           title: '类型',
           dataIndex: 'grouping_type',
-          key: 'grouping_type',
+          scopedSlots: { customRender: 'grouping_type' }
         },
         // 暂时不做
         // {
         //   title: '应用活动次数',
         //   dataIndex: 'status',
-        //   key: 'status',
         // },
         {
           title: '客户群创建时间',
           dataIndex: 'create_time',
-          key: 'create_time',
         },
         {
           title: '数据刷新时间',
           dataIndex: 'update_time',
-          key: 'update_time',
         },
         {
           title: '操作',
@@ -141,26 +149,84 @@ export default {
           onChange: this.onSelectChange
         }
       },
-      optionAlertShow: false
+      optionAlertShow: false,
+      itemId:null,
     }
   },
   created () {
     this.tableOption()
   },
   methods: {
-    delTag () {
+    edit(item){
+      this.itemId = item.id
+      this.pageType = 'edit'
+    },
+    // 批量导出
+    exportAll(){
+      let id = this.selectedRows.map(e=>{
+        return e.id
+      })
+      let that = this
+      this.$confirm({
+        title: '提示',
+        content: (
+          <div>
+            <p class="text">报表已生成，请到数据——下载列表中下载</p>
+          </div>
+        ),
+        okText: '去下载',
+        onOk () {
+
+          that.$router.push({
+            path: '/dmp/report/download'
+          })
+        },
+        onCancel () {}
+      })
+
+    },
+    // 刷新
+    RefreshGrouping(item){
+      RefreshGrouping(item.id).then(()=>{
+        this.$message.success('刷新成功')
+        this.$refs.table.refresh()
+      })
+    },
+    // 批量删除
+    delAll(){
+      
+      let id = this.selectedRows.map(e=>{
+        return e.id
+      })
+
+      let that = this
       this.$confirm({
         title: '温馨提示',
-        content: '删除会清除标签全部信息，是否删除？',
+        content: '删除会清除群组全部信息，是否删除？',
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          delGrouping(id).then(()=>{
+            that.$refs.table.refresh()
+          })
+        },
+        onCancel () {}
+      })
+    },
+    // 删除群组
+    delGroup (item) {
+      let that = this
+      this.$confirm({
+        title: '温馨提示',
+        content: '删除会清除群组全部信息，是否删除？',
+        onOk () {
+          delGrouping([item.id]).then(()=>{
+            that.$refs.table.refresh()
+          })
         },
         onCancel () {}
       })
     },
     openAdd () {
+      this.pageType = 'add'
       this.$router.push({
         name: 'CrmCrowdAdd'
       })
