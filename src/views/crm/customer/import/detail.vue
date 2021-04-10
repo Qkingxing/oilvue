@@ -68,7 +68,7 @@
           <span slot="action" slot-scope="text, record">
             <template>
               <div class="action-group" style="text-align:center;">
-                <a-button type="link"> 编辑 </a-button>
+                <a-button type="link" @click="openEdit(record)"> 编辑 </a-button>
               </div>
               
             </template>
@@ -176,6 +176,9 @@ export default {
     }
   },
   methods:{
+    openEdit(item){
+
+    },
     // 批量导出
     exportAll(){
 
