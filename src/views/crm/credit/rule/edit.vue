@@ -1279,7 +1279,7 @@ a{
     line-height: 48px;
     padding: 0 0 0 30px;
     background: #edf2fd;
-    border: 1px solid #37f;
+    border: 1px solid #7C7EE2;
     .teipsText{
       vertical-align: middle;
     }
@@ -1339,7 +1339,7 @@ a{
     background: #fff;
     position: relative;
     span{
-      color: #37f;
+      color: #7C7EE2;
     }
     &::after{
       content: " ";

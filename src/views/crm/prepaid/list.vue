@@ -338,7 +338,7 @@ export default {
   cursor: pointer;
 }
 .showDataForTableForStationSpan{
-  color: #37f;
+  color: #7C7EE2;
 }
 .showDataForTableForStationDiv{
   cursor: pointer;

@@ -518,7 +518,7 @@ export default {
                       font-size: 12px;
                     }
                     span:nth-of-type(3) {
-                      color: #37f;
+                      color: #7C7EE2;
                       font-size: 12px;
                       cursor: pointer;
                     }

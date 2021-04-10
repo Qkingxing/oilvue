@@ -225,7 +225,7 @@ export default {
         .price {
           font-size: 32px;
           font-weight: 700;
-          color: #37f;
+          color: #7C7EE2;
           line-height: 32px;
           margin-right: 2px;
         }

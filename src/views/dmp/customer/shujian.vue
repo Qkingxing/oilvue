@@ -94,7 +94,7 @@ export default {
     cursor: pointer;
 
     &:hover {
-      color: #37f;
+      color: #7C7EE2;
     }
 
     &.actives {

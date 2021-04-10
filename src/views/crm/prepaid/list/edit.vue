@@ -1312,7 +1312,7 @@ export default {
                 font-size: 11px;
                 font-family: PingFangSC-Regular,PingFang SC;
                 font-weight: 400;
-                color: #37f;
+                color: #7C7EE2;
                 line-height: 16px;
               }
             }

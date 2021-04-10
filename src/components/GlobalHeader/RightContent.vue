@@ -418,9 +418,9 @@ export default {
         }
         &.slick-active{
           button{
-            border-color: #37f;
+            border-color: #7C7EE2;
             width: 10px;
-            background: #37f;
+            background: #7C7EE2;
           }
         }
       }

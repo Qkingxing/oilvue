@@ -350,7 +350,7 @@ export default {
                 text-align: center;
               }
               .text {
-                color: #37f;
+                color: #7C7EE2;
                 cursor: pointer;
               }
               .a {

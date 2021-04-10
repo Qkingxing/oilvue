@@ -409,7 +409,7 @@ export default {
                                         .con-art-caption{
                                             font-size: 32px;
                                             font-weight: 700;
-                                            color: #37f;
+                                            color: #7C7EE2;
                                         }
                                         .con-art-unit{
                                             font-size: 14px;

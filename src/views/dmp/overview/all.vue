@@ -214,7 +214,7 @@ export default {
     border-radius: 4px;
 
     &:hover {
-      color: #37f;
+      color: #7C7EE2;
       transition: all 0.5s;
     }
 

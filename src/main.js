@@ -24,7 +24,8 @@ import {
   Loading, CheckboxGroup, CheckboxButton
 
 } from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+// import 'element-ui/lib/theme-chalk/index.css'
+import './assets/element-ui/theme/index.css'
 
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.

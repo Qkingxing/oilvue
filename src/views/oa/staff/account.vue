@@ -401,7 +401,7 @@ export default {
         .f {
           text-align: center;
           width: 112px;
-          color: #37f;
+          color: #7C7EE2;
           cursor: pointer;
         }
       }

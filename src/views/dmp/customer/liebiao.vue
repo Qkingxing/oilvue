@@ -106,7 +106,7 @@ export default {
 .ant-btn {
   border: 1px solid transparent; //自定义边框
   outline: none; //消除默认点击蓝色边框效果
-  color: #37f;
+  color: #7C7EE2;
   margin: 0;
   padding: 0;
   line-height: 59px;
@@ -187,7 +187,7 @@ export default {
         .price {
           font-size: 32px;
           font-weight: 700;
-          color: #37f;
+          color: #7C7EE2;
           line-height: 32px;
           margin-right: 2px;
         }
