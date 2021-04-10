@@ -16,7 +16,7 @@
         </div>
         <div class="descriptions-item">
           <div class="descriptions-item-label">操作人</div>
-          <div class="descriptions-item-content">对外零管演示</div>
+          <div class="descriptions-item-content">{{detail.user_name}}</div>
         </div>
         <div class="descriptions-item">
           <div class="descriptions-item-label">导入状态</div>
