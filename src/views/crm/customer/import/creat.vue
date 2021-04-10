@@ -7,62 +7,63 @@
       </div>
 
       <div class="body import_creat">
-        <a-form>
-          <a-form-item label="客户类型" :colon="false">
+        <a-form-model
+          ref="form"
+          :model="form"
+          :rules="rules"
+          >
+          <a-form-model-item label="客户类型" :colon="false">
             <a-checkbox-group
               v-model="checkboxValue"
               name="checkboxgroup"
               :options="plainOptions"
               @change="onChangeRadio"
             />
-          </a-form-item>
+          </a-form-model-item>
 
-          <a-form-item label="  " :colon="false" class="form-item-group" v-if="checkboxValue.length!=0">
-            <a-form-item label="加油卡名称" :colon="false" v-if="checkboxValue.includes(1)">
-              <a-select style="width: 200px" placeholder="请选择加油卡名称">
-                <a-select-option value="jack">
-                  Jack
+          <a-form-model-item label="  " :colon="false" class="form-item-group" v-if="checkboxValue.length!=0">
+            <a-form-model-item label="加油卡名称" prop="card_id" :colon="false" v-if="checkboxValue.includes(1)">
+              <a-select v-model="form.card_id" style="width: 200px" placeholder="请选择加油卡名称">
+                <a-select-option 
+                  v-for="(item,index) in cards"
+                  :key="index"
+                  :value="item.id">
+                  {{item.card_name}}
                 </a-select-option>
-                <a-select-option value="lucy">
-                  Lucy
-                </a-select-option>
-                <a-select-option value="Yiminghe">
-                  yiminghe
-                </a-select-option>
+
               </a-select>
-            </a-form-item>
-            <a-form-item label="固定等级" :colon="false" v-if="checkboxValue.includes(2)">
-              <a-select style="width: 200px" placeholder="请选择固定等级">
-                <a-select-option value="jack">
-                  Jack
+            </a-form-model-item>
+            <a-form-model-item label="固定等级" prop="level_id" :colon="false" v-if="checkboxValue.includes(2)">
+              <a-select v-model="form.level_id" style="width: 200px" placeholder="请选择固定等级">
+                <a-select-option 
+                  v-for="(item,index) in fixedLevelOptions"
+                  :key="index"
+                  :value="item.id">
+                  {{item.name}}
                 </a-select-option>
-                <a-select-option value="lucy">
-                  Lucy
-                </a-select-option>
-                <a-select-option value="Yiminghe">
-                  yiminghe
-                </a-select-option>
+
               </a-select>
-            </a-form-item>
-            <a-form-item label="动态等级" :colon="false" v-if="checkboxValue.includes(3)">
+            </a-form-model-item>
+            <a-form-model-item label="动态等级" :colon="false" v-if="checkboxValue.includes(3)">
               <ul>
-                <li>铜卡会员&nbsp;&nbsp;&nbsp;&nbsp;所需成长值：0-249</li>
-                <li>铜卡会员&nbsp;&nbsp;&nbsp;&nbsp;所需成长值：0-249</li>
-                <li>铜卡会员&nbsp;&nbsp;&nbsp;&nbsp;所需成长值：0-249</li>
-                <li>铜卡会员&nbsp;&nbsp;&nbsp;&nbsp;所需成长值：0-249</li>
+                <li
+                  v-for="(item,index) in simpleLevels"
+                  :key="index">{{item.level_name}}&nbsp;&nbsp;&nbsp;&nbsp;所需成长值：{{item.growth_start}}-{{item.growth_end}}</li>
 
               </ul>
-            </a-form-item>
-          </a-form-item>
+            </a-form-model-item>
+          </a-form-model-item>
 
-          <a-form-item label="上传数据" :colon="false" class="form-item-upload form-item-nomargin">
+          <a-form-model-item label="上传数据" :colon="false" class="form-item-upload form-item-nomargin">
             <div class="upload-wrapper">
               <div class="upload-content">
                 <span>
                   <a-upload
                     name="file"
-                    :multiple="true"
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    accept=".xlsx"
+                    :multiple="false"
+                    :file-list="fileList"
+                    :before-upload="beforeUpload"
                   >
                     <a-button> 上传 </a-button>
                   </a-upload>
@@ -70,31 +71,33 @@
               </div>
               <div class="upload-tips">当前仅支持xlsx格式的文件（大小在3M以内）</div>
             </div>
-          </a-form-item>
+          </a-form-model-item>
 
-          <a-form-item label="  " :colon="false" class="form-item-desc">
+          <a-form-model-item label="  " :colon="false" class="form-item-desc">
             必须严格按照模板表格的内容填写用户数据，否则可能会出现异常。
-            <a-button type="link">
-              下载导入模板
-            </a-button>
+
+            <a 
+              href="https://web-static-1258898587.cos.ap-guangzhou.myqcloud.com/mp/static/resource/导入模板.xlsx" 
+              download="导入模板">下载导入模板</a>
+              
             <br>
             客户信息按照手机号进行关联，没有手机号的客户信息不会同步到客户端。
-          </a-form-item>
+          </a-form-model-item>
 
-          <a-form-item label="  " :colon="false" class="form-item-handle">
+          <a-form-model-item label="  " :colon="false" class="form-item-handle">
             <div>
-              <a-checkbox >
+              <a-checkbox v-model="isAgree">
                 我已阅读并同意<a-button type="link"> 《数据导入免责声明》 </a-button>
               </a-checkbox>
             </div>
-            <a-button type="primary">
+            <a-button type="primary" @click="save">
               导入
             </a-button>
             <a-button @click="$router.go(-1)" type="info" style="margin-left: 8px;">
               取消
             </a-button>
-          </a-form-item>
-        </a-form>
+          </a-form-model-item>
+        </a-form-model>
 
 
       </div>
@@ -103,6 +106,9 @@
 </template>
 
 <script>
+import { getlevelAlls } from '@/api/user'
+import { querycardlist,simpleLevel,ImportCustomer } from '@/api/crm'
+
 export default {
   name: 'ImportCreat',
   data(){
@@ -113,15 +119,125 @@ export default {
         { label: '固定等级', value: 2 },
         { label: '动态等级', value: 3 },
       ],
-    }
-  },
-  methods:{
-    onChangeRadio(){
-      // console.log(this.checkboxValue)
-      // 数组转字符串
-      let str = this.checkboxValue.toString()
+      cards: [],
+      fixedLevelOptions: [],
+      simpleLevels: [],
+      fileList: [],
+      isAgree: false,
+      form:{
+        file: undefined,	
+        //[file]	是	.xlsx		
+        card_id: undefined,	
+        //[int]		加油卡id		
+        level_id: undefined,	
+        //[int]		固定会员id
+        is_spalevel: undefined,
+        // 动态会员 ，1 开2，关
+      },
+      rules: {
+        card_id: [
+          { required: true, message: '请选择加油卡名称', trigger: 'blur' },
+        ],
+        level_id: [
+          { required: true, message: '请选择固定等级', trigger: 'blur' },
+        ],
+        file: [
+          { required: true, message: '请上传文件', trigger: 'blur' },
+        ],
+        isAgree: [
+          { required: true, message: '请阅读并同意', trigger: 'blur' },
+        ],
+       
+      },
 
     }
+  },
+  created(){
+    this.load()
+  },
+  methods:{
+    async load(){
+      // 加油卡下拉
+      let cardsRes = await querycardlist()
+      // console.log(cardsRes.data)
+      this.cards = cardsRes.data
+      // 固定等级下拉
+      let fixedLevelRes = await getlevelAlls({type:1})
+      // console.log(fixedLevelRes.data)
+      this.fixedLevelOptions = fixedLevelRes.data
+      // 动态等级简表
+      let simpleLevelRes = await simpleLevel()
+      // console.log(simpleLevelRes.data)
+      this.simpleLevels = simpleLevelRes.data
+
+    },
+    save(){
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          if (!this.isAgree) {
+            this.$message.error('请阅读并同意')
+            return
+          }
+          if (!this.fileList.length) {
+            this.$message.error('请上传文件')
+            return
+          }
+          // console.log(this.form)
+          var form = new FormData();
+          form.append("file", this.form.file);
+          if (this.form.card_id) {
+            form.append("card_id", this.form.card_id);
+          }
+          if (this.form.level_id) {
+            form.append("level_id", this.form.level_id);
+          }
+          if (this.form.is_spalevel) {
+            form.append("is_spalevel", this.form.is_spalevel);
+          }
+
+          ImportCustomer(form).then((res)=>{
+            // console.log(res)
+            
+            if (res.code==='200') {
+              this.$message.success('导入成功')
+              this.$router.go(-1)
+            }
+
+          })
+
+        } else {
+          // console.log('error submit!!');
+          return false;
+        }
+      });
+      
+
+      // console.log(this.form)
+
+    },
+    onChangeRadio(){
+      // console.log(this.checkboxValue)
+      // // 数组转字符串
+      // let str = this.checkboxValue.toString()
+      if (!this.checkboxValue.includes(1)) {
+        this.form.card_id = undefined
+      }
+      if (!this.checkboxValue.includes(2)) {
+        this.form.level_id = undefined
+      }
+      if (this.checkboxValue.includes(3)) {
+        this.form.is_spalevel = 1
+      }else{
+        this.form.is_spalevel = 2
+      }
+    },
+    beforeUpload(file) {
+      this.fileList = [];
+      this.fileList = [...this.fileList, file];
+      this.form.file = file
+      return false;
+    },
+
   }
 }
 </script>

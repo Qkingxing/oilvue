@@ -1,6 +1,9 @@
 <template>
   <a-layout>
     <ImportCreat v-if="$route.query.isCreate == 1"/>
+
+    <ImportDetail v-else-if="$route.query.id"/>
+
     <a-layout-content
       v-else
       :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }"
@@ -19,7 +22,17 @@
       <div class="showDataForTable">
         <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData">
           
-          <span slot="import_type" slot-scope="text, record">
+          <span slot="report_name" slot-scope="text, record">
+            <template>
+              <span v-if="record.import_type==2">{{text}}</span>
+
+              <router-link v-else :to="{ path: '/crm/customer/import',query:{ id: record.id } }">
+                {{text}}
+              </router-link>
+
+            </template>
+          </span>
+          <span slot="import_type" slot-scope="text">
             <template>
               <div>
                 {{text==null?'':importTypeList[text].text}}
@@ -30,8 +43,7 @@
           <span slot="action" slot-scope="text, record">
             <template>
               <div class="action-group" style="text-align:center;">
-                <a @click="delTag(record)">下载错误数据</a><br>
-                <a @click="delTag(record)">撤回</a>
+                <a @click="delTag(record)" v-if="record.import_type==1">撤回</a>
               </div>
               
             </template>
@@ -46,14 +58,14 @@
 <script>
 import { STable } from '@/components'
 
-import { getRoleList, getServiceList } from '@/api/manage'
 import { getImportlist } from '@/api/crm'
 
 export default {
   name: 'Import',
   components: {
     STable,
-    ImportCreat: ()=>import('./import/creat')
+    ImportCreat: ()=>import('./import/creat'),
+    ImportDetail: ()=>import('./import/detail')
   },
   data () {
     return {
@@ -69,7 +81,8 @@ export default {
       columns: [
         {
           title: '文件名称',
-          dataIndex: 'report_name'
+          dataIndex: 'report_name',
+          scopedSlots: { customRender: 'report_name' }
         },
         {
           title: '操作人',
@@ -145,7 +158,6 @@ export default {
   },
   created () {
     this.tableOption()
-    getRoleList({ t: new Date() })
   },
   methods: {
     delTag () {
@@ -248,6 +260,10 @@ export default {
 }
 .select-all {
   margin-left: 16px;
+  cursor: pointer;
+}
+.link-text{
+  color: #1890ff;
   cursor: pointer;
 }
 </style>

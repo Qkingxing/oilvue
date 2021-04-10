@@ -150,6 +150,38 @@ export function getImportlist (data) {
     data
   })
 }
+
+// 加油卡下拉
+export function querycardlist () {
+  return PhpRequest({
+    url: '/user/querycardlist',
+    method: 'post',
+  })
+}
+// 动态等级简表
+export function simpleLevel () {
+  return JavaRequest({
+    url: '/customer/query_concise_spalevel',
+    method: 'post',
+  })
+}
+// 客户导入
+export function ImportCustomer (data) {
+  return JavaRequest({
+    url: '/report/Import',
+    method: 'post',
+    data
+  })
+}
+// 客户导入-详情
+export function ImportDetail (data) {
+  return PhpRequest({
+    url: '/user/downloadDefault',
+    method: 'post',
+    data
+  })
+}
+
 // 新增会员基础设置或修改
 export function postBasicsset (data) {
   return PhpRequest({
