@@ -1417,8 +1417,8 @@ export default {
       cursor: pointer;
       overflow: hidden;
       &.activeCardPanel{
-        box-shadow: 0 0 4px 0 #5482eb;
-        border: 1px solid #5482eb;
+        box-shadow: 0 0 4px 0 #7C7EE2;
+        border: 1px solid #7C7EE2;
       }
       img{
         height: 100%;
