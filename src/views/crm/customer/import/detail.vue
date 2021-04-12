@@ -79,7 +79,7 @@
 
 
    
-
+    <EditUserModal ref="EditUserModal"/>
   </a-layout-content>
 </template>
 
@@ -91,6 +91,7 @@ export default {
   name: 'ImportDetail',
   components: {
     STable,
+    EditUserModal: ()=>import('./components/editUserModal')
   },
   data(){
     return {
@@ -177,7 +178,7 @@ export default {
   },
   methods:{
     openEdit(item){
-
+      this.$refs.EditUserModal.show(item)
     },
     // 批量导出
     exportAll(){
