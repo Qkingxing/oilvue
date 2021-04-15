@@ -36,6 +36,7 @@
           ref="table"
           :columns="columns"
           :data="loadData"
+          rowKey="articleId"
         >
           <span slot="intro" slot-scope="text, record">
             <template>
@@ -85,7 +86,7 @@ export default {
         console.log('loadData.parameter', parameter)
         const params = {
           page: parameter.pageNo, // 页码
-          limit: parameter.pageSize // 每页页数
+          size: parameter.pageSize // 每页页数
         }
         if (this.queryParam) {
           params.articleId = this.queryParam.articleId,
@@ -111,15 +112,13 @@ export default {
     handleSelectCategory (item) {
       this.selectCategory = item
       this.queryParam = {
-        articleId: item.id,
-        search: ''
+        search: item.id ? item.name : ''
       }
       this.$refs.table.refresh()
     },
     async getQuestionCategory () {
       const res = await getArticleCategory()
       this.categoryList = res.data.data
-      console.log(this.categoryList)
     },
     onSearch (value) {
       this.queryParam.search = value
@@ -128,7 +127,6 @@ export default {
     async viewDetail (article) {
       this.showDetail = true
       const res = await getArticleDetail({ articleId: article.articleId })
-      console.log(res)
       this.detail = res.data
     }
   }

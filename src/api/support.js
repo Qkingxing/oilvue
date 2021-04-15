@@ -25,3 +25,11 @@ export function getArticleDetail (data) {
     data
   })
 }
+
+// 文章详情
+export function getAllSiteList () {
+  return PhpRequest({
+    url: '/work/sitelistAll',
+    method: 'post'
+  })
+}
