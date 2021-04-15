@@ -394,6 +394,14 @@ export function getIntegralrulelist (data) {
     data
   })
 }
+// 积分记录列表
+export function getIntegralrecordlist (data) {
+  return PhpRequest({
+    url: '/user/integralrecordlist',
+    method: 'post',
+    data
+  })
+}
 // 获取加油站列表
 export function getSitelist (data) {
   return PhpRequest({
