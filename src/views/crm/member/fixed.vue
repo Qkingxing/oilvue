@@ -40,10 +40,15 @@
             slot-scope="discount_list,row">
             <template>
               <div 
+                style="text-align:center;"
                 v-for="(item,index) in discount_list" 
                 :key="index">
-                <span v-if="row.discount_type==1">{{item.oils_name}} 每升优惠{{item.oils_money}}元</span>
-                <span v-if="row.discount_type==2">{{item.oils_name}} 享{{item.oils_discount}}折</span>
+                <template v-if="row.discount_type==1">
+                  {{item.oils_name}} 每升优惠{{item.oils_money}}元
+                </template>
+                <template v-if="row.discount_type==2">
+                  {{item.oils_name}} 享{{item.oils_discount}}折
+                </template>
               </div>
             </template>
           </div>
@@ -121,35 +126,35 @@ export default {
           title: '等级模板',
           dataIndex: 'template_icon',
           scopedSlots: { customRender: 'template_icon' },
-          width: 160
+          width: 172
         },
         {
           title: '等级名称',
           dataIndex: 'level_name',
-          width: 160
+          width: 172
         },
         {
           title: '生效油站',
           scopedSlots: { customRender: 'group_name' },
-          width: 160
+          width: 172
         },
         {
           title: '等级优惠',
           key: 'discount_list',
           dataIndex: 'discount_list',
           scopedSlots: { customRender: 'discount_list' },
-          width: 160
+          width: 172
         },
         {
           title: '等级有效期',
           dataIndex: 'level_status',
           scopedSlots: { customRender: 'level_status' },
-          width: 160
+          width: 172
         },
         {
           title: '最近修改人',
           dataIndex: 'user_name',
-          width: 160
+          width: 172
         },
         {
           title: '查看',
