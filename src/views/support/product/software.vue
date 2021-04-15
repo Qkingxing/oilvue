@@ -19,14 +19,17 @@
                   <el-select
                     multiple
                     collapse-tags
-                    @change="(val)=>selectAll(val,index,cIndex)"
+                    @change="val => selectAll(val, index, cIndex)"
                     placeholder="请选择"
-                    style="width: 240px;">
+                    style="width: 240px;"
+                    size="medium"
+                  >
                     <el-option
                       v-for="(selectItem, selectIndex) in companies"
                       :key="selectIndex"
                       :label="selectItem.name"
-                      :value="selectItem.id">
+                      :value="selectItem.id"
+                    >
                     </el-option>
                   </el-select>
                 </div>
@@ -35,6 +38,9 @@
                 <div class="wrap-item-title">数量</div>
                 <div class="wrap-item-title">radio</div>
               </div>
+            </div>
+            <div class="more_btn">
+              <a-icon type="plus" /><span style="margin-left:8px;">继续添加</span>
             </div>
           </div>
         </div>
@@ -56,12 +62,9 @@ export default {
       companies: []
     }
   },
-  created () {
-  },
+  created () {},
   methods: {
-    selectAll () {
-
-    }
+    selectAll () {}
   }
 }
 </script>
@@ -107,6 +110,20 @@ export default {
         white-space: nowrap;
       }
     }
+  }
+  .more_btn {
+    width: 800px;
+    height: 48px;
+    background: rgb(255, 255, 255);
+    border: 1px dashed rgb(234, 234, 244);
+    display: flex;
+    align-items: center;
+    color: rgb(30, 30, 40);
+    font-size: 14px;
+    padding-left: 26px;
+    box-sizing: border-box;
+    margin-top: 8px;
+    cursor: pointer;
   }
 }
 </style>
