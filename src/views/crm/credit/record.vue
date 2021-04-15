@@ -20,40 +20,48 @@
           </div>
         </div>
       </div>
-      <a-tabs default-active-key="1" size="large">
+      <a-tabs v-model="type" size="large">
         <a-tab-pane key="1" tab="积分变动记录">
           <div class="search-wrap">
-            <div class="screen">
-              <div class="screen-li active">今日</div>
-              <div class="screen-li">本周</div>
-              <div class="screen-li">本月</div>
-              <div class="screen-li">自定义</div>
-              <a-range-picker show-time></a-range-picker>
-            </div>
+            <timePicker @change="onChangeTime"/>
             <div>
-              <a-input-search placeholder="请输入手机号/客户编号" style="width: 200px" />
+              <a-input-search 
+                @search="$refs.table.refresh()"
+                v-model="sreach"
+                placeholder="请输入手机号/客户编号" style="width: 200px" />
               <a-button class="current-exprot">导出数据</a-button>
             </div>
           </div>
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
           >
-            <span slot="action" slot-scope="text, record">
+            <span slot="type" slot-scope="text, record">
               <template>
-                <a @click="delTag(record)">撤回</a>
+                {{typeListText(text).text}}
               </template>
             </span>
+
           </s-table>
         </a-tab-pane>
         <a-tab-pane key="2" tab="积分获取记录">
+          <div class="search-wrap">
+            <timePicker @change="onChangeTime"/>
+            <div>
+              <a-input-search 
+                @search="$refs.table.refresh()"
+                v-model="sreach"
+                placeholder="请输入手机号/客户编号" style="width: 200px" />
+              <a-button class="current-exprot">导出数据</a-button>
+            </div>
+          </div>
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
           >
@@ -65,10 +73,20 @@
           </s-table>
         </a-tab-pane>
         <a-tab-pane key="3" tab="积分消耗记录">
+          <div class="search-wrap">
+            <timePicker @change="onChangeTime"/>
+            <div>
+              <a-input-search 
+                @search="$refs.table.refresh()"
+                v-model="sreach"
+                placeholder="请输入手机号/客户编号" style="width: 200px" />
+              <a-button class="current-exprot">导出数据</a-button>
+            </div>
+          </div>
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
           >
@@ -88,72 +106,97 @@
 <script>
 import { STable } from '@/components'
 
-import { getRoleList, getServiceList } from '@/api/manage'
+import { getIntegralrecordlist } from '@/api/crm'
 
 export default {
   name: 'Record',
   components: {
-    STable
+    STable,
+    timePicker:()=>import('./record/components/timePicker')
   },
   data () {
     return {
+      typeList: [
+        { text: '消费积分', value: 1 },
+        { text: '手动增加', value: 2 },
+        { text: '退款', value: 3 },
+        { text: '订单取消', value: 4 },
+        { text: '导入', value: 5 },
+        { text: '活动获取', value: 6 },
+      ],
+      type:'1',
+      time: {
+        time_type: 1
+      },
+      sreach: '',
       // 表头
       columns: [
         {
-          title: '文件名称',
-          dataIndex: 'no'
+          title: '客户子编号',
+          dataIndex: 'sonnumber'
         },
         {
-          title: '操作人',
-          dataIndex: 'description'
+          title: '手机号',
+          dataIndex: 'mobile'
         },
         {
-          title: '成功数',
-          dataIndex: 'status',
-          needTotal: true
+          title: '类型',
+          dataIndex: 'type',
+          scopedSlots: { customRender: 'type' }
         },
         {
-          title: '失败数',
-          dataIndex: 'time',
-          needTotal: true
+          title: '兑换商品',
+          dataIndex: 'goods_name',
         },
         {
-          title: '总积分',
-          // dataIndex: 'status',
-          needTotal: true
+          title: '积分变动',
+          dataIndex: 'integral',
         },
         {
-          title: '总余额',
-          // dataIndex: 'status',
-          needTotal: true
+          title: '积分总数',
+          dataIndex: 'user_integral',
         },
         {
-          title: '加油卡名称',
-          // dataIndex: 'status',
-          needTotal: true
+          title: '积分变更油站',
+          dataIndex: 'site_name',
         },
         {
-          title: '导入状态',
-          // dataIndex: 'status',
-          needTotal: true
+          title: '时间',
+          dataIndex: 'create_time',
         },
         {
-          title: '导入时间',
-          // dataIndex: 'status',
-          needTotal: true
+          title: '关联订单',
+          dataIndex: 'order_id',
         },
         {
-          title: '操作',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
-        }
+          title: '备注',
+          dataIndex: 'remark',
+        },
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
+        let params = {
+          page: parameter.pageNo, // 页码
+          size: parameter.pageSize, // 每页页数
+          type: this.type,
+          sreach: this.sreach,
+          time_type: this.time.time_type,
+          starting_time: this.time.time_type===5?this.time.time[0]:'',
+          end_time: this.time.time_type===5?this.time.time[1]:'',
+        }
+
+        console.log(this.time)
+        return getIntegralrecordlist(Object.assign(params))
           .then(res => {
-            return res.result
+            console.log(res)
+            return {
+              data: res.data.data, // 列表数组
+              pageNo: parameter.pageNo,  // 当前页码
+              pageSize: parameter.pageSize,  // 每页页数
+              totalCount: res.data.total, // 列表总条数
+              totalPage: res.data.current_page // 列表总页数
+            }
           })
       },
       selectedRowKeys: [],
@@ -171,9 +214,21 @@ export default {
   },
   created () {
     this.tableOption()
-    getRoleList({ t: new Date() })
+
   },
   methods: {
+    typeListText(value){
+      let item = this.typeList.filter(e=>{
+        return e.value === value
+      })[0]
+      // console.log(item)
+      return item
+    },
+    onChangeTime(value){
+      // console.log(value)
+      this.time = value
+      this.$refs.table.refresh()
+    },
     tableOption () {
       if (!this.optionAlertShow) {
         this.options = {
@@ -229,6 +284,7 @@ export default {
     width: 100%;
     .value{
       font-size: 34px;
+      font-weight: 700;
       line-height: 34px;
       color: #040a46;
     }
@@ -241,7 +297,7 @@ export default {
   }
 }
 .customer-statistics{
-  margin-top: 30px;
+  margin-top: 16px;
   width: 102%;
   .invoice-card-box{
     height: 108px;
@@ -267,33 +323,9 @@ export default {
 .search-wrap{
   display: flex;
   justify-content: space-between;
-  .screen{
-    font-size: 12px;
-    line-height: 22px;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-    .screen-li {
-      display: inline-block;
-      width: 48px;
-      height: 24px;
-      line-height: 24px;
-      margin-right: 20px;
-      text-align: center;
-      color: #040a46;
-      font-size: 12px;
-      cursor: pointer;
-      &.active{
-        background-color: #ecf3ff;
-        border-radius: 3px;
-        color: #3c85ff;
-      }
-    }
-  }
+  
 }
 .current-exprot{
-  border-color: #81a8f7;
-  color: #81a8f7;
   margin-left: 15px;
 }
 </style>
