@@ -27,7 +27,7 @@
           </a-menu-item>
         </a-menu>
       </a-layout-sider>
-      <a-layout-content class="content" :style="{ padding: '0 0 24px 24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content class="content" :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
         <div class="search-header">
           <span>{{ selectCategory.name }}</span>
           <a-input-search placeholder="请输入关键字" style="width: 195px" @search="onSearch" />
