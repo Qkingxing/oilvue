@@ -4,6 +4,7 @@
     <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
       <div class="head-title">
         客户积分记录
+        <a-button type="primary">手动新增积分</a-button>
       </div>
       <div class="customer-statistics">
         <div class="invoice-card-box" v-for="(card,key) in headCardList" :key="key">
@@ -35,6 +36,7 @@
             ref="table"
             size="default"
             rowKey="id"
+            :scroll="{ x: true }"
             :columns="columns"
             :data="loadData"
           >
@@ -61,6 +63,7 @@
             ref="table"
             size="default"
             rowKey="id"
+            :scroll="{ x: true }"
             :columns="columns"
             :data="loadData"
           >
@@ -86,6 +89,7 @@
             ref="table"
             size="default"
             rowKey="id"
+            :scroll="{ x: true }"
             :columns="columns"
             :data="loadData"
           >
@@ -245,6 +249,9 @@ export default {
   line-height: 41px;
   border-bottom: 1px solid #eaeaf4;
   line-height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .invoice-card-box{
   position: relative;
