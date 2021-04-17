@@ -34,6 +34,7 @@
         </div>
         <s-table
           ref="table"
+          :scroll="{ x: true }"
           :columns="columns"
           :data="loadData"
           rowKey="articleId"
