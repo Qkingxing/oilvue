@@ -212,8 +212,9 @@ export default {
     }
   },
   created () {
+    // 拉取头部卡片数据
     getIntegralStatistics().then((res=>{
-      console.log(res.data)
+      // console.log(res.data)
       this.headCardList = res.data
     }))
 
