@@ -101,7 +101,8 @@
         </div>
       </div>
     </a-layout-content>
-    <Add v-if="activityType"></Add>
+    <!-- <Add v-if="activityType" @back="activityType =''"></Add> -->
+    <PriceCut v-if="activityType == 102" @back="activityType =''"></PriceCut>
   </a-layout>
 </template>
 
@@ -109,7 +110,8 @@
 export default {
   name: 'ActivityAdd',
   components: {
-    Add: () => import('./activity/add')
+    Add: () => import('./activity/add'),
+    PriceCut: () => import('./activity/priceCut')
   },
   data () {
     return {
