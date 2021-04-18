@@ -4,16 +4,16 @@
     <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
       <div class="head-title">
         客户积分记录
+        <a-button type="primary">手动新增积分</a-button>
       </div>
       <div class="customer-statistics">
-        <div class="invoice-card-box" v-for="(card,index) in 6" :key="index">
-          <div class="box-title"><span>剩余有效积分</span></div>
+        <div class="invoice-card-box" v-for="(card,key) in headCardList" :key="key">
+          <div class="box-title"><span>{{cardText[key]}}</span></div>
           <div class="box-content">
-            <!-- <span decimals="0" class="value">269,383</span> -->
             <countTo
               class="value"
               :startVal="0"
-              :endVal="269383"
+              :endVal="card"
               :duration="3000"
             ></countTo>
             <span class="unit"></span>
@@ -36,10 +36,11 @@
             ref="table"
             size="default"
             rowKey="id"
+            :scroll="{ x: true }"
             :columns="columns"
             :data="loadData"
           >
-            <span slot="type" slot-scope="text, record">
+            <span slot="type" slot-scope="text">
               <template>
                 {{typeListText(text).text}}
               </template>
@@ -62,6 +63,7 @@
             ref="table"
             size="default"
             rowKey="id"
+            :scroll="{ x: true }"
             :columns="columns"
             :data="loadData"
           >
@@ -87,6 +89,7 @@
             ref="table"
             size="default"
             rowKey="id"
+            :scroll="{ x: true }"
             :columns="columns"
             :data="loadData"
           >
@@ -106,7 +109,7 @@
 <script>
 import { STable } from '@/components'
 
-import { getIntegralrecordlist } from '@/api/crm'
+import { getIntegralrecordlist,getIntegralStatistics } from '@/api/crm'
 
 export default {
   name: 'Record',
@@ -116,6 +119,16 @@ export default {
   },
   data () {
     return {
+      headCardList: {},
+      cardText: {
+        grant_integral: '累计发放积分',
+        surplus_integral: '剩余有效积分',
+        consume_integral: '累计消耗积分',
+        expire_integral: '累计过期积分',
+        else_expire_integral: '积分跨站消耗',
+        Add_manually: '手动新增积分',
+        Manual_deduction: '手动减扣积分',
+      },
       typeList: [
         { text: '消费积分', value: 1 },
         { text: '手动增加', value: 2 },
@@ -175,7 +188,7 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
+        // console.log('loadData.parameter', parameter)
         let params = {
           page: parameter.pageNo, // 页码
           size: parameter.pageSize, // 每页页数
@@ -186,10 +199,10 @@ export default {
           end_time: this.time.time_type===5?this.time.time[1]:'',
         }
 
-        console.log(this.time)
+        // console.log(this.time)
         return getIntegralrecordlist(Object.assign(params))
           .then(res => {
-            console.log(res)
+            // console.log(res)
             return {
               data: res.data.data, // 列表数组
               pageNo: parameter.pageNo,  // 当前页码
@@ -199,21 +212,15 @@ export default {
             }
           })
       },
-      selectedRowKeys: [],
-      selectedRows: [],
-
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
+      
     }
   },
   created () {
-    this.tableOption()
+    // 拉取头部卡片数据
+    getIntegralStatistics().then((res=>{
+      // console.log(res.data)
+      this.headCardList = res.data
+    }))
 
   },
   methods: {
@@ -229,22 +236,7 @@ export default {
       this.time = value
       this.$refs.table.refresh()
     },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    }
+
   }
 }
 </script>
@@ -257,6 +249,9 @@ export default {
   line-height: 41px;
   border-bottom: 1px solid #eaeaf4;
   line-height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .invoice-card-box{
   position: relative;
@@ -264,8 +259,8 @@ export default {
   width: 242px;
   display: inline-block;
   text-align: center;
-  margin-right: 20px;
-  margin-bottom: 16px;
+  margin-right: 8px;
+  margin-bottom: 8px;
   box-shadow: 0 0 6px 0 rgba(0,0,0,.1);
   .box-title{
     position: absolute;

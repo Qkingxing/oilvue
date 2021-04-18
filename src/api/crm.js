@@ -394,6 +394,13 @@ export function getIntegralrulelist (data) {
     data
   })
 }
+// 积分记录头部卡片
+export function getIntegralStatistics () {
+  return PhpRequest({
+    url: '/user/integralStatistics',
+    method: 'post'
+  })
+}
 // 积分记录列表
 export function getIntegralrecordlist (data) {
   return PhpRequest({

@@ -20,7 +20,13 @@
 
       <!-- 表格 -->
       <div class="showDataForTable">
-        <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData">
+        <s-table 
+          :scroll="{ x: true }"
+          ref="table" 
+          size="default" 
+          rowKey="id" 
+          :columns="columns" 
+          :data="loadData">
           
           <span slot="report_name" slot-scope="text, record">
             <template>
