@@ -8,31 +8,32 @@
               <a-col :md="24" :sm="24">
                 <a-form-item label="充值时间" class="screen-item">
                   <a-range-picker
+                    v-model="dateRange"
+                    @change="timeChange()"
                     style="margin-left: 10px;"
                     :disabled-date="disabledDate"
                     :disabled-time="disabledRangeTime"
-                    :show-time="{
-                      hideDisabledOptions: true,
-                      defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
-                    }"
-                    format="YYYY-MM-DD HH:mm:ss"
+                    format="YYYY-MM-DD"
                    />
                    <span style="margin: 0 10px;">订单状态：</span>
-                   <a-select default-value="lucy" style="width: 120px">
-                     <a-select-option value="jack">
-                       Jack
+                   <a-select default-value="" v-model="params.tradeStatus" style="width: 120px">
+                     <a-select-option value="">
+                       全部
                      </a-select-option>
-                     <a-select-option value="lucy">
-                       Lucy
+                     <a-select-option value="0">
+                       待支付
+                     </a-select-option>
+                     <a-select-option value="1">
+                       支付成功
                      </a-select-option>
                    </a-select>
-                   <a-input placeholder="请输入订单号后四位" style="width: 200px;margin-left: 10px;"></a-input>
+                   <a-input placeholder="请输入订单号后四位" v-model="params.order_number" style="width: 200px;margin-left: 10px;"></a-input>
                 </a-form-item>
                   
               </a-col>
               <a-col :md="24" :sm="24">
                 <a-form-item>
-                  <a-button type="primary" class="search-btn" style="min-width:82px;"> 搜索 </a-button>
+                  <a-button type="primary" @click="search()" class="search-btn" style="min-width:82px;"> 搜索 </a-button>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -45,32 +46,20 @@
               充值记录
             </span>
           </div>
-          <s-table
-            ref="table"
-            size="default"
-            rowKey="key"
-            :columns="columns"
-            :data="loadData"
-            :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-          >
-          </s-table>
+          <a-table ref="table" :columns="columns"  :rowKey='record=>record.id' :data-source="recordList" :scroll="{ x: 1300 }">
+            <span slot="zf_type" slot-scope="text,record" href="javascript:;">
+             <span v-if="text.zf_type==1">对公转账</span>
+             <span v-if="text.zf_type==2">微信支付</span>
+            </span>
+            <span slot="tradeStatus" slot-scope="text,record" href="javascript:;">
+             <span v-if="text.tradeStatus==0">待支付</span>
+             <span v-if="text.tradeStatus==1">支付成功</span>
+            </span>
+            
+          </a-table>
         </div>
       </a-layout-content>
     </a-layout>
-    <a-modal
-        title="自定义展示"
-        :visible="setVisible"
-        :confirm-loading="setConfirmLoading"
-        @ok="handleSetOk"
-        @cancel="handleSetCancel"
-      >
-      <div style="display: flex;">
-        <span style="flex: 1;">可选字段</span>
-        <a style="flex: 0 0 50px;">重置</a>
-        <a style="flex: 0 0 60px;">恢复默认</a>
-      </div>
-      <a-divider />
-      </a-modal>
     <router-view />
   </div>
 </template>
@@ -78,7 +67,7 @@
 <script>
 import moment from 'moment';
 import { STable } from '@/components'
-import { getRoleList, getServiceList } from '@/api/manage'
+import { getMoneyTransfer } from '@/api/finance'
 export default {
   name: 'RechargeList',
   components: {
@@ -88,71 +77,50 @@ export default {
     return {
       setVisible:false,
       setConfirmLoading: false,
-      searchType:'高级搜索',
-      diyDate:false,
-      orderTime:'',
-      radioValue: 'new',
       value:'',
-      // 查询参数
-      queryParam: {
-        keyType: '86'
-      },
+      dateRange:[],
+      recordList:[],
       // 表头
       columns: [
         {
           title: '充值单号',
-          dataIndex: 'no'
+          dataIndex: 'tradeNo'
         },
         {
           title: '充值金额（元）',
-          dataIndex: 'description'
+          dataIndex: 'totalAmount'
         },
         {
           title: '充值时间',
-          dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'gmtCreate',
         },
         {
           title: '到帐时间',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '优惠金额',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'update_time',
         },
         {
           title: '充值方式',
-          // dataIndex: 'status',
-          needTotal: true
+          scopedSlots: { customRender: 'zf_type' },
+        },
+        {
+          title: '订单状态',
+          scopedSlots: { customRender: 'tradeStatus' },
         },
       ],
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
-      },
       selectedRowKeys: [],
       selectedRows: [],
-
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
+      params:{
+        starting_time:'',
+        end_time:'',
+        order_number:'',
+        tradeStatus:'',
+        page:1,
+        limit:1000,
+      }
     }
   },
   created () {
-    console.log(this.$route.name)
-    this.tableOption()
-    getRoleList({ t: new Date() })
+    this.loadRechargeList()
   },
   methods: {
     moment,
@@ -163,21 +131,19 @@ export default {
       }
       return result;
     },
-    onChangeTableOption(){
-      
+    search(){
+     getMoneyTransfer(this.params).then(res => {
+       this.recordList = res.data
+     })
     },
-    handleSetOk(e) {
-      this.setConfirmLoading = true;
-      setTimeout(() => {
-        this.setVisible = false;
-        this.setConfirmLoading = false;
-      }, 2000);
+    loadRechargeList(){
+      getMoneyTransfer(this.params).then(res => {
+        this.recordList = res.data
+      })
     },
-    handleSetCancel(e) {
-      this.setVisible = false;
-    },
-    advanceSearchChange(){
-      this.searchType == "高级搜索" ? this.searchType="点击收起" :　this.searchType="高级搜索" 
+    timeChange (value, dateString) {
+      this.params.starting_time = moment(this.dateRange[0]._d).format('YYYY-MM-DD')
+      this.params.end_time = moment(this.dateRange[1]._d).format('YYYY-MM-DD')
     },
     disabledDate(current) {
       return current && current > moment().endOf('day');
@@ -196,33 +162,6 @@ export default {
         disabledSeconds: () => [55, 56],
       };
     },
-    onChange(value){
-      value.target.value == 5 ? this.diyDate = true : this.diyDate = false
-    },
-    showEditTag (type) {
-      this.$refs['EditTag'].show(type)
-    },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
-    }
   }
 }
 </script>
