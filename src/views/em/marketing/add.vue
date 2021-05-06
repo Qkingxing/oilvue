@@ -186,20 +186,19 @@
               </a-radio>
             </a-radio-group>
           </a-form-item>
-          <a-form-item
-            :label-col="formItemLayout.labelCol"
-            :wrapper-col="formItemLayout.wrapperCol"
-            label="使用门槛"
-          >
-            <span>消费</span>
-            <a-select default-value="lucy" style="width: 200px;margin-left: 10px;" >
-              <a-select-option value="jack">
-                油品1
-              </a-select-option>
-              <a-select-option value="lucy">
-                油品2
-              </a-select-option>
-            </a-select>
+            <a-form-item label="使用门槛">
+              <span>消费</span>
+              <a-select
+                mode="tags"
+                placeholder="Please select"
+                style="width: 200px"
+                v-model="oils_threshold"
+              >
+                <a-select-option v-for="(item,index) in oilList" :key="index">
+                  {{item.oils_name}}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
             <a-select default-value="lucy" style="width: 50px;margin-left: 10px;" >
               <a-select-option value="jack">
                 原价
@@ -234,6 +233,7 @@
 </template>
 
 <script>
+import { getSiteoillist } from '@/api/oil'
 import moment from 'moment';
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -258,6 +258,7 @@ export default {
       dynamic_id:'',
       activePersons:[],
       coupons_limit:['1','2'],
+      oils_threshold:[],
       validity_type:1,
       limit_time:1,
       effective_day:7,
@@ -273,13 +274,15 @@ export default {
       checkNick: false,
       formItemLayout,
       formTailLayout,
-      step:0,
+      step:1,
       yxqValue:[],
+      oilList:[]
       
     }
   },
   created () {
     this.laodLevel()
+    this.loadOilList()
   },
   methods: {
     moment,
@@ -301,6 +304,14 @@ export default {
     },
     handleGdjeChange(){
       
+    },
+    async loadOilList(){
+      // 油品下拉
+      let oilRes = await getSiteoillist()
+      if (oilRes) {
+        this.oilList = oilRes.data.data
+        console.log( this.oilList)
+      }
     },
     onChangeAmount(e){
       console.log(e)
