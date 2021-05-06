@@ -478,7 +478,7 @@ export default {
   position: absolute;
   right: 24px;
   top: 10px;
-  z-index: 10;
+  z-index: 1;
 }
 .head-title {
   font-size: 16px;

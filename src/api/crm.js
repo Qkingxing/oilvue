@@ -93,6 +93,54 @@ export function getSelectOption (type) {
     data: { type }
   })
 }
+// 获取客群详情
+export function getdefaultGroup (id) {
+  return PhpRequest({
+    url: '/user/getdefaultGroup',
+    method: 'post',
+    data: { id }
+  })
+}
+// 新增客户群体
+export function addGrouping (data) {
+  return JavaRequest({
+    url: '/customer/addGrouping',
+    method: 'post',
+    data
+  })
+}
+// 编辑客户群体
+export function updateGrouping (data) {
+  return PhpRequest({
+    url: '/user/updateGrouping',
+    method: 'post',
+    data
+  })
+}
+// 删除客户群体
+export function delGrouping (id) {
+  return PhpRequest({
+    url: '/user/delGrouping',
+    method: 'post',
+    data: {id}
+  })
+}
+// 刷新客户群体
+export function RefreshGrouping (id) {
+  return PhpRequest({
+    url: '/user/RefreshGrouping',
+    method: 'post',
+    data: {id}
+  })
+}
+// 固定客户群体-用户列表
+export function defaultGrouping (data) {
+  return PhpRequest({
+    url: '/user/defaultGrouping',
+    method: 'post',
+    data
+  })
+}
 
 // 客户导入列表
 export function getImportlist (data) {
@@ -102,6 +150,38 @@ export function getImportlist (data) {
     data
   })
 }
+
+// 加油卡下拉
+export function querycardlist () {
+  return PhpRequest({
+    url: '/user/querycardlist',
+    method: 'post',
+  })
+}
+// 动态等级简表
+export function simpleLevel () {
+  return JavaRequest({
+    url: '/customer/query_concise_spalevel',
+    method: 'post',
+  })
+}
+// 客户导入
+export function ImportCustomer (data) {
+  return JavaRequest({
+    url: '/report/Import',
+    method: 'post',
+    data
+  })
+}
+// 客户导入-详情
+export function ImportDetail (data) {
+  return PhpRequest({
+    url: '/user/downloadDefault',
+    method: 'post',
+    data
+  })
+}
+
 // 新增会员基础设置或修改
 export function postBasicsset (data) {
   return PhpRequest({
@@ -310,6 +390,21 @@ export function getIntegralrulelist (data) {
   }
   return PhpRequest({
     url: '/user/integralrulelist',
+    method: 'post',
+    data
+  })
+}
+// 积分记录头部卡片
+export function getIntegralStatistics () {
+  return PhpRequest({
+    url: '/user/integralStatistics',
+    method: 'post'
+  })
+}
+// 积分记录列表
+export function getIntegralrecordlist (data) {
+  return PhpRequest({
+    url: '/user/integralrecordlist',
     method: 'post',
     data
   })

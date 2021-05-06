@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import { SettingDrawer, updateTheme } from '@ant-design-vue/pro-layout'
 import { i18nRender } from '@/locales'
 import { mapState } from 'vuex'
@@ -122,6 +123,17 @@ export default {
 
       // 是否手机模式
       isMobile: false
+    }
+  },
+  watch: {
+    siderWidth(newV,oldV){
+      let dom = $('aside .ant-layout-sider-children')
+      if (dom) {
+        // console.log(dom)
+        dom.css({
+          width: newV
+        })
+      }
     }
   },
   computed: {

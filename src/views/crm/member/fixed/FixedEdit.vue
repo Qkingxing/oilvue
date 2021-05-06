@@ -625,10 +625,10 @@ export default {
         align-items: center;
         background-color: #f5f5fa;
         &.active{
-          border-color: #37f;
+          border-color: #7C7EE2;
         }
         &:hover{
-          border-color: #37f;
+          border-color: #7C7EE2;
         }
         img{
           border-radius: 4px;
@@ -704,7 +704,7 @@ export default {
         margin-right: 16px;
       }
       .handle{
-        color: #37f;
+        color: #7C7EE2;
         cursor: pointer;
       }
     }

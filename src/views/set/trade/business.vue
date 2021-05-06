@@ -226,7 +226,7 @@ export default {
       text-align: left;
       justify-content: start;
       .value{
-        color: #37f;
+        color: #7C7EE2;
       }
     }
   }

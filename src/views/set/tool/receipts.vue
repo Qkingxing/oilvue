@@ -21,8 +21,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -181,8 +181,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -340,8 +340,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -499,8 +499,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -658,8 +658,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -817,8 +817,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -976,8 +976,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -1135,8 +1135,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -1294,8 +1294,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -1453,8 +1453,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -1612,8 +1612,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -1771,8 +1771,8 @@
             <div  class="ticket_wrap">
               <div   class="ticketBox">
                 <img  src="./logo.png" class="logo">
-                <span  class="station_name">{{station_info_.station_name.name}}</span>
-                <span  class="small_title">（客户联）</span>
+                <span v-if="listData[0]?listData[0].list[0].checked:false" class="station_name">{{listData[0]?listData[0].list[0].preview_value:''}}</span>
+                <span  class="small_title">（{{radioType==1?'客户联':(radioType==2?'商户联':'客户补打联')}}）</span>
     
     <div  :class="{ oil_msg_wrap:item.title=='consumption_detail',border_style: item.list[item.list.length-1].checked }" class="text_wrap" v-for="(item,index) in listData" :key="index">
       <template v-if="item.title=='payment_info'">
@@ -2022,15 +2022,18 @@ export default {
         this.setReceiptstylelist()
       },
       tabChange(type){
+        this.radioType=1
         this.type=type
+        
         this.setReceiptstylelist()
       },
       setReceiptstylelist(){
         let that=this
         let type=''
-        switch(that.type){
+        console.log(that.type,that.radioType)
+        switch(Number(that.type)){
           case 1:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=1
                 break;
@@ -2044,7 +2047,7 @@ export default {
 
             break;
           case 2:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=4
                 break;
@@ -2058,7 +2061,7 @@ export default {
 
             break;
           case 3:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=7
                 break;
@@ -2072,7 +2075,7 @@ export default {
 
             break;
           case 4:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=10
                 break;
@@ -2086,7 +2089,7 @@ export default {
 
             break;
           case 5:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=13
                 break;
@@ -2100,7 +2103,7 @@ export default {
 
             break;
           case 6:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=16
                 break;
@@ -2114,7 +2117,7 @@ export default {
 
             break;
           case 7:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=19
                 break;
@@ -2128,7 +2131,7 @@ export default {
 
             break;
           case 8:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=22
                 break;
@@ -2142,7 +2145,7 @@ export default {
 
             break;
           case 9:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=25
                 break;
@@ -2156,7 +2159,7 @@ export default {
 
             break;
           case 10:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=28
                 break;
@@ -2170,7 +2173,7 @@ export default {
 
             break;
           case 11:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=31
                 break;
@@ -2184,7 +2187,7 @@ export default {
 
             break;
           case 12:
-            switch(that.radioType){
+            switch(Number(that.radioType)){
               case 1:
                 type=34
                 break;

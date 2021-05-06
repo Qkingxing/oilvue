@@ -1312,7 +1312,7 @@ export default {
                 font-size: 11px;
                 font-family: PingFangSC-Regular,PingFang SC;
                 font-weight: 400;
-                color: #37f;
+                color: #7C7EE2;
                 line-height: 16px;
               }
             }
@@ -1417,8 +1417,8 @@ export default {
       cursor: pointer;
       overflow: hidden;
       &.activeCardPanel{
-        box-shadow: 0 0 4px 0 #5482eb;
-        border: 1px solid #5482eb;
+        box-shadow: 0 0 4px 0 #7C7EE2;
+        border: 1px solid #7C7EE2;
       }
       img{
         height: 100%;

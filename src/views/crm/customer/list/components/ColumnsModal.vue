@@ -242,7 +242,7 @@ export default {
     color: #1f2e4d;
   }
   .headerRight {
-    color: #37f;
+    color: #7C7EE2;
     flex: 1;
     text-align: right;
     span {

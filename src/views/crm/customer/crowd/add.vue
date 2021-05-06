@@ -1,6 +1,6 @@
 
 <template>
-  <a-layout>
+  <a-layout v-loading="loading">
     <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '600px' }">
       <div class="head-title">
         <span>
@@ -9,12 +9,18 @@
       </div>
       <div class="select-info">
         <div class="label">客群名称</div>
-        <a-form layout="inline">
-          <a-form-item>
+        <a-form-model layout="inline" ref="form" :model="form">
+          <a-form-model-item
+            prop="grouping_name"
+            :rules="{
+            required: true,
+            message: '请输入人群名称',
+            trigger: 'blur',
+          }">
             <a-input v-model="form.grouping_name" :maxLength="10" placeholder="请输入人群名称" style="width:300px;"/>
-            <span style="margin-left: -45px; color: rgb(199, 199, 199); position: relative;">10/10</span>
-          </a-form-item>
-        </a-form>
+            <span style="margin-left: -45px; color: rgb(199, 199, 199); position: relative;">{{form.grouping_name.length}}/10</span>
+          </a-form-model-item>
+        </a-form-model>
       </div>
       <div class="select-info">
         <div class="label">
@@ -80,7 +86,7 @@
             </div>
             <div class="sub-comtent">
               <!-- 多选 -->
-              <a-checkbox-group v-if="cItem.type===2">
+              <a-checkbox-group v-model="cItem.data" v-if="cItem.type===2">
                 <a-checkbox 
                   class="ant-checkbox-group-item"
                   v-for="(checkItem,checkIndex) in cItem.info"
@@ -97,13 +103,17 @@
                     <a-select-option 
                       v-for="(selectItem, selectIndex) in customItem.list"
                       :key="selectIndex"
-                      :value="selectItem.name">
+                      :value="selectItem.name"
+                      :disabled="disabled(index, cIndex,customIndex,selectItem.name)">
                       {{selectItem.name}}
                     </a-select-option>
                   </a-select>
 
-                  <a-form-item>
+                  <a-form-item
+                    :validate-status="customItem.validateStatus"
+                    :help="customItem.help">
                     <a-input-number 
+                      @change="onChangeNum(index, cIndex,customIndex)"
                       v-model="customItem.areaLeft" 
                       :min="0"
                       :precision="customItem.precision" 
@@ -113,6 +123,7 @@
                   <div class="bt" v-if="customItem.name==='区间'">
                     <span style="margin-right: 8px;">至</span>
                     <a-input-number 
+                      @change="onChangeNum(index, cIndex,customIndex)"
                       v-model="customItem.arearight" 
                       :min="0"
                       :precision="customItem.precision" 
@@ -173,8 +184,11 @@
                     </a-select-option>
                   </a-select>
 
-                  <a-form-item>
+                  <a-form-item
+                    :validate-status="customItem.validateStatus"
+                    :help="customItem.help">
                     <a-input-number 
+                      @change="onChangeNum(index, cIndex,customIndex)"
                       v-model="customItem.areaLeft" 
                       :min="0" 
                       :precision="customItem.precision" 
@@ -184,6 +198,7 @@
                   <div class="bt" v-if="customItem.name==='区间'">
                     <span style="margin-right: 8px;">至</span>
                     <a-input-number 
+                      @change="onChangeNum(index, cIndex,customIndex)"
                       v-model="customItem.arearight" 
                       :min="0"
                       :precision="customItem.precision" 
@@ -219,16 +234,20 @@
         <a-button style="margin-left: 8px;" size="large" @click="exit"> 取消 </a-button>
       </div>
     </a-layout-content>
+
+    <CrowdAddModal ref="CrowdAddModal" @ok="saveAfter"/>
   </a-layout>
 </template>
 
 <script>
 import _ from 'lodash'
-import { getSelectOption } from '@/api/crm'
+import { getSelectOption,addGrouping,getdefaultGroup,updateGrouping } from '@/api/crm'
 
 export default {
   name: 'CrmCrowdAdd',
-  components: {},
+  components: {
+    CrowdAddModal:()=>import('./components/modal')
+  },
   data () {
     return {
       value: [],
@@ -238,11 +257,15 @@ export default {
         grouping_type: 0,//客群类型 0：固定人群，1：条件人群
         conditions: [],
       },
+      loading: false,
     }
   },
   props:{
     pageType:{
       type: String
+    },
+    itemId:{
+      type: Number
     }
   },
   created () {
@@ -251,23 +274,123 @@ export default {
   },
   methods: {
     async Init(){
+      this.loading = true
       let res = await getSelectOption(this.form.grouping_type)
-      console.log(res.data)
+      // console.log(res.data)
       this.options = res.data
 
       this.form.conditions = _.cloneDeep(res.data)
 
+      if(this.pageType==='edit'){
+        // console.log(this.itemId)
+        let formRes = await getdefaultGroup(this.itemId)
+        // console.log(formRes.data)
+        this.form = formRes.data
+        let value = []
+        this.form.conditions.forEach((e,i)=>{
+          e.treelist.forEach((ele,ind)=>{
+            if(ele.isShow){
+              let arr = [e.id, ele.id]
+              value.push(arr)
+            }
+            // 洗掉数值报错信息
+            ele.info.forEach(eee=>{
+              eee.help = ''
+              eee.validateStatus = ''
+            })
+          })
+        })
+        this.value = value
 
-
+      }
+      this.loading = false
+    },
+    saveAfter(){
+      let that = this
+      if (that.pageType ==='add'||!that.pageType) {
+        addGrouping(that.form).then(()=>{
+          that.exit()
+        })
+      }
+      if (that.pageType ==='edit') {
+        updateGrouping(that.form).then(()=>{
+          that.exit()
+        })
+      }
     },
     save(){
-      console.log(this.form)
+      
+      let that = this
+      
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          that.checkForm().then(()=>{
+
+            that.$refs.CrowdAddModal.show(that.form)
+
+          }).catch(()=>{})
+        
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    // 表单校验
+    checkForm(){
+      return new Promise((resolve, reject)=>{
+        let isError = false
+        let erroeText = '请至少添加一项信息筛选!'
+
+        if (!this.value.length&&!isError) {
+          isError = true
+        }
+
+        this.form.conditions.forEach((element,index)=>{
+          element.treelist.forEach((ele,i)=>{
+            if (ele.isShow) {
+              // 多选
+              if (ele.type===2&&(!ele.data||!ele.data.length)&&!isError) {
+                isError = true
+              }
+              // 下拉
+              if (ele.type===4&&(!ele.data||!ele.data.length)&&!isError) {
+                isError = true
+              }
+              ele.info.forEach((e,j)=>{
+                // 组合（下拉+数字）
+                if (ele.type===3&&!isError&&(e.name===''||!e.areaLeft)) {
+                  isError = true
+                }
+                if (ele.type===3&&!isError&&e.name==='区间'&&(!e.areaLeft||!e.arearight||e.areaLeft>e.arearight)) {
+                  isError = true
+                }
+                // 组合（下拉+下拉+数字）
+                if (ele.type===5&&!isError&&(e.name2===''||e.name===''||!e.areaLeft)) {
+                  isError = true
+                }
+                if (ele.type===5&&!isError&&e.name==='区间'&&(e.name2===''||!e.areaLeft||!e.arearight||e.areaLeft>e.arearight)) {
+                  isError = true
+                }
+              })
+            }
+          })
+        })
+
+        if (isError) {
+          this.$message.error(erroeText)
+          reject()
+        }else{
+          resolve()
+        }
+      })
     },
     // 变更客群类型
     onChangeType(){
       getSelectOption(this.form.grouping_type).then((res)=>{
         this.options = res.data
         this.form.conditions = _.cloneDeep(res.data)
+        this.value = []
       })
     },
     // 全选select
@@ -334,6 +457,41 @@ export default {
         this.form.conditions[index].isShow = false
       }
     },
+    // 禁用选项
+    disabled(index, cIndex,customIndex,name){
+      let arr = this.form.conditions[index].treelist[cIndex].info.map(e=>{
+        return e.name
+      })
+
+      if (name==='区间') {
+        return false
+      }
+      
+      if (arr.includes(name)) {
+        return true
+      }
+
+    },
+    // 校验区间数字
+    onChangeNum(index, cIndex,customIndex){
+      let obj = this.form.conditions[index].treelist[cIndex].info[customIndex]
+      // console.log(obj)
+      if (obj.name==='区间'&&obj.areaLeft&&obj.arearight) {
+        
+        if (obj.areaLeft > obj.arearight) {
+          console.log(obj.areaLeft)
+          console.log(obj.arearight)
+          obj.help = '左边不能大于右边'
+          obj.validateStatus = 'error'
+        }else{
+          obj.help = ''
+          obj.validateStatus = ''
+        }
+      }else{
+        obj.help = ''
+        obj.validateStatus = ''
+      }
+    },
     // 增加一个区间小条目
     addSelectItem(index, cIndex,customIndex){
       // console.log(this.form.conditions[index].treelist[cIndex].info[customIndex])
@@ -342,7 +500,7 @@ export default {
       // console.log(obj)
       obj.areaLeft = null
       obj.arearight = null
-      obj.name = ''
+      obj.name = undefined
       if (this.form.conditions[index].treelist[cIndex].info.length===8) {
         return
       }
@@ -400,6 +558,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+
 .ant-form-item{
   margin-bottom: 0;
 }
@@ -547,5 +706,10 @@ export default {
   padding: 0 19px;
   height: 40px;
   line-height: 40px;
+}
+</style>
+<style lang="less">
+.el-cascader-menu__wrap{
+  height: 240px;
 }
 </style>
