@@ -2,6 +2,7 @@
   <div class="overview">
     <a-layout v-if="$route.name=='balance'">
       <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
+        <h3 class="o-title">结算</h3>
         <a-divider />
         <div class="screen-box">
           <a-form layout="inline" >
@@ -68,25 +69,6 @@
                 </a-form-item>
               </a-col>
               <a-col :md="24" :sm="24">
-                <a-form-item class="screen-item-inline">
-                  <span class="item-title">业务类型</span>
-                  <a-select mode="multiple" default-value="lucy" style="width: 120px" @change="handleChange">
-                    <a-select-option value="jack">
-                      Jack
-                    </a-select-option>
-                    <a-select-option value="lucy">
-                      Lucy
-                    </a-select-option>
-                    <a-select-option value="disabled">
-                      Disabled
-                    </a-select-option>
-                    <a-select-option value="Yiminghe">
-                      yiminghe
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="24" :sm="24">
                 <a-form-item>
                   <a-button type="primary" class="search-btn" style="min-width:82px;" @click="toSearch()"> 搜索 </a-button>
                   <a-button style="min-width:82px;margin-left: 10px;"> 导出 </a-button>
@@ -132,7 +114,6 @@ export default {
     return {
       setVisible: false,
       setConfirmLoading: false,
-      searchType: '高级搜索',
       diyDate: false,
       form: {
         handle_starting: '',
@@ -301,9 +282,6 @@ export default {
     },
     handleSetCancel (e) {
       this.setVisible = false
-    },
-    advanceSearchChange () {
-      this.searchType == '高级搜索' ? this.searchType = '点击收起' :　this.searchType = '高级搜索'
     },
     disabledDate (current) {
       return current && current < moment().endOf('day')
