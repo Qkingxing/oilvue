@@ -1,10 +1,10 @@
 
 <template>
   <a-layout>
-    <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
+    <a-layout-content v-if="pageType=='list'" :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
       <div class="head-title">
         客户积分记录
-        <a-button type="primary">手动新增积分</a-button>
+        <a-button type="primary" @click="pageType='add'">手动新增积分</a-button>
       </div>
       <div class="customer-statistics">
         <div class="invoice-card-box" v-for="(card,key) in headCardList" :key="key">
@@ -103,6 +103,8 @@
       </a-tabs>
     </a-layout-content>
 
+    <AddRecord ref="AddRecord" v-if="pageType=='add'" @back="pageType='list'"/>
+
   </a-layout>
 </template>
 
@@ -115,10 +117,12 @@ export default {
   name: 'Record',
   components: {
     STable,
-    timePicker:()=>import('./record/components/timePicker')
+    timePicker:()=>import('./record/components/timePicker'),
+    AddRecord: ()=>import('./record/Add'),
   },
   data () {
     return {
+      pageType: 'list',
       headCardList: {},
       cardText: {
         grant_integral: '累计发放积分',
