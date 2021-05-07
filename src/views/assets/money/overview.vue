@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-layout v-if="$route.name=='Aoverview'">
+    <a-layout v-if="$route.name=='Aoverview'" v-show="wxPayStatus==1">
       <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }" v-if="false">
         <h3 class="o-title">账户概览</h3>
         <a-divider />
@@ -15,7 +15,7 @@
             <a-form layout="inline" style="margin-left: 30px;">
               <div style="margin-top:30px">
                 <span style="margin-right: 10px;">充值账户</span>
-                <span>第一集团</span>
+                <span>{{companyName}}</span>
               </div>
               <div style="margin-top:30px">
                 <span style="margin-right: 10px;">账户余额</span>
@@ -30,13 +30,13 @@
               <a-button type="primary" @click="toWxPay()">确认充值</a-button>
               <a-button style="margin-left: 20px;">取消</a-button>
             </div>
-            <img :src="wxPayImg" alt="">
+            
           </a-tab-pane>
           <a-tab-pane key="2" tab="对公汇款" force-render>
             <a-form layout="inline" style="margin-left: 30px;">
               <div style="margin-top:30px">
                 <span style="margin-right: 10px;">充值账户</span>
-                <span>第一集团</span>
+                <span>{{companyName}}</span>
               </div>
               <div style="margin-top:30px">
                 <span style="margin-right: 10px;">账户余额</span>
@@ -44,7 +44,7 @@
               </div>
               <div style="margin-top:30px">
                 <span style="margin-right: 10px;">充值金额</span>
-                <span><a-input type="number" style="width: 90px;" v-model="wxParams.money"></a-input> 元</span>
+                <span><a-input type="number" style="width: 90px;" v-model="dgParams.recharge"></a-input> 元</span>
               </div>
               <div style="margin-top:30px">
                 <span style="margin-right: 10px;">回款流程</span>
@@ -56,30 +56,30 @@
                   <p class="tips">可使用任意银行卡汇款，实际汇款户名必须与所填户名一致，才可充值到账</p>
                   <div>
                     <span>汇款姓名</span>
-                    <a-input style="width:200px" type="text" placeholder="请输入汇款户名">></a-input>
+                    <a-input v-model="dgParams.money_name" style="width:200px" type="text" placeholder="请输入汇款户名">></a-input>
                   </div>
                   <div>
                     <span>汇款账号</span>
-                    <a-input style="width:200px" type="text" placeholder="请输入汇款账号">></a-input>
+                    <a-input v-model="dgParams.money_account" style="width:200px" type="text" placeholder="请输入汇款账号">></a-input>
                   </div>
                   <div>
                     <span>汇款回单号</span>
-                    <a-input style="width:200px" type="text" placeholder="请输入汇款回单号">></a-input>
+                    <a-input v-model="dgParams.money_number" style="width:200px" type="text" placeholder="请输入汇款回单号">></a-input>
                     <span class="memo">注：回单号和汇款截图二选一即可</span>
                   </div>
                   <div>
                     <span>汇款截图</span>
                      <a-upload
-                        style="vertical-align: top;"
                         name="avatar"
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
-                        action="https://oiljava.ldyxx.com:4435/goods/FileImg"
+                        action="https://oiljava.ldyxx.com/goods/FileImg"
+                        :data="data1"
                         :before-upload="beforeUpload"
                         @change="handleChange"
                       >
-                        <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                        <img v-if="dgParams.money_icon" :src="dgParams.money_icon" alt="avatar" />
                         <div v-else>
                           <a-icon :type="loading ? 'loading' : 'plus'" />
                           <div class="ant-upload-text">
@@ -87,6 +87,7 @@
                           </div>
                         </div>
                       </a-upload>
+                      <div class="text">请上传形象照，图片大小不超过1M</div>
                   </div>
                 </div>
                 <div class="step-title" style="margin-left: 70px;">
@@ -128,72 +129,150 @@
             </a-form>
             
             <div style="margin-left: 30px;margin-top: 30px;">
-              <a-button type="primary" @click="toWxPay()">确认充值</a-button>
+              <a-button type="primary" @click="toDgPay()">确认充值</a-button>
               <a-button style="margin-left: 20px;">取消</a-button>
             </div>
           </a-tab-pane>
         </a-tabs>
       </a-layout-content>
     </a-layout>
+    <a-layout v-if="wxPayStatus==2" style="background-color: #FFFFFF;">
+      <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
+        <a-result
+          status="success"
+          title="充值成功"
+        >
+          <template>
+            <a-button @click="wxPayStatus = 1">
+              返回
+            </a-button>
+          </template>
+        </a-result>
+      </a-layout-content>
+    </a-layout>
+    <a-modal
+      title="线上充值"
+      :visible="wxVisible"
+      @ok="wxVisible = false"
+      @cancel="wxVisible = false"
+      style="text-align: center;"
+    >
+    <img :src="wxPayImg" alt="">
+    </a-modal>
   </div>
 </template>
 <script>
-import { getBasic, wxPay } from '@/api/finance'
+import { getBasic, wxPay, addMoneyTransfer,checkwxPay } from '@/api/finance'
 import store from '@/store'
+import { isEmpty } from '@/utils/lzz'
 export default {
     name: 'Aoverview',
     data () {
       return {
+        wxVisible:false,
         loading: false,
-        imageUrl: '',
         wxPayImg:'',
+        wxPayStatus:'1',
         wxParams:{
           money:'',
           body:'账户充值',
           uid:''
         },
+        dgParams:{
+          recharge:'',
+          money_name:'',
+          money_account:'',
+          money_number:'',
+          money_icon:'',
+        },
+        data1: {
+          file: {},
+        },
+        companyName:'',
         accountBalance: ''
       }
     },
     created () {
+      console.log(store)
       this.wxParams.uid = store.getters.userId
       if (store.getters.site_id === (-1)) {
         this.wxParams.group_id = store.getters.group_id
+        this.dgParams.group_id = store.getters.group_id
+        this.companyName = store.getters.userInfo.group_name
       } else {
         this.wxParams.site_id = store.getters.site_id
+        this.dgParams.site_id = store.getters.site_id
+        this.companyName = store.getters.userInfo.site_name
       }
       this.loadBasic()
+    },
+    beforeDestroy() {
+      clearInterval(this.timer);
     },
     methods: {
       handleChange(info) {
         if (info.file.status === 'uploading') {
-          this.loading = true;
-          return;
+          this.loading = true
+          return
         }
         if (info.file.status === 'done') {
           // Get this url from response in real world.
-          console.log(info)
-          // getBase64(info.file.originFileObj, imageUrl => {
-          //   this.imageUrl = imageUrl;
-          //   this.loading = false;
-          // });
+          this.dgParams.money_icon = info.file.response.data
+          // getBase64(info.file.response.data, (imageUrl) => {
+          // 	console.log(imageUrl)
+          //   this.imageUrl = imageUrl
+          this.loading = false
+          // })
         }
       },
       beforeUpload(file) {
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        this.data1.file = file
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
         if (!isJpgOrPng) {
-          this.$message.error('You can only upload JPG file!');
+          this.$message.error('请上传 JPG 或 IPG 格式的照片!')
         }
-        const isLt2M = file.size / 1024 / 1024 < 2;
+        const isLt2M = file.size / 1024 / 1024 < 2
         if (!isLt2M) {
-          this.$message.error('Image must smaller than 2MB!');
+          this.$message.error('Image must smaller than 2MB!')
         }
-        return isJpgOrPng && isLt2M;
+        return isJpgOrPng && isLt2M
+      },
+      toDgPay(){
+        if(isEmpty(this.dgParams.recharge)){
+          this.$message.error('请输入对公转账金额');
+          return;
+        }
+        if(isEmpty(this.dgParams.money_name)){
+          this.$message.error('请输入汇款姓名');
+          return;
+        }
+        if(isEmpty(this.dgParams.money_account)){
+          this.$message.error('请输入汇款账号');
+          return;
+        }
+        if(isEmpty(this.dgParams.money_icon) && isEmpty(this.dgParams.money_number)){
+          this.$message.error('请输入汇款回单号或汇款截图');
+          return;
+        }
+        
+        addMoneyTransfer(this.dgParams).then(res=>{
+          this.$message.error('充值成功');
+        })
       },
       toWxPay(){
+        if(isEmpty(this.wxParams.money)){
+          this.$message.error('请输入对公转账金额');
+          return;
+        }
         wxPay(this.wxParams).then(res=>{
           this.wxPayImg = window.URL.createObjectURL(res)
-          console.log(this.wxPayImg)
+          this.wxVisible = true;
+          this.timer = setInterval(() => {
+            checkwxPay(this.wxParams).then(resp=>{
+              this.wxPayStatus = resp.data.tradeStatus
+              console.log(this.wxPayStatus)
+            })
+          }, 1000);
         })
       },
       async loadBasic () {
@@ -295,6 +374,9 @@ export default {
       height: 40px;
       vertical-align: top;
     }
+  }
+  .avatar-uploader{
+    vertical-align: top;
   }
   .avatar-uploader > .ant-upload {
     width: 128px;

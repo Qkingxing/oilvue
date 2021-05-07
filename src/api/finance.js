@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import JavaRequest from '@/utils/JavaRequest'
+import PhpRequest from '@/utils/PhpRequest'
 import store from '@/store'
 const api = {
   basic: '/wxPay/getBasic'
@@ -38,5 +39,39 @@ export function wxPay(parameter) {
     url: _url,
     method: 'get',
     responseType: 'blob'
+  })
+}
+
+// 对公转账
+export function addMoneyTransfer(parameter) {
+  return JavaRequest({
+    url: '/wxPay/addMoneyTransfer',
+    method: 'post',
+     data: parameter
+  })
+}
+
+// 查询微信支付结果回调
+export function checkwxPay(parameter) {
+  return PhpRequest({
+    url: '/user/checkwxPay',
+    method: 'post',
+     data: parameter
+  })
+}
+
+// 班结详细列表
+export function getBjList(parameter) {
+  return JavaRequest({
+    url: '/order/query_order_class_knot',
+    method: 'post',
+     data: parameter
+  })
+}
+// 班结id列表
+export function getBjIdList() {
+  return PhpRequest({
+    url: '/user/getAllclass_knot',
+    method: 'post',
   })
 }

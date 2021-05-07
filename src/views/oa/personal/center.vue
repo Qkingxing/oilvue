@@ -92,7 +92,7 @@
                     list-type="picture-card"
                     class="avatar-uploader"
                     :show-upload-list="false"
-                    action="https://oiljava.ldyxx.com:4435/goods/FileImg"
+                    action="https://oiljava.ldyxx.com/goods/FileImg"
                     :data="data1"
                     :before-upload="beforeUpload"
                     @change="handleChange"

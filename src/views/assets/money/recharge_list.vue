@@ -55,7 +55,6 @@
              <span v-if="text.tradeStatus==0">待支付</span>
              <span v-if="text.tradeStatus==1">支付成功</span>
             </span>
-            
           </a-table>
         </div>
       </a-layout-content>
@@ -78,6 +77,7 @@ export default {
       setVisible:false,
       setConfirmLoading: false,
       value:'',
+      timer:'',
       dateRange:[],
       recordList:[],
       // 表头
