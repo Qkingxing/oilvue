@@ -9,19 +9,21 @@
             <a-row :gutter="48">
               <a-col :md="24" :sm="24">
                 <a-form-item label="订单时间" class="screen-item">
-                  <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
-                  <a-radio-group v-model="orderTime" @change="onChange">
+                  <a-radio-group v-model="params.time_type" @change="onChange">
                     <a-radio-button :value="1">
                       今日
                     </a-radio-button>
                     <a-radio-button :value="2" style="margin-left: 10px;">
-                      本周
+                      昨日
                     </a-radio-button>
                     <a-radio-button :value="3" style="margin-left: 10px;">
+                      本周
+                    </a-radio-button>
+                    <a-radio-button :value="4" style="margin-left: 10px;">
                       本月
                     </a-radio-button>
                   </a-radio-group>
-                  <a-range-picker
+                  <!-- <a-range-picker
                     style="margin-left: 10px;"
                     :disabled-date="disabledDate"
                     :disabled-time="disabledRangeTime"
@@ -29,14 +31,16 @@
                       hideDisabledOptions: true,
                       defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
                     }"
+                    v-model="diyTime"
+                    @change="timeChange()"
                     format="YYYY-MM-DD HH:mm:ss"
-                   />
-                   <a-input placeholder="请输入客户子编号/手机号" style="width: 200px;margin-left: 10px;"></a-input>
+                   /> -->
+                   <a-input v-model="params.search" placeholder="请输入客户子编号/手机号" style="width: 200px;margin-left: 10px;"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="24" :sm="24">
                 <a-form-item>
-                  <a-button type="primary" class="search-btn" style="min-width:82px;"> 搜索 </a-button>
+                  <a-button type="primary" class="search-btn" style="min-width:82px;" @click="toSearch()"> 搜索 </a-button>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -53,19 +57,12 @@
               <a-button style="margin-left: 8px;" @click="setVisible=true" icon="setting"/>
             </div>
           </div>
-          <s-table
-            ref="table"
-            size="default"
-            rowKey="key"
-            :columns="columns"
-            :data="loadData"
-            :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-          >
-          </s-table>
+          <a-table ref="table" :columns="columns"  :rowKey='record=>record.id' :data-source="orderList" :scroll="{ x: 1300 }">
+          </a-table>
         </div>
       </a-layout-content>
     </a-layout>
-    <a-modal
+   <!-- <a-modal
         title="自定义展示"
         :visible="setVisible"
         :confirm-loading="setConfirmLoading"
@@ -89,27 +86,17 @@
             </a-row>
           </a-checkbox-group>
       </div>
-      </a-modal>
+      </a-modal> -->
     <router-view />
   </div>
 </template>
 
 <script>
+import { deleteNullAttr } from '@/utils/lzz.js'
 import moment from 'moment';
 import { STable } from '@/components'
 import { getRoleList, getServiceList } from '@/api/manage'
-const tableOptions = [
-  { label: '订单号', value: '订单号', disabled: true },
-  { label: '订单状态', value: '订单状态', disabled: true },
-  { label: '订单类型', value: '订单类型', disabled: true },
-  { label: '应付金额', value: '应付金额', disabled: true },
-  { label: '优惠金额', value: '优惠金额' },
-  { label: '实付金额', value: '实付金额' },
-  { label: '支付方式', value: '支付方式' },
-  { label: '状态时间', value: '状态时间' },
-  { label: '手机号', value: '手机号' },
-  { label: '会员等级', value: '会员等级' },
-];
+import { getOrderList } from '@/api/order'
 export default {
   name: 'write_off',
   components: {
@@ -117,72 +104,76 @@ export default {
   },
   data () {
     return {
-      tableOptions,
       setVisible:false,
       setConfirmLoading: false,
-      searchType:'高级搜索',
       diyDate:false,
       orderTime:'',
       radioValue: 'new',
-      tableOptionChoose:['优惠金额','实付金额','支付方式','状态时间'],
-      value:'',
-      // 查询参数
-      queryParam: {
-        keyType: '86'
+      orderList:[],
+      params:{
+        page: 1,
+        limit:1000,
+        time_type:4,
+        product_type:'2',
+        search:''
       },
+      tableOptionChoose:['优惠金额','实付金额','支付方式','状态时间'],
       // 表头
       columns: [
         {
           title: '订单号',
-          dataIndex: 'no'
+          dataIndex: 'id'
         },
         {
           title: '订单状态',
-          dataIndex: 'description'
+          dataIndex: 'order_status',
+          customRender: function (text) {
+            if (text == 1) {
+              return '交易成功'
+            } else if (text == 2) {
+              return '待支付'
+            } else if (text == 3) {
+              return '支付失败'
+            }
+          }
         },
         {
           title: '订单类型',
-          dataIndex: 'status',
-          needTotal: true
+          customRender: function (text) {
+            console.log(text)
+            if (text.product_type == 1) {
+              return '油品'
+            } else if (text.product_type == 2) {
+              return '商品'
+            }
+          }
         },
         {
           title: '应付金额',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'order_total'
         },
         {
           title: '优惠金额',
-          // dataIndex: 'status',
+          dataIndex: 'count_discount',
           needTotal: true
         },
         {
           title: '实付金额',
-          // dataIndex: 'status',
+          dataIndex: 'actually_paid',
           needTotal: true
         },
         {
           title: '支付方式',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
+          dataIndex:'order_type_name'
         },
         {
           title: '状态时间',
-          // dataIndex: 'status',
+          dataIndex: 'transaction_time',
           needTotal: true
         }
       ],
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
-      },
       selectedRowKeys: [],
       selectedRows: [],
-
-      // custom table alert & rowSelection
       options: {
         rowSelection: {
           selectedRowKeys: this.selectedRowKeys,
@@ -193,9 +184,7 @@ export default {
     }
   },
   created () {
-    console.log(this.$route.name)
-    this.tableOption()
-    getRoleList({ t: new Date() })
+    this.loadOrderList()
   },
   methods: {
     moment,
@@ -209,6 +198,15 @@ export default {
     onChangeTableOption(){
       
     },
+    toSearch(){
+      
+    },
+    loadOrderList(){
+      getOrderList(deleteNullAttr(this.params)).then(res=>{
+        console.log(res.data)
+        this.orderList = res.data
+      })
+    },
     handleSetOk(e) {
       this.setConfirmLoading = true;
       setTimeout(() => {
@@ -218,9 +216,6 @@ export default {
     },
     handleSetCancel(e) {
       this.setVisible = false;
-    },
-    advanceSearchChange(){
-      this.searchType == "高级搜索" ? this.searchType="点击收起" :　this.searchType="高级搜索" 
     },
     disabledDate(current) {
       return current && current > moment().endOf('day');

@@ -9,7 +9,6 @@
             <a-row :gutter="48">
               <a-col :md="24" :sm="24">
                 <a-form-item label="订单时间" class="screen-item">
-                  <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
                   <a-radio-group v-model="form.time_type" @change="timeRadioChange">
                     <a-radio :value="1">
                       今日
@@ -159,15 +158,8 @@
               <a-button style="margin-left: 8px;">导出报表</a-button>
             </div>
           </div>
-          <s-table
-            ref="table"
-            size="default"
-            rowKey="id"
-            :columns="columns"
-            :data="loadData"
-            :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-          >
-          </s-table>
+          <a-table ref="table" :columns="columns"  :rowKey='record=>record.id' :data-source="orderList" :scroll="{ x: 1300 }">
+          </a-table>
         </div>
       </a-layout-content>
     </a-layout>
@@ -178,13 +170,9 @@
 <script>
 import { deleteNullAttr } from '@/utils/lzz.js'
 import moment from 'moment'
-import { STable } from '@/components'
 import { getOrderList, getOilSetList, getGunList, getPayList, getDepotslist } from '@/api/order'
 export default {
   name: 'Ooverview',
-  components: {
-    STable
-  },
   data () {
     return {
       oilList: [],
@@ -193,13 +181,14 @@ export default {
       searchType: '高级搜索',
       diyDate: false,
       diyTime: null,
+      orderList:[],
       form: {
         handle_starting: '',
         handle_end: '',
         paid_starting: '',
         paid_end: '',
         page: 1,
-        limit: 10,
+        limit: 1000,
         time_type: 1,
         starting_time: '',
         end_time: '',
@@ -210,15 +199,11 @@ export default {
       },
       radioValue: 'new',
       value: '',
-      // 查询参数
-      queryParam: {
-        keyType: '86'
-      },
       // 表头
       columns: [
         {
           title: '订单号',
-          dataIndex: 'oils_id'
+          dataIndex: 'id'
         },
         {
           title: '订单状态',
@@ -235,8 +220,12 @@ export default {
         },
         {
           title: '订单类型',
-          customRender: function () {
-            return '未找到'
+          customRender: function (text) {
+            if (text.product_type == 1) {
+              return '油品'
+            } else if (text.product_type == 2) {
+              return '商品'
+            }
           }
         },
         {
@@ -255,42 +244,21 @@ export default {
         },
         {
           title: '支付方式',
-          customRender: function (text) {
-            if (text.order_type == 1) {
-              return '微信'
-            } else if (text.order_type == 2) {
-              return '支付宝'
-            } else if (text.order_type == 3) {
-              return '对公转账'
-            }
-          }
+          dataIndex:'order_type_name'
         },
         {
           title: '状态时间',
-          dataIndex: 'zf_number',
+          dataIndex: 'transaction_time',
           needTotal: true
         }
       ],
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        return getOrderList(deleteNullAttr(this.form))
-        .then(res => {
-          return {
-            data: res.data, // 列表数组
-            pageNo: this.form.page, // 当前页码
-            pageSize: this.form.limit, // 每页页数
-            totalCount: res.countPage, // 列表总条数
-            totalPage: res.pageSize // 列表总页数
-          }
-        })
-      },
       selectedRowKeys: [],
       selectedRows: [],
       depotslist: []
     }
   },
   created () {
-
+    this.loadOrderList()
   },
   methods: {
     moment,
@@ -309,6 +277,11 @@ export default {
       getDepotslist().then(res => {
         console.log(res.data.data)
         this.depotslist = res.data.data
+      })
+    },
+    loadOrderList(){
+      getOrderList(deleteNullAttr(this.form)).then(res=>{
+        this.orderList = res.data
       })
     },
     loadPayList () {
@@ -331,7 +304,7 @@ export default {
         this.form.starting_time = ''
         this.form.end_time = ''
       }
-      this.$refs.table.refresh(true)
+      this.loadOrderList()
     },
     handleSetOk (e) {
       this.setConfirmLoading = true

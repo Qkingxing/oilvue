@@ -1,15 +1,15 @@
 <template>
   <div>
     <a-layout v-if="$route.name=='Aoverview'" v-show="wxPayStatus==1">
-      <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }" v-if="false">
+      <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }" v-show="!isRecharge">
         <h3 class="o-title">账户概览</h3>
         <a-divider />
         <div class="account-box">
           <p>账户可用余额（元）</p>
-          <span>{{ accountBalance }}</span><a-button type="primary" class="abutton">充值</a-button>
+          <span>{{ accountBalance }}</span><a-button type="primary" class="abutton" @click="isRecharge = true">充值</a-button>
         </div>
       </a-layout-content>
-      <a-layout-content  :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content  :style="{ padding: '24px', background: '#fff', minHeight: '280px' }" v-show="isRecharge">
         <a-tabs default-active-key="1" >
           <a-tab-pane key="1" tab="线上充值">
             <a-form layout="inline" style="margin-left: 30px;">
@@ -28,7 +28,7 @@
             </a-form>
             <div style="margin-left: 30px;margin-top: 30px;">
               <a-button type="primary" @click="toWxPay()">确认充值</a-button>
-              <a-button style="margin-left: 20px;">取消</a-button>
+              <a-button style="margin-left: 20px;" @click="isRecharge = false">取消</a-button>
             </div>
             
           </a-tab-pane>
@@ -130,7 +130,7 @@
             
             <div style="margin-left: 30px;margin-top: 30px;">
               <a-button type="primary" @click="toDgPay()">确认充值</a-button>
-              <a-button style="margin-left: 20px;">取消</a-button>
+              <a-button style="margin-left: 20px;" @click="isRecharge = false">取消</a-button>
             </div>
           </a-tab-pane>
         </a-tabs>
@@ -169,6 +169,7 @@ export default {
     name: 'Aoverview',
     data () {
       return {
+        isRecharge:false,
         wxVisible:false,
         loading: false,
         wxPayImg:'',
