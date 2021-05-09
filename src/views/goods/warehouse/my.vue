@@ -213,7 +213,4 @@
   .my img{
     width: 50px;
   }
-  .ant-table-row{
-    height: 83px !important;
-  }
 </style>

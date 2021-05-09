@@ -122,8 +122,8 @@
                 </a-col>
                 <a-col :md="24" :sm="24">
                   <a-form-item label="支付方式" class="screen-item-inline">
-                    <a-select style="width: 200px">
-                      <a-select-option :value="item.id" v-for="(item,index) in payList" :key="item.id">
+                    <a-select style="width: 200px" v-model="form.order_type">
+                      <a-select-option :value="item.code" v-for="(item,index) in payList" :key="item.code">
                         {{ item.name }}
                       </a-select-option>
                     </a-select>
@@ -195,7 +195,8 @@ export default {
         oils_id: '',
         oils_gunId: '',
         user_id: '',
-        order_status: '0'
+        order_status: '0',
+        order_type:''
       },
       radioValue: 'new',
       value: '',

@@ -54,7 +54,7 @@
             </span>
             <div>
               <a-button style="margin-left: 8px;">导出报表</a-button>
-              <a-button style="margin-left: 8px;" @click="setVisible=true" icon="setting"/>
+              <!-- <a-button style="margin-left: 8px;" @click="setVisible=true" icon="setting"/> -->
             </div>
           </div>
           <a-table ref="table" :columns="columns"  :rowKey='record=>record.id' :data-source="orderList" :scroll="{ x: 1300 }">
