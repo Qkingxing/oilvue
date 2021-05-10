@@ -409,6 +409,14 @@ export function getIntegralrecordlist (data) {
     data
   })
 }
+// 根据手机号或者编号查询
+export function sreachUser (data) {
+  return PhpRequest({
+    url: '/user/sreachUser',
+    method: 'post',
+    data
+  })
+}
 // 获取加油站列表
 export function getSitelist (data) {
   return PhpRequest({

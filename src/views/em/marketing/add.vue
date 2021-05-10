@@ -312,7 +312,7 @@ export default {
       checkNick: false,
       formItemLayout,
       formTailLayout,
-      step: 1,
+      step: 0,
       count_available: '',
       yxqValue: [],
       oilList: [],

@@ -3,107 +3,21 @@
   <div class="overview">
     <a-layout v-if="$route.name=='detailed'">
       <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
-        <h3 class="o-title">IC卡汇总</h3>
+        <h3 class="o-title">班结</h3>
         <a-divider />
         <div class="screen-box">
           <a-form layout="inline" >
             <a-row :gutter="48">
               <a-col :md="24" :sm="24">
-                <a-form-item class="screen-item-inline">
-                  <span class="item-title">业务类型</span>
-                  <a-select mode="multiple" default-value="lucy" style="width: 120px" @change="handleChange">
-                    <a-select-option value="jack">
-                      Jack
-                    </a-select-option>
-                    <a-select-option value="lucy">
-                      Lucy
-                    </a-select-option>
-                    <a-select-option value="disabled">
-                      Disabled
-                    </a-select-option>
-                    <a-select-option value="Yiminghe">
-                      yiminghe
+                <a-form-item>
+                  <a-select v-model="queryParam.id" style="width: 200px">
+                    <a-select-option :value="item.id" v-for="item in bjIdList" >
+                      {{item.name}}
                     </a-select-option>
                   </a-select>
                 </a-form-item>
-              </a-col>
-              <a-col :md="24" :sm="24">
-                <a-form-item class="screen-item-inline">
-                  <span class="item-title">统计类型</span>
-                  <a-radio-group>
-                    <a-radio value="a">
-                      默认
-                    </a-radio>
-                    <a-radio value="b">
-                      员工
-                    </a-radio>
-                    <a-radio value="c">
-                      支付方式
-                    </a-radio>
-                    <a-radio value="d">
-                      油品
-                    </a-radio>
-                    <a-radio value="e">
-                      油枪
-                    </a-radio>
-                    <a-radio value="f">
-                      商品名称
-                    </a-radio>
-                  </a-radio-group>
-                </a-form-item>
-              </a-col>
-              <a-col :md="24" :sm="24">
-                <a-form-item class="screen-item-inline">
-                  <span class="item-title">统计方式</span>
-                  <a-radio-group>
-                    <a-radio value="a">
-                      班次统计
-                    </a-radio>
-                    <a-radio value="b">
-                      自然日统计
-                    </a-radio>
-                    <a-radio value="c">
-                      时间段统计
-                    </a-radio>
-                  </a-radio-group>
-                </a-form-item>
-              </a-col>
-              <a-col :md="24" :sm="24">
-                <a-form-item label="订单时间" class="screen-item">
-                  <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
-                  <a-radio-group v-model="form.time_type" @change="onChange">
-                    <a-radio :value="1">
-                      今日
-                    </a-radio>
-                    <a-radio :value="2">
-                      昨日
-                    </a-radio>
-                    <a-radio :value="3">
-                      本周
-                    </a-radio>
-                    <a-radio :value="4">
-                      本月
-                    </a-radio>
-                    <a-radio :value="5">
-                      自定义
-                    </a-radio>
-                  </a-radio-group>
-                  <a-range-picker
-                    v-show="diyDate"
-                    :disabled-date="disabledDate"
-                    :disabled-time="disabledRangeTime"
-                    :show-time="{
-                      hideDisabledOptions: true,
-                      defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
-                    }"
-                    format="YYYY-MM-DD HH:mm:ss"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :md="24" :sm="24">
                 <a-form-item>
                   <a-button type="primary" class="search-btn" style="min-width:82px;" @click="toSearch()"> 搜索 </a-button>
-                  <a-button style="min-width:82px;margin-left: 10px;"> 导出 </a-button>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -116,14 +30,8 @@
               数据更新时间：2021-02-06 11:04:34
             </span>
           </div>
-          <s-table
-            ref="table"
-            size="default"
-            rowKey="key"
-            :columns="columns"
-            :data="loadData"
-          >
-          </s-table>
+          <a-table ref="table" :columns="columns"  :rowKey='record=>record.id' :data-source="bjList" :scroll="{ x: 1300 }">
+          </a-table>
         </div>
       </a-layout-content>
     </a-layout>
@@ -135,7 +43,7 @@
 import { deleteNullAttr } from '@/utils/lzz.js'
 import moment from 'moment'
 import { STable } from '@/components'
-import { getOrderList } from '@/api/order'
+import { getBjList, getBjIdList } from '@/api/finance'
 export default {
   name: 'Detailed',
   components: {
@@ -145,91 +53,59 @@ export default {
     return {
       setVisible: false,
       setConfirmLoading: false,
-      searchType: '高级搜索',
-      diyDate: false,
-      form: {
-        handle_starting: '',
-        handle_end: '',
-        paid_starting: '',
-        paid_end: '',
-        page: 1,
-        limit: 10,
-        time_type: ''
+      bjIdList:[],
+      bjList:[],
+      queryParam:{
+        id:''
       },
-      radioValue: 'new',
-      tableOptionChoose: ['优惠金额', '实付金额', '支付方式', '状态时间'],
       value: '',
-      // 查询参数
-      queryParam: {
-        keyType: '86'
-      },
       // 表头
       columns: [
         {
           title: '上班时间',
-          dataIndex: 'oils_id'
+          dataIndex: 'to_work_time'
         },
         {
           title: '下班时间',
-          dataIndex: 'order_status',
-          customRender: function (text) {
-            if (text == 1) {
-              return '交易成功'
-            } else if (text == 2) {
-              return '待支付'
-            } else if (text == 3) {
-              return '支付失败'
-            }
-          }
+          dataIndex: 'off_work_time',
         },
         {
           title: '实收金额',
-          customRender: function () {
-            return '未找到'
-          }
+          dataIndex:'actually_paid',
         },
         {
           title: '应收金额',
-          dataIndex: 'order_total'
+          dataIndex: 'original_amount'
         },
         {
-          title: '笔数',
-          dataIndex: 'count_discount',
-          needTotal: true
+          title: '订单笔数',
+          dataIndex: 'order_number',
         },
         {
-          title: '升数',
-          dataIndex: 'actually_paid',
-          needTotal: true
+          title: '订单升数',
+          dataIndex: 'order_liter',
         },
         {
           title: '优惠金额',
-          dataIndex: 'order_total'
+          dataIndex: 'count_discount'
         },
         {
-          title: '能链云支付券优惠',
-          dataIndex: 'count_discount',
-          needTotal: true
+          title: '优惠券优惠',
+          dataIndex: 'coupon_discount',
         },
         {
-          title: '挂牌价总计',
-          dataIndex: 'actually_paid',
-          needTotal: true
-        }
+          title: '上班状态',
+          dataIndex: 'work_type',
+          customRender: function (text) {
+            if (text == 1) {
+              return '上班'
+            } else if (text == 2) {
+              return '下班'
+            }
+          }
+        },
       ],
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        return getOrderList(deleteNullAttr(this.form))
-          .then(res => {
-            return {
-              data: res.data, // 列表数组
-              pageNo: this.form.page, // 当前页码
-              pageSize: this.form.limit, // 每页页数
-              totalCount: res.countPage, // 列表总条数
-              totalPage: res.pageSize // 列表总页数
-            }
-          })
-      },
       selectedRowKeys: [],
       selectedRows: [],
 
@@ -245,6 +121,8 @@ export default {
   },
   created () {
     // this.tableOption()
+    this.loadBjList()
+    this.loadBjSelectList()
   },
   methods: {
     moment,
@@ -255,87 +133,24 @@ export default {
       }
       return result
     },
-    onChangeTableOption () {
-
-    },
-    toSearch () {
-      getOrderList(deleteNullAttr(this.form)).then(res => {
-        console.log(res)
+    loadBjSelectList(){
+      getBjIdList().then(res=>{
+        this.bjIdList = res.data
       })
     },
-    handleSetOk (e) {
-      this.setConfirmLoading = true
-      setTimeout(() => {
-        this.setVisible = false
-        this.setConfirmLoading = false
-      }, 2000)
+    loadBjList(){
+      getBjList(this.queryParam).then(res=>{
+        this.bjList = res.data
+      })
+    },
+    toSearch () {
+      getBjList(this.queryParam).then(res=>{
+        this.bjList = res.data
+      })
     },
     disabledDate (current) {
       return current && current < moment().endOf('day')
     },
-    disabledRangeTime (_, type) {
-      if (type === 'start') {
-        return {
-          disabledHours: () => this.range(0, 60).splice(4, 20),
-          disabledMinutes: () => this.range(30, 60),
-          disabledSeconds: () => [55, 56]
-        }
-      }
-      return {
-        disabledHours: () => this.range(0, 60).splice(20, 4),
-        disabledMinutes: () => this.range(0, 31),
-        disabledSeconds: () => [55, 56]
-      }
-    },
-    handleSetCancel (e) {
-      this.setVisible = false
-    },
-    advanceSearchChange () {
-      this.searchType == '高级搜索' ? this.searchType = '点击收起' :　this.searchType = '高级搜索'
-    },
-    disabledDate (current) {
-      return current && current < moment().endOf('day')
-    },
-    disabledRangeTime (_, type) {
-      if (type === 'start') {
-        return {
-          disabledHours: () => this.range(0, 60).splice(4, 20),
-          disabledMinutes: () => this.range(30, 60),
-          disabledSeconds: () => [55, 56]
-        }
-      }
-      return {
-        disabledHours: () => this.range(0, 60).splice(20, 4),
-        disabledMinutes: () => this.range(0, 31),
-        disabledSeconds: () => [55, 56]
-      }
-    },
-    onChange (value) {
-      value.target.value == 5 ? this.diyDate = true : this.diyDate = false
-    },
-    showEditTag (type) {
-      this.$refs['EditTag'].show(type)
-    },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
-    }
   }
 }
 </script>

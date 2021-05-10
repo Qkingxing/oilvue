@@ -50,25 +50,25 @@
        </a-form>
        <div v-if="goodsList.length>0">
          <a-table ref="table" :columns="columns"  :rowKey='record=>record.id' :data-source="goodsList" :scroll="{ x: 1300 }">
-             <a slot="img" slot-scope="text,record" href="javascript:;">
-              <img :src="text.goods_cover" />
+           <a slot="img" slot-scope="text,record" href="javascript:;">
+            <img :src="text.goods_cover" />
+           </a>
+           <a slot="action" slot-scope="text">
+             <span>兑换记录</span>
+             <span style="margin-left: 10px;">兑换统计</span>
+             <span style="margin-left: 10px;" v-if="text.state==2" @click="changeState(text)">上架</span>
+             <span style="margin-left: 10px;" v-if="text.state==1" @click="changeState(text)">下架</span>
+             <span style="margin-left: 10px;" @click="toModify(text)">编辑</span>
+             <a-popconfirm
+                 title="确定删除商品吗"
+                 ok-text="确定"
+                 cancel-text="取消"
+                 @confirm="delGoods(text)"
+                 style="margin-left: 10px;"
+               >
+                 <a>删除</a>
+              </a-popconfirm>
              </a>
-             <a slot="action" slot-scope="text">
-               <span>兑换记录</span>
-               <span style="margin-left: 10px;">兑换统计</span>
-               <span style="margin-left: 10px;" v-if="text.state==2" @click="changeState(text)">上架</span>
-               <span style="margin-left: 10px;" v-if="text.state==1" @click="changeState(text)">下架</span>
-               <span style="margin-left: 10px;" @click="toModify(text)">编辑</span>
-               <a-popconfirm
-                   title="确定删除商品吗"
-                   ok-text="确定"
-                   cancel-text="取消"
-                   @confirm="delGoods(text)"
-                   style="margin-left: 10px;"
-                 >
-                   <a>删除</a>
-                </a-popconfirm>
-               </a>
            </a-table>
        </div>
       </a-layout-content>
