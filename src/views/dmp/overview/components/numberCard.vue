@@ -13,7 +13,7 @@
       </div>
       <div class="info">
           <span>{{list.comparedName}} </span>   
-          <span>降{{list.Compared}}%</span>
+          <span>降{{list.Compared | str}}%</span>
           <i class="trend">
               <a-icon type="arrow-down"/>
         </i> 
@@ -48,12 +48,21 @@ export default {
   },
   created(){
     // this.mapDate()
+
   },
   methods: {
     // mapDate(){
     //   console.log(this.list)
     // }
   },
+  filters:{
+      str(Compared){
+         if(Compared == 'NaN'){
+            return Compared = 0
+         }
+         return Compared
+      }
+  }
 }
 </script>
 

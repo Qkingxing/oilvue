@@ -16,7 +16,7 @@
       <component v-if="show" :nums='nums' :lists='lists' :is="vivew"></component>
     </div>
     <div class="time" v-if="dateKey == 'zuotian'">
-      <div class="head-title">销售总数据</div>
+      <div class="head-title">销售总数据11</div>
       <div class="saleall_2">
         <div class="saleall-container" v-for="(list,index) in lists" :key="index">
           <number-card :list='list'></number-card>
@@ -150,7 +150,7 @@ export default {
     },
     changeDate(key) {
       this.dateKey = key
-      
+      sessionStorage.setItem('key',key)
     },
   },
 }

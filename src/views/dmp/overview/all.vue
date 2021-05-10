@@ -21,6 +21,7 @@
       <div class="head-title">销售总数据</div>
       <div class="saleall_1">
         <div class="saleall-container" v-for="(list, index) in lists" :key="index">
+            
           <number-card :list="list"></number-card>
         </div>
       </div>
@@ -131,6 +132,7 @@ export default {
   created() {
     this.analysis()
     this.revenue()
+    console.log(this.lists)
   },
   methods: {
     revenue(){
@@ -180,6 +182,8 @@ export default {
     },
     changeDate(key) {
       this.dateKey = key
+      sessionStorage.setItem('key',key)
+    //   console.log(this.lists)
       // if (this.dateKey == '1') {
       //   this.setData(this.dateKey)
       // } else if (this.dateKey == '2') {

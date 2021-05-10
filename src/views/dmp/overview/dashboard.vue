@@ -44,7 +44,7 @@ export default {
         { key: 'quanbu', tab: '全部' },
         { key: 'youpin', tab: '油品' },
         { key: 'shanfu', tab: '闪付' },
-        { key: 'tuanyou', tab: '团油' },
+        // { key: 'tuanyou', tab: '团油' },
         { key: 'bianlidian', tab: '便利店' },
       ],
 
@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     setData() {
-      return dashboard({}).then((res) => {
+      return dashboard({time_type:1}).then((res) => {
         // this.lists = res.data
        
         this.lists = res.data.map(e=>{
@@ -72,7 +72,7 @@ export default {
           }
           return object
         })
-        // console.log(this.lists)
+        console.log(this.lists)
       })
     },
     onTabChange(key, type) {
@@ -115,6 +115,7 @@ export default {
 
     changeDate(key) {
       this.dateKey = key
+     
     },
     handleClick(tab, event) {
       console.log(tab, event)

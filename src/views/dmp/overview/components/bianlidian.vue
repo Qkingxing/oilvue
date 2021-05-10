@@ -341,6 +341,7 @@ export default {
     },
     changeDate(key) {
       this.dateKey = key
+      sessionStorage.setItem('key',key)
     },
   },
 }
