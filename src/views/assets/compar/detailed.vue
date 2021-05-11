@@ -11,7 +11,7 @@
               <a-col :md="24" :sm="24">
                 <a-form-item>
                   <a-select v-model="queryParam.id" style="width: 200px">
-                    <a-select-option :value="item.id" v-for="item in bjIdList" >
+                    <a-select-option :value="item.id" v-for="(item,index) in bjIdList" :key="index">
                       {{item.name}}
                     </a-select-option>
                   </a-select>
