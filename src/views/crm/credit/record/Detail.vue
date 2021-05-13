@@ -12,22 +12,22 @@
         <div class="header-wrap">
           <div class="header-item">
             <span class="title">手机号</span>
-            <span class="value">15264791111</span>
+            <span class="value">{{itemObj.mobile}}</span>
           </div>
           <div class="header-item">
             <span class="title">现有积分</span>
             <span class="value">
-              <span>0 </span>
+              <span>{{itemObj.integral}}</span>
               <span class="creditsEdit">
                 <em type="link" @click="openModal('plus')">增加</em>
                 <em type="link" @click="openModal('reduce')">减少</em>
               </span>
             </span>
           </div>
-          <div class="header-item">
+          <!-- <div class="header-item">
             <span class="title">已用积分</span>
             <span class="value">0</span>
-          </div>
+          </div> -->
 
           
         </div>
@@ -54,7 +54,8 @@
 
 
     <ChangeIntegral 
-      ref="ChangeIntegral"/>
+      ref="ChangeIntegral"
+      @reset="$refs.table.refresh()"/>
   </a-layout-content>
 </template>
 
@@ -71,8 +72,8 @@ export default {
     ChangeIntegral:()=>import('./components/ChangeIntegral')
   },
   props:{
-    user_id:{
-      type: Number,
+    itemObj:{
+      type: Object,
       default: null
     }
   },
@@ -98,10 +99,10 @@ export default {
           title: '积分变动',
           dataIndex: 'integral'
         },
-        {
-          title: '积分总数',
+        // {
+          // title: '积分总数',
           // dataIndex: 'sonnumber'
-        },
+        // },
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
@@ -109,7 +110,7 @@ export default {
         let params = {
           page: parameter.pageNo, // 页码
           size: parameter.pageSize, // 每页页数
-          user_id: this.user_id
+          user_id: this.itemObj.user_id
         }
 
 
@@ -133,7 +134,7 @@ export default {
   methods: {
     openModal(type){
       this.$refs.ChangeIntegral.showModal({
-        user_id: this.user_id,
+        user_id: this.itemObj.user_id,
         type
       })
     },

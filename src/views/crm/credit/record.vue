@@ -113,7 +113,7 @@
       ref="DetailRecord"
       v-if="pageType == 'detail'"
       @back="pageType='list'"
-      :user_id="itemID"/>
+      :itemObj="itemObj"/>
 
   </a-layout>
 </template>
@@ -220,7 +220,7 @@ export default {
             }
           })
       },
-      itemID: null,
+      itemObj: null,
       
     }
   },
@@ -234,8 +234,8 @@ export default {
   },
   methods: {
     godetail(item){
-      // console.log(item)
-      this.itemID = item.id
+      console.log(item)
+      this.itemObj = item
       this.pageType = 'detail'
     },
     typeListText(value){

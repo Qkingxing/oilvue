@@ -65,7 +65,7 @@ export default {
       wrapperCol: { span: 12 },
       form: {
         user_id: undefined,//用户id
-        site_id: undefined,//站点id
+        site_id: [],//站点id
         count: undefined,//积分变量
         type: undefined,//2是手动添加，需要对应count是正数，8是手动减少，需要对应count是负数。
         remark: ''//备注
@@ -99,7 +99,7 @@ export default {
     },
     resetForm(){
       this.form = {
-        user_id: undefined,//用户id
+        user_id: [],//用户id
         site_id: undefined,//站点id
         count: undefined,//积分变量
         type: undefined,//2是手动添加，需要对应count是正数，8是手动减少，需要对应count是负数。
@@ -126,8 +126,26 @@ export default {
 
       
       let form = _.cloneDeep(this.form)
+      form.site_id = form.site_id.filter(e=>{
+        return e!=="ALL_SELECT"
+      })
+      // console.log(form)
+      if (!form.site_id.length) {
+        this.$message.error('请选择加油站')
+        return
+      }
+      if (!form.count) {
+        this.$message.error('增减积分不能为0')
+        return
+      }
 
-      console.log(form)
+      addIntegral(form).then(res=>{
+        // console.log(res)
+        if (res.data) {
+          this.handleCancel()
+          this.$emit('reset')
+        }
+      })
       
 
       // this.visible = false;
@@ -147,12 +165,12 @@ export default {
  
       // 若选择全部
       if (val.includes('ALL_SELECT')) {
-        this.form.site_ids = allValues;
+        this.form.site_id = allValues;
       }
       // console.log(oldVal)
       // 取消全部选中， 上次有， 当前没有， 表示取消全选
       if (oldVal.includes('ALL_SELECT') && !val.includes('ALL_SELECT')) {
-        this.form.site_ids = [];
+        this.form.site_id = [];
       }
  
       // 点击非全部选中，需要排除全部选中 以及 当前点击的选项
@@ -160,18 +178,18 @@ export default {
       if (oldVal.includes('ALL_SELECT') && val.includes('ALL_SELECT')) {
         const index = val.indexOf('ALL_SELECT');
         val.splice(index, 1); // 排除全选选项
-        this.form.site_ids = val;
+        this.form.site_id = val;
       }
  
       // 全选未选，但是其他选项都全部选上了，则全选选上
       if (!oldVal.includes('ALL_SELECT') && !val.includes('ALL_SELECT')) {
         if (val.length === allValues.length - 1) {
-          this.form.site_ids = ['ALL_SELECT'].concat(val);
+          this.form.site_id = ['ALL_SELECT'].concat(val);
         }
       }
 
       // 储存当前选择的最后结果 作为下次的老数据
-      this.oldChooseData = this.form.site_ids;
+      this.oldChooseData = this.form.site_id;
 
 
     },

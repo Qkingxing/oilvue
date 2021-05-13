@@ -52,7 +52,7 @@
             <div class="base-item rightBorder">
               <div class="base-title">会员等级</div>
               <div class="base-val">{{detail.level_name}}</div>
-              <a-button type="link" style="padding: 0px 8px 0px 0px;">修改</a-button>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="openEditLevel">修改</a-button>
             </div>
             <div class="base-item">
               <div class="base-title">客户身份</div>
@@ -88,6 +88,8 @@
           </div>
           <a-tabs default-active-key="1">
             <a-tab-pane key="1" tab="消费记录">
+              <ConsumptionHistory 
+                ref="ConsumptionHistory"/>
             </a-tab-pane>
             <a-tab-pane key="2" tab="加油卡记录">
             </a-tab-pane>
@@ -101,24 +103,7 @@
             </a-tab-pane>
           </a-tabs>
 
-          <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadData">
-            <span slot="watch" slot-scope="text, record">
-              <template>
-                <a @click="delTag(record)">认证列表</a>
-                <a-divider type="vertical" />
-                <a @click="delTag(record)">用户列表</a>
-              </template>
-            </span>
-            <span slot="action" slot-scope="text, record">
-              <template>
-                <a @click="delTag(record)">编辑</a>
-                <a-divider type="vertical" />
-                <a @click="delTag(record)">删除</a>
-                <a-divider type="vertical" />
-                <a @click="delTag(record)">下载等级码</a>
-              </template>
-            </span>
-          </s-table>
+          
         </div>
       </div>
     </a-layout-content>
@@ -136,6 +121,10 @@
     <!-- 编辑车牌号 -->
     <ChangePlateNumber 
       ref="ChangePlateNumber"/>
+    
+    <!-- 修改会员等级 -->
+    <ChangeLevel 
+      ref="ChangeLevel"/>
 
     
   </a-layout>
@@ -155,63 +144,16 @@ export default {
     STable,
     ChangeIntegral: ()=>import('./components/ChangeIntegral'),
     SendCoupon: ()=>import('./components/SendCoupon'),
-    ChangePlateNumber: ()=>import('./components/ChangePlateNumber')
+    ChangePlateNumber: ()=>import('./components/ChangePlateNumber'),
+    ChangeLevel: ()=>import('./components/ChangeLevel'),
+    ConsumptionHistory: ()=>import('./components/table/ConsumptionHistory')
   },
   data () {
     return {
       pageType: 'detail',
       detail: null,
       identitySelect,
-      // 查询参数
-      queryParam: {},
-      // 表头
-      columns: [
-        {
-          title: '等级模板',
-          dataIndex: 'no'
-        },
-        {
-          title: '等级名称',
-          dataIndex: 'description'
-        },
-        {
-          title: '生效油站',
-          dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '等级优惠',
-          dataIndex: 'time',
-          needTotal: true
-        },
-        {
-          title: '等级有效期',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '最近修改人',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '查看',
-          dataIndex: 'watch',
-          scopedSlots: { customRender: 'watch' }
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
-        }
-      ],
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        // console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
-        })
-      },
+      
       
     }
   },
@@ -222,6 +164,9 @@ export default {
     })
   },
   methods: {
+    openEditLevel(){
+      this.$refs.ChangeLevel.showModal()
+    },
     openPlateEdit(){
       this.$refs.ChangePlateNumber.showModal()
     },

@@ -7,7 +7,7 @@
       </div>
       <div class="mSelect_ListContainer" v-show="isshow==1" @click.stop>
         <div class="mSelect_ListSearchBox">
-          <a-input allowClear placeholder="请输入券名称或ID" />
+          <a-input allowClear v-model="coupons_name" placeholder="请输入券名称或ID" />
         </div>
         <div class="mSelect_ListBox public_global_scroll">
           <!-- 选项 -->
@@ -89,7 +89,8 @@ export default {
   data(){
     return {
       isshow: 0,
-      list: []
+      list: [],
+      coupons_name: ''
     }
   },
   created(){
@@ -102,6 +103,7 @@ export default {
         limit: 99, // 每页页数
         activation_type: 0,
         is_expired: 1,
+        coupons_name: this.coupons_name,
       }).then(res=>{
         console.log(res)
       })

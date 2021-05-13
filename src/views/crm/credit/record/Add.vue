@@ -44,6 +44,7 @@
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: 'radio' }"
         :pagination="false">
       </a-table>
+      
     </a-modal>
 
   </a-layout-content>
@@ -83,17 +84,17 @@ export default {
           title: '昵称',
           dataIndex: 'nickname',
         },
-        {
-          title: '会员等级',
-          dataIndex: 'level_id',
-        },
+        // {
+        //   title: '会员等级',
+        //   dataIndex: 'level_id',
+        // },
         {
           title: '现有积分',
           dataIndex: 'integral',
         },
         {
           title: '偏好油站',
-          dataIndex: 'love_site_id',
+          dataIndex: 'site_name',
         },
       ],
       selectedRowKeys: [], // Check here to configure the default column
@@ -110,9 +111,13 @@ export default {
       this.ModalText = 'The modal will be closed after two seconds';
       this.confirmLoading = true;
 
+      // console.log(this.data)
+      // console.log(this.selectedRowKeys)
+
       let item = this.data.filter(e=>{
-        return e.id === this.selectedRowKeys[0].id
-      })
+        return e.id === this.selectedRowKeys[0]
+      })[0]
+      // console.log(item)
       // 确认选择，跳转详情
       this.godetail(item)
 
@@ -141,7 +146,7 @@ export default {
                 // 数量大于1，展开列表
                 this.data = res.data
               }
-              this.selectedRowKeys[0] = res.data[0].id
+              this.selectedRowKeys = [res.data[0].id]
             }else{
               this.$message.error('该用户/手机号未注册，无积分信息')
             }
@@ -157,7 +162,7 @@ export default {
       this.$emit('back')
     },
     onSelectChange(selectedRowKeys) {
-      console.log('selectedRowKeys changed: ', selectedRowKeys);
+      // console.log('selectedRowKeys changed: ', selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
     },
   }
