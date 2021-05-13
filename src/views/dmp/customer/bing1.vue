@@ -1,5 +1,5 @@
 <template>
-  <div id="canvas_box" ref="canvas_box"></div>
+  <div id="canvas_box" ref="canvas_box1"></div>
 </template>
 
 <script>
@@ -34,7 +34,7 @@ export default {
           data.push(items)
       }
 
-      const piePlot = new Pie(this.$refs.canvas_box, {
+      const piePlot = new Pie(this.$refs.canvas_box1, {
         appendPadding: 10,
         data,
         angleField: 'value',

@@ -26,8 +26,9 @@ export default {
   },
   methods:{
     members(){
-      return member({}).then(res =>{
+      return member({time_status:'1'}).then(res =>{
         this.arrs = res.data
+        console.log(this.arrs)
         this.show = true
       })
     }

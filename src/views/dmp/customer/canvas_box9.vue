@@ -1,6 +1,6 @@
 <template>
 
-    <div id="canvas_box1" style="width:100%" ref="canvas_box1"></div>
+    <div id="canvas_box1" style="width:100%" ref="canvas_box18"></div>
 
   
 </template>
@@ -42,7 +42,7 @@ export default {
       }
       console.log(data)
       const chart = new Chart({
-        container: this.$refs.canvas_box1,
+        container: this.$refs.canvas_box18,
         autoFit: true,
         height: 500,
       })

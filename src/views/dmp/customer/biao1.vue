@@ -12,7 +12,7 @@
           </div>
           <div class="trend_info">
             <span>较上一周期</span>
-            <span class="percente percent-up">{{list.day_before}}</span>
+            <span class="percente percent-up">{{list.day_before|before}}</span>
             <i class="trend">
               <a-icon type="arrow-down" />
             </i>
@@ -122,6 +122,14 @@ export default {
   // },
   created(){
       this.biao()
+  },
+  filters:{
+      before(str){
+          if(str == "NaN"){
+              return str = 0
+          }
+          return str
+      }
   },
   methods:{
      biao(){

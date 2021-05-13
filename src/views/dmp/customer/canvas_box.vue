@@ -1,5 +1,5 @@
 <template>
-  <div id="canvas_box" ref="canvas_box"></div>
+  <div id="canvas_box" ref="canvas_box9"></div>
 </template>
 
 <script>
@@ -38,7 +38,7 @@ export default {
   methods: {
     biao3() {
       const chart = new Chart({
-        container: this.$refs.canvas_box,
+        container: this.$refs.canvas_box9,
         autoFit: true,
         height: 500,
       })

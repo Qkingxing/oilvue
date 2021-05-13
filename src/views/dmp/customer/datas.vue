@@ -71,6 +71,7 @@ export default {
   components: { biao1 },
   props:['arrs'],
   created(){
+      console.log(this.arrs)
   },
 //   watch:{
 // 	  arrs:{
