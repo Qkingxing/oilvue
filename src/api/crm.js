@@ -417,6 +417,22 @@ export function sreachUser (data) {
     data
   })
 }
+// 查询单用户的积分记录
+export function getuserintegrallist (data) {
+  return PhpRequest({
+    url: '/user/getuserintegrallist',
+    method: 'post',
+    data
+  })
+}
+// 手动添加积分，减少积分
+export function addIntegral (data) {
+  return PhpRequest({
+    url: '/user/addIntegral',
+    method: 'post',
+    data
+  })
+}
 // 获取加油站列表
 export function getSitelist (data) {
   return PhpRequest({

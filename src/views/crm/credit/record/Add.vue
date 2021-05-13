@@ -1,7 +1,7 @@
 
 <template>
 
-  <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '600px', position: 'relative' }">
+  <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '700px', position: 'relative' }">
     <div class="head-title">
       客户积分记录
       <a-button type="info" @click="back">返回上一页</a-button>
@@ -40,7 +40,7 @@
       <a-table 
         :columns="columns" 
         :data-source="data" 
-        rowKey="key"
+        rowKey="id"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: 'radio' }"
         :pagination="false">
       </a-table>
@@ -69,29 +69,7 @@ export default {
       ModalText: 'Content of the modal',
       visible: false,
       confirmLoading: false,
-      data: [
-        {
-          key: '1',
-          name: 'John Brown',
-          age: 32,
-          address: 'New York No. 1 Lake Park',
-          tags: ['nice', 'developer'],
-        },
-        {
-          key: '2',
-          name: 'Jim Green',
-          age: 42,
-          address: 'London No. 1 Lake Park',
-          tags: ['loser'],
-        },
-        {
-          key: '3',
-          name: 'Joe Black',
-          age: 32,
-          address: 'Sidney No. 1 Lake Park',
-          tags: ['cool', 'teacher'],
-        },
-      ],
+      data: [],
       columns: [
         {
           title: '客户子编号',
@@ -118,7 +96,7 @@ export default {
           dataIndex: 'love_site_id',
         },
       ],
-      selectedRowKeys: ['1'], // Check here to configure the default column
+      selectedRowKeys: [], // Check here to configure the default column
     }
   },
   created () {
@@ -131,10 +109,19 @@ export default {
     handleOk(e) {
       this.ModalText = 'The modal will be closed after two seconds';
       this.confirmLoading = true;
-      setTimeout(() => {
-        this.visible = false;
-        this.confirmLoading = false;
-      }, 2000);
+
+      let item = this.data.filter(e=>{
+        return e.id === this.selectedRowKeys[0].id
+      })
+      // 确认选择，跳转详情
+      this.godetail(item)
+
+      this.visible = false;
+      this.confirmLoading = false;
+
+    },
+    godetail(item){
+      this.$emit('godetail',item)
     },
     handleCancel(e) {
       console.log('Clicked cancel button');
@@ -148,10 +135,13 @@ export default {
             // console.log(res)
             if (res.data.length) {
               if (res.data.length===1) {
-                
+                // 数量为1，直接跳转
+                this.godetail(res.data[0])
               }else{
-
+                // 数量大于1，展开列表
+                this.data = res.data
               }
+              this.selectedRowKeys[0] = res.data[0].id
             }else{
               this.$message.error('该用户/手机号未注册，无积分信息')
             }
@@ -167,7 +157,7 @@ export default {
       this.$emit('back')
     },
     onSelectChange(selectedRowKeys) {
-      // console.log('selectedRowKeys changed: ', selectedRowKeys);
+      console.log('selectedRowKeys changed: ', selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
     },
   }

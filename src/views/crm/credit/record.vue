@@ -103,14 +103,24 @@
       </a-tabs>
     </a-layout-content>
 
-    <AddRecord ref="AddRecord" v-if="pageType=='add'" @back="pageType='list'"/>
+    <AddRecord 
+      ref="AddRecord" 
+      v-if="pageType=='add'" 
+      @back="pageType='list'"
+      @godetail="godetail"/>
+    
+    <DetailRecord 
+      ref="DetailRecord"
+      v-if="pageType == 'detail'"
+      @back="pageType='list'"
+      :user_id="itemID"/>
 
   </a-layout>
 </template>
 
 <script>
 import { STable } from '@/components'
-
+import { typeList } from '@/utils/enums'
 import { getIntegralrecordlist,getIntegralStatistics } from '@/api/crm'
 
 export default {
@@ -119,6 +129,7 @@ export default {
     STable,
     timePicker:()=>import('./record/components/timePicker'),
     AddRecord: ()=>import('./record/Add'),
+    DetailRecord: ()=>import('./record/Detail'),
   },
   data () {
     return {
@@ -133,14 +144,7 @@ export default {
         Add_manually: '手动新增积分',
         Manual_deduction: '手动减扣积分',
       },
-      typeList: [
-        { text: '消费积分', value: 1 },
-        { text: '手动增加', value: 2 },
-        { text: '退款', value: 3 },
-        { text: '订单取消', value: 4 },
-        { text: '导入', value: 5 },
-        { text: '活动获取', value: 6 },
-      ],
+      typeList,
       type:'1',
       time: {
         time_type: 1
@@ -216,6 +220,7 @@ export default {
             }
           })
       },
+      itemID: null,
       
     }
   },
@@ -228,6 +233,11 @@ export default {
 
   },
   methods: {
+    godetail(item){
+      // console.log(item)
+      this.itemID = item.id
+      this.pageType = 'detail'
+    },
     typeListText(value){
       let item = this.typeList.filter(e=>{
         return e.value === value
