@@ -56,6 +56,7 @@
     <ChangeIntegral 
       ref="ChangeIntegral"
       @reset="$refs.table.refresh()"/>
+      
   </a-layout-content>
 </template>
 
