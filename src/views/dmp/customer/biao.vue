@@ -140,6 +140,9 @@ export default {
       items:[]
     }
   },
+  created(){
+     console.log( this.lists)
+  },
   watch: {
     arr: {
       immediate: true,

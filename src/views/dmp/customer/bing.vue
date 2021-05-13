@@ -60,7 +60,7 @@ export default {
               overflow: 'hidden',
               textOverflow: 'ellipsis',
             },
-            // formatter: () => 'AntV\nG2Plot',
+            formatter: () => 'AntV\nG2Plot',
           },
         },
       })
