@@ -313,6 +313,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { STable } from '@/components'
+import { identitySelect } from '@/utils/enums'
 
 import { getOldUserList, getSonoillist, getSonsitelist,getlevelAll,getNewUserList } from '@/api/crm'
 
@@ -352,13 +353,9 @@ export default {
       loveSiteSelect:[],// 偏好油站下拉
       oilSelect:[],// 偏好油品下拉
       levelSelect:[],// 会员等级下拉
-      identitySelect:[ // 客户身份下拉
-        { label: '全部', value: 0 },
-        { label: '物流车/商用车', value: 1 },
-        { label: '专快车/顺风车', value: 2 },
-        { label: '私家车', value: 3 },
-        { label: '出租车', value: 4 },
-      ],// 会员等级下拉
+      identitySelect,
+      // 客户身份下拉,
+      // 会员等级下拉
       consumptionOptions: [
         { label: '全部', value: 2 },
         { label: '已消费', value: 1 },

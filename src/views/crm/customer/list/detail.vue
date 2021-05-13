@@ -2,6 +2,7 @@
 <template>
   <a-layout>
     <a-layout-content
+      v-if="pageType=='detail'"
       :style="{
        
         padding: '0 24px 24px 24px',
@@ -11,56 +12,57 @@
       }"
     >
       <div class="add-rule">
-        <a-button> 返回上一页 </a-button>
+        <a-button @click="$router.go(-1)"> 返回上一页 </a-button>
       </div>
       <div class="list">
         <div class="page-block">
           <div class="head-title">
             客户详情
           </div>
-          <div class="base-info" style="border-right: none; border-bottom: none;">
+          <div class="base-info" style="border-right: none; border-bottom: none;" v-if="detail">
             <div class="base-item">
               <div class="base-title">客户编号</div>
-              <div class="base-val">-</div>
+              <div class="base-val">{{detail.id}}</div>
             </div>
             <div class="base-item">
               <div class="base-title">客户子编号</div>
-              <div class="base-val">-</div>
+              <div class="base-val">{{detail.sonnumber}}</div>
             </div>
             <div class="base-item">
               <div class="base-title">手机号</div>
-              <div class="base-val">-</div>
+              <div class="base-val">{{detail.mobile}}</div>
             </div>
             <div class="base-item rightBorder">
               <div class="base-title">昵称</div>
-              <div class="base-val">-</div>
+              <div class="base-val">{{detail.nickname}}</div>
             </div>
             <div class="base-item">
               <div class="base-title">性别</div>
-              <div class="base-val">-</div>
+              <div class="base-val">{{detail.sex}}</div>
             </div>
             <div class="base-item">
               <div class="base-title">车牌号</div>
-              <div class="base-val">-</div>
+              <div class="base-val">{{detail.plate_number}}</div>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;">编辑</a-button>
             </div>
             <div class="base-item">
               <div class="base-title">油品偏好</div>
-              <div class="base-val">-</div>
+              <div class="base-val">{{detail.oils_name}}</div>
             </div>
             <div class="base-item rightBorder">
               <div class="base-title">会员等级</div>
-              <div class="base-val">1张</div>
+              <div class="base-val">{{detail.level_name}}</div>
               <a-button type="link" style="padding: 0px 8px 0px 0px;">修改</a-button>
             </div>
             <div class="base-item">
               <div class="base-title">客户身份</div>
-              <div class="base-val">-</div>
+              <div class="base-val">{{identityText(detail.identity_id)}}</div>
             </div>
             <div class="base-item">
               <div class="base-title">现有积分</div>
-              <div class="base-val">1张</div>
-              <a-button type="link" style="padding: 0px 8px 0px 0px;">增加</a-button>
-              <a-button type="link" style="padding: 0px 8px 0px 0px;">减少</a-button>
+              <div class="base-val">{{detail.integral}}</div>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="openChangeIntegralModal('plus')">增加</a-button>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="openChangeIntegralModal('reduce')">减少</a-button>
             </div>
             <div class="base-item">
               <div class="base-title">加油卡</div>
@@ -71,7 +73,7 @@
               <div class="base-title">优惠券</div>
               <div class="base-val">1张</div>
               <a-button type="link" style="padding: 0px 8px 0px 0px;">查看</a-button>
-              <a-button type="link" style="padding: 0px 8px 0px 0px;">发券</a-button>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="pageType='SendCoupon'">发券</a-button>
             </div>
             <div class="base-item rightBorder">
               <div class="base-title">客户标签</div>
@@ -84,12 +86,18 @@
             <div style="flex: 1 1 25%;"></div>
             <div style="flex: 1 1 25%;"></div>
           </div>
-          <a-tabs default-active-key="1" size="large">
-            <a-tab-pane key="1" tab="Tab 1">
+          <a-tabs default-active-key="1">
+            <a-tab-pane key="1" tab="消费记录">
             </a-tab-pane>
-            <a-tab-pane key="2" tab="Tab 2" force-render>
+            <a-tab-pane key="2" tab="加油卡记录">
             </a-tab-pane>
-            <a-tab-pane key="3" tab="Tab 3">
+            <a-tab-pane key="3" tab="优惠券记录">
+            </a-tab-pane>
+            <a-tab-pane key="4" tab="等级记录">
+            </a-tab-pane>
+            <a-tab-pane key="5" tab="积分记录">
+            </a-tab-pane>
+            <a-tab-pane key="6" tab="身份认证记录">
             </a-tab-pane>
           </a-tabs>
 
@@ -114,21 +122,36 @@
         </div>
       </div>
     </a-layout-content>
+
+    <SendCoupon 
+      ref="SendCoupon"
+      v-if="pageType=='SendCoupon'"/>
+
+    <ChangeIntegral 
+      ref="ChangeIntegral"/>
   </a-layout>
 </template>
 
 <script>
 import { STable } from '@/components'
+import { identitySelect } from '@/utils/enums'
 
-import { getRoleList, getServiceList } from '@/api/manage'
+import { getServiceList } from '@/api/manage'
+
+import { getUserdefault } from '@/api/crm'
 
 export default {
   name: 'CrmDetail',
   components: {
-    STable
+    STable,
+    ChangeIntegral: ()=>import('./components/ChangeIntegral'),
+    SendCoupon: ()=>import('./components/SendCoupon')
   },
   data () {
     return {
+      pageType: 'detail',
+      detail: null,
+      identitySelect,
       // 查询参数
       queryParam: {},
       // 表头
@@ -174,29 +197,40 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
+        // console.log('loadData.parameter', parameter)
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },
-      selectedRowKeys: [],
-      selectedRows: [],
-
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
+      
     }
   },
   created () {
-    this.tableOption()
-    getRoleList({ t: new Date() })
+    getUserdefault(this.$route.query.id).then(res=>{
+      // console.log(res)
+      this.detail = res.data
+    })
   },
   methods: {
+    // 增加减少积分
+    openChangeIntegralModal(type){
+      this.$refs.ChangeIntegral.showModal({
+        user_id: this.detail.user_id,
+        type
+      })
+    },
+    identityText(id){
+      let item = this.identitySelect.find(e=>{
+        return e.value === id
+      })
+      // console.log(item)
+      if (item&&item.value) {
+        return item.label
+      }else{
+        return '-'
+      }
+      
+    },
     delTag () {
       this.$confirm({
         title: '操作提示',
@@ -209,27 +243,6 @@ export default {
         onCancel () {}
       })
     },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
-    }
   }
 }
 </script>

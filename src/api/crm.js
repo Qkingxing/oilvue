@@ -42,6 +42,14 @@ export function getNewUserList (data) {
     data
   })
 }
+// 获取客户详情
+export function getUserdefault (id) {
+  return PhpRequest({
+    url: '/user/userdefault',
+    method: 'post',
+    data: {id}
+  })
+}
 // 获取获取标签列表
 export function getlabellist (data) {
   return PhpRequest({
