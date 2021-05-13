@@ -43,7 +43,7 @@
             <div class="base-item">
               <div class="base-title">车牌号</div>
               <div class="base-val">{{detail.plate_number}}</div>
-              <a-button type="link" style="padding: 0px 8px 0px 0px;">编辑</a-button>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="openPlateEdit">编辑</a-button>
             </div>
             <div class="base-item">
               <div class="base-title">油品偏好</div>
@@ -123,12 +123,21 @@
       </div>
     </a-layout-content>
 
+    <!-- 发优惠券 -->
     <SendCoupon 
       ref="SendCoupon"
-      v-if="pageType=='SendCoupon'"/>
+      v-if="pageType=='SendCoupon'"
+      @exit="pageType='detail'"/>
 
+    <!-- 增减积分 -->
     <ChangeIntegral 
       ref="ChangeIntegral"/>
+    
+    <!-- 编辑车牌号 -->
+    <ChangePlateNumber 
+      ref="ChangePlateNumber"/>
+
+    
   </a-layout>
 </template>
 
@@ -145,7 +154,8 @@ export default {
   components: {
     STable,
     ChangeIntegral: ()=>import('./components/ChangeIntegral'),
-    SendCoupon: ()=>import('./components/SendCoupon')
+    SendCoupon: ()=>import('./components/SendCoupon'),
+    ChangePlateNumber: ()=>import('./components/ChangePlateNumber')
   },
   data () {
     return {
@@ -212,6 +222,9 @@ export default {
     })
   },
   methods: {
+    openPlateEdit(){
+      this.$refs.ChangePlateNumber.showModal()
+    },
     // 增加减少积分
     openChangeIntegralModal(type){
       this.$refs.ChangeIntegral.showModal({

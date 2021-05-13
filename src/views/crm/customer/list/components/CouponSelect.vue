@@ -15,10 +15,12 @@
             class="mSelect_ListBlock"
             v-for="(item,i) in list"
             :key="i">
+
             <label>
               <a-checkbox></a-checkbox>
               <div class="mSelect_ListBlock_text">正式随机券1130</div>
             </label>
+            
           </div>
 
 

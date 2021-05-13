@@ -42,7 +42,7 @@
 
     <div class="container_button" style="display: flex; justify-content: space-around; width: 280px;">
       <a-button type="primary" disabled>确 认</a-button>
-      <a-button>取 消</a-button>
+      <a-button @click="exit">取 消</a-button>
 
     </div>
 
@@ -92,7 +92,9 @@ export default {
 
   },
   methods: {
-
+    exit(){
+      this.$emit('exit')
+    }
   }
 }
 </script>
