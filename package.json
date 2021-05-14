@@ -14,7 +14,7 @@
     "@ant-design-vue/pro-layout": "^1.0.7",
     "@antv/data-set": "^0.10.2",
     "@antv/g2": "^4.1.16",
-    "@antv/g2plot": "^2.3.19",
+    "@antv/g2plot": "^2.3.21",
     "ant-design-vue": "^1.7.2",
     "axios": "^0.19.0",
     "core-js": "^3.1.2",

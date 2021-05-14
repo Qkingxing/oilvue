@@ -15,7 +15,7 @@
       </div>
     </div>
     <div v-if="dateKey == '1'">
-      <component v-if="show" :nums="nums" :lists="lists" :is="vivew"></component>
+      <times  :nums="nums" :lists="lists"></times>
     </div>
     <div class="time" v-if="dateKey == '2'">
       <div class="head-title">销售总数据</div>
@@ -81,13 +81,13 @@
     </div>
 
     <div v-if="dateKey == '3'">
-      <component :nums="nums" :lists="lists" :is="vivew"></component>
+      <times2 :nums="nums" :lists="lists" ></times2>
     </div>
     <div v-if="dateKey == '4'">
-      <component :nums="nums" :lists="lists" :is="vivew"></component>
+      <times3 :nums="nums" :lists="lists" ></times3>
     </div>
     <div v-if="dateKey == '5'">
-      <component :nums="nums" :lists="lists" :is="vivew"></component>
+      <times4 :nums="nums" :lists="lists" ></times4>
     </div>
   </div>
 </template>
@@ -95,15 +95,22 @@
 <script>
 import G2 from './components/G2'
 import times from './times'
+import times1 from './times1'
+import times2 from './times2'
+import times3 from './times3'
+import times4 from './times4'
 import NumberCard from './components/numberCard'
 import LineCharts from './components/LineCharts'
 import { analysiss } from '@/api/data'
-import { revenue } from '@/api/data'
 export default {
   props: ['lists'],
   name: 'Dashboard',
   components: {
     times,
+    times1,
+    times2,
+    times3,
+    times4,
     NumberCard,
     LineCharts,
     G2,
@@ -124,6 +131,7 @@ export default {
       noTitleKey: 'quanbu',
       dateKey: '1',
       show: false,
+      nums:{}
       // lists: {},
     }
   },
@@ -131,19 +139,15 @@ export default {
   mounted() {},
   created() {
     this.analysis()
-    this.revenue()
-    console.log(this.lists)
   },
   methods: {
-    revenue(){
-      return revenue({}).then(res =>{
-        // console.log(res)
-      })
-    },
+   
     analysis() {
-      return analysiss({}).then((res) => {
+      return analysiss1({time_type:1}).then((res) => {
+          console.log(res)
         res.data.map((item) => {
           this.nums = item
+          console.log(this.nums)
         })
         this.show = true
       })

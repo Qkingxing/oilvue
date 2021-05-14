@@ -121,7 +121,7 @@ export default {
   //   }
   // },
   created(){
-      this.biao()
+      this.biaos()
   },
   filters:{
       before(str){
@@ -132,7 +132,7 @@ export default {
       }
   },
   methods:{
-     biao(){
+     biaos(){
        return customerMemberStatistic({ time_type:1}).then(res =>{
           
           this.lineChart = res.data.lineChart1

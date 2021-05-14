@@ -87,10 +87,10 @@ export default {
     }
   },
    created(){
-        this.biao()
+        this.biaos()
    },
    methods:{
-       biao(){
+       biaos(){
            return customerIntegralStatistics({time_type:1}).then(res =>{
              this.lineChart1 = res.data.lineChart1
              this.lineChart2 = res.data.lineChart2

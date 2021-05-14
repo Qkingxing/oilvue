@@ -42,14 +42,13 @@ export default {
     },
     methods:{
         customers(){
-           
             return customer({time_status:1}).then(res=>{
                 this.lists = res.data
                 console.log(this.lists)
             })
         },
         customerStatisticss(){
-            return customerStatistics({ time_status:1}).then(res=>{
+            return customerStatistics({ time_type:1}).then(res=>{
                 this.arr = res.data
                 this.show = true
                 console.log(this.arr)

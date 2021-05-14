@@ -12,7 +12,7 @@ export default {
     }
   },
   mounted() {
-    this.biao()
+    this.biao6()
   },
   watch: {
     cake1: {
@@ -25,7 +25,7 @@ export default {
     
   },
   methods: {
-    biao() {
+    biao6() {
       const data = []
       for (let i = 0; i < this.arrs.data.length; i++) {
         let items = {}

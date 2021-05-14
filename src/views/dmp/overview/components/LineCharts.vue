@@ -6,19 +6,20 @@
 import { Chart } from '@antv/g2'
 
 export default {
+    props:['lineChart1'],
+    watch:{
+        lineChart1:{
+            immediate: true,
+            handler(value){
+                console.log(value)
+                this.lists = value
+            },
+            deep: true,
+        }
+    },
   data () {
     return {
-      data: [
-        { year: '1991', value: 3 },
-        { year: '1992', value: 4 },
-        { year: '1993', value: 3.5 },
-        { year: '1994', value: 5 },
-        { year: '1995', value: 4.9 },
-        { year: '1996', value: 6 },
-        { year: '1997', value: 7 },
-        { year: '1998', value: 9 },
-        { year: '1999', value: 13 }
-      ]
+        lists:{},
     }
   },
   methods: {
@@ -28,8 +29,16 @@ export default {
         autoFit: true,
         height: 300
       })
-
-      chart.data(this.data)
+     let data = []
+      for(let i = 0; i < this.lists.length; i++){
+          for(let j = 0; j < this.lists[i].data.length; j++){
+             let item ={}
+             item.year = this.lists[i].data[j].yaer
+             item.value = this.lists[i].data[j].value
+             data.push(item)
+          }
+      }
+      chart.data(data)
       chart.scale({
         year: {
           range: [0, 1]

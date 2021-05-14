@@ -23,7 +23,7 @@
             <a-popover title="消费客户" overlayClassName="note">
               <template slot="content">
                 <div class="" style="width: 200px">
-                  <p>{{list.value}}</p>
+                  <p>统计时间内，已消费人数合计</p>
                 </div>
               </template>
               <span class="anticon">
@@ -39,26 +39,23 @@
 import IconSelector from '@/components/IconSelector'
 
 export default {
-  props:['list','show1'],
+  props:['list'],
   components: { IconSelector },
   data() {
     return {
       data: [],
-      zhou:'',
-     xiaoshou:''
+      zhou:''
     }
   },
   created(){
-      
-//    setTimeout(()=>{
+   setTimeout(()=>{
          this.mapDate()
-//    },100)
-//     console.log(this.list)
+   },100)
+    console.log(this.list)
 
   },
   methods: {
     mapDate(){
-     
      if(sessionStorage.getItem('key') == '1'||sessionStorage.getItem('key') == '2'){
          
          this.zhou = '周同比'
@@ -69,8 +66,6 @@ export default {
          
          this.zhou = '月环比'
      }
-     console.log(this.zhou)
-     console.log(this.list)
     }
   },
   filters:{

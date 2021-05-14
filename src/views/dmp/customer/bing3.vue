@@ -1,5 +1,5 @@
 <template>
-  <div id="canvas_box" ref="canvas_box3"></div>
+  <div id="canvas_box3" ref="canvas_box3"></div>
 </template>
 
 <script>
@@ -12,7 +12,9 @@ export default {
     }
   },
   mounted() {
-    this.biao()
+   this.$nextTick(()=>{
+        this.biao3()
+   })
   },
   watch: {
     cake1: {
@@ -25,7 +27,7 @@ export default {
     
   },
   methods: {
-    biao() {
+    biao3() {
       const data = []
       for (let i = 0; i < this.arrs.data.length; i++) {
         let items = {}
@@ -33,7 +35,7 @@ export default {
           items.value = Number(this.arrs.data[i].value)
           data.push(items)
       }
-      const piePlot = new Pie(this.$refs.canvas_box3, {
+      const piePlot = new Pie('canvas_box3', {
         appendPadding: 10,
         data,
         angleField: 'value',

@@ -41,49 +41,11 @@
       </div>
     </div>
 
-    <!-- <div class="head_title">
-      <span>累计数据</span>
-      <span class="sub-title">统计截止时间：2021-01-23</span>
-    </div> -->
-    <!-- <div class="box">
-      <div class="overflow_box" v-for="(a, index) in 6" :key="index">
-        <div class="overflow_li">
-          <div class="title">
-            <span>消费客户</span>
-          </div>
-          <div class="price_info">
-            <span class="price">100</span>
-            <span class="unit">人</span>
-          </div>
-          <div class="trend_info">
-            <span>较上一周期</span>
-            <span class="percente percent-up">0.00%</span>
-             <i class="trend">
-                  <a-icon type="arrow-down" />
-                </i>
-          </div>
-          <i class="more_info anticon anticon-question-circle">
-            <a-popover title="消费客户" overlayClassName="note">
-              <template slot="content">
-                <div class="" style="width: 200px">
-                  <p>统计时间内，已消费人数合计</p>
-                </div>
-              </template>
-              <span class="anticon">
-                <a-icon type="question-circle" />
-              </span>
-            </a-popover>
-          </i>
-        </div>
-      </div>
-    </div> -->
+ 
 
-    <span>图表分析</span>
+    <span>图表分析111</span>
     <div class="head_title">
       <div class="trend-box">
-        <!-- <div style="width:200px;margin: 0 auto;text-align: center;" v-for="(leg,index) in legends" :key="index">
-            <span style="line-height: 35px;">{{leg}}</span>
-        </div> -->
         <div class="canvas-boxs">
           <canvas_box :lineChart="lineChart" ></canvas_box>
         </div>
@@ -141,7 +103,7 @@ export default {
     }
   },
   created(){
-     console.log( this.lists)
+     
   },
   watch: {
     arr: {
@@ -160,7 +122,8 @@ export default {
         arr1.push(this.cake2)
         arr2.push(this.cake3)
         this.items.push(arr,arr1,arr2)
-        this.show = true
+        this.show = tru
+        console.log(this.lineChart)
       },
       deep: true,
     },

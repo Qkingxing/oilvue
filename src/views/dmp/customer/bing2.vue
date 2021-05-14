@@ -12,7 +12,9 @@ export default {
     }
   },
   mounted() {
-    this.biao()
+    this.$nextTick(()=>{
+        this.biao()
+    })
   },
   watch: {
     cake3: {

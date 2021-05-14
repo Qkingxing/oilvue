@@ -3,7 +3,8 @@
 </template>
 
 <script>
-import { Pie } from '@antv/g2plot'
+// import { Pie } from '@antv/g2plot'
+import { Pie } from '@antv/g2plot';
 export default {
   props: ['cake2',],
   data() {
@@ -12,7 +13,7 @@ export default {
     }
   },
   mounted() {
-    this.biao()
+    this.biao1()
   },
   watch: {
     cake2: {
@@ -25,7 +26,7 @@ export default {
    
   },
   methods: {
-    biao() {
+    biao1() {
       const data = []
       for (let i = 0; i < this.arrs.data.length; i++) {
          let items = {}

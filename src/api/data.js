@@ -18,6 +18,15 @@ export function analysiss(data){
         data
     })
 }
+// 占比分析 最新
+export function analysiss1(data){
+    return PhpRequest({
+        url:'/set/allinfo',
+        method:'post',
+        data
+    })
+}
+
 
 // 查看收入趋势
 

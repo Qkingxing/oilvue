@@ -1,170 +1,91 @@
 <template>
-  
   <div>
-        <div id="charts" style="width: 400px" ref="charts"></div>
+    <div id="charts" style="width: 400px;margin: auto" ref="charts"></div>
   </div>
 </template>
 
 <script>
-import { Chart } from '@antv/g2'
+import { Chart, registerShape } from '@antv/g2'
 
 export default {
-  props:['nums'],
+  props: ['it',],
   data() {
     return {
-      data: [
-        { item: '92#', count: this.nums.fives_oils_actually_paid, d: 0.4 , },
-        { item: '0#', count: this.nums.zero_oils_actually_paid, d: 0.21 },
-        { item: '95#', count: this.nums.two_oils_actually_paid, d: 0.17 },
-      ],
+      lists: {},
+      lists1:{}
     }
   },
-  created(){
-      // console.log(this.nums)
+  watch: {
+    it: {
+      immediate: true,
+      handler(value) {
+          console.log(value)
+        this.lists = value
+      },
+      deep: true,
+    },
+    
   },
-  
+  created() {},
+
   methods: {
-      
-    init: function () {
-        let thit = this
+    init() {
+      const data = [
+        // { type: '分类一', value: 20 },
+        // { type: '分类二', value: 18 },
+        // { type: '分类三', value: 32 },
+        // { type: '分类四', value: 15 },
+        // { type: 'Other', value: 15 },
+      ]
+        console.log(this.lists)
+      for (let key in this.lists) {
+          let item = {}
+          item.type = this.lists[key].type
+          item.value = this.lists[key].value
+           data.push(item)
+      }
+      console.log(data)
+      // 可以通过调整这个数值控制分割空白处的间距，0-1 之间的数值
+      const sliceNumber = 0.01
+
+      // 自定义 other 的图形，增加两条线
+      registerShape('interval', 'slice-shape', {
+        draw(cfg, container) {
+          const points = cfg.points
+          let path = []
+          path.push(['M', points[0].x, points[0].y])
+          path.push(['L', points[1].x, points[1].y - sliceNumber])
+          path.push(['L', points[2].x, points[2].y - sliceNumber])
+          path.push(['L', points[3].x, points[3].y])
+          path.push('Z')
+          path = this.parsePath(path)
+          return container.addShape('path', {
+            attrs: {
+              fill: cfg.color,
+              path,
+            },
+          })
+        },
+      })
+
       const chart = new Chart({
         container: this.$refs.charts,
-        autoFit: false,
-        height: 300,
-        width:600,
+        autoFit: true,
+        height: 500,
       })
 
+      chart.data(data)
       chart.coordinate('theta', {
         radius: 0.75,
-        innerRadius: 0.5,
+        innerRadius: 0.6,
       })
-      chart.data(this.data)
-
-      chart.scale('d', {
-        formatter: (val) => {
-          val = val * 100 + '%'
-          return val
-        },
+      chart.tooltip({
+        showTitle: false,
+        showMarkers: false,
       })
-      // 声明需要进行自定义图例字段： 'item'
-      chart.legend('item', {
-        position: 'right', // 配置图例显示位置
-        custom: true, // 关键字段，告诉 G2，要使用自定义的图例
-        items: thit.data.map((obj, index) => {
-            // console.log(thit)
-          return {
-            name: obj.item, // 对应 itemName
-            value: obj, // 对应 itemValue
-            marker: {
-              symbol: 'square', // marker 的形状
-              style: {
-                r: 5, // marker 图形半径
-                fill: chart.getTheme().colors10[index], // marker 颜色，使用默认颜色，同图形对应
-              },
-            }, // marker 配置
-          }
-        }),
-        itemValue: {
-          style: {
-            fill: '#999',
-          }, // 配置 itemValue 样式
-          formatter: (val) => `${val.d * 100}%  ${val.count} 元`, // 格式化 itemValue 内容
-        },
-      })
-      chart
-        .interval()
-        .adjust('stack')
-        .position('d')
-        .color('item')
-        .style({
-          fillOpacity: 1,
-        })
-        .state({
-          active: {
-            style: (element) => {
-              const shape = element.shape
-              return {
-                lineWidth: 10,
-                stroke: shape.attr('fill'),
-                strokeOpacity: shape.attr('fillOpacity'),
-              }
-            },
-          },
-        })
-
-      // 移除图例点击过滤交互
-      chart.removeInteraction('legend-filter')
-      chart.interaction('element-active')
+      chart.interval().adjust('stack').position('value').color('type').shape('slice-shape')
 
       chart.render()
-
-      // 监听 element 上状态的变化来动态更新 Annotation 信息
-      chart.on('element:statechange', (ev) => {
-        const { state, stateStatus, element } = ev.gEvent.originalEvent
-
-        // 本示例只需要监听 active 的状态变化
-        if (state === 'active') {
-          const data = element.getData()
-          if (stateStatus) {
-            // 更新 Annotation
-            updateAnnotation(data)
-          } else {
-            // 隐藏 Annotation
-            clearAnnotation()
-          }
-        }
-      })
-
-      // 绘制 annotation
-      let lastItem
-      function updateAnnotation(data) {
-        if (data.item !== lastItem) {
-          chart.annotation().clear(true)
-          chart
-            .annotation()
-            .text({
-              position: ['50%', '50%'],
-              content: data.item,
-              style: {
-                fontSize: 20,
-                fill: '#8c8c8c',
-                textAlign: 'center',
-              },
-              offsetY: -20,
-            })
-            .text({
-              position: ['50%', '50%'],
-              content: data.count,
-              style: {
-                fontSize: 28,
-                fill: '#8c8c8c',
-                textAlign: 'center',
-              },
-              offsetX: -10,
-              offsetY: 20,
-            })
-            .text({
-              position: ['50%', '50%'],
-              content: '台',
-              style: {
-                fontSize: 20,
-                fill: '#8c8c8c',
-                textAlign: 'center',
-              },
-              offsetY: 20,
-              offsetX: 20,
-            })
-          chart.render(true)
-          lastItem = data.item
-        }
-      }
-
-      // 清空 annotation
-      function clearAnnotation() {
-        chart.annotation().clear(true)
-        chart.render(true)
-        lastItem = null
-      }
     },
   },
 

@@ -13,9 +13,9 @@
       <a-popover placement="bottom">
         <template slot="content">
           <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span v-for="(item,index) in this.lineChart1" :key="index" @click="income(index)" style="margin-bottom: 10px; cursor: pointer">{{item.legend}}</span>
-            <!-- <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span> -->
-            <!-- <span @click="income(3)" style="cursor: pointer">客单价趋势</span> -->
+            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
           </div>
         </template>
 
@@ -25,27 +25,112 @@
 
     <a-row>
       <a-col :span="20" v-if="line == 1">
-        <LineCharts :lineChart1='lineChart1'></LineCharts>
+        <line-charts></line-charts>
       </a-col>
       <a-col :span="20" v-if="line == 2">
-        <LineCharts :lineChart1='lineChart1'></LineCharts>
+        <line-charts></line-charts>
         22
       </a-col>
       <a-col :span="20" v-if="line == 3">
-        <LineCharts :lineChart1='lineChart1'></LineCharts>
+        <line-charts></line-charts>
         33
       </a-col>
     </a-row>
 
     <div class="head-title">点比分析</div>
-    <div class="pie-chart-box" v-for="(item,index) in lists1" :key="index">
+    <div class="pie-chart-box">
       <div class="tab_1">
         <a-tabs>
-          <a-tab-pane v-for="(it,index) in item" :key="index" :tab="it.type">
-            <G2 v-if='show' :it='it.data' ></G2>
-            <div class="sale-ratio-name">
-                <span >{{it.name}}</span>
-            </div>
+          <a-tab-pane key="1" tab="全部">
+            <G2 :nums='nums' v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="扫呗-微信">
+            <G2 :nums='nums' ></G2>
+          </a-tab-pane>
+          <a-tab-pane key="3" tab="扫呗-微信付款码">
+            <G2 :nums='nums'  ></G2>
+          </a-tab-pane>
+          <a-tab-pane key="4" tab="团油 - 微信">
+            <G2 :nums='nums'  ></G2>
+          </a-tab-pane>
+          <a-tab-pane key="5" tab="团油 - 微信小程序支付">
+            <G2 :nums='nums' ></G2>
+          </a-tab-pane>
+          <a-tab-pane key="6" tab="团油">
+            <G2 :nums='nums' ></G2>
+          </a-tab-pane>
+          <a-tab-pane key="7" tab="加油卡">
+            <G2 :nums='nums' ></G2>
+          </a-tab-pane>
+        </a-tabs>
+      </div>
+      <div class="tab_1">
+        <a-tabs>
+          <a-tab-pane key="1" tab="全部">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="92#">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="3" tab="0#">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="4" tab="95#">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+        </a-tabs>
+      </div>
+      <div class="tab_1">
+        <a-tabs>
+          <a-tab-pane key="1" tab="全部">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="扫呗-微信">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="3" tab="扫呗-微信付款码">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="4" tab="团油 - 微信">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="5" tab="团油 - 微信小程序支付">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="6" tab="团油">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="7" tab="加油卡">
+            <G2 :nums='nums' v-if="show"></G2>
+          </a-tab-pane>
+        </a-tabs>
+      </div>
+      <div class="tab_1">
+        <a-tabs>
+          <a-tab-pane key="1" tab="全部">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="92#">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="3" tab="0#">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="4" tab="95#">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+        </a-tabs>
+      </div>
+      <div class="tab_1">
+        <a-tabs>
+          <a-tab-pane key="1" tab="Tab 1">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="Tab 2">
+            <G2 :nums='nums'  v-if="show"></G2>
+          </a-tab-pane>
+          <a-tab-pane key="3" tab="Tab 3">
+            <G2 :nums='nums' v-if="show"></G2>
           </a-tab-pane>
         </a-tabs>
       </div>
@@ -65,7 +150,7 @@ import LineCharts from './components/LineCharts'
 import {revenue} from '@/api/data'
 import {analysiss1} from '@/api/data'
 export default {
-  props: ['lists'],
+  props: ['lists','nums','a'],
   name: 'Dashboard',
   components: {
     NumberCard,
@@ -94,25 +179,21 @@ export default {
       noTitleKey: 'quanbu',
       dateKey: 'jintian',
       num:{},
-      nums:{},
-      lists1:[],
-      lineChart1:{},
-      oilsMoney:{},
-      oilsNumber:{},
-      paysMoney:{},
-      paysNumber:{}
+      show:true,
+      show1:false,
+      show2:false,
+      show3:false,
+      show4:false,
+	//   nums:{}
     }
   },
   created() {
       this.analysis()
-    console.log(this.lists)
-
   },
   watch:{
       nums:{
           handler(value){
-              this.num = value
-              console.log(value)
+            //   this.num = value
               this.show = true
           },
           deep:true,
@@ -120,33 +201,31 @@ export default {
       }
   },
   methods: {
-    analysis(){
-        return analysiss1({time_type:3}).then(res=>{
-          this.lineChart1 = res.data.lineChart1
-          this.oilsMoney = res.data.oilsMoney
-          this.oilsNumber = res.data.oilsNumber
-          this.paysMoney = res.data.paysMoney
-          this.paysNumber = res.data.paysNumber
+     
+	 analysis(){
 
-          this.lists1.push(this.oilsMoney,this.oilsNumber,this.paysMoney,this.paysNumber)
-          console.log(this.lists1)
-         this.show = true
-        })
-    },
+		 return analysiss1({time_status:1}).then(res=>{
+             console.log(item)
+			res.data.map(item =>{
+                this.nums = item;
+                
+            })
+            this.show = true
+		 })
+	 },
     income(index) {
-        console.log(index)
-      if (String(index) == '0') {
+      if (index == 1) {
         this.line = 1
         return
       }
-      if (String(index) == '1') {
+      if (index == 2) {
         this.line = 2
         return
       }
-    //   if (index == 3) {
-    //     this.line = 3
-    //     returny
-    //   }
+      if (index == 3) {
+        this.line = 3
+        returny
+      }
     },
     handleClick(tab, event) {
       console.log(tab, event)
@@ -165,17 +244,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.sale-ratio-name{
-    font-size: 16px;
-    color: #1e1e28;
-    margin: 20px auto;
-    text-align: center;
-}
 .boxs {
   .pie-chart-box {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    // display: grid;
     // grid-template-columns: 1fr 1fr;
     // grid-gap: 20px;
     .tab_1 {
