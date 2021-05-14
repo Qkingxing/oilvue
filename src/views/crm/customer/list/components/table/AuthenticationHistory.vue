@@ -6,9 +6,14 @@
     :columns="columns" 
     :data="loadData">
 
-    <span slot="type" slot-scope="text, record">
+    <span slot="identity_type" slot-scope="text, record">
       <template>
-        {{IntegralHistoryTypeText(text)}}
+        {{identity_typesText(text)}}
+      </template>
+    </span>
+    <span slot="identity_id" slot-scope="text, record">
+      <template>
+        {{identitySelectText(text)}}
       </template>
     </span>
     <span slot="order_no" slot-scope="text, record">
@@ -23,7 +28,7 @@
 <script>
 import { STable } from '@/components'
 import { getUserAuthenticationHistory } from '@/api/crm'
-import { IntegralHistoryType } from '@/utils/enums'
+import { identitySelect,identity_types } from '@/utils/enums'
 
 export default {
   name: 'AuthenticationHistory',
@@ -32,7 +37,8 @@ export default {
   },
   data(){
     return {
-      IntegralHistoryType,
+      identitySelect,
+      identity_types,
       // 表头
       columns: [
         {
@@ -43,12 +49,12 @@ export default {
         {
           title: '身份类型',
           dataIndex: 'identity_type',
-          // scopedSlots: { customRender: 'zf_number' },
+          scopedSlots: { customRender: 'identity_type' },
         },
         {
           title: '车辆类型',
           dataIndex: 'identity_id',
-          // scopedSlots: { customRender: 'zf_number' },
+          scopedSlots: { customRender: 'identity_id' },
         },
         {
           title: '车牌号',
@@ -75,8 +81,8 @@ export default {
             data: res.data, // 列表数组
             pageNo: parameter.pageNo,  // 当前页码
             pageSize: parameter.pageSize,  // 每页页数
-            totalCount: res.data.total, // 列表总条数
-            totalPage: res.data.current_page // 列表总页数
+            totalCount: res.countPage, // 列表总条数
+            totalPage: res.pageSize // 列表总页数
           }
         })
       },
@@ -86,10 +92,18 @@ export default {
 
   },
   methods: {
-    IntegralHistoryTypeText(text){
+    identity_typesText(text){
       // console.log(text)
-      let item = this.IntegralHistoryType.find(e=>{
-        return e.value === text
+      let item = this.identity_types.find(e=>{
+        return e.value === Number(text)
+      })
+      // console.log(item)
+      return item.label
+    },
+    identitySelectText(text){
+      // console.log(text)
+      let item = this.identitySelect.find(e=>{
+        return e.value === Number(text)
       })
       // console.log(item)
       return item.label

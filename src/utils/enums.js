@@ -41,5 +41,12 @@ export const IntegralHistoryType = [
   { label: '活动获取', value: 6 },
   { label: '过期', value: 7 },
   { label: '手动减少', value: 8 },
+]
+// 身份类型
+export const identity_types = [
+  { label: '无', value: 0 },
+  { label: '身份已认证', value: 1 },
+  { label: '加油卡', value: 2 },
+  { label: '会员', value: 3 },
 
 ]

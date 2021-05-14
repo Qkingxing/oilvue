@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <a-layout v-if="$route.name=='Clist'">
+    <a-layout v-if="$route.name=='Clist'&&pageType=='list'">
       <a-layout-content :style="{ padding: '24px', background: '#fff', minHeight: '280px' }">
         <div class="client-tab-btns">
           <a-radio-group v-model="radioValue" @change="onChangeType">
@@ -207,7 +207,7 @@
               </span>
             </span>
             <div>
-              <a-button :disabled="!oldselectedRowKeys.length">发优惠券</a-button>
+              <a-button :disabled="!oldselectedRowKeys.length" @click="openSendCoupon()">发优惠券</a-button>
               
               <a-button 
                 v-if="oldselectedRowKeys.length>0&&userInfo.site_id!=-1" 
@@ -306,6 +306,14 @@
     </a-layout>
 
     <ColumnsModal ref="ColumnsModal"></ColumnsModal>
+
+    <a-layout v-if="pageType=='SendCoupon'">
+      <SendCoupon 
+        ref="SendCoupon" 
+        :ids="ids"
+        @exit="pageType='list'" />
+    </a-layout>
+
     <router-view />
   </div>
 </template>
@@ -324,10 +332,12 @@ export default {
   components: {
     STable,
     EditTag,
-    ColumnsModal: ()=>import('./components/ColumnsModal')
+    ColumnsModal: ()=>import('./components/ColumnsModal'),
+    SendCoupon: ()=> import('./components/SendCoupon')
   },
   data () {
     return {
+      pageType: 'list',
       radioValue: 'new',
       oldqueryParam: {
         numberType: 'sonnumber', // 输入类型
@@ -584,7 +594,8 @@ export default {
           onChange: this.onSelectChange
         }
       },
-      optionAlertShow: false
+      optionAlertShow: false,
+      ids: []
     }
   },
   computed: {
@@ -615,6 +626,19 @@ export default {
     
   },
   methods: {
+    // 发优惠券
+    openSendCoupon(){
+      if (this.radioValue==='old') {
+        // console.log(this.oldselectedRows)
+        this.ids = this.oldselectedRows.map(e=>{return e.id})
+        // console.log(this.ids)
+      }else{
+        // console.log(this.selectedRows)
+        this.ids = this.selectedRows.map(e=>{return e.id})
+        // console.log(this.ids)
+      }
+      this.pageType = 'SendCoupon'
+    },
     onChangeType(){
       // console.log(this.radioValue)
       if (this.radioValue==='old') {

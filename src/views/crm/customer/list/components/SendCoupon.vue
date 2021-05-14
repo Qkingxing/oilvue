@@ -1,7 +1,6 @@
 <template>
   <a-layout-content
     :style="{
-      
       padding: '0 24px 24px 24px',
       background: '#fff',
       minHeight: '760px',
@@ -112,6 +111,12 @@ export default {
 
     }
   },
+  props:{
+    ids:{
+      type: Array,
+      default: []
+    }
+  },
   computed:{
     ...mapGetters(['checkedCoupons']),
     money(){
@@ -131,7 +136,7 @@ export default {
     SendCoupon(){
       let table = _.cloneDeep(this.checkedCoupons)
       let params = {
-        user_id: this.$route.query.id,
+        user_id: this.$route.query.id?this.$route.query.id:this.ids,
         coupons: table.map(e=>{
           return {
             id: e.id,
@@ -142,7 +147,8 @@ export default {
       // console.log(params)
   
       SendCoupon(params).then(res=>{
-        // console.log(res)
+        // console.log(res).
+        this.$message.success('优惠券发放成功')
         this.$emit('reset')
         this.exit()
       })

@@ -92,12 +92,13 @@
             <div style="flex: 1 1 25%;"></div>
             <div style="flex: 1 1 25%;"></div>
           </div>
-          <a-tabs default-active-key="5">
+          <a-tabs default-active-key="1">
             <a-tab-pane key="1" tab="消费记录">
               <ConsumptionHistory 
                 ref="ConsumptionHistory"/>
             </a-tab-pane>
             <a-tab-pane key="2" tab="加油卡记录">
+              
             </a-tab-pane>
             <a-tab-pane key="3" tab="优惠券记录">
               <CouponHistory 
