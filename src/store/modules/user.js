@@ -8,7 +8,7 @@ import {
 import { getUserInfo, SwitchPermission } from '@/api/oa'
 
 import { ACCESS_TOKEN, SITE_ID, GROUP_ID, USER_ID } from '@/store/mutation-types'
-import { welcome } from '@/utils/util'
+import { welcome, getQueryString } from '@/utils/util'
 import { getSitelist } from '@/api/crm'
 
 import notification from 'ant-design-vue/es/notification'
@@ -163,7 +163,13 @@ const user = {
             })
             // 刷新
             setTimeout(()=>{
-              location.reload();
+              // 如果有url参数，重定向
+              if (getQueryString('backUri')) {
+                location.href = getQueryString('backUri')
+              }else{
+              // 没有刷新
+                location.reload();
+              }
             },300)
             
             resolve(res)
