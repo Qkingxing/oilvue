@@ -24,10 +24,23 @@
           <a-form-model-item label="初始会员等级" >
             
             <a-radio-group v-model="form.radio" style="padding-top: 5px;">
-              <a-radio :style="radioStyle" :value="1">
+              <!-- <a-radio :style="radioStyle" :value="1">
                 动态等级(自动升级)
               </a-radio>
               <a-radio :style="radioStyle" :value="2" style="margin-top: 15px;">
+                固定等级
+                <a-select v-model="form.level_id" style="width: 200px;margin-left: 16px;" placeholder="请选择固定等级">
+                  <a-select-option 
+                    v-for="(item,index) in fixedLevelOptions"
+                    :key="index"
+                    :value="item.id">
+                    {{item.name}}
+                  </a-select-option>
+
+                </a-select>
+
+              </a-radio> -->
+              <a-radio :style="radioStyle" :value="1">
                 固定等级
                 <a-select v-model="form.level_id" style="width: 200px;margin-left: 16px;" placeholder="请选择固定等级">
                   <a-select-option 
