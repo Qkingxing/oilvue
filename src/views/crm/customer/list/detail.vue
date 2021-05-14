@@ -122,7 +122,8 @@
 
     <!-- 增减积分 -->
     <ChangeIntegral 
-      ref="ChangeIntegral"/>
+      ref="ChangeIntegral"
+      @reset="onLoad"/>
     
     <!-- 编辑车牌号 -->
     <ChangePlateNumber 
@@ -130,7 +131,8 @@
     
     <!-- 修改会员等级 -->
     <ChangeLevel 
-      ref="ChangeLevel"/>
+      ref="ChangeLevel"
+      @reset="onLoad"/>
 
     
   </a-layout>
@@ -164,12 +166,15 @@ export default {
     }
   },
   created () {
-    getUserdefault(this.$route.query.id).then(res=>{
-      // console.log(res)
-      this.detail = res.data
-    })
+    this.onLoad()
   },
   methods: {
+    async onLoad(){
+      getUserdefault(this.$route.query.id).then(res=>{
+        // console.log(res)
+        this.detail = res.data
+      })
+    },
     plate_numberText(){
       let arr = this.detail.plate_number.map(e=>{return e.plate_number})
       let str = arr.join('、')
@@ -190,8 +195,12 @@ export default {
         return '-'
       }
     },
+    // 修改会员等级
     openEditLevel(){
-      this.$refs.ChangeLevel.showModal()
+      this.$refs.ChangeLevel.showModal({
+        level_id: this.detail.level_id,
+        level_name: this.detail.level_name
+      })
     },
     // 编辑车牌号
     openPlateEdit(){

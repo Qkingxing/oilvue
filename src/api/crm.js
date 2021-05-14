@@ -50,6 +50,15 @@ export function getUserdefault (id) {
     data: {id}
   })
 }
+// 给客户修改用户等级（只能修改固定等级）
+export function levelsave (data) {
+  return PhpRequest({
+    url: '/user/levelsave',
+    method: 'post',
+    data
+  })
+}
+
 // 获取获取标签列表
 export function getlabellist (data) {
   return PhpRequest({

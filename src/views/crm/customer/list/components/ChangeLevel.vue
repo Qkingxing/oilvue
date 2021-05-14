@@ -10,7 +10,7 @@
     >
       <div>
         将客户从
-        <span class="grade-name">铜卡会员</span>
+        <span class="grade-name">{{level_name}}</span>
         变更为
 
         <a-form-model
@@ -68,6 +68,7 @@
 
 import _ from 'lodash'
 import { getlevelAlls } from '@/api/user'
+import { levelsave } from '@/api/crm'
 
 export default {
   name: 'ChangeLevel',
@@ -93,7 +94,9 @@ export default {
         //   { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
         // ],
       },
-      fixedLevelOptions: []
+      fixedLevelOptions: [],
+      level_id: undefined,
+      level_name: '',
 
 
     }
@@ -107,16 +110,17 @@ export default {
       let fixedLevelRes = await getlevelAlls({type:1})
       // console.log(fixedLevelRes.data)
       this.fixedLevelOptions = fixedLevelRes.data
-
-
     },
     resetForm(){
       this.form = {
-       
+        radio: 1,
+        level_id: undefined
       }
     },
     showModal(obj) {
-     
+      this.level_id = obj.level_id
+      this.level_name = obj.level_name
+
       this.visible = true;
     },
     handleOk(e) {
@@ -125,7 +129,16 @@ export default {
       
       let form = _.cloneDeep(this.form)
 
-      console.log(form)
+      // console.log(form)
+
+      levelsave({
+        user_id: this.$route.query.id,	//[string]	是	用户id		
+        level_id: this.form.level_id	//[string]	是	固定等级id
+      }).then(res=>{
+        // console.log(res)
+        this.handleCancel()
+        this.$emit('reset')
+      })
       
 
       // this.visible = false;
