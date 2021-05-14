@@ -18,12 +18,13 @@
         >
           <a-form-model-item label="车牌号" class="inline-item" style="width: 400px;">
             <a-form-model-item
-              v-for="(item,i) in form.tags" :key="i"
+              prop=""
+              v-for="(item,i) in form.plate_number" :key="i"
               style="margin-left: 8px;">
-              <a-input allowClear style="width: 108px;margin: 3px 0 3px 0;"/>
+              <a-input v-model="item.plate_number" allowClear style="width: 108px;margin: 3px 0 3px 0;"/>
             </a-form-model-item>
 
-            <div class="add-wrap edit-wrap">
+            <div class="add-wrap edit-wrap" @click="addItem">
               <a-icon type="plus" />
               添加
             </div>
@@ -48,15 +49,12 @@ export default {
       labelCol: { span: 3 },
       wrapperCol: { span: 21 },
       form: {
-        tags:[
-
-        ]
+        plate_number:[]
       },
       rules: {
-        // name: [
-        //   { required: true, message: 'Please input Activity name', trigger: 'blur' },
-        //   { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
-        // ],
+        plate_number: [
+          { required: true, message: '请输入车牌号', trigger: 'blur' },
+        ],
       },
 
 
@@ -74,8 +72,15 @@ export default {
        
       }
     },
-    showModal(obj) {
-     
+    addItem(){
+      let obj = {
+        plate_number: ''
+      }
+      this.form.plate_number.push(obj)
+    },
+    showModal(arr) {
+      console.log(arr)
+      this.form.plate_number = _.cloneDeep(arr)
       this.visible = true;
     },
     handleOk(e) {

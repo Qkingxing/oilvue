@@ -30,28 +30,30 @@
             </div>
             <div class="base-item">
               <div class="base-title">手机号</div>
-              <div class="base-val">{{detail.mobile}}</div>
+              <div class="base-val">{{detail.mobile=='****'?'-':detail.mobile}}</div>
             </div>
             <div class="base-item rightBorder">
               <div class="base-title">昵称</div>
-              <div class="base-val">{{detail.nickname}}</div>
+              <div class="base-val">{{detail.nickname?detail.nickname:'-'}}</div>
             </div>
             <div class="base-item">
               <div class="base-title">性别</div>
-              <div class="base-val">{{detail.sex}}</div>
+              <div class="base-val" v-if="detail.sex==null">-</div>
+              <div class="base-val" v-if="detail.sex==0">男</div>
+              <div class="base-val" v-if="detail.sex==1">女</div>
             </div>
             <div class="base-item">
               <div class="base-title">车牌号</div>
-              <div class="base-val">{{detail.plate_number}}</div>
-              <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="openPlateEdit">编辑</a-button>
+              <div class="base-val">{{plate_numberText()}}</div>
+              <!-- <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="openPlateEdit">编辑</a-button> -->
             </div>
             <div class="base-item">
               <div class="base-title">油品偏好</div>
-              <div class="base-val">{{detail.oils_name}}</div>
+              <div class="base-val">{{detail.oils_name?detail.oils_name:'-'}}</div>
             </div>
             <div class="base-item rightBorder">
               <div class="base-title">会员等级</div>
-              <div class="base-val">{{detail.level_name}}</div>
+              <div class="base-val">{{detail.level_name?detail.level_name:'-'}}</div>
               <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="openEditLevel">修改</a-button>
             </div>
             <div class="base-item">
@@ -60,25 +62,29 @@
             </div>
             <div class="base-item">
               <div class="base-title">现有积分</div>
-              <div class="base-val">{{detail.integral}}</div>
+              <div class="base-val">{{detail.integral?detail.integral:0}}</div>
               <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="openChangeIntegralModal('plus')">增加</a-button>
               <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="openChangeIntegralModal('reduce')">减少</a-button>
             </div>
             <div class="base-item">
               <div class="base-title">加油卡</div>
-              <div class="base-val">1张</div>
+              <div class="base-val">{{detail.card.length}}张</div>
               <a-button type="link" style="padding: 0px 8px 0px 0px;">查看</a-button>
             </div>
             <div class="base-item rightBorder">
               <div class="base-title">优惠券</div>
-              <div class="base-val">1张</div>
+              <div class="base-val">{{detail.coupons.length}}张</div>
               <a-button type="link" style="padding: 0px 8px 0px 0px;">查看</a-button>
               <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="pageType='SendCoupon'">发券</a-button>
             </div>
             <div class="base-item rightBorder">
               <div class="base-title">客户标签</div>
               <div class="base-val">
-                <div class="label-box"><span>-</span></div>
+                <div class="label-box">
+                  <span>
+                    {{userTagText()}}
+                  </span>
+                </div>
                 <a>修改</a>
               </div>
             </div>
@@ -164,11 +170,32 @@ export default {
     })
   },
   methods: {
+    plate_numberText(){
+      let arr = this.detail.plate_number.map(e=>{return e.plate_number})
+      let str = arr.join('、')
+      // console.log(str)
+      if (this.detail.plate_number.length) {
+        return str
+      }else{
+        return '-'
+      }
+    },
+    userTagText(){
+      let arr = this.detail.label.map(e=>{return e.name})
+      let str = arr.join('、')
+      // console.log(str)
+      if (this.detail.label.length) {
+        return str
+      }else{
+        return '-'
+      }
+    },
     openEditLevel(){
       this.$refs.ChangeLevel.showModal()
     },
+    // 编辑车牌号
     openPlateEdit(){
-      this.$refs.ChangePlateNumber.showModal()
+      this.$refs.ChangePlateNumber.showModal(this.detail.plate_number)
     },
     // 增加减少积分
     openChangeIntegralModal(type){
