@@ -141,9 +141,9 @@ export default {
 
       addIntegral(form).then(res=>{
         // console.log(res)
-        if (res.data) {
+        if (res.data&&res.data.type) {
           this.handleCancel()
-          this.$emit('reset')
+          this.$emit('reset',res.data.integral)
         }
       })
       

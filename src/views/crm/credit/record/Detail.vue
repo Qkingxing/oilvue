@@ -55,7 +55,7 @@
 
     <ChangeIntegral 
       ref="ChangeIntegral"
-      @reset="$refs.table.refresh()"/>
+      @reset="onChangeIntegralOK"/>
       
   </a-layout-content>
 </template>
@@ -133,6 +133,10 @@ export default {
    
   },
   methods: {
+    onChangeIntegralOK(integral){
+      this.$emit('changeIntegral',integral)
+      this.$refs.table.refresh()
+    },
     openModal(type){
       this.$refs.ChangeIntegral.showModal({
         user_id: this.itemObj.user_id,

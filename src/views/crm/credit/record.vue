@@ -113,7 +113,8 @@
       ref="DetailRecord"
       v-if="pageType == 'detail'"
       @back="pageType='list'"
-      :itemObj="itemObj"/>
+      :itemObj="itemObj"
+      @changeIntegral="onChangeIntegralOK"/>
 
   </a-layout>
 </template>
@@ -233,8 +234,11 @@ export default {
 
   },
   methods: {
+    onChangeIntegralOK(integral){
+      this.itemObj.integral = integral
+    },
     godetail(item){
-      console.log(item)
+      // console.log(item)
       this.itemObj = item
       this.pageType = 'detail'
     },
