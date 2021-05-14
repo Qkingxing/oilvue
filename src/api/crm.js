@@ -58,6 +58,14 @@ export function levelsave (data) {
     data
   })
 }
+// 给客户发优惠券
+export function SendCoupon (data) {
+  return PhpRequest({
+    url: '/user/SendCoupon',
+    method: 'post',
+    data
+  })
+}
 // 查询客户加油卡
 export function getUserCard (user_id) {
   return PhpRequest({

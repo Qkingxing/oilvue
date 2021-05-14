@@ -62,7 +62,7 @@
     </div>
 
     <div class="container_button" style="display: flex; justify-content: space-around; width: 280px;">
-      <a-button type="primary" :disabled="checkedCoupons.length==0">确 认</a-button>
+      <a-button type="primary" :disabled="checkedCoupons.length==0" @click="SendCoupon">确 认</a-button>
       <a-button @click="exit">取 消</a-button>
 
     </div>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { getCoupons } from '@/api/em'
+import { SendCoupon } from '@/api/crm'
 import _ from 'lodash'
 import { mapGetters, mapMutations } from 'vuex'
 
@@ -128,6 +128,25 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_CHECKED_COUPONS']),
+    SendCoupon(){
+      let table = _.cloneDeep(this.checkedCoupons)
+      let params = {
+        user_id: this.$route.query.id,
+        coupons: table.map(e=>{
+          return {
+            id: e.id,
+            count: e.count
+          }
+        })
+      }
+      // console.log(params)
+  
+      SendCoupon(params).then(res=>{
+        // console.log(res)
+        this.$emit('reset')
+        this.exit()
+      })
+    },
     delItem(index){
       let table = _.cloneDeep(this.checkedCoupons)
       // 通知下拉框，删除一个

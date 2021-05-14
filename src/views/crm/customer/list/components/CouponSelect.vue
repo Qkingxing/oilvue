@@ -142,6 +142,7 @@ export default {
           e.count = 1
           return e
         })
+        this.SET_CHECKED_COUPONS([])
       })
     },
     // 打开关闭下拉框

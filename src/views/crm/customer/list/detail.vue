@@ -118,7 +118,8 @@
     <SendCoupon 
       ref="SendCoupon"
       v-if="pageType=='SendCoupon'"
-      @exit="pageType='detail'"/>
+      @exit="pageType='detail'"
+      @reset="onLoad"/>
 
     <!-- 增减积分 -->
     <ChangeIntegral 
