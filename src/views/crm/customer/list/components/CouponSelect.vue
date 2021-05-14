@@ -1,14 +1,15 @@
 <template>
   <div class="multipleChoiceContainer" v-cloak v-clickoutside="outsideClose">
     <div class="mSelectContainer" :isshow="isshow" itdisable="0" @click="togalSelect">
-      <div class="mSelect_text" style="color: rgb(191, 191, 191);">请选择奖励优惠券</div>
+      <div class="mSelect_text" style="color: rgb(191, 191, 191);" v-if="checkedCoupons.length==0">请选择奖励优惠券</div>
+      <div class="mSelect_text" style="color: rgba(0, 0, 0, 0.65);" v-else>已选择{{checkedCoupons.length}}项</div>
       <div class="mSelect_triangle">
         <a-icon type="caret-down" style="color: rgb(191, 191, 191);"/>
       </div>
       <div class="mSelect_ListContainer" v-show="isshow==1" @click.stop>
-        <div class="mSelect_ListSearchBox">
-          <a-input allowClear v-model="coupons_name" placeholder="请输入券名称或ID" />
-        </div>
+        <!-- <div class="mSelect_ListSearchBox">
+          <a-input allowClear v-model="coupons_name" @change="getList" placeholder="请输入券名称或ID" />
+        </div> -->
         <div class="mSelect_ListBox public_global_scroll">
           <!-- 选项 -->
           <div 
@@ -17,8 +18,8 @@
             :key="i">
 
             <label>
-              <a-checkbox></a-checkbox>
-              <div class="mSelect_ListBlock_text">正式随机券1130</div>
+              <a-checkbox v-model="item.checked" @change="pushTable(item,i)"></a-checkbox>
+              <div class="mSelect_ListBlock_text">{{item.coupons_name}}</div>
             </label>
             
           </div>
@@ -29,7 +30,7 @@
           <div v-show="list.length==0" hascenter="true" class="mSelect_ListBlock" style="">暂无数据</div>
         </div>
         <!-- hover详情 -->
-        <div class="mSelect_ListDetailInfoBox">
+        <!-- <div class="mSelect_ListDetailInfoBox">
           <div class="multipleChoiceContainer_detail">
             <div>
               <div>优惠券名:</div>
@@ -75,7 +76,7 @@
               <div>不限制</div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -83,6 +84,8 @@
 
 <script>
 import { getCoupons } from '@/api/em'
+import { mapGetters, mapMutations } from 'vuex'
+import _ from 'lodash'
 
 export default {
   name: 'CouponSelect',
@@ -90,13 +93,41 @@ export default {
     return {
       isshow: 0,
       list: [],
-      coupons_name: ''
+      coupons_name: '',
+      table: [],
+
     }
+  },
+  computed:{
+    ...mapGetters(['checkedCoupons'])
   },
   created(){
     this.getList()
   },
   methods: {
+    ...mapMutations(['SET_CHECKED_COUPONS']),
+    delItem(item){
+      this.list.forEach(e=>{
+        if (e.id===item.id) {
+          e.checked = false
+        }
+      })
+    },
+    pushTable(item,i){
+      let table = _.cloneDeep(this.checkedCoupons)
+      // console.log(item)
+      // 增加
+      if (item.checked) {
+        table.push(item)
+      }else{
+      // 删除
+        let index = table.findIndex(e=>{
+          return e.id === item.id
+        })
+        table.splice(index,1)
+      }
+      this.SET_CHECKED_COUPONS(table)
+    },
     getList(){
       getCoupons({
         page: 1, // 页码
@@ -105,7 +136,12 @@ export default {
         is_expired: 1,
         coupons_name: this.coupons_name,
       }).then(res=>{
-        console.log(res)
+        // console.log(res.data)
+        this.list = res.data.map(e=>{
+          e.checked = false
+          e.count = 1
+          return e
+        })
       })
     },
     // 打开关闭下拉框

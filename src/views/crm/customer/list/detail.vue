@@ -74,7 +74,7 @@
             <div class="base-item rightBorder">
               <div class="base-title">优惠券</div>
               <div class="base-val">{{detail.coupons.length}}张</div>
-              <a-button type="link" style="padding: 0px 8px 0px 0px;">查看</a-button>
+              <!-- <a-button type="link" style="padding: 0px 8px 0px 0px;">查看</a-button> -->
               <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="pageType='SendCoupon'">发券</a-button>
             </div>
             <div class="base-item rightBorder">
@@ -85,7 +85,7 @@
                     {{userTagText()}}
                   </span>
                 </div>
-                <a>修改</a>
+                <!-- <a>修改</a> -->
               </div>
             </div>
             <div style="flex: 1 1 25%;"></div>

@@ -14,7 +14,7 @@ const getters = {
   userId: state => state.user.userId,
   addRouters: state => state.permission.addRouters,
   multiTab: state => state.app.multiTab,
-  
+  checkedCoupons: state => state.crm.checkedCoupons
 }
 
 export default getters
