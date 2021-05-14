@@ -58,6 +58,14 @@ export function levelsave (data) {
     data
   })
 }
+// 查询客户加油卡
+export function getUserCard (user_id) {
+  return PhpRequest({
+    url: '/user/userCard',
+    method: 'post',
+    data: {user_id}
+  })
+}
 
 // 获取获取标签列表
 export function getlabellist (data) {

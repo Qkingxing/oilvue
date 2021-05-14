@@ -69,7 +69,7 @@
             <div class="base-item">
               <div class="base-title">加油卡</div>
               <div class="base-val">{{detail.card.length}}张</div>
-              <a-button type="link" style="padding: 0px 8px 0px 0px;">查看</a-button>
+              <a-button type="link" style="padding: 0px 8px 0px 0px;" v-if="detail.card.length" @click="openCardListModal">查看</a-button>
             </div>
             <div class="base-item rightBorder">
               <div class="base-title">优惠券</div>
@@ -134,6 +134,9 @@
       ref="ChangeLevel"
       @reset="onLoad"/>
 
+    <CardListModal 
+      ref="CardListModal"/>
+
     
   </a-layout>
 </template>
@@ -154,7 +157,8 @@ export default {
     SendCoupon: ()=>import('./components/SendCoupon'),
     ChangePlateNumber: ()=>import('./components/ChangePlateNumber'),
     ChangeLevel: ()=>import('./components/ChangeLevel'),
-    ConsumptionHistory: ()=>import('./components/table/ConsumptionHistory')
+    ConsumptionHistory: ()=>import('./components/table/ConsumptionHistory'),
+    CardListModal: ()=>import('./components/CardListModal'),
   },
   data () {
     return {
@@ -174,6 +178,10 @@ export default {
         // console.log(res)
         this.detail = res.data
       })
+    },
+    // 打开加油卡详情
+    openCardListModal(){
+      this.$refs.CardListModal.showModal()
     },
     plate_numberText(){
       let arr = this.detail.plate_number.map(e=>{return e.plate_number})
