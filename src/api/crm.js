@@ -99,6 +99,14 @@ export function getUserIntegralHistory(data) {
     data
   })
 }
+// 查询客户加油卡记录
+export function getUserCheckrecordsHistory(data) {
+  return PhpRequest({
+    url: '/user/checkrecords',
+    method: 'post',
+    data
+  })
+}
 // 查询客户身份认证记录
 export function getUserAuthenticationHistory(data) {
   return JavaRequest({
