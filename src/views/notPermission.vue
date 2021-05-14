@@ -20,14 +20,31 @@
         <div class="container-right">
           <!-- <div class="error-mainInfo">提示</div> -->
           <div class="error-mainInfoTwo">提示</div>
-          <div class="error-subInfo">当前操作需要切换至集团</div>
+
+          <div class="error-subInfo" v-if="type==1">当前操作需要切换至集团</div>
+          <div class="error-subInfo" v-if="type==2">该页面在单站下才有访问权限!</div>
+
 
           <a-button
+            v-if="type==1"
             type="primary"
             size="large"
-            style="margin-top: 30px">
+            style="margin-top: 30px"
+            @click="SwitchPermission(-1)">
             切换至集团
           </a-button>
+
+          <router-link
+            v-if="type==2"
+            :to="{path:'/'}">
+            <a-button
+              type="primary"
+              size="large"
+              style="margin-top: 30px">
+              回到首页
+            </a-button>
+          </router-link>
+          
         </div>
       </div>
     </a-layout-content>
@@ -35,12 +52,21 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'notPermission',
   data(){
     return {
-      
+      type: 0
     }
+  },
+  created(){
+    this.type = this.$route.query.type
+    // console.log(this.$route.query.type)
+
+  },
+  methods: {
+    ...mapActions(['SwitchPermission']),
   }
 }
 </script>

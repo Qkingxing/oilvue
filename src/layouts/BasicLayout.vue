@@ -134,6 +134,15 @@ export default {
           width: newV
         })
       }
+      if (this.siderWidth===120) {
+        $('.ant-pro-page-header-wrap').css({
+          'padding-left': '170px'
+        })
+      }else{
+        $('.ant-pro-page-header-wrap').css({
+          'padding-left': '300px'
+        })
+      }
     }
   },
   computed: {
@@ -193,6 +202,7 @@ export default {
       // this.collapsed = val
       // console.log(val)
       this.siderWidth = this.siderWidth===120 ? 252 : 120
+      
     },
     openSilder(){
       this.siderWidth = 252

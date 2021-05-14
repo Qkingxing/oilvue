@@ -5,19 +5,20 @@
     :scroll="{ x: true }"
     :columns="columns" 
     :data="loadData">
-    <span slot="zf_number" slot-scope="text, record">
+
+    <span slot="zf_type" slot-scope="text, record">
       <template>
-        <router-link :to="{path:'/oms/overview',query:{id:text}}">{{text}}</router-link>
+        {{text==1?'未使用':'使用'}}
       </template>
     </span>
-    <span slot="product_type" slot-scope="text, record">
+    <span slot="volume_type" slot-scope="text, record">
       <template>
-        {{text==1?'油品':'商品'}}
+        {{text==1?'油品券':'商品券'}}
       </template>
     </span>
-    <span slot="order_status" slot-scope="text, record">
+    <span slot="way_type" slot-scope="text, record">
       <template>
-        {{orderStatusText(text)}}
+        {{way_typeText(text)}}
       </template>
     </span>
   </s-table>
@@ -25,81 +26,69 @@
 
 <script>
 import { STable } from '@/components'
-import { getUserConsumptionHistory } from '@/api/crm'
-import { orderStatus } from '@/utils/enums'
+import { getUserCouponHistory } from '@/api/crm'
+import { orderStatus, way_type } from '@/utils/enums'
 
 export default {
-  name: 'ConsumptionHistory',
+  name: 'CouponHistory',
   components: {
     STable
   },
   data(){
     return {
       orderStatus,
+      way_type,
+      //  "site_name": "世外桃源油站",//关联油站
+      //   "volume_type": "1",//券类型  1:油品卷，2：商品卷
+      //   "create_time": "2021-03-04 17:10:41",//变更时间
+      //   "coupons_name": "测试卷",//券名称
+      //   "way_type": "-",//获取途径
+      //   "zf_type": "1",//类型 zf_type
+      //   "coupons_amount": "12.74"//券面额
       // 表头
       columns: [
         {
-          title: '订单号',
-          dataIndex: 'zf_number',
-          scopedSlots: { customRender: 'zf_number' },
+          title: '变更时间',
+          dataIndex: 'create_time',
+          // scopedSlots: { customRender: 'zf_number' },
           fixed: 'left'
         },
         {
-          title: '订单时间',
-          dataIndex: 'create_time'
+          title: '类型',
+          dataIndex: 'zf_type',
+          scopedSlots: { customRender: 'zf_type' },
         },
         {
-          title: '订单类型',
-          dataIndex: 'product_type',
-          scopedSlots: { customRender: 'product_type' },
+          title: '券名称',
+          dataIndex: 'coupons_name',
         },
         {
-          title: '订单状态',
-          dataIndex: 'order_status',
-          scopedSlots: { customRender: 'order_status' },
+          title: '券类型',
+          dataIndex: 'volume_type',
+          scopedSlots: { customRender: 'volume_type' },
         },
         {
-          title: '油品升数',
-          dataIndex: 'order_liter'
+          title: '券面额',
+          dataIndex: 'coupons_amount'
         },
         {
-          title: '应付金额',
-          dataIndex: 'order_total'
+          title: '获取途径',
+          dataIndex: 'way_type',
+          scopedSlots: { customRender: 'way_type' },
         },
         {
-          title: '优惠金额',
-          dataIndex: 'count_discount'
+          title: '关联油站',
+          dataIndex: 'site_name'
         },
-        {
-          title: '实付金额',
-          dataIndex: 'actually_paid'
-        },
-        // {
-        //   title: '加油卡余额',
-        //   // dataIndex: 'status'
-        // },
-        // {
-        //   title: '可用积分',
-        //   // dataIndex: 'status'
-        // },
-        // {
-        //   title: '会员等级',
-        //   dataIndex: 'watch',
-        // },
-        // {
-        //   title: '消费油站',
-        //   dataIndex: 'action',
-        //   fixed: 'right'
-        // }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         let params = {
           page: parameter.pageNo, // 页码
           limit: parameter.pageSize, // 每页页数
-          user_id: this.$route.query.id
+          id: this.$route.query.id
         }
-        return getUserConsumptionHistory(Object.assign(params)).then(res => {
+        return getUserCouponHistory(Object.assign(params)).then(res => {
           // 自定义出参
           console.log(res.data)
 
@@ -122,6 +111,14 @@ export default {
       // console.log(text)
       let item = this.orderStatus.find(e=>{
         return e.value === text
+      })
+      // console.log(item)
+      return item.label
+    },
+    way_typeText(text){
+      // console.log(text)
+      let item = this.way_type.find(e=>{
+        return e.value === Number(text)
       })
       // console.log(item)
       return item.label

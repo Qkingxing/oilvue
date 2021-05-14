@@ -92,7 +92,7 @@
             <div style="flex: 1 1 25%;"></div>
             <div style="flex: 1 1 25%;"></div>
           </div>
-          <a-tabs default-active-key="1">
+          <a-tabs default-active-key="5">
             <a-tab-pane key="1" tab="消费记录">
               <ConsumptionHistory 
                 ref="ConsumptionHistory"/>
@@ -100,12 +100,18 @@
             <a-tab-pane key="2" tab="加油卡记录">
             </a-tab-pane>
             <a-tab-pane key="3" tab="优惠券记录">
+              <CouponHistory 
+                ref="CouponHistory"/>
             </a-tab-pane>
-            <a-tab-pane key="4" tab="等级记录">
+            <!-- <a-tab-pane key="4" tab="等级记录">
+            </a-tab-pane> -->
+            <a-tab-pane key="4" tab="积分记录">
+              <IntegralHistory 
+                ref="IntegralHistory"/>
             </a-tab-pane>
-            <a-tab-pane key="5" tab="积分记录">
-            </a-tab-pane>
-            <a-tab-pane key="6" tab="身份认证记录">
+            <a-tab-pane key="5" tab="身份认证记录">
+              <AuthenticationHistory 
+                ref="AuthenticationHistory"/>
             </a-tab-pane>
           </a-tabs>
 
@@ -159,6 +165,9 @@ export default {
     ChangePlateNumber: ()=>import('./components/ChangePlateNumber'),
     ChangeLevel: ()=>import('./components/ChangeLevel'),
     ConsumptionHistory: ()=>import('./components/table/ConsumptionHistory'),
+    CouponHistory: ()=>import('./components/table/CouponHistory'),
+    IntegralHistory: ()=>import('./components/table/IntegralHistory'),
+    AuthenticationHistory: ()=>import('./components/table/AuthenticationHistory'),
     CardListModal: ()=>import('./components/CardListModal'),
   },
   data () {

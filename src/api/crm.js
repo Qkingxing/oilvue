@@ -75,6 +75,39 @@ export function getUserCard (user_id) {
   })
 }
 
+// 查询客户消费记录
+export function getUserConsumptionHistory (data) {
+  return JavaRequest({
+    url: '/order/getOrder',
+    method: 'post',
+    data
+  })
+}
+// 查询客户优惠券记录
+export function getUserCouponHistory(data) {
+  return JavaRequest({
+    url: '/customer/coupon_record_identity',
+    method: 'post',
+    data
+  })
+}
+// 查询客户积分记录
+export function getUserIntegralHistory(data) {
+  return PhpRequest({
+    url: '/user/getuserintegrallist',
+    method: 'post',
+    data
+  })
+}
+// 查询客户身份认证记录
+export function getUserAuthenticationHistory(data) {
+  return JavaRequest({
+    url: '/customer/query_authentication',
+    method: 'post',
+    data
+  })
+}
+
 // 获取获取标签列表
 export function getlabellist (data) {
   return PhpRequest({

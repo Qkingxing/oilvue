@@ -164,7 +164,7 @@ const user = {
             // 刷新
             setTimeout(()=>{
               location.reload();
-            },1500)
+            },300)
             
             resolve(res)
           }else{

@@ -17,3 +17,29 @@ export const identitySelect = [
   { label: '私家车', value: 3 },
   { label: '出租车', value: 4 },
 ]
+// 订单状态
+export const orderStatus = [
+  { label: '已支付', value: 1 },
+  { label: '待支付', value: 2 },
+  { label: '支付失败', value: 3 },
+]
+// 优惠券获取途径
+export const way_type = [
+  { label: '人工发放', value: 1 },
+  { label: '用户购买', value: 2 },
+  { label: '满额送', value: 3 },
+  { label: '抽奖', value: 4 },
+  { label: '好友邀请', value: 5 },
+]
+// 优惠券获取途径
+export const IntegralHistoryType = [
+  { label: '消费积分', value: 1 },
+  { label: '手动增加', value: 2 },
+  { label: '退款', value: 3 },
+  { label: '订单取消', value: 4 },
+  { label: '导入', value: 5 },
+  { label: '活动获取', value: 6 },
+  { label: '过期', value: 7 },
+  { label: '手动减少', value: 8 },
+
+]
