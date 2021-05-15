@@ -1,140 +1,60 @@
 <template>
   <div class="boxs">
-    <div class="head-title">销售总数据</div>
-    <div class="saleall_4">
-      <div class="saleall-container" v-for="(list, index) in lists" :key="index">
-        <NumberCard :list="list"></NumberCard>
-        
+   <div class="head-title">销售总数据</div>
+      <div class="saleall_4">
+        <div class="saleall-container" v-for="(list, index) in lists" :key="index">
+            
+         <NumberCard  :list="list"></NumberCard>
+        </div>
       </div>
+
+      <div class="sales">
+        <div class="head-title">销售收入趋势</div>
+        <a-popover placement="bottom">
+          <template slot="content">
+            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
+              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
+              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
+            </div>
+          </template>
+
+          <a-button>切换</a-button>
+        </a-popover>
+      </div>
+      <a-row>
+        <a-col :span="20" v-if="line == 1">
+           <LineCharts v-if="show" :lineChart1='lineChart1'></LineCharts>
+        </a-col>
+
+        <a-col :span="20" v-if="line == 2">
+           <LineCharts v-if="show" :lineChart1='lineChart1'></LineCharts>
+          
+        </a-col>
+        <a-col :span="20" v-if="line == 3">
+          <LineCharts v-if="show" :lineChart1='lineChart1'></LineCharts>
+          
+        </a-col>
+      </a-row>
+
+      <div class="head-title">点比分析</div>
+      
+      <div class="content">
+        <div class="pie-chart-box" v-for="(item,index) in lists1" :key="index">
+        <div class="tab_1">
+            <a-tabs>
+            <a-tab-pane v-for="(it,index) in item" :key="index" :tab="it.type">
+                <G2 v-if='show' :it='it.data' ></G2>
+                <div class="sale-ratio-name">
+                    <span >{{it.name}}</span>
+                </div>
+            </a-tab-pane>
+            </a-tabs>
+        </div>
+        </div>
     </div>
 
-    <div class="sales">
-      <div class="head-title">销售收入趋势</div>
-      <a-popover placement="bottom">
-        <template slot="content">
-          <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-            <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-            <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-            <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-          </div>
-        </template>
-
-        <a-button>切换</a-button>
-      </a-popover>
-    </div>
-
-    <a-row>
-      <a-col :span="20" v-if="line == 1">
-        <line-charts></line-charts>
-      </a-col>
-      <a-col :span="20" v-if="line == 2">
-        <line-charts></line-charts>
-        22
-      </a-col>
-      <a-col :span="20" v-if="line == 3">
-        <line-charts></line-charts>
-        33
-      </a-col>
-    </a-row>
-
-    <div class="head-title">点比分析</div>
-    <div class="pie-chart-box">
-      <div class="tab_1">
-        <a-tabs>
-          <a-tab-pane key="1" tab="全部">
-            <G2 :nums='nums' v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="扫呗-微信">
-            <G2 :nums='nums' ></G2>
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="扫呗-微信付款码">
-            <G2 :nums='nums'  ></G2>
-          </a-tab-pane>
-          <a-tab-pane key="4" tab="团油 - 微信">
-            <G2 :nums='nums'  ></G2>
-          </a-tab-pane>
-          <a-tab-pane key="5" tab="团油 - 微信小程序支付">
-            <G2 :nums='nums' ></G2>
-          </a-tab-pane>
-          <a-tab-pane key="6" tab="团油">
-            <G2 :nums='nums' ></G2>
-          </a-tab-pane>
-          <a-tab-pane key="7" tab="加油卡">
-            <G2 :nums='nums' ></G2>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
-      <div class="tab_1">
-        <a-tabs>
-          <a-tab-pane key="1" tab="全部">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="92#">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="0#">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="4" tab="95#">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
-      <div class="tab_1">
-        <a-tabs>
-          <a-tab-pane key="1" tab="全部">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="扫呗-微信">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="扫呗-微信付款码">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="4" tab="团油 - 微信">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="5" tab="团油 - 微信小程序支付">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="6" tab="团油">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="7" tab="加油卡">
-            <G2 :nums='nums' v-if="show"></G2>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
-      <div class="tab_1">
-        <a-tabs>
-          <a-tab-pane key="1" tab="全部">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="92#">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="0#">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="4" tab="95#">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
-      <div class="tab_1">
-        <a-tabs>
-          <a-tab-pane key="1" tab="Tab 1">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="Tab 2">
-            <G2 :nums='nums'  v-if="show"></G2>
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="Tab 3">
-            <G2 :nums='nums' v-if="show"></G2>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
-    </div>
+    
   </div>
 </template>
 
@@ -147,10 +67,9 @@ import NumberCard3 from './components/numberCard3'
 import NumberCard4 from './components/numberCard4'
 import Charts from './components/charts'
 import LineCharts from './components/LineCharts'
-import {revenue} from '@/api/data'
 import {analysiss1} from '@/api/data'
 export default {
-  props: ['lists','nums','a'],
+  props: ['lists','index'],
   name: 'Dashboard',
   components: {
     NumberCard,
@@ -179,74 +98,34 @@ export default {
       noTitleKey: 'quanbu',
       dateKey: 'jintian',
       num:{},
-      show:true,
-      show1:false,
-      show2:false,
-      show3:false,
-      show4:false,
-	//   nums:{}
+        nums:{},
+      lists1:[],
+      lineChart1:{},
+      oilsMoney:{},
+      oilsNumber:{},
+      paysMoney:{},
+      paysNumber:{}
     }
   },
   created() {
       this.analysis()
-    // console.log(this.nums)
-    this.revenues()
   },
-  watch:{
-      nums:{
-          handler(value){
-            //   this.num = value
-              this.show = true
-          },
-          deep:true,
-          immediate:true
-      }
-  },
+  
   methods: {
-      revenues(){
-          console.log(this.a)
-         if(sessionStorage.getItem('key') == 1){
-             this.show = true
-             this.show1 = false
-             this.show2 = false
-             this.show3 = false
-             this.show4 = false
-         }else if(sessionStorage.getItem('key' == 2)){
-             this.show = false
-             this.show1 = true
-              this.show2 = false
-             this.show3 = false
-             this.show4 = false
-         }else if(sessionStorage.getItem('key' == 3)){
-             this.show = false
-             this.show1 = false
-             this.show2 = true
-              this.show3 = false
-             this.show4 = false
-         }else if(sessionStorage.getItem('key' == 4)){
-             this.show = false
-             this.show1 = false
-             this.show2 = false
-             this.show3 = true
-              this.show4 = false
-         }else {
-             this.show = false
-              this.show1 = false
-             this.show2 = false
-             this.show3 = false
-             this.show4 = true
-         }
-      },
+     
+      
 	 analysis(){
 
-		 return analysiss1({time_status:1}).then(res=>{
-             console.log(item)
-			res.data.map(item =>{
-                this.nums = item;
-                
-            })
-            this.show = true
-		 })
+		return analysiss1({time_status:this.index}).then(res=>{
+          this.lineChart1 = res.data.lineChart1
+          this.oilsMoney = res.data.oilsMoney
+          this.oilsNumber = res.data.oilsNumber
+          this.paysMoney = res.data.paysMoney
+          this.paysNumber = res.data.paysNumber
+          this.lists1.push(this.oilsMoney,this.oilsNumber,this.paysMoney,this.paysNumber)
+         this.show = true
+         console.log(this.index)
+        })
 	 },
     income(index) {
       if (index == 1) {
@@ -279,20 +158,32 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.boxs {
-  .pie-chart-box {
-    // display: grid;
-    // grid-template-columns: 1fr 1fr;
-    // grid-gap: 20px;
-    .tab_1 {
-      min-width: 680px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 0 6px 0;
-      border-radius: 2px;
-    }
-  }
+
+.sale-ratio-name{
+    font-size: 16px;
+    color: #1e1e28;
+    margin: 20px auto;
+    text-align: center;
 }
+.content{
+    display: flex;
+    .pie-chart-box{
+        margin-right: 10px;
+        width: 700px;
+        display: grid;
+        grid-template-columns: 1fr;
+            grid-gap: 20px;
+        .tab_1{
+            min-width: 680px;
+            display: flex;
+            flex-direction: column;
+            
+        }
+    }
+}
+
+
+ 
 
 .head-title {
   font-size: 16px;

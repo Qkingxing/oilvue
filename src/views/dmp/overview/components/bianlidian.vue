@@ -10,271 +10,25 @@
       >
         {{ item.name }}
       </div>
-      <a-range-picker v-if="dateKey == 'zidingyi'" />
-    </div>
-    <div v-if="dateKey == 'jintian'">
-      <div class="head-title">销售总数据</div>
-      <div class="saleall_3" >
-        <div class="saleall-container" v-for="(list,index) in lists" :key="index">
-          <number-card :list='list'></number-card>
-
-        </div>
-      </div>
-      <div class="sales">
-        <div class="head-title">销售收入趋势</div>
-        <a-popover placement="bottom">
-          <template slot="content">
-            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-            </div>
-          </template>
-
-          <a-button>切换</a-button>
-        </a-popover>
-      </div>
-      <a-row>
-        <a-col :span="20" v-if="line == 1">
-          <line-charts></line-charts>
-        </a-col>
-        <a-col :span="20" v-if="line == 2">
-          <line-charts></line-charts>
-          哈哈我出来了
-        </a-col>
-        <a-col :span="20" v-if="line == 3">
-          <line-charts></line-charts>
-          哈哈我也出来了
-        </a-col>
-      </a-row>
-      <div class="head-title">点比分析</div>
-      <div class="pie-chart-box">
-        <div class="tab_1">
-          <a-tabs>
-            <a-tab-pane key="1" tab="Tab 1">
-              <G2 v-if="show" :nums='nums'></G2>
-            </a-tab-pane>
-            <a-tab-pane key="2" tab="Tab 2">
-              <G2 v-if="show" :nums='nums'></G2>
-            </a-tab-pane>
-            <a-tab-pane key="3" tab="Tab 3">
-              <G2 v-if="show" :nums='nums'></G2>
-            </a-tab-pane>
-          </a-tabs>
-        </div>
+      <div class="zidingyi">
+        <a-range-picker @change="onChange" v-if="dateKey == '5'" />
       </div>
     </div>
-
-    <div class="time" v-if="dateKey == 'zuotian'">
-      <div class="head-title">销售总数据</div>
-      <div class="saleall_3" >
-        <div class="saleall-container" v-for="(list, index) in lists" :key="index">
-          <number-card :list="list"></number-card>
-        </div>
-      </div>
-
-      <div class="sales">
-        <div class="head-title">销售收入趋势</div>
-        <a-popover placement="bottom">
-          <template slot="content">
-            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-            </div>
-          </template>
-
-          <a-button>切换</a-button>
-        </a-popover>
-      </div>
-      <a-row>
-        <a-col :span="20" v-if="line == 1">
-          <line-charts></line-charts>
-        </a-col>
-        <a-col :span="20" v-if="line == 2">
-          <line-charts></line-charts>
-          哈哈我出来了
-        </a-col>
-        <a-col :span="20" v-if="line == 3">
-          <line-charts></line-charts>
-          哈哈我也出来了
-        </a-col>
-      </a-row>
-
-      <div class="head-title">点比分析</div>
-      <div class="pie-chart-box">
-        <div class="tab_1">
-          <a-tabs>
-            <a-tab-pane key="1" tab="Tab 1">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-            <a-tab-pane key="2" tab="Tab 2">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-            <a-tab-pane key="3" tab="Tab 3">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-          </a-tabs>
-        </div>
-      </div>
+    <div v-if="dateKey == '1'">
+      <times  :nums="nums" :index='dateKey' :lists="lists"></times>
+    </div>
+    <div class="time" v-if="dateKey == '2'">
+      <times1  :nums="nums" :index='dateKey' :lists="lists" ></times1>
     </div>
 
-    <div v-if="dateKey == 'benzhou'">
-      <div class="head-title">销售总数据</div>
-      
-       <div class="saleall_3" >
-        <div class="saleall-container" v-for="(list,index) in lists" :key="index">
-          <number-card :list='list'></number-card>
-
-        </div>
-      </div>
-      <div class="sales">
-        <div class="head-title">销售收入趋势</div>
-        <a-popover placement="bottom">
-          <template slot="content">
-            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-            </div>
-          </template>
-
-          <a-button>切换</a-button>
-        </a-popover>
-      </div>
-      <a-row>
-        <a-col :span="20" v-if="line == 1">
-          <line-charts></line-charts>
-        </a-col>
-        <a-col :span="20" v-if="line == 2">
-          <line-charts></line-charts>
-          哈哈我出来了
-        </a-col>
-        <a-col :span="20" v-if="line == 3">
-          <line-charts></line-charts>
-          哈哈我也出来了
-        </a-col>
-      </a-row>
-      <div class="head-title">点比分析</div>
-      <div class="pie-chart-box">
-        <div class="tab_1">
-          <a-tabs>
-            <a-tab-pane key="1" tab="Tab 1">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-            <a-tab-pane key="2" tab="Tab 2">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-            <a-tab-pane key="3" tab="Tab 3">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-          </a-tabs>
-        </div>
-      </div>
+    <div v-if="dateKey == '3'">
+      <times2  :nums="nums" :index='dateKey' :lists="lists" ></times2>
     </div>
-    <div v-if="dateKey == 'benyue'">
-      <div class="head-title">销售总数据</div>
-        <div class="saleall_3" >
-        <div class="saleall-container" v-for="(list,index) in lists" :key="index">
-          <number-card :list='list'></number-card>
-
-        </div>
-      </div>
-      <div class="sales">
-        <div class="head-title">销售收入趋势</div>
-        <a-popover placement="bottom">
-          <template slot="content">
-            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-            </div>
-          </template>
-
-          <a-button>切换</a-button>
-        </a-popover>
-      </div>
-      <a-row>
-        <a-col :span="20" v-if="line == 1">
-          <line-charts></line-charts>
-        </a-col>
-        <a-col :span="20" v-if="line == 2">
-          <line-charts></line-charts>
-          哈哈我出来了
-        </a-col>
-        <a-col :span="20" v-if="line == 3">
-          <line-charts></line-charts>
-          哈哈我也出来了
-        </a-col>
-      </a-row>
-      <div class="head-title">点比分析</div>
-      <div class="pie-chart-box">
-        <div class="tab_1">
-          <a-tabs>
-            <a-tab-pane key="1" tab="Tab 1">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-            <a-tab-pane key="2" tab="Tab 2">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-            <a-tab-pane key="3" tab="Tab 3">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-          </a-tabs>
-        </div>
-      </div>
+    <div v-if="dateKey == '4'">
+      <times3  :nums="nums" :index='dateKey' :lists="lists" ></times3>
     </div>
-    <div v-if="dateKey == 'zidingyi'">
-      <div class="head-title">销售总数据</div>
-       <div class="saleall_3" >
-        <div class="saleall-container" v-for="(list,index) in lists" :key="index">
-          <number-card :list='list'></number-card>
-
-        </div>
-      </div>
-      <div class="sales">
-        <div class="head-title">销售收入趋势</div>
-        <a-popover placement="bottom">
-          <template slot="content">
-            <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-              <span @click="income(1)" style="margin-bottom: 10px; cursor: pointer">销售收入趋势</span>
-              <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span>
-              <span @click="income(3)" style="cursor: pointer">客单价趋势</span>
-            </div>
-          </template>
-
-          <a-button>切换</a-button>
-        </a-popover>
-      </div>
-      <a-row>
-        <a-col :span="20" v-if="line == 1">
-          <line-charts></line-charts>
-        </a-col>
-        <a-col :span="20" v-if="line == 2">
-          <line-charts></line-charts>
-          哈哈我出来了
-        </a-col>
-        <a-col :span="20" v-if="line == 3">
-          <line-charts></line-charts>
-          哈哈我也出来了
-        </a-col>
-      </a-row>
-      <div class="head-title">点比分析</div>
-      <div class="pie-chart-box">
-        <div class="tab_1">
-          <a-tabs>
-            <a-tab-pane key="1" tab="Tab 1">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-            <a-tab-pane key="2" tab="Tab 2">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-            <a-tab-pane key="3" tab="Tab 3">
-              <G2 :nums='nums'></G2>
-            </a-tab-pane>
-          </a-tabs>
-        </div>
-      </div>
+    <div v-if="dateKey == '5'">
+      <times4  :nums="nums" :time='time'  :index='dateKey' :lists="lists" ></times4>
     </div>
   </div>
 </template>
@@ -282,14 +36,22 @@
 <script>
 import G2 from '../components/G2'
 import times from '../times'
+import times1 from '../times1'
+import times2 from '../times2'
+import times3 from '../times3'
+import times4 from '../times4'
 import NumberCard from '../components/numberCard'
 import LineCharts from '../components/LineCharts'
-import {analysiss} from '@/api/data'
+import {analysiss1} from '@/api/data'
 export default {
   props: ['lists'],
   name: 'Dashboard',
   components: {
     times,
+    times1,
+    times2,
+    times3,
+    times4,
     NumberCard,
     LineCharts,
     G2,
@@ -300,31 +62,66 @@ export default {
       line: 1,
       vivew: 'times',
       dates: [
-        { key: 'jintian', name: '今天' },
-        { key: 'zuotian', name: '昨天' },
-        { key: 'benzhou', name: '本周' },
-        { key: 'benyue', name: '本月' },
-        { key: 'zidingyi', name: '自定义' },
+        { key: '1', name: '今天' },
+        { key: '2', name: '昨天' },
+        { key: '3', name: '本周' },
+        { key: '4', name: '本月' },
+        { key: '5', name: '自定义' },
       ],
-      key: 'quanbu',
+      key: '1',
       noTitleKey: 'quanbu',
-      dateKey: 'jintian',
-      show:false
+      dateKey: '1',
+      show: false,
+      nums:{},
+      lists1:[],
+      lineChart1:{},
+      oilsMoney:{},
+      oilsNumber:{},
+      paysMoney:{},
+      paysNumber:{},
+      time:[]
     }
   },
+
+  mounted() {},
   created() {
-      this.analysis()
+     this.analysis()
   },
   methods: {
-      analysis(){
-		 return analysiss({}).then(res=>{
-			res.data.map(item =>{
-                this.nums = item;
-                
-            })
-            this.show = true
-		 })
-	 },
+   
+     analysis(index){
+       if(index){
+           let weekStarting = index[0]
+           let weekEnd_time = index[1]
+           return analysiss1({time_status:5,weekStarting:weekStarting,weekEnd_time:weekEnd_time}).then(res=>{
+          this.lineChart1 = res.data.lineChart1
+          this.oilsMoney = res.data.oilsMoney
+          this.oilsNumber = res.data.oilsNumber
+          this.paysMoney = res.data.paysMoney
+          this.paysNumber = res.data.paysNumber
+          this.lists1.push(this.oilsMoney,this.oilsNumber,this.paysMoney,this.paysNumber)
+         this.show = true
+        })
+        return
+       }
+        return analysiss1({time_status:1}).then(res=>{
+          this.lineChart1 = res.data.lineChart1
+          this.oilsMoney = res.data.oilsMoney
+          this.oilsNumber = res.data.oilsNumber
+          this.paysMoney = res.data.paysMoney
+          this.paysNumber = res.data.paysNumber
+          this.lists1.push(this.oilsMoney,this.oilsNumber,this.paysMoney,this.paysNumber)
+         this.show = true
+        })
+    },
+    onChange(date, dateString) {
+      this.setData(dateString, 1)
+      this.analysis(dateString)
+    },
+
+    setData(index, time) {
+        this.time = index
+    },
     income(index) {
       if (index == 1) {
         this.line = 1
@@ -341,13 +138,14 @@ export default {
     },
     changeDate(key) {
       this.dateKey = key
+      console.log(key,'哈哈哈')
       sessionStorage.setItem('key',key)
     },
   },
 }
 </script>
 
-<style lang="less" >
+<style lang="less" scoped>
 .search {
   height: 40px;
   display: flex;
@@ -376,41 +174,31 @@ export default {
   }
 }
 .box {
-  width: 300px;
+  width: 100px;
   margin: 0 auto;
   .span {
     color: #040a46;
   }
 }
-.pie-chart-box {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 20px;
-  .tab_1 {
-    min-width: 680px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 0 6px 0;
-    border-radius: 2p;
-  }
-}
 
 // 销售总数据
-.saleall_3 {
+.saleall_1 {
   display: flex;
   // flex-direction: column;
-   flex-wrap: wrap;
+  flex-wrap: wrap;
   padding-bottom: 10px;
 
   .saleall-container {
     margin: -10px;
-    // display: flex;
+    width: 20%;
     // flex-wrap: wrap;
-     width: 20%;
 
     .number-card {
+      width: 100%；;
       display: flex;
-       background-image: url('./img/bei.png');
+      // flex: 1 1 20%;
+      // max-width: 20%;
+      background-image: url('./img/bei.png');
       background-size: 100% 100%;
       background-repeat: no-repeat;
     }
