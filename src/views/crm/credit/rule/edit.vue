@@ -103,9 +103,15 @@
                   <el-cascader
                     :disabled="userInfo.site_id==(-1)"
                     style="width: 600px;"
-                    v-model="value"
-                    :options="options"
-                    :props="{ expandTrigger: 'hover', multiple: true }"
+                    v-model="item.activity_ids"
+                    :options="activePeoples"
+                    :props="{ 
+                      expandTrigger: 'hover', 
+                      multiple: true,
+                      value: 'id',
+                      label: 'name',
+                      children: 'treeList'
+                    }"
                   ></el-cascader>
                 </span>
               </div>
@@ -409,6 +415,7 @@
 import moment from 'moment';
 import { getSitelist, addIntegralruleset,ruleConflict,getIntegrallists } from '@/api/crm'
 import { getSitesoillist } from '@/api/oil'
+import { getlevelAlls } from '@/api/user'
 import { getPayList } from '@/api/base'
 import { funcChangeNumToCHN } from '@/utils/util'
 import { mapGetters } from 'vuex'
@@ -479,71 +486,7 @@ export default {
         show:false,
         text: ''
       },// 冲突对象
-      value: [],
-      options: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-              label: '设计原则'
-            },
-            {
-              value: 'daohang',
-              label: '导航'
-            }
-          ]
-        },
-        {
-          value: 'zujian',
-          label: '组件',
-          children: [
-            {
-              value: 'basic',
-              label: 'Basic'
-            },
-            {
-              value: 'form',
-              label: 'Form'
-            },
-            {
-              value: 'data',
-              label: 'Data'
-            },
-            {
-              value: 'notice',
-              label: 'Notice'
-            },
-            {
-              value: 'navigation',
-              label: 'Navigation'
-            },
-            {
-              value: 'others',
-              label: 'Others'
-            }
-          ]
-        },
-        {
-          value: 'ziyuan',
-          label: '资源',
-          children: [
-            {
-              value: 'axure',
-              label: 'Axure Components'
-            },
-            {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            },
-            {
-              value: 'jiaohu',
-              label: '组件交互文档'
-            }
-          ]
-        }
-      ]
+      activePeoples: [],
 
     }
   },
@@ -568,6 +511,13 @@ export default {
     // 初始化
     async Init(){
       this.loading = true
+      // 获取固定、动态、客群三合一
+      let activePeopleRes = await getlevelAlls({type:3})
+      // console.log(activePeopleRes)
+      if (activePeopleRes) {
+        console.log(activePeopleRes.data)
+        this.activePeoples = activePeopleRes.data
+      }
       let SitelistRes = null
       // 如果是集团权限
       if (this.userInfo.site_id === (-1)) {
@@ -1229,6 +1179,8 @@ export default {
     save(){
       this.checkForm().then((form)=>{
         // console.log(form)
+
+        // return
 
         addIntegralruleset(form).then((res)=>{
           this.back()
