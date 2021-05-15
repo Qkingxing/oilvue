@@ -3,7 +3,7 @@
     <div class="head-title">销售总数据</div>
     <div class="saleall_4">
       <div class="saleall-container" v-for="(list, index) in lists" :key="index">
-        <NumberCard :list="list"></NumberCard>
+        <NumberCard  :list="list"></NumberCard>
         
       </div>
     </div>
@@ -14,8 +14,6 @@
         <template slot="content">
           <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
             <span v-for="(item,index) in this.lineChart1" :key="index" @click="income(index)" style="margin-bottom: 10px; cursor: pointer">{{item.legend}}</span>
-            <!-- <span @click="income(2)" style="margin-bottom: 10px; cursor: pointer">订单趋势</span> -->
-            <!-- <span @click="income(3)" style="cursor: pointer">客单价趋势</span> -->
           </div>
         </template>
 
@@ -25,31 +23,34 @@
 
     <a-row>
       <a-col :span="20" v-if="line == 1">
-        <LineCharts :lineChart1='lineChart1'></LineCharts>
+        <LineCharts v-if="show" :lineChart1='lineChart1'></LineCharts>
       </a-col>
       <a-col :span="20" v-if="line == 2">
-        <LineCharts :lineChart1='lineChart1'></LineCharts>
+        <LineCharts v-if="show" :lineChart1='lineChart1'></LineCharts>
         22
       </a-col>
       <a-col :span="20" v-if="line == 3">
-        <LineCharts :lineChart1='lineChart1'></LineCharts>
+        <LineCharts v-if="show" :lineChart1='lineChart1'></LineCharts>
         33
       </a-col>
     </a-row>
 
     <div class="head-title">点比分析</div>
-    <div class="pie-chart-box" v-for="(item,index) in lists1" :key="index">
-      <div class="tab_1">
-        <a-tabs>
-          <a-tab-pane v-for="(it,index) in item" :key="index" :tab="it.type">
-            <G2 v-if='show' :it='it.data' ></G2>
-            <div class="sale-ratio-name">
-                <span >{{it.name}}</span>
-            </div>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
+    <div class="content">
+        <div class="pie-chart-box" v-for="(item,index) in lists1" :key="index">
+        <div class="tab_1">
+            <a-tabs>
+            <a-tab-pane v-for="(it,index) in item" :key="index" :tab="it.type">
+                <G2 v-if='show' :it='it.data' ></G2>
+                <div class="sale-ratio-name">
+                    <span >{{it.name}}</span>
+                </div>
+            </a-tab-pane>
+            </a-tabs>
+        </div>
+        </div>
     </div>
+
   </div>
 </template>
 
@@ -62,10 +63,9 @@ import NumberCard3 from './components/numberCard3'
 import NumberCard4 from './components/numberCard4'
 import Charts from './components/charts'
 import LineCharts from './components/LineCharts'
-import {revenue} from '@/api/data'
 import {analysiss1} from '@/api/data'
 export default {
-  props: ['lists'],
+  props: ['lists','index','time'],
   name: 'Dashboard',
   components: {
     NumberCard,
@@ -105,32 +105,21 @@ export default {
   },
   created() {
       this.analysis()
-    console.log(this.lists)
-
-  },
-  watch:{
-      nums:{
-          handler(value){
-              this.num = value
-              console.log(value)
-              this.show = true
-          },
-          deep:true,
-          immediate:true
-      }
   },
   methods: {
-    analysis(){
-        return analysiss1({time_type:3}).then(res=>{
+    analysis(index){
+        if(index == 5){
+            console.log(this.time)
+        }
+        return analysiss1({time_status:this.index}).then(res=>{
           this.lineChart1 = res.data.lineChart1
           this.oilsMoney = res.data.oilsMoney
           this.oilsNumber = res.data.oilsNumber
           this.paysMoney = res.data.paysMoney
           this.paysNumber = res.data.paysNumber
-
           this.lists1.push(this.oilsMoney,this.oilsNumber,this.paysMoney,this.paysNumber)
-          console.log(this.lists1)
          this.show = true
+         console.log(this.index)
         })
     },
     income(index) {
@@ -143,10 +132,7 @@ export default {
         this.line = 2
         return
       }
-    //   if (index == 3) {
-    //     this.line = 3
-    //     returny
-    //   }
+  
     },
     handleClick(tab, event) {
       console.log(tab, event)
@@ -165,28 +151,32 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 .sale-ratio-name{
     font-size: 16px;
     color: #1e1e28;
     margin: 20px auto;
     text-align: center;
 }
-.boxs {
-  .pie-chart-box {
+.content{
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    // grid-template-columns: 1fr 1fr;
-    // grid-gap: 20px;
-    .tab_1 {
-      min-width: 680px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 0 6px 0;
-      border-radius: 2px;
+    .pie-chart-box{
+        margin-right: 10px;
+        width: 700px;
+        display: grid;
+        grid-template-columns: 1fr;
+            grid-gap: 20px;
+        .tab_1{
+            min-width: 680px;
+            display: flex;
+            flex-direction: column;
+            
+        }
     }
-  }
 }
+
+
+ 
 
 .head-title {
   font-size: 16px;

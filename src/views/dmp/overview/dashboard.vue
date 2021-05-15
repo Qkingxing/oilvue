@@ -50,69 +50,109 @@ export default {
       key: 'quanbu',
       dateKey: 'jintian',
       lists: {},
-      
     }
   },
   created() {
     this.setData()
   },
   methods: {
-    setData() {
-      return dashboard({time_type:1}).then((res) => {
-        var json = {
-            "销售总收入":"今天截止此时的销售总收入",
-            "实际销售收入":"今天截止此时的实际销售收入",
-            "油品销售收入":"今天截止此时的油品销售收入",
-            "闪付销售收入":"今天截止此时的闪付销售收入",
-            "加油卡充值收入":"今天截止此时的加油卡充值收入",
-            "便利店销售收入":"今天截止此时的便利店销售收入",
-            "便利店积分收入":"今天截止此时的便利店积分收入",
-            "订单总数":"今天截止此时的订单总数",
-            "油品订单数":"今天截止此时的油品订单数",
-            "闪付订单数":"今天截止此时的闪付订单数",
-            "加油卡充值订单数":"今天截止此时的加油卡充值订单数",
-            "便利店订单数":"今天截止此时的便利店订单数",
-            "总加油量（升）":"今天截止此时的总加油量（升）",
-            "营销成本":"今天截止此时的营销成本",
-            "客单价":"今天截止此时的客单价"
-            }
-        this.lists = res.data.map((e,index)=>{
+    setData(index) {
+      if (index) {
+        return dashboard({time_type:1, type: index }).then((res) => {
+          var json = {
+            销售总收入: '今天截止此时的销售总收入',
+            实际销售收入: '今天截止此时的实际销售收入',
+            油品销售收入: '今天截止此时的油品销售收入',
+            闪付销售收入: '今天截止此时的闪付销售收入',
+            加油卡充值收入: '今天截止此时的加油卡充值收入',
+            便利店销售收入: '今天截止此时的便利店销售收入',
+            便利店积分收入: '今天截止此时的便利店积分收入',
+            订单总数: '今天截止此时的订单总数',
+            油品订单数: '今天截止此时的油品订单数',
+            闪付订单数: '今天截止此时的闪付订单数',
+            加油卡充值订单数: '今天截止此时的加油卡充值订单数',
+            便利店订单数: '今天截止此时的便利店订单数',
+            '总加油量（升）': '今天截止此时的总加油量（升）',
+            营销成本: '今天截止此时的营销成本',
+            客单价: '今天截止此时的客单价',
+          }
+          this.lists = res.data.map((e, index) => {
             let object = e
-            for (const key in object) {   
-                if(key != 'orderName' && key != 'comparedName' && key != 'Compared'){
-                    object.number = object[key];
-                    break
-                }
+            for (const key in object) {
+              if (key != 'orderName' && key != 'comparedName' && key != 'Compared') {
+                object.number = object[key]
+                break
+              }
             }
             // 在 lists 对象里面添加 json对象值
-          e['value'] = json[object['orderName']]
-            console.log(e)
-          return object
+            e['value'] = json[object['orderName']]
+            return object
+          })
         })
-        console.log(this.lists)
-      })
+        
+      }
+          return dashboard({ time_type:1 }).then((res) => {
+          var json = {
+            销售总收入: '今天截止此时的销售总收入',
+            实际销售收入: '今天截止此时的实际销售收入',
+            油品销售收入: '今天截止此时的油品销售收入',
+            闪付销售收入: '今天截止此时的闪付销售收入',
+            加油卡充值收入: '今天截止此时的加油卡充值收入',
+            便利店销售收入: '今天截止此时的便利店销售收入',
+            便利店积分收入: '今天截止此时的便利店积分收入',
+            订单总数: '今天截止此时的订单总数',
+            油品订单数: '今天截止此时的油品订单数',
+            闪付订单数: '今天截止此时的闪付订单数',
+            加油卡充值订单数: '今天截止此时的加油卡充值订单数',
+            便利店订单数: '今天截止此时的便利店订单数',
+            '总加油量（升）': '今天截止此时的总加油量（升）',
+            营销成本: '今天截止此时的营销成本',
+            客单价: '今天截止此时的客单价',
+          }
+          this.lists = res.data.map((e, index) => {
+            let object = e
+            for (const key in object) {
+              if (key != 'orderName' && key != 'comparedName' && key != 'Compared') {
+                object.number = object[key]
+                break
+              }
+            }
+            // 在 lists 对象里面添加 json对象值
+            e['value'] = json[object['orderName']]
+            return object
+          })
+        })
     },
     onTabChange(key, type) {
       if (key == 'quanbu') {
+          this.setData()
         this.view = 'all'
+        
+        sessionStorage.setItem('key',1)
       } else if (key == 'youpin') {
         this.view = 'oils'
+        this.setData(1)
+        
+        sessionStorage.setItem('key',1)
       } else if (key == 'shanfu') {
         this.view = 'shanfu'
+        this.setData(3)
+        sessionStorage.setItem('key',1)
       } else if (key == 'tuanyou') {
         this.view = 'tuanyou'
       } else if (key == 'bianlidian') {
         this.view = 'bianlidian'
+        this.setData(2)
+        sessionStorage.setItem('key',1)
       } else {
         this.view = 'all'
       }
-  
+
       this[type] = key
     },
 
     changeDate(key) {
       this.dateKey = key
-     
     },
     handleClick(tab, event) {
       console.log(tab, event)

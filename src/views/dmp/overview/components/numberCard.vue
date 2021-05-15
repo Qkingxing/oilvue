@@ -13,7 +13,7 @@
       </div>
       <div class="info">
           <span>{{zhou}}</span>   
-          <span>降{{list.Compared | str}}%</span>
+          <span>降{{list.Compared | str | str1}}%</span>
           <i class="trend">
               <a-icon type="arrow-down"/>
         </i> 
@@ -39,7 +39,7 @@
 import IconSelector from '@/components/IconSelector'
 
 export default {
-  props:['list','show1'],
+  props:['list'],
   components: { IconSelector },
   data() {
     return {
@@ -50,9 +50,9 @@ export default {
   },
   created(){
       
-//    setTimeout(()=>{
+   setTimeout(()=>{
          this.mapDate()
-//    },100)
+   },100)
 //     console.log(this.list)
 
   },
@@ -69,8 +69,7 @@ export default {
          
          this.zhou = '月环比'
      }
-     console.log(this.zhou)
-     console.log(this.list)
+     console.log(sessionStorage.getItem('key') )
     }
   },
   filters:{
@@ -79,6 +78,12 @@ export default {
             return Compared = 0
          }
          return Compared
+      },
+      str1(value){
+          if(value == 'Infinity'){
+              return value = 0
+          }
+          return value
       }
   }
 }

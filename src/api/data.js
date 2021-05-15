@@ -11,13 +11,13 @@ export function dashboard(data){
 }
 // 占比分析
 
-export function analysiss(data){
-    return JavaRequest({
-        url:'/data/get_sale_ratio',
-        method:'post',
-        data
-    })
-}
+// export function analysiss(data){
+//     return JavaRequest({
+//         url:'/data/get_sale_ratio',
+//         method:'post',
+//         data
+//     })
+// }
 // 占比分析 最新
 export function analysiss1(data){
     return PhpRequest({
