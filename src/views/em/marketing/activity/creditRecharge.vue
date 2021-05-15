@@ -1,6 +1,6 @@
 
 <template>
-  <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
+  <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '700px', position: 'relative' }">
     <div class="head-title">积分抵充值</div>
     <div class="rules-edit-container-ele">
       <div class="content">
@@ -176,7 +176,7 @@ export default {
       this.$router.push(`/em/list/list?activityId=39717`)
     },
     back () {
-      this.$emit('back')
+      this.$router.go(-1)
     }
   }
 }

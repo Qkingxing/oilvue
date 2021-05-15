@@ -1,6 +1,6 @@
 
 <template>
-  <a-layout-content :style="{padding: '0 0 24px', minHeight: '280px' }">
+  <a-layout-content :style="{padding: '0 0 24px', minHeight: '700px' }">
     <a-card class="head-card" style="margin-bottom: 10px;">
       <a-steps :current="step" style="width:70%;margin: 0 auto;">
         <a-step>
@@ -379,7 +379,7 @@ export default {
       }
     },
     back () {
-      this.$emit('back')
+      this.$router.go(-1)
     },
     goList () {
       this.$router.push('/em/list/list')
@@ -451,5 +451,9 @@ export default {
 /deep/ .el-checkbox-button__inner {
   border: none !important;
   background-color: initial;
+}
+/deep/.ant-result{
+  background: #ffffff;
+  min-height: 600px;
 }
 </style>

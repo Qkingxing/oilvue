@@ -2,8 +2,8 @@
 <template>
   <a-layout class="activity_add">
     <a-layout-content
-      v-if="!activityType"
-      :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px' }">
+      v-if="!$route.query.activityType"
+      :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '700px' }">
       <div class="activity-list">
         <div class="activity" @click="createActivity(102)">
           <div class="activity-img">
@@ -101,9 +101,13 @@
         </div>
       </div>
     </a-layout-content>
+
     <!-- <Add v-if="activityType" @back="activityType =''"></Add> -->
-    <PriceCut v-if="activityType == 102" @back="activityType =''"></PriceCut>
-    <CreditRecharge v-if="activityType == 14" @back="activityType =''"></CreditRecharge>
+
+    <PriceCut v-if="$route.query.activityType == 102" />
+
+    <CreditRecharge v-if="$route.query.activityType == 14" />
+
   </a-layout>
 </template>
 
@@ -124,7 +128,13 @@ export default {
   },
   methods: {
     createActivity (activityType) {
-      this.activityType = activityType
+
+      this.$router.push({
+        path: `/em/marketing/activity_add`,
+        query:{
+          activityType
+        }
+      })
     }
   }
 }
