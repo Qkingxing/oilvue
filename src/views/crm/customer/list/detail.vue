@@ -77,15 +77,17 @@
               <!-- <a-button type="link" style="padding: 0px 8px 0px 0px;">查看</a-button> -->
               <a-button type="link" style="padding: 0px 8px 0px 0px;" @click="pageType='SendCoupon'">发券</a-button>
             </div>
-            <div class="base-item rightBorder">
+            <div class="base-item rightBorder" v-if="userInfo.site_id!=-1">
               <div class="base-title">客户标签</div>
               <div class="base-val">
                 <div class="label-box">
-                  <span>
-                    {{userTagText()}}
-                  </span>
+                  <div 
+                    class="label-item"
+                    v-for="(item,i) in detail.label" :key="i">{{item.name}}</div>
+
+                  <span v-if="!detail.label.length">-</span>
                 </div>
-                <!-- <a>修改</a> -->
+                <a @click="openAddTag()">修改</a>
               </div>
             </div>
             <div style="flex: 1 1 25%;"></div>
@@ -143,8 +145,14 @@
       ref="ChangeLevel"
       @reset="onLoad"/>
 
+    <!-- 查询加油卡 -->
     <CardListModal 
       ref="CardListModal"/>
+
+      <!-- 加标签 -->
+    <AddTagModal 
+      ref="AddTagModal"
+      @change="onLoad"/>
 
     
   </a-layout>
@@ -155,7 +163,7 @@ import { STable } from '@/components'
 import { identitySelect } from '@/utils/enums'
 
 import { getServiceList } from '@/api/manage'
-
+import { mapGetters } from 'vuex'
 import { getUserdefault } from '@/api/crm'
 
 export default {
@@ -172,6 +180,7 @@ export default {
     AuthenticationHistory: ()=>import('./components/table/AuthenticationHistory'),
     CheckrecordsHistory: ()=>import('./components/table/CheckrecordsHistory'),
     CardListModal: ()=>import('./components/CardListModal'),
+    AddTagModal: ()=>import('./components/AddTagModal'),
   },
   data () {
     return {
@@ -181,6 +190,9 @@ export default {
       
       
     }
+  },
+  computed: {
+    ...mapGetters(['userInfo'])
   },
   created () {
     this.onLoad()
@@ -192,6 +204,13 @@ export default {
         this.detail = res.data
       })
     },
+    // 打开加标签
+    openAddTag(){
+      this.$refs.AddTagModal.showModal({
+        user_id: this.$route.query.id,
+        tags: this.detail.label.map(e=>{return e.id})
+      })
+    },
     // 打开加油卡详情
     openCardListModal(){
       this.$refs.CardListModal.showModal()
@@ -201,16 +220,6 @@ export default {
       let str = arr.join('、')
       // console.log(str)
       if (this.detail.plate_number.length) {
-        return str
-      }else{
-        return '-'
-      }
-    },
-    userTagText(){
-      let arr = this.detail.label.map(e=>{return e.name})
-      let str = arr.join('、')
-      // console.log(str)
-      if (this.detail.label.length) {
         return str
       }else{
         return '-'
@@ -315,6 +324,12 @@ export default {
         display: flex;
         flex-wrap: wrap;
         padding-top: 4px;
+        .label-item{
+          padding: 0 5px;
+          margin: 0 4px 4px 0;
+          border: 1px solid #eaeaf4;
+          background: #fafafa;
+        }
       }
       a{
         display: inline-block;

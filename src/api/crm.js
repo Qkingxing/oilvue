@@ -115,7 +115,29 @@ export function getUserAuthenticationHistory(data) {
     data
   })
 }
-
+// 客户标签下拉框（仅限油站）
+export function querylabellist() {
+  return PhpRequest({
+    url: '/user/querylabellist',
+    method: 'post'
+  })
+}
+// 给单个客户加标签
+export function userupdatelabel(data) {
+  return PhpRequest({
+    url: '/user/userupdatelabel',
+    method: 'post',
+    data
+  })
+}
+// 批量客户加标签
+export function giveuserlabel(data) {
+  return PhpRequest({
+    url: '/user/giveuserlabel',
+    method: 'post',
+    data
+  })
+}
 // 获取获取标签列表
 export function getlabellist (data) {
   return PhpRequest({

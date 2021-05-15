@@ -211,7 +211,7 @@
               
               <a-button 
                 v-if="oldselectedRowKeys.length>0&&userInfo.site_id!=-1" 
-                style="margin-left: 8px;">加标签</a-button>
+                style="margin-left: 8px;" @click="openAddTag()">加标签</a-button>
 
               <a-button style="margin-left: 8px;">导出报表</a-button>
               <a-button style="margin-left: 8px;" icon="setting" @click="openColSetting"/>
@@ -219,8 +219,8 @@
           </div>
           <s-table
             ref="table"
-            size="default"
             rowKey="id"
+            :scroll="{ x: true }"
             :columns="oldcolumns"
             :data="oldloadData"
             :rowSelection="{ selectedRowKeys: oldselectedRowKeys, onChange: oldonSelectChange }"
@@ -278,7 +278,7 @@
 
               <a-button 
                 v-if="selectedRowKeys.length>0&&userInfo.site_id!=-1" 
-                style="margin-left: 8px;">加标签</a-button>
+                style="margin-left: 8px;" @click="openAddTag()">加标签</a-button>
 
               <a-button style="margin-left: 8px;">导出报表</a-button>
               <a-button style="margin-left: 8px;" icon="setting" v-if="radioValue=='old'"/>
@@ -286,8 +286,8 @@
           </div>
           <s-table
             ref="table2"
-            size="default"
             rowKey="id"
+            :scroll="{ x: true }"
             :columns="columns"
             :data="loadData"
             :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
@@ -305,7 +305,7 @@
       <EditTag ref="EditTag"></EditTag>
     </a-layout>
 
-    <ColumnsModal ref="ColumnsModal"></ColumnsModal>
+    
 
     <a-layout v-if="pageType=='SendCoupon'">
       <SendCoupon 
@@ -314,6 +314,21 @@
         @exit="pageType='list'" />
     </a-layout>
 
+    <!-- 自定义列 -->
+    <ColumnsModal 
+      ref="ColumnsModal" 
+      @change="onChangeOldColum"/>
+
+    <!-- 批量加标签 -->
+    <AddAllTagModal 
+      ref="AddAllTagModal" 
+      @change="onChangeType"/>
+
+    <!-- 单个加标签 -->
+    <AddTagModal 
+      ref="AddTagModal" 
+      @change="onChangeType"/>
+
     <router-view />
   </div>
 </template>
@@ -321,7 +336,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import { STable } from '@/components'
-import { identitySelect } from '@/utils/enums'
+import { identitySelect, oldcolumns } from '@/utils/enums'
+import _ from 'lodash'
 
 import { getOldUserList, getSonoillist, getSonsitelist,getlevelAll,getNewUserList } from '@/api/crm'
 
@@ -333,7 +349,9 @@ export default {
     STable,
     EditTag,
     ColumnsModal: ()=>import('./components/ColumnsModal'),
-    SendCoupon: ()=> import('./components/SendCoupon')
+    SendCoupon: ()=> import('./components/SendCoupon'),
+    AddAllTagModal: ()=> import('./components/AddAllTagModal'),
+    AddTagModal: ()=> import('./components/AddTagModal'),
   },
   data () {
     return {
@@ -372,99 +390,9 @@ export default {
         { label: '未消费', value: 0 }
       ],
       // 表头
-      oldcolumns: [
-        {
-          title: '客户编号',
-          dataIndex: 'id',
-          scopedSlots: { customRender: 'id' }
-        },
-        {
-          title: '客户子编号',
-          dataIndex: 'sonnumber',
-          scopedSlots: { customRender: 'sonnumber' }
-        },
-        {
-          title: '手机号',
-          dataIndex: 'mobile',
-        },
-        {
-          title: '偏好油站',
-          dataIndex: 'name',
-        },
-        {
-          title: '昵称',
-          dataIndex: 'nickname',
-        },
-        {
-          title: '是否消费油品',
-          dataIndex: 'is_consumption',
-        },
-        {
-          title: '加油升数',
-          dataIndex: 'l_number',
-        },
-        {
-          title: '加油次数',
-          dataIndex: 'l_count',
-        },
-        // {
-        //   title: '最近加油时间',
-        //   dataIndex: 'last_time',
-        // },
-        // {
-        //   title: '偏好油品',
-        //   dataIndex: 'name',
-        // },
-        // {
-        //   title: '会员等级',
-        //   dataIndex: 'level_id',
-        // },
-        // {
-        //   title: '现有积分',
-        //   dataIndex: 'integral',
-        // },
-        // {
-        //   title: '加油卡余额',
-        //   dataIndex: 'money',
-        // },
-        // {
-        //   title: '客户身份',
-        //   dataIndex: 'type',
-        // },
-        // {
-        //   title: '车牌号',
-        //   dataIndex: 'plate_number',
-        // },
-        // {
-        //   title: '近30天消费金额',
-        //   dataIndex: 'plate_number',
-        // },
-        // {
-        //   title: '近60天消费金额',
-        //   dataIndex: 'plate_number',
-        // },
-        // {
-        //   title: '近30天消费升数',
-        //   dataIndex: 'plate_number',
-        // },
-        // {
-        //   title: '近60天消费升数',
-        //   dataIndex: 'plate_number',
-        // },
-        // {
-        //   title: '近30天消费次数',
-        //   dataIndex: 'plate_number',
-        // },
-        // {
-        //   title: '近60天消费次数',
-        //   dataIndex: 'plate_number',
-        // },
-        // {
-        //   title: '注册时间',
-        //   dataIndex: 'plate_number',
-        // },
-
-      ],
+      oldcolumns: _.cloneDeep(oldcolumns).filter(e=>{
+        return e.show
+      }),
       oldTotal: 0,
       // 加载数据方法 必须为 Promise 对象
       oldloadData: parameter => {
@@ -602,6 +530,8 @@ export default {
     ...mapGetters(['userInfo'])
   },
   created () {
+    
+    this.creatLastColum()
     // console.log(this.$route.name)
     this.tableOption()
     this.oldtableOption()
@@ -626,6 +556,55 @@ export default {
     
   },
   methods: {
+    // 创建最后一列
+    creatLastColum(){
+      // 站点查询
+      let last_colum = {}
+      if (this.userInfo.site_id!==(-1)) {
+        last_colum = {
+          title: '标签',
+          dataIndex: 'action',
+          scopedSlots: { customRender: 'action' },
+          fixed: 'right',
+        }
+      }else{
+        // 集团查询
+        last_colum = {
+          title: '偏好油站',
+          dataIndex: 'site_name',
+          fixed: 'right',
+        }
+      }
+      // 为已有客户列表追加最后一列
+      this.oldcolumns.push(last_colum)
+    },
+    onChangeOldColum(oldcolumns){
+      this.oldcolumns = oldcolumns
+      // console.log(this.oldcolumns)
+      this.creatLastColum()
+    },
+    // 打开加标签弹窗
+    openAddTag(item){
+      let ids = []
+      if (this.radioValue==='old') {
+        // console.log(this.oldselectedRows)
+        ids = this.oldselectedRows.map(e=>{return e.id})
+
+      }else{
+        // console.log(this.selectedRows)
+        ids = this.selectedRows.map(e=>{return e.id})
+        console.log(this.ids)
+      }
+
+      if(item){
+        // 单个
+        this.$refs.AddTagModal.showModal(item.id)
+      }else{
+        // 批量
+        this.$refs.AddAllTagModal.showModal(ids)
+      }
+
+    },
     // 发优惠券
     openSendCoupon(){
       if (this.radioValue==='old') {

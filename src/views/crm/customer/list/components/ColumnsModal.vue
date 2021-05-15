@@ -23,6 +23,9 @@
 </template>
 
 <script>
+import { oldcolumns } from '@/utils/enums'
+import _ from 'lodash'
+
 export default {
   name: 'ColumnsModal',
   data() {
@@ -30,160 +33,11 @@ export default {
       title: '自定义展示',
       visible: false,
       loading: false,
-      oldcolumns: [
-        {
-          title: '客户编号',
-          dataIndex: 'id',
-          key: 'id',
-          disabled: true,
-          show: true,
-          default: true,
-        },
-        {
-          title: '客户子编号',
-          dataIndex: 'sonnumber',
-          key: 'sonnumber',
-          disabled: true,
-          show: true,
-          default: true,
-        },
-        {
-          title: '手机号',
-          dataIndex: 'mobile',
-          key: 'mobile',
-          disabled: true,
-          show: true,
-          default: true,
-        },
-        {
-          title: '偏好油站',
-          dataIndex: 'name',
-          key: 'name',
-          disabled: true,
-          show: true,
-          default: true,
-        },
-        {
-          title: '昵称',
-          dataIndex: 'nickname',
-          key: 'nickname',
-          show: true,
-          default: true,
-        },
-        {
-          title: '是否消费油品',
-          dataIndex: 'is_consumption',
-          key: 'is_consumption',
-          show: true,
-          default: true,
-        },
-        {
-          title: '加油升数',
-          show: true,
-          default: true,
-          //   dataIndex: 'l_number',
-          //   key: 'l_number',
-        },
-        {
-          title: '加油次数',
-          show: true,
-          default: true,
-          //   dataIndex: 'l_count',
-          //   key: 'l_count',
-        },
-        {
-          title: '最近加油时间',
-          show: true,
-          default: true,
-          //   dataIndex: 'last_time',
-          //   key: 'last_time',
-        },
-        {
-          title: '偏好油品',
-          show: true,
-          default: true,
-          //   dataIndex: 'name',
-          //   key: 'name',
-        },
-        {
-          title: '会员等级',
-          show: true,
-          default: true,
-          //   dataIndex: 'level_id',
-          //   key: 'level_id',
-        },
-        {
-          title: '现有积分',
-          show: true,
-          default: true,
-          //   dataIndex: 'integral',
-          //   key: 'integral',
-        },
-        {
-          title: '加油卡余额',
-          show: true,
-          default: true,
-          //   dataIndex: 'money',
-          //   key: 'money',
-        },
-        {
-          title: '客户身份',
-          show: true,
-          default: true,
-          //   dataIndex: 'type',
-          //   key: 'type',
-        },
-        {
-          title: '车牌号',
-          show: true,
-          default: true,
-          //   dataIndex: 'plate_number',
-          //   key: 'plate_number',
-        },
-        {
-          title: '近30天消费金额',
-          show: true,
-          //   dataIndex: 'plate_number',
-          //   key: 'plate_number',
-        },
-        {
-          title: '近60天消费金额',
-          show: true,
-          //   dataIndex: 'plate_number',
-          //   key: 'plate_number',
-        },
-        {
-          title: '近30天消费升数',
-          show: true,
-          //   dataIndex: 'plate_number',
-          //   key: 'plate_number',
-        },
-        {
-          title: '近60天消费升数',
-          show: true,
-          //   dataIndex: 'plate_number',
-          //   key: 'plate_number',
-        },
-        {
-          title: '近30天消费次数',
-          show: true,
-          //   dataIndex: 'plate_number',
-          //   key: 'plate_number',
-        },
-        {
-          title: '近60天消费次数',
-          show: true,
-          //   dataIndex: 'plate_number',
-          //   key: 'plate_number',
-        },
-        {
-          title: '注册时间',
-          show: true,
-          //   dataIndex: 'plate_number',
-          //   key: 'plate_number',
-        },
-      ],
+      oldcolumns: _.cloneDeep(oldcolumns),
     }
+  },
+  mounted(){
+
   },
   methods: {
     defaultCol(){
@@ -208,9 +62,14 @@ export default {
     },
     handleCancel() {
       this.visible = false
+      
     },
     handleOk() {
       this.visible = false
+      let oldcolumns = _.cloneDeep(this.oldcolumns).filter(e=>{
+        return e.show
+      })
+      this.$emit('change', oldcolumns)
     },
   },
 }

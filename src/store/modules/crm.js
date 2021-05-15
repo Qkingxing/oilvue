@@ -2,7 +2,7 @@
 
 const crm = {
   state: {
-    checkedCoupons: []
+    checkedCoupons: [],
   },
   mutations: {
     SET_CHECKED_COUPONS(state, data){
