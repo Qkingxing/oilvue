@@ -2,6 +2,7 @@
 <template>
   <a-layout>
     <a-layout-content
+      v-if="pageType=='list'"
       :style="{
         padding: '0 24px 24px 24px',
         background: '#fff',
@@ -89,7 +90,7 @@
               <div class="level-content">
                 <s-table 
                   ref="table" 
-                  size="default" 
+                  :scroll="{ x: true }"
                   rowKey="id" 
                   :columns="columns" 
                   :data="loadData">
@@ -113,9 +114,9 @@
                   
                   <div slot="action" slot-scope="text, record" class="showDataForOperation">
                     <template>
-                      <a type="link" @click="delTag(record)">详情</a>
-                      <a type="link" @click="delTag(record)">激活</a>
-                      <a type="link" @click="delTag(record)">删除</a>
+                      <a type="link" @click="openDetail(record)">详情</a>
+                      <a type="link" @click="openDetail(record)" v-if="record.activation_type==0">激活</a>
+                      <a type="link" @click="delCoupons(record)" v-if="record.activation_type==0">删除</a>
 
                     </template>
                   </div>
@@ -127,6 +128,13 @@
         </div>
       </div>
     </a-layout-content>
+
+    <CouponDetail 
+      ref="CouponDetail"
+      v-if="pageType=='detail'"
+      :itemObj="itemObj" 
+      @back="pageType='list'" />
+
   </a-layout>
 </template>
 
@@ -134,15 +142,18 @@
 import { STable } from '@/components'
 
 
-import { getCoupons } from '@/api/em'
+import { getCoupons, delCoupons } from '@/api/em'
 
 export default {
   name: 'Couponlist',
   components: {
-    STable
+    STable,
+    CouponDetail: ()=>import('./couponlist/CouponDetail')
   },
   data () {
     return {
+      pageType: 'list',
+      itemObj: null,
       // 查询参数
       q: {
         coupons_name: "",// 也可以coupons_name查询优惠券名称和优惠券id
@@ -154,11 +165,13 @@ export default {
       columns: [
         {
           title: '券ID',
-          dataIndex: 'id'
+          dataIndex: 'id',
+          fixed: 'left'
         },
         {
           title: '券名称',
-          dataIndex: 'coupons_name'
+          dataIndex: 'coupons_name',
+          fixed: 'left'
         },
         {
           title: '券金额',
@@ -170,10 +183,10 @@ export default {
           dataIndex: 'validity_type',
           scopedSlots: { customRender: 'validity_type' }
         },
-        {
-          title: '生效活动',
-          dataIndex: 'status',
-        },
+        // {
+        //   title: '生效活动',
+        //   dataIndex: 'status',
+        // },
         {
           title: '创建时间',
           dataIndex: 'create_time',
@@ -185,7 +198,8 @@ export default {
         {
           title: '操作',
           dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
+          scopedSlots: { customRender: 'action' },
+          fixed: 'right'
         }
       ],
       // 加载数据方法 必须为 Promise 对象
@@ -229,6 +243,27 @@ export default {
 
   },
   methods: {
+    openDetail(item){
+
+      this.itemObj = item
+      this.pageType = 'detail'
+    },
+    // 删除一个
+    delCoupons (item) {
+      let that = this
+      this.$confirm({
+        title: '操作提示',
+        content: '删除不可恢复，请确认是否继续',
+        onOk () {
+          delCoupons(item.id).then(res=>{
+            // console.log(res)
+            that.$message.success('操作成功')
+            that.$refs.table.refresh()
+          })
+        },
+        onCancel () {}
+      })
+    },
     delTag () {
       this.$confirm({
         title: '操作提示',

@@ -10,4 +10,23 @@ export function getCoupons (data) {
     data
   })
 }
+// 删除优惠券
+export function delCoupons (id) {
+  return JavaRequest({
+    url: '/coupons/delCoupons',
+    method: 'post',
+    data: {id}
+  })
+}
+// 激活优惠券
+export function updateCoupons (id) {
+  return JavaRequest({
+    url: '/coupons/updateCoupons',
+    method: 'post',
+    data: {
+      id,
+      activation_type: 1
+    }
+  })
+}
 
