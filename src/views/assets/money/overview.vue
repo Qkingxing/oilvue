@@ -190,11 +190,10 @@ export default {
           file: {},
         },
         companyName:'',
-        accountBalance: ''
+        accountBalance: '',
       }
     },
     created () {
-      console.log(store)
       this.wxParams.uid = store.getters.userId
       if (store.getters.site_id === (-1)) {
         this.wxParams.group_id = store.getters.group_id
@@ -209,6 +208,13 @@ export default {
     },
     beforeDestroy() {
       clearInterval(this.timer);
+    },
+    watch:{
+      wxPayStatus(val, oldVal){
+        if(val == '2'){
+          clearInterval(this.timer);
+        }
+      },
     },
     methods: {
       handleChange(info) {
@@ -271,7 +277,6 @@ export default {
           this.timer = setInterval(() => {
             checkwxPay(this.wxParams).then(resp=>{
               this.wxPayStatus = resp.data.tradeStatus
-              console.log(this.wxPayStatus)
             })
           }, 1000);
         })

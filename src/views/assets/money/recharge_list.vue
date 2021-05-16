@@ -134,6 +134,7 @@ export default {
     search(){
      getMoneyTransfer(this.params).then(res => {
        this.recordList = res.data
+	   console.log(res)
      })
     },
     loadRechargeList(){

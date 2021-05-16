@@ -42,7 +42,7 @@
                 部分不可参与
               </a-radio>
             </a-radio-group>
-            <div v-if="activity_type != 1" style="width: 400px;height: 80px;background-color: #fafafa;">
+            <div v-if="activity_type != 1 && treeData.length>0" style="width: 400px;height: 80px;background-color: #fafafa;">
               <a-tree-select
                 v-model="activePersons"
                 style="width: 100%"
@@ -92,16 +92,16 @@
             </div>
             <div v-if="amount_type==2" style="width: 500px;height: 80px;line-height: 80px; background-color: #fafafa;text-align: center;">
               <span>随机金额</span>
-              <a-input-number style="margin: 0 10px;" v-model="sjMin" />
+              <a-input-number style="margin: 0 10px;" v-model="sjMin" :min='0'/>
               <span>至</span>
-              <a-input-number style="margin: 0 10px;" v-model="sjMax" />
+              <a-input-number style="margin: 0 10px;" v-model="sjMax" :min='0'/>
               <span>元</span>
             </div>
             <div v-if="amount_type==3" style="width: 500px;height: 80px;line-height: 80px; background-color: #fafafa;text-align: center;">
               <span>固定折扣</span>
-              <a-input-number style="margin: 0 10px;" :value="discount" />
+              <a-input-number style="margin: 0 10px;" v-model="discount" />
               <span>折，最大抵扣金额</span>
-              <a-input-number style="margin: 0 10px;" :value="coupons_amount" placeholder="金额(选填)" />
+              <a-input-number style="margin: 0 10px;" v-model="coupons_amount" placeholder="金额(选填)" />
               <span>元</span>
             </div>
           </a-form-item>
@@ -195,7 +195,7 @@
               </a-select-option>
             </a-select>
             <span style="margin: 0 10px;">满</span>
-            <a-input-number v-model="count_available"></a-input-number>
+            <a-input-number v-model="count_available" :min='0'></a-input-number>
             <span style="margin-left: 10px;">可用</span>
           </a-form-item>
           <a-form-item
@@ -220,7 +220,7 @@
 
             </div>
             <div class="ant-col ant-col-10" style="border: 1px solid #eee;padding: 20px;width: 500px;margin-bottom: 20px;" >
-              <a-radio-group v-model="limit_time" @change="onChangeActivity">
+              <a-radio-group v-model="time_type" @change="onChangeActivity">
                 <a-radio :value="1">
                   每日重复
                 </a-radio>
@@ -232,17 +232,17 @@
                 </a-radio>
               </a-radio-group>
               <div style="margin-top: 20px;">
-                <a-radio-group v-if="limit_time==2" v-model="week_threshold" button-style="solid" style="display: block;margin-bottom: 20px;">
-                  <a-radio-button v-for="(item,index) in weekList" :key="index">
+                <a-radio-group v-if="time_type==2" v-model="week_threshold" button-style="solid" style="display: block;margin-bottom: 20px;">
+                  <a-radio-button v-for="(item,index) in weekList" :value="index">
                     {{ item }}
                   </a-radio-button>
                 </a-radio-group>
-                <el-checkbox-group v-if="limit_time==3" v-model="month_threshold" style="display: block;margin-bottom: 20px;">
+                <el-checkbox-group v-if="time_type==3" v-model="month_threshold" style="display: block;margin-bottom: 20px;">
                   <el-checkbox-button v-for="i in 31" :label="i" :key="i"> <span v-show="i<10" style="margin-right: -4px;">0</span> {{ i }}</el-checkbox-button>
                 </el-checkbox-group>
                 <a-time-picker v-model="limit_timer1" @openChange="handleOpenChange"> </a-time-picker>
                 <a-time-picker v-model="limit_timer2" style="margin-left: 20px;"></a-time-picker>
-                </el-checkbox-groupv-if="limit_time==3"></div>
+                </el-checkbox-group v-if="time_type==3"></div>
             </div>
 
           </div>
@@ -322,6 +322,7 @@ export default {
       open2: false,
       limit_timer1: '',
       limit_timer2: '',
+      time_type:'',
       weekList: ['日', '一', '二', '三', '四', '五', '六']
     }
   },
@@ -340,14 +341,13 @@ export default {
     },
     loadOilList () {
       getOilSetList().then(res => {
-        console.log(res.data)
-        this.oilList = res.data
+        console.log(res.data.data)
+        this.oilList = res.data.data;
       })
     },
     laodLevel () {
       getlevelAlls().then(res => {
         this.treeData = res.data
-        console.log(this.treeData)
       })
     },
     handleGdjeChange () {
@@ -445,11 +445,6 @@ export default {
       } else {
         this.post_obj.validity_type = this.validity_type
       }
-      // this.post_obj.total_data = [
-      //   {
-      //     'tart_time':  // 起止时间
-      //     'end_time': this.yxqValue[1]// 结束时间
-      //   }]
       this.step = 1
     },
     nextTwo () {
@@ -460,14 +455,46 @@ export default {
       this.post_obj.coupons_limit = this.coupons_limit.length == 1 ? this.coupons_limit[0] : 3
       this.post_obj.limit_time = this.limit_time
       if (this.oilChooseList.length == 0) {
-        this.$message.error('请选择门槛油品')
+        this.$message.error('请选择门槛油品');
         return
       }
       this.post_obj.oils_threshold = this.oilChooseList.join(',')
-      if (isEmpty(this.count_available)) {
-        this.$message.error('请填写消费门槛')
+      if (isEmpty(this.limit_timer1)||isEmpty(this.limit_timer2)) {
+        this.$message.error('请选择时间限制范围');
         return
       }
+      if(this.limit_time!=1){
+        this.post_obj.time_type = this.time_type;
+        if(isEmpty(this.time_type)){
+          this.$message.error('请选择重复方式？')
+          return;
+        }
+        if(this.time_type==2){
+          if (this.week_threshold.length == 0) {
+            this.$message.error('请选择每周几？')
+            return;
+          }
+          this.post_obj.total_data = [
+            {
+              'tart_time': this.limit_timer1, // 起止时间
+              'end_time': this.limit_timer2// 结束时间
+            }]
+           this.post_obj.week_threshold = this.week_threshold.toString(",");
+        }
+        if(this.limit_time==3){
+          if (this.month_threshold.length == 0) {
+            this.$message.error('请选择每月几日？')
+            return;
+          }
+          this.post_obj.total_data = [
+            {
+              'tart_time': this.limit_timer1, // 起止时间
+              'end_time': this.limit_timer2// 结束时间
+            }]
+          this.post_obj.month_threshold = this.month_threshold.toString(",");
+        }
+      }
+      
       this.post_obj.count_available = this.count_available
       this.post_obj.wechat_type = 2
       addCoupons(this.post_obj).then(res => {

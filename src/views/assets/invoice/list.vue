@@ -36,25 +36,18 @@
                   <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
                   <a-radio-group v-model="form.time_type" @change="onChange">
                     <a-radio-button :value="1">
-                      昨日
+                      今天
                     </a-radio-button>
                     <a-radio-button :value="2">
-                      近7天
+                      本周
                     </a-radio-button>
                     <a-radio-button :value="3">
-                      近30天
+                      本月
+                    </a-radio-button>
+                    <a-radio-button :value="4">
+                      上月
                     </a-radio-button>
                   </a-radio-group>
-                  <a-range-picker
-                    style="margin-left: 10px;"
-                    :disabled-date="disabledDate"
-                    :disabled-time="disabledRangeTime"
-                    :show-time="{
-                      hideDisabledOptions: true,
-                      defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
-                    }"
-                    format="YYYY-MM-DD HH:mm:ss"
-                  />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -70,7 +63,7 @@
           <s-table
             ref="table"
             size="default"
-            rowKey="key"
+            rowKey="id"
             :columns="columns"
             :data="loadData"
           >
@@ -86,7 +79,7 @@
 import { deleteNullAttr } from '@/utils/lzz.js'
 import moment from 'moment'
 import { STable } from '@/components'
-import { getOrderList } from '@/api/order'
+import { getInvoiceList } from '@/api/finance'
 export default {
   name: 'Alist',
   components: {
@@ -96,19 +89,12 @@ export default {
     return {
       setVisible: false,
       setConfirmLoading: false,
-      searchType: '高级搜索',
       diyDate: false,
       form: {
-        handle_starting: '',
-        handle_end: '',
-        paid_starting: '',
-        paid_end: '',
         page: 1,
         limit: 10,
-        time_type: ''
+        time_type: 3
       },
-      radioValue: 'new',
-      tableOptionChoose: ['优惠金额', '实付金额', '支付方式', '状态时间'],
       value: '',
       // 查询参数
       queryParam: {
@@ -117,32 +103,42 @@ export default {
       // 表头
       columns: [
         {
-          title: '开卡油站',
-          dataIndex: 'oils_id'
+          title: '开票时间',
+          dataIndex: 'create_time'
         },
         {
-          title: '消费油站',
-          dataIndex: 'order_status',
-          customRender: function (text) {
-            if (text == 1) {
-              return '交易成功'
-            } else if (text == 2) {
-              return '待支付'
-            } else if (text == 3) {
-              return '支付失败'
-            }
-          }
+          title: '订单号',
+          dataIndex: 'zf_number'
         },
         {
-          title: '总消费金额（元）',
-          customRender: function () {
-            return '未找到'
-          }
+          title: '油品',
+          dataIndex: 'oils_name'
+        },
+        {
+          title: '开票金额',
+          dataIndex: 'actually_paid'
+        },
+        {
+          title: '发票抬头',
+          dataIndex: 'look_ticket_name'
+        },
+        
+        {
+          title: '纳税人识别号',
+          dataIndex: 'look_ticket_ein'
+        },
+        {
+          title: '开票类型',
+          dataIndex: 'invoice_type'
+        },
+        {
+          title: '邮箱',
+          dataIndex: 'email'
         }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        return getOrderList(deleteNullAttr(this.form))
+        return getInvoiceList(deleteNullAttr(this.form))
           .then(res => {
             return {
               data: res.data, // 列表数组
@@ -155,15 +151,6 @@ export default {
       },
       selectedRowKeys: [],
       selectedRows: [],
-
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
     }
   },
   created () {
@@ -178,87 +165,24 @@ export default {
       }
       return result
     },
-    onChangeTableOption () {
-
-    },
-    toSearch () {
-      getOrderList(deleteNullAttr(this.form)).then(res => {
-        console.log(res)
-      })
-    },
-    handleSetOk (e) {
-      this.setConfirmLoading = true
-      setTimeout(() => {
-        this.setVisible = false
-        this.setConfirmLoading = false
-      }, 2000)
-    },
-    disabledDate (current) {
-      return current && current < moment().endOf('day')
-    },
-    disabledRangeTime (_, type) {
-      if (type === 'start') {
-        return {
-          disabledHours: () => this.range(0, 60).splice(4, 20),
-          disabledMinutes: () => this.range(30, 60),
-          disabledSeconds: () => [55, 56]
-        }
-      }
-      return {
-        disabledHours: () => this.range(0, 60).splice(20, 4),
-        disabledMinutes: () => this.range(0, 31),
-        disabledSeconds: () => [55, 56]
-      }
-    },
-    handleSetCancel (e) {
-      this.setVisible = false
-    },
-    advanceSearchChange () {
-      this.searchType == '高级搜索' ? this.searchType = '点击收起' :　this.searchType = '高级搜索'
-    },
-    disabledDate (current) {
-      return current && current < moment().endOf('day')
-    },
-    disabledRangeTime (_, type) {
-      if (type === 'start') {
-        return {
-          disabledHours: () => this.range(0, 60).splice(4, 20),
-          disabledMinutes: () => this.range(30, 60),
-          disabledSeconds: () => [55, 56]
-        }
-      }
-      return {
-        disabledHours: () => this.range(0, 60).splice(20, 4),
-        disabledMinutes: () => this.range(0, 31),
-        disabledSeconds: () => [55, 56]
-      }
-    },
     onChange (value) {
-      value.target.value == 5 ? this.diyDate = true : this.diyDate = false
+      console.log(value)
+      this.loadData = parameter => {
+        return getInvoiceList(deleteNullAttr(this.form))
+          .then(res => {
+            return {
+              data: res.data, // 列表数组
+              pageNo: this.form.page, // 当前页码
+              pageSize: this.form.limit, // 每页页数
+              totalCount: res.countPage, // 列表总条数
+              totalPage: res.pageSize // 列表总页数
+            }
+          })
+      }
     },
     showEditTag (type) {
       this.$refs['EditTag'].show(type)
     },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
-    }
   }
 }
 </script>

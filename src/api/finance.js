@@ -62,10 +62,16 @@ export function checkwxPay(parameter) {
 
 // 班结详细列表
 export function getBjList(parameter) {
+  console.log(parameter)
+  if (store.getters.site_id === (-1)) {
+    parameter.group_id = store.getters.group_id;
+  } else {
+    parameter.site_id = store.getters.site_id;
+  }
   return JavaRequest({
     url: '/order/query_order_class_knot',
     method: 'post',
-     data: parameter
+    data: parameter
   })
 }
 // 班结id列表
@@ -73,5 +79,16 @@ export function getBjIdList() {
   return PhpRequest({
     url: '/user/getAllclass_knot',
     method: 'post',
+  })
+}
+
+// 发票列表
+
+export function getInvoiceList(parameter) {
+  console.log(parameter)
+  return JavaRequest({
+    url: '/order/query_invoice_receipt',
+    method: 'post',
+    data: parameter
   })
 }

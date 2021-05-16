@@ -1,8 +1,9 @@
 import JavaRequest from '@/utils/JavaRequest'
 import PhpRequest from '@/utils/PhpRequest'
+import store from '@/store'
 const api = {
   orderList: '/order/getOrder',
-  oilSet: '/order/queryOilSet',
+  oilSet: '/set/siteoillist',
   gun: '/order/queryGun',
   payList: '/order/queryPayList'
 }
@@ -15,11 +16,17 @@ export function getOrderList (parameter) {
   })
 }
 
-export function getOilSetList (parameter) {
-  return JavaRequest({
+export function getOilSetList () {
+  const data = new FormData()
+  if (store.getters.site_id == (-1)) {
+    data.append('group_id', store.getters.group_id)
+  } else {
+    data.append('site_id', store.getters.site_id)
+  }
+  return PhpRequest({
     url: api.oilSet,
     method: 'post',
-    data: parameter
+    data
   })
 }
 

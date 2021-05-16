@@ -56,7 +56,7 @@ export default {
       bjIdList:[],
       bjList:[],
       queryParam:{
-        id:''
+        limit:1000,
       },
       value: '',
       // 表头
