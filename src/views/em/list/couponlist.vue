@@ -220,8 +220,8 @@ export default {
             data: res.data, // 列表数组
             pageNo: parameter.pageNo,  // 当前页码
             pageSize: parameter.pageSize,  // 每页页数
-            totalCount: res.data.length, // 列表总条数
-            totalPage: res.countPage // 列表总页数
+            totalCount: res.countPage, // 列表总条数
+            totalPage: res.pageSize // 列表总页数
           }
         })
       },
