@@ -104,7 +104,7 @@
                   </div>
 
                   <div style="margin-bottom: 60px">
-                    <span>配置自定义角色，并在该角色下配置员工账号，灵活管理员工账号权限</span>
+                    <span style="white-space:none">配置自定义角色，并在该角色下配置员工账号，灵活管理员工账号权限</span>
                   </div>
 
                   <div style="display: flex; justify-content: space-between">
