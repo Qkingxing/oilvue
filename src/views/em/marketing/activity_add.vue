@@ -102,8 +102,6 @@
       </div>
     </a-layout-content>
 
-    <!-- <Add v-if="activityType" @back="activityType =''"></Add> -->
-
     <PriceCut v-if="$route.query.activityType == 102" />
 
     <CreditRecharge v-if="$route.query.activityType == 14" />
@@ -115,13 +113,12 @@
 export default {
   name: 'ActivityAdd',
   components: {
-    Add: () => import('./activity/add'),
     PriceCut: () => import('./activity/priceCut'),
     CreditRecharge: () => import('./activity/creditRecharge')
   },
   data () {
     return {
-      activityType: ''
+
     }
   },
   created () {
