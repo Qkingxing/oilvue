@@ -19,47 +19,53 @@
     </div>
 
     <div class="global_couponDetailBox">
-      <div class="global_couponDetail_right">
+      <div class="global_couponDetail_right" v-if="detail">
         <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">优惠券名</div>
           <div class="global_couponDetail_right_right">
-            <div>{{itemObj.coupons_name}}</div>
+            <div>{{detail.coupons_name}}</div>
           </div>
         </div>
         <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">生效油站</div>
           <div class="global_couponDetail_right_right">
-            <div>{{itemObj.site_id}}</div>
+            <div>{{detail.site_name}}</div>
           </div>
         </div>
         <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">活动人群</div>
           <div class="global_couponDetail_right_right">
-            <div>神仙优惠</div>
+            <div v-if="detail.activity_type==1">所有线上用户</div>
+            <div v-if="detail.activity_type==2">可参与人群(****)</div>
+            <div v-if="detail.activity_type==3">不可参与人群(****)</div>
           </div>
         </div>
-        <div class="global_couponDetail_right_line">
+        <!-- <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">支付限制</div>
           <div class="global_couponDetail_right_right">
-            <div>神仙优惠</div>
+            <div>{{detail.coupons_limit_name}}</div>
           </div>
-        </div>
+        </div> -->
         <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">券类型</div>
           <div class="global_couponDetail_right_right">
-            <div>神仙优惠</div>
+            <div v-if="detail.volume_type==1">油品券</div>
+            <div v-if="detail.volume_type==2">商品券</div>
           </div>
         </div>
         <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">券面额</div>
           <div class="global_couponDetail_right_right">
-            <div>固定金额<span style="color:#3a85ff;padding:0 3px;">2</span>元</div>
+            <div v-if="detail.amount_type==1">固定金额<span style="color:#3a85ff;padding:0 3px;">{{detail.coupons_amount}}</span>元</div>
+            <div v-if="detail.amount_type==2">随机金额<span style="color:#3a85ff;padding:0 3px;">{{detail.coupons_amount}}</span>元</div>
+            <div v-if="detail.amount_type==3">固定折扣{{detail.discount}}折 ,最大抵扣金额{{detail.coupons_amount}}元</div>
           </div>
         </div>
         <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">券有效期</div>
           <div class="global_couponDetail_right_right">
-            <div >2021-05-13 00:00:00至2021-06-13 23:59:59</div>
+            <div v-if="detail.validity_type=='1'">{{detail.start_time}}至{{detail.end_time}}</div>
+            <div v-if="detail.validity_type=='2'">{{detail.day_time}}到期</div>
 
             <a-date-picker 
               v-if="itemObj.activation_type==1"
@@ -78,25 +84,44 @@
         <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">使用限制</div>
           <div class="global_couponDetail_right_right">
-            <div >2021-05-13 00:00:00至2021-06-13 23:59:59</div>
+            <div>{{detail.coupons_limit_name}}</div>
           </div>
         </div>
         <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">使用须知</div>
           <div class="global_couponDetail_right_right">
-            <div >2021-05-13 00:00:00至2021-06-13 23:59:59</div>
+            <div>{{detail.conditions?detail.conditions:'-'}}</div>
           </div>
         </div>
         <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">时间限制</div>
           <div class="global_couponDetail_right_right">
-            <div >2021-05-13 00:00:00至2021-06-13 23:59:59</div>
+            <div v-if="detail.limit_time==1">不限制</div>
+            <div v-if="detail.limit_time==2">
+              <!-- 有问题 -->
+              <span v-if="detail.time_type==1">每日</span>
+              <span v-if="detail.time_type==2">每周</span>
+              <span v-if="detail.time_type==3">每月</span>
+              
+              <span v-for="(item,i) in detail.off_time" :key="i">
+                {{item.tart_time}} 到 {{item.end_time}}
+              </span>
+              可用
+            </div>
+            <div v-if="detail.limit_time==3">不限制</div>
           </div>
         </div>
         <div class="global_couponDetail_right_line">
           <div class="global_couponDetail_right_left">使用条件</div>
           <div class="global_couponDetail_right_right">
-            <div>98#车用汽油原价满2元可用<br><div style="height: 5px;"></div>95#车用汽油原价满2元可用<br><div style="height: 5px;"></div>92#车用汽油原价满2元可用<br><div style="height: 5px;"></div>4#车用柴油原价满2元可用<br><div style="height: 5px;"></div>3#车用柴油原价满2元可用<br><div style="height: 5px;"></div>0#车用柴油原价满2元可用<br><div style="height: 5px;"></div></div>
+            <div v-html="detail.oil_name">
+              98#车用汽油原价满2元可用<br><div style="height: 5px;"></div>
+              95#车用汽油原价满2元可用<br><div style="height: 5px;"></div>
+              92#车用汽油原价满2元可用<br><div style="height: 5px;"></div>
+              4#车用柴油原价满2元可用<br><div style="height: 5px;"></div>
+              3#车用柴油原价满2元可用<br><div style="height: 5px;"></div>
+              0#车用柴油原价满2元可用<br><div style="height: 5px;"></div>
+          </div>
           </div>
         </div>
         <div class="global_couponDetail_right_line" v-if="itemObj.activation_type==0">
@@ -106,12 +131,6 @@
             <a style="margin-left: 18px;" @click="delCoupons(itemObj)" v-if="itemObj.activation_type==0">删除</a>
           </div>
         </div>
-
-
-
-
-
-
 
 
       </div>
@@ -127,7 +146,7 @@
 import { STable } from '@/components'
 
 import moment from 'moment';
-import { delCoupons,updateCoupons } from '@/api/em'
+import { delCoupons,updateCoupons, getCouponDefault, setCouponUpdateTime } from '@/api/em'
 
 export default {
   name: 'CouponDetail',
@@ -136,7 +155,8 @@ export default {
   },
   data () {
     return {
-      time: null
+      time: null,
+      detail: null
     }
   },
   props:{
@@ -146,11 +166,20 @@ export default {
     }
   },
   created () {
-    console.log(this.itemObj)
-
+    // console.log(this.itemObj)
+    this.onLoad()
+    
   },
   methods: {
     moment,
+    onLoad(){
+      getCouponDefault(this.itemObj.id).then(res=>{
+      
+        this.detail = res.data
+        this.detail.off_time = JSON.parse(this.detail.off_time)
+        console.log(this.detail)
+      })
+    },
     range(start, end) {
       const result = [];
       for (let i = start; i < end; i++) {
@@ -178,7 +207,13 @@ export default {
         title: '温馨提示',
         content: `是否将优惠券结束时间改为 ${date.format('YYYY-MM-DD HH:mm:ss')}`,
         onOk () {
-
+          setCouponUpdateTime({
+            id: that.itemObj.id,
+            end_time: date.format('YYYY-MM-DD HH:mm:ss')
+          }).then(res=>{
+            console.log(res)
+            that.onLoad()
+          })
         },
         onCancel () {}
       })

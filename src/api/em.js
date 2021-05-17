@@ -10,6 +10,22 @@ export function getCoupons (data) {
     data
   })
 }
+// 优惠券详情
+export function getCouponDefault (id) {
+  return PhpRequest({
+    url: '/user/couponDefault',
+    method: 'post',
+    data: {id}
+  })
+}
+// 修改优惠券时间
+export function setCouponUpdateTime (data) {
+  return PhpRequest({
+    url: '/user/couponUpdateTime',
+    method: 'post',
+    data
+  })
+}
 // 删除优惠券
 export function delCoupons (id) {
   return JavaRequest({
