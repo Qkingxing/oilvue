@@ -93,18 +93,18 @@
           </a-form-item>
            <a-form-item label="油品名称" :wrapper-col="{ span: 12}">
              <a-select v-model="yqForm.oils_id">
-              <a-select-option v-for="(item,index) in setSiteoillistData" :key="index">
+              <a-select-option :value="item.id" v-for="(item,index) in setSiteoillistData" :key="index">
                 {{ item.oils_name}}
               </a-select-option>
             </a-select>
           </a-form-item>
-          <a-form-item label="油枪分组" :wrapper-col="{ span: 12}">
+          <!-- <a-form-item label="油枪分组" :wrapper-col="{ span: 12}">
              <a-select v-model="yqForm.gun_grouping"  @change="yqChange">
               <a-select-option v-for="(item,index) in yqArr" :key="index">
                 {{ item.sort_name}}
               </a-select-option>
             </a-select>
-          </a-form-item>
+          </a-form-item> -->
            <a-form-item label="状态">
             <a-radio-group v-model="yqForm.gun_status">
               <a-radio value="1">
@@ -116,7 +116,7 @@
               
             </a-radio-group>
           </a-form-item>
-        <a-form-item label="零管系统">
+        <!-- <a-form-item label="零管系统">
           <a-radio-group v-model="yqForm.zero_type">
             <a-radio value="1">
               启用
@@ -126,7 +126,7 @@
             </a-radio>
            
           </a-radio-group>
-        </a-form-item>
+        </a-form-item> -->
           <a-form-item :wrapper-col="{ span: 12 }">
             <a-button @click="subYq" type="primary" style="margin-right:20px">
               提交
@@ -150,9 +150,15 @@
               :columns="columns"
               :data-source="setSiteoillistData"
             >
-              <span slot="oils_status" slot-scope="oils_status">
-               {{oils_status==1?'生效中':(oils_status==2?'待生效':'已过期')}}
-              </span>
+             
+
+               <a-tag
+        slot="oils_status" slot-scope="oils_status"
+        
+        :color="oils_status ==1 ? 'volcano' : oils_status ==2 ? 'geekblue' : 'green'"
+      >
+        {{oils_status==1?'生效中':(oils_status==2?'待生效':'已过期')}}
+      </a-tag>
               <span slot="action" slot-scope="text, record">
                 <template>
                   <a @click="delTag(record)">撤回</a>
@@ -404,12 +410,13 @@ export default {
         {
           dataIndex: 'oils_status',
           title: '状态',
-          key: 'oils_status'
+          key: 'oils_status',
+          scopedSlots: { customRender: 'oils_status' }
         },
         {
-          dataIndex: 'userId',
+          dataIndex: 'user_name',
           title: '操作员',
-          key: 'userId'
+          key: 'user_name'
         },
          {
           dataIndex: '操作',
@@ -527,10 +534,12 @@ export default {
     subYq(){
       
       let that=this
+     
        api.orderAddGun_Oils_list(that.yqForm)
         .then(res => {
          if(res.code==200){
            that.showTab=true
+           that.setSiteoillist()
            that.yqForm={
             "oils_id":"",//油品id
             "gun_status":"",//状态 1：启用，2：禁用
