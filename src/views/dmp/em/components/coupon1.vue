@@ -43,11 +43,7 @@ export default {
         })
       }
     },
-    // removeTag(val) {
-    //   if (val === '全选') {
-    //     this.selectedArray = []
-    //   }
-    // },
+    
   },
 }
 </script>

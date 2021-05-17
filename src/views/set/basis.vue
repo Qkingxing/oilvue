@@ -94,7 +94,7 @@
           </a-form-item>
           <a-form-item label="油站图片">
             <a-upload
-              action="https://oiljava.ldyxx.com:4435/goods/FileImg"
+              action="https://oiljava.ldyxx.com/goods/FileImg"
               list-type="picture-card"
               :file-list="fileList"
               name="file"

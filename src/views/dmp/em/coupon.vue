@@ -24,12 +24,18 @@ import coupon1 from './components/coupon1'
 import coupon2 from './components/coupon2'
 import coupon3 from './components/coupon3'
 import times from './components/times'
+import {coupon} from '@/api/data'
 export default {
   name: 'Coupon',
   components: { coupon1, coupon2,coupon3,times },
   data() {
     return {}
   },
+  methods:{
+      coupons(){
+          return 
+      }
+  }
 }
 </script>
 

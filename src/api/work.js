@@ -9,6 +9,23 @@ export function personage (data) {
     })
 }
 
+// 个人信息
+
+export function userinfo(data){
+    return PhpRequest({
+        url:"/work/userinfo",
+        method:'post',
+        data
+    })
+}
+
+// export function useraccount(data){
+//     return PhpRequest({
+//         url:'work/useraccount',
+//         method:'post',
+//         data
+//     })
+// }
 // 员工查询
 export function userinfolist (data) {
     return PhpRequest({
