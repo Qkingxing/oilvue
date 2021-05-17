@@ -134,13 +134,13 @@
       :pageType="pageType" 
       :itemData="itemData"
       :active="active"
-      @back="pageType='list'"/>
+      @back="DetailBack"/>
     
     <RuleEdit 
       v-if="pageType=='edit'||pageType=='add'" 
       :pageType="pageType" 
       :itemData="itemData"
-      @back="pageType='list'"/>
+      @back="EditBack"/>
   </a-layout>
 </template>
 
@@ -218,7 +218,7 @@ export default {
           type: 1
         }
         return getIntegralrulelist(Object.assign(params)).then(res=>{
-          console.log(res.data.list)
+          // console.log(res.data.list)
           // 自定义出参
           // 单站模式
           if (this.userInfo.site_id!==(-1)) {
@@ -280,9 +280,17 @@ export default {
     ...mapGetters(['userInfo'])
   },
   created () {
-    console.log(this.userInfo)
+    // console.log(this.userInfo)
   },
   methods: {
+    EditBack(){
+      this.pageType = 'list'
+      this.itemData = null
+    },
+    DetailBack(){
+      this.pageType = 'list'
+      this.itemData = null
+    },
     editRule(item){
       this.itemData = item
       this.pageType = 'edit'

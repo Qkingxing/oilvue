@@ -43,8 +43,8 @@
           <div class="box flex">
             <span class="s1">活动人群</span>
             <span class="s2" v-if="item.activity_type==1">所有线上客户 </span>
-            <span class="s2" v-if="item.activity_type==2">部分可参与 </span>
-            <span class="s2" v-if="item.activity_type==3">部分不可参与 </span>
+            <span class="s2" v-if="item.activity_type==2">部分可参与 ({{activePeoplesText(item.activity_ids)}})</span>
+            <span class="s2" v-if="item.activity_type==3">部分不可参与 ({{activePeoplesText(item.activity_ids)}})</span>
           </div>
           <div class="boxRule flex">
             <span class="s1" style="margin-top: 18px;">规则设置</span>
@@ -105,6 +105,7 @@ import { mapGetters } from 'vuex'
 import { getIntegrallists,stopIntegralruleset } from '@/api/crm'
 import { getPayList } from '@/api/base'
 import { getSitesoillist } from '@/api/oil'
+import { getlevelAlls } from '@/api/user'
 
 export default {
   name: 'siteDetail',
@@ -115,7 +116,9 @@ export default {
       integralsetIndex: 0,// 显示规则索引
       form: {},
       payList:[],
-      oilList:[]
+      oilList:[],
+      activePeoples: [],
+      activePeoplesLine: []
 
     }
   },
@@ -133,7 +136,7 @@ export default {
   },
   created () {
     // console.log(this.userInfo)
-    console.log(this.itemData)
+    // console.log(this.itemData)
     this.Init()
     
   },
@@ -155,10 +158,41 @@ export default {
       let oilRes = await getSitesoillist(this.form.site_ids)
       this.oilList = oilRes.data
 
+      // 获取固定、动态、客群三合一
+      let activePeopleRes = await getlevelAlls({type:3})
+      // console.log(activePeopleRes)
+      if (activePeopleRes) {
+        // console.log(activePeopleRes.data)
+        this.activePeoples = activePeopleRes.data
+        let activePeoplesLine = []
+        // 树状改平行结构
+        this.activePeoples.forEach(e=>{
+          activePeoplesLine = activePeoplesLine.concat(e.treeList)
+        })
+        // console.log(activePeoplesLine)
+        this.activePeoplesLine = activePeoplesLine
+      }
+
       // console.log(this.form)
 
 
       this.loading = false
+    },
+    activePeoplesText(arr){
+      let filterArr = this.activePeoplesLine.filter(e=>{
+        return arr.includes(e.id)
+      })
+      // console.log(filterArr)
+      let textArr = filterArr.map(e=>{return e.name})
+
+      let text = textArr.join('、')
+
+      if (textArr.length) {
+        return text
+      }else{
+        return
+      }
+      
     },
     // 结束规则
     stop(){
@@ -335,6 +369,7 @@ export default {
       }
       .s2{
         margin-left: 24px;
+        white-space: normal;
       }
     }
     .boxRule{

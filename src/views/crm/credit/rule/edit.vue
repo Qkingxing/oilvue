@@ -118,8 +118,8 @@
             </div>
             <div v-else class="row-content">
               <div v-if="item.activity_type==1">所有线上客户</div>
-              <div v-if="item.activity_type==2">某些人可参与</div>
-              <div v-if="item.activity_type==3">某些人不可参与</div>
+              <div v-if="item.activity_type==2">部分可参与 ({{activePeoplesText(item.activity_ids)}})</div>
+              <div v-if="item.activity_type==3">部分不可参与 ({{activePeoplesText(item.activity_ids)}})</div>
             </div>
           </div>
           <div class="row-item flex">
@@ -441,7 +441,7 @@ export default {
         integralset: [  // 规则列表
           {
             activity_type: 1, //活动人群活动人群类型 1所有线上客户 2部分可参与 3部分不可参与  如果选择所有客户的话，客户群体选择null
-            activity_ids: null, //客户群体
+            activity_ids: [], //客户群体
             name: '', //积分规则名称
             giveintegral: [
               {
@@ -487,6 +487,7 @@ export default {
         text: ''
       },// 冲突对象
       activePeoples: [],
+      activePeoplesLine: []
 
     }
   },
@@ -515,8 +516,15 @@ export default {
       let activePeopleRes = await getlevelAlls({type:3})
       // console.log(activePeopleRes)
       if (activePeopleRes) {
-        console.log(activePeopleRes.data)
+        // console.log(activePeopleRes.data)
         this.activePeoples = activePeopleRes.data
+        let activePeoplesLine = []
+        // 树状改平行结构
+        this.activePeoples.forEach(e=>{
+          activePeoplesLine = activePeoplesLine.concat(e.treeList)
+        })
+        // console.log(activePeoplesLine)
+        this.activePeoplesLine = activePeoplesLine
       }
       let SitelistRes = null
       // 如果是集团权限
@@ -605,6 +613,22 @@ export default {
       
       this.loading = false
     },
+    activePeoplesText(arr){
+      let filterArr = this.activePeoplesLine.filter(e=>{
+        return arr.includes(e.id)
+      })
+      // console.log(filterArr)
+      let textArr = filterArr.map(e=>{return e.name})
+
+      let text = textArr.join('、')
+
+      if (textArr.length) {
+        return text
+      }else{
+        return
+      }
+      
+    },
     // 重复时间转换文字
     timeText(item){
       let str = ''
@@ -674,7 +698,7 @@ export default {
     addIntegralset(){
       let obj = {
         activity_type: 1, //活动人群活动人群类型 1所有线上客户 2部分可参与 3部分不可参与  如果选择所有客户的话，客户群体选择null
-        activity_ids: null, //客户群体
+        activity_ids: [], //客户群体
         name: '', //积分规则名称
         giveintegral: [
           {
@@ -1094,6 +1118,18 @@ export default {
             integralsetItem.id = integralsetItem.id
           }
           // console.log(integralsetItem)
+          // 活动人群
+          integralsetItem.activity_ids = integralsetItem.activity_ids.map(e=>{
+            return e[1]
+          })
+          if (integralsetItem.activity_type==2||integralsetItem.activity_type==3) {
+            if (!integralsetItem.activity_ids.length&&!isError) {
+              erroeText = '请选择活动人群'
+              isError = true
+            }
+          }
+          // console.log(integralsetItem)
+
           integralsetItem.name = `积分规则${funcChangeNumToCHN(integralsetIndex+1)}`
           integralsetItem.giveintegral.forEach((giveintegralItem,giveintegralIndex)=>{
             if (this.pageType==='edit') {
