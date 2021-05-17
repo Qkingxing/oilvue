@@ -152,6 +152,13 @@ function setInvoiceset(parameter){
     data: parameter
   })
 }
+// function setSiteoillist(parameter){
+//   return PhpRequest({
+//     url: 'set/siteoillist',
+//     method: 'post',
+//     data: parameter
+//   })
+// }
 const api = {
   setInvoiceset,
   setReceiptstyleset,

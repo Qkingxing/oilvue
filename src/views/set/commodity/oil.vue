@@ -4,7 +4,7 @@
     <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
       <div v-show="!showTab&&nowKey==1">
         <div>
-          <header >
+          <header>
             <div  class="page-title">
               <span >新增挂牌价</span>
               </div>
@@ -65,13 +65,12 @@
                       取消
                     </a-button>
               </a-form-item>
-   
             </a-form>                
           </div>
       </div>
       <div v-show="!showTab&&nowKey==2">
         <header>
-          <div  class="page-title"><span >
+          <div  class="page-title"><span>
             新增油枪</span></div>
         </header>
         <a-form :form="yqForm" :label-col="{ span:3 }" :wrapper-col="{ span: 21 }">
@@ -151,6 +150,9 @@
               :columns="columns"
               :data-source="setSiteoillistData"
             >
+              <span slot="oils_status" slot-scope="oils_status">
+               {{oils_status==1?'生效中':(oils_status==2?'待生效':'已过期')}}
+              </span>
               <span slot="action" slot-scope="text, record">
                 <template>
                   <a @click="delTag(record)">撤回</a>
