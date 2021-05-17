@@ -233,7 +233,7 @@
               </a-radio-group>
               <div style="margin-top: 20px;">
                 <a-radio-group v-if="time_type==2" v-model="week_threshold" button-style="solid" style="display: block;margin-bottom: 20px;">
-                  <a-radio-button v-for="(item,index) in weekList" :value="index">
+                  <a-radio-button v-for="(item,index) in weekList" :key="index" :value="index">
                     {{ item }}
                   </a-radio-button>
                 </a-radio-group>
