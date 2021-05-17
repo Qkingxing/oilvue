@@ -56,7 +56,7 @@
                 <div class="roles" v-for="(list, index) in lists" :key="index">
                   <template>
                     <a-card hoverable style="width: 300px; margin: 10px 10px">
-                      <a style="padding-left: 190px; display: block; margin-top: -14px; color: #7C7EE2">修改权限</a>
+                      <a @click="toModify(list)" style="padding-left: 190px; display: block; margin-top: -14px; color: #7C7EE2">修改权限</a>
                       <div style="display: flex; flex-direction: column">
                         <div style="margin: 32px auto">
                           <div style="width: 50px; height: 50px; margin: 0 auto; border-radius: 30px">
@@ -104,7 +104,7 @@
                   </div>
 
                   <div style="margin-bottom: 60px">
-                    <span>配置自定义角色，并在该角色下配置员工账号，灵活管理员工账号权限</span>
+                    <span style="white-space: pre-wrap;">配置自定义角色，并在该角色下配置员工账号，灵活管理员工账号权限</span>
                   </div>
 
                   <div style="display: flex; justify-content: space-between">
@@ -126,17 +126,17 @@
                     <p style="width: 100px; padding-top: 5px">选择权限</p>
                     <div style="width: 950px">
                       <div>
-						  <a-tree
-                              v-model="checkedKeys1"
-                              checkable
-                              :expanded-keys="expandedKeys1"
-                              :auto-expand-parent="autoExpandParent"
-                              :selected-keys="selectedKeys"
-                              :tree-data="treeDatas1"
-                              :replaceFields="{ children: 'treeList', title: 'menu_name', key: 'id' }"
-                              @expand="onExpands"
-                              @select="onSelect"
-                            />	
+                         <a-tree
+                            v-model="checkedKeys1"
+                            checkable
+                            :expanded-keys="expandedKeys1"
+                            :auto-expand-parent="autoExpandParent"
+                            :selected-keys="selectedKeys"
+                            :tree-data="treeDatas1"
+                            :replaceFields="{ children: 'treeList', title: 'menu_name', key: 'id' }"
+                            @expand="onExpands"
+                            @select="onSelect"
+                          />	
                       </div>
                     </div>
                   </div>
@@ -147,6 +147,44 @@
                   <div style="width: 200px; margin: 40px auto">
                     <a-button type="primary" @click="yes"> 确定 </a-button>
                     <a-button style="margin-left: 20px" @click="no">取消</a-button>
+                  </div>
+                </a-modal>
+                <a-modal
+                  width="1300px"
+                  v-model="modifyVisible"
+                  centered
+                  :footer="null"
+                  @ok="() => (modifyVisible = false)"
+                >
+                  <div style="width: 1000px; margin: 0 auto; display: flex">
+                    <p style="width: 100px; padding-top: 5px">角色名称</p>
+                    <a-input v-model="modifyInput" placeholder="" />
+                  </div>
+                  <div style="width: 1000px; margin: 0 auto; display: flex; margin-top: 20px">
+                    <p style="width: 100px; padding-top: 5px">选择权限</p>
+                    <div style="width: 950px">
+                      <div>
+                         <a-tree
+                            v-model="modifyCheckKey"
+                            checkable
+                            :expanded-keys="expandedKeys1"
+                            :auto-expand-parent="autoExpandParent"
+                            :selected-keys="selectedKeys"
+                            :tree-data="treeDatas1"
+                            :replaceFields="{ children: 'treeList', title: 'menu_name', key: 'id' }"
+                            @expand="onExpands"
+                            @select="onSelect"
+                          />	
+                      </div>
+                    </div>
+                  </div>
+                  <div style="width: 1000px; margin: 0 auto; display: flex; margin-top: 20px">
+                    <p style="width: 100px; padding-top: 5px">权限说明</p>
+                    <a-textarea v-model="modifyPermission" placeholder="请输入权限说明" :auto-size="{ minRows: 3, maxRows: 5 }" />
+                  </div>
+                  <div style="width: 200px; margin: 40px auto">
+                    <a-button type="primary" @click="modifySubmit()"> 确定 </a-button>
+                    <a-button style="margin-left: 20px" @click="modifyVisible = false">取消</a-button>
                   </div>
                 </a-modal>
               </div>
@@ -248,7 +286,7 @@ const treeDatas1 = [
   },
 ]
 
-import { rolemenu } from '@/api/work'
+import { rolemenu,getRoleDetail,modifyRole } from '@/api/work'
 import { rolelist } from '@/api/work'
 import { STable } from '@/components'
 import { rolesave } from '@/api/work'
@@ -262,14 +300,19 @@ export default {
   data() {
     return {
       obj: {},
+      powerId:'',
       expandedKeys: ['数据'],
-	  expandedKeys1:[],
+      expandedKeys1:[],
       autoExpandParent: false,
+      modifyVisible:false,
       checkedKeys: [],
-	  checkedKeys1:[],
+      checkedKeys1:[],
       selectedKeys: [],
+      modifyCheckKey:[],
+      modifyInput:'',
+      modifyPermission:'',
       treeDatas,
-	  treeDatas1,
+      treeDatas1,
       datas: false,
       modal2Visibles: false,
       input: '',
@@ -343,6 +386,7 @@ export default {
   },
   created() {
     this.rolelist()
+    this.loadTree()
   },
   computed: {
     // treeData() {
@@ -353,21 +397,65 @@ export default {
   },
   watch: {
     checkedKeys1(val) {
-		this.arrs = val
-      console.log('onCheck', val)
+      this.arrs = val
     },
   },
   methods: {
+    modifySubmit(){
+      let _obj={
+        id:this.powerId,	
+        role_name:this.modifyInput,
+        introduce:this.modifyPermission,
+        menu:this.modifyCheckKey
+      }
+      modifyRole(_obj).then(res=>{
+        this.$message.success('修改成功')
+        this.modifyVisible = false;
+        this.powerId = '';
+        this.modifyInput = '';
+        this.modifyPermission = '';
+        this.modifyCheckKey = [];
+        this.rolelist()
+      })
+    },
+    loadTree(){
+      groupmenulistt({}).then((res) => {
+        this.treeDatas1 = res.data.data
+      })
+    },
+    toModify(item){
+      getRoleDetail({ id: item.id }).then(res=>{
+        console.log(res)
+        this.powerId = res.data.id
+        this.modifyInput = res.data.role_name
+        this.modifyPermission = res.data.introduce
+      })
+      rolemenu({ role_id: item.id }).then(res=>{
+        for(let i in res.data){
+          if(res.data[i].checked == 1){
+            this.modifyCheckKey.push(res.data[i].menu_id)
+            for(let j in res.data[i].treeList){
+              if(res.data[i].treeList[j].checked == 1){
+                this.modifyCheckKey.push(res.data[i].treeList[j].menu_id)
+                for(let m in res.data[i].treeList[j].treeList){
+                  if(res.data[i].treeList[j].treeList[m].checked == 1){
+                    this.modifyCheckKey.push(res.data[i].treeList[j].treeList[m].menu_id)
+                  }
+                }
+              }
+            }
+          }
+        }
+      })
+      this.modifyVisible = true;
+    },
     showModal(id) {
       return rolemenu({ role_id: id }).then((res) => {
         this.treeDatas = res.data
-        console.log(res.data)
-
         this.modal2Visibles = true
       })
     },
     onSelect(selectedKeys, info) {
-      console.log('onSelect', info)
       this.selectedKeys = selectedKeys
     },
 
@@ -389,31 +477,23 @@ export default {
       this.expandedKeys1 = expandedKeys
       this.autoExpandParent = false
     },
-
-    
-
     yes() {
       let data = {
         role_name: this.input,
         introduce: this.value,
         menu: this.arrs,
-		role_image:'https://oilphp.ldyxx.com/images/fc58b4c0f928a76b797c5c687ea8fbdf.png'
+        role_image:'https://oilphp.ldyxx.com/images/fc58b4c0f928a76b797c5c687ea8fbdf.png'
       }
       return rolesave(data).then((res) => {
-        console.log(res)
-		this.rolelist()
-		this.modal2Visible1 = false
+      this.rolelist()
+      this.modal2Visible1 = false
       })
     },
     no() {
       this.modal2Visible1 = false
     },
     tianjia() {
-      return groupmenulistt({}).then((res) => {
-        console.log(res.data.data)
-        this.treeDatas1 = res.data.data
-        this.modal2Visible1 = true
-      })
+      this.modal2Visible1 = true
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys

@@ -35,6 +35,23 @@ export function rolelist (data) {
         data
     })
 }
+// 角色权限详情
+export function getRoleDetail (data) {
+    return PhpRequest({
+        url: '/work/rolelistDefault',
+        method: 'post',
+        data
+    })
+}
+
+// 修改角色权限
+export function modifyRole (data) {
+    return PhpRequest({
+        url: '/work/rolesave',
+        method: 'post',
+        data
+    })
+}
 
 export function depotslist (data) {
     return PhpRequest({
