@@ -539,7 +539,7 @@ export default {
         .then(res => {
          if(res.code==200){
            that.showTab=true
-           that.setSiteoillist()
+           that.seTgunlist()
            that.yqForm={
             "oils_id":"",//油品id
             "gun_status":"",//状态 1：启用，2：禁用
@@ -557,6 +557,11 @@ export default {
     },
     delMinus(item,index){
       this.yqForm.gunList.splice(index,1);
+      if(this.yqForm.gunList.length==0){
+        this.yqForm.gunList.push({
+          gun_name:''
+        })
+      }
     },
     addPlus(){
       this.yqForm.gunList.push({
@@ -959,6 +964,9 @@ main .gun-item .mark-icon {
     display: flex;
     height: 278px;
     margin-bottom: 16px;
+}
+.ant-input-number{
+  width:100%;
 }
 .terminal-box .terminal-block {
     -webkit-box-flex: 1;
