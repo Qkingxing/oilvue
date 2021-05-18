@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { Pie } from '@antv/g2plot'
+// import { Pie } from '@antv/g2plot'
 export default {
   props: ['cake3'],
   data() {
