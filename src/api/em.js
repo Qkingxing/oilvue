@@ -2,6 +2,14 @@ import JavaRequest from '@/utils/JavaRequest'
 import PhpRequest from '@/utils/PhpRequest'
 import store from '@/store'
 
+// 活动列表
+export function getActivitlist (data) {
+  return PhpRequest({
+    url: '/activity/activitlist',
+    method: 'post',
+    data
+  })
+}
 // 优惠券列表
 export function getCoupons (data) {
   return JavaRequest({
