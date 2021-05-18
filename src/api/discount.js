@@ -9,3 +9,17 @@ export function discount(data){
         data
     })
 }
+
+export function discount1(data){
+    return PhpRequest({
+        url:'/set/couponsStatistics',
+        method:'post',
+        data
+    })
+} 
+
+export function overview(data){
+    return JavaRequest({
+        url
+    })
+}

@@ -199,7 +199,7 @@ export function follows(data){
 
 export function coupon (data){
     return JavaRequest({
-        url:'/data/get_coupon_static',
+        url:'/data/get_customer_overview',
         method:'post',
         data
     })

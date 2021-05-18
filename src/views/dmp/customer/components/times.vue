@@ -82,19 +82,19 @@ export default {
     changeDate(key) {
        if(key == 'jintian'){
 		   this.show1 = false
-		   this.$parent.discounts(1)
+		   this.$parent.customers(1)
        }
        if(key == 'zuotian'){
 	    this.show1 = false
-         this.$parent.discounts(2)
+         this.$parent.customers(2)
        }
         if(key == 'benzhou'){
 		this.show1 = false
-         this.$parent.discounts(3)
+         this.$parent.customers(3)
        }
         if(key == 'benyue'){
 		this.show1 = false
-         this.$parent.discounts(4)
+         this.$parent.customers(4)
        }
 	   if(key == 'zidingyi'){
 		   this.show1 = true
@@ -105,7 +105,7 @@ export default {
     },
     onChange(date, dateString) {
 
-		this.$parent.discounts(5,dateString)
+		this.$parent.customers(5,dateString)
     },
   },
 }
