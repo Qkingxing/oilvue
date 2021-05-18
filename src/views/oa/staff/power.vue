@@ -78,11 +78,6 @@
                           <span @click="showModal(list.id)" style="color: #7C7EE2">详情</span>
                           <a-modal :mask="datas" v-model="modal2Visibles" centered :footer="null">
                             <a-tree
-                              v-model="checkedKeys"
-                              checkable
-                              :expanded-keys="expandedKeys"
-                              :auto-expand-parent="autoExpandParent"
-                              :selected-keys="selectedKeys"
                               :tree-data="treeDatas"
                               :replaceFields="{ children: 'treeList', title: 'menu_title_code', key: 'menu_id' }"
                               @expand="onExpand"
@@ -433,12 +428,23 @@ export default {
       rolemenu({ role_id: item.id }).then(res=>{
         for(let i in res.data){
           if(res.data[i].checked == 1){
-            this.modifyCheckKey.push(res.data[i].menu_id)
+            for(let j in res.data[i].treeList){
+              for(let m in res.data[i].treeList[j].treeList){
+                this.modifyCheckKey.push(res.data[i].treeList[j].treeList[m].menu_id)
+              }
+              if(!res.data[i].treeList[j].treeList){
+                this.modifyCheckKey.push(res.data[i].treeList[j].menu_id)
+              }
+            }
+          }else{
             for(let j in res.data[i].treeList){
               if(res.data[i].treeList[j].checked == 1){
-                this.modifyCheckKey.push(res.data[i].treeList[j].menu_id)
                 for(let m in res.data[i].treeList[j].treeList){
-                  if(res.data[i].treeList[j].treeList[m].checked == 1){
+                  this.modifyCheckKey.push(res.data[i].treeList[j].treeList[m].menu_id)
+                }
+              }else{
+                for(let m in res.data[i].treeList[j].treeList){
+                  if(res.data[i].treeList[j].treeList[m].checked==1){
                     this.modifyCheckKey.push(res.data[i].treeList[j].treeList[m].menu_id)
                   }
                 }
@@ -447,12 +453,44 @@ export default {
           }
         }
       })
+      console.log(this.modifyCheckKey)
       this.modifyVisible = true;
     },
     showModal(id) {
       return rolemenu({ role_id: id }).then((res) => {
-        this.treeDatas = res.data
-        this.modal2Visibles = true
+        for(let i in res.data){
+          for(let j in res.data[i].treeList){
+            if(res.data[i].treeList[j].treeList){
+              for(let m in res.data[i].treeList[j].treeList){
+                if(res.data[i].treeList[j].treeList[m].checked == 0){
+                  delete res.data[i].treeList[j].treeList[m]
+                }
+              }
+            }
+          }
+        }
+        let _data = res.data
+        for(let i in res.data){
+          if(res.data[i].treeList.length>0){
+            for(let j in res.data[i].treeList){
+              if(res.data[i].treeList[j].treeList){
+                if(res.data[i].treeList[j].treeList[0]){
+                  // console.log(res.data[i].treeList[j].treeList[0])
+                }else{
+                  console.log(i)
+                }
+                // if(res.data[i].treeList[j].treeList[0] == undefined){
+                //   console.log(11)
+                //   delete res.data[i]
+                // }
+              }
+              
+              
+            }
+          }
+        }
+        console.log(res.data)
+        // this.modal2Visibles = true
       })
     },
     onSelect(selectedKeys, info) {
