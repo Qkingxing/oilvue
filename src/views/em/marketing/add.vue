@@ -31,7 +31,7 @@
             :wrapper-col="formItemLayout.wrapperCol"
             label="活动人群"
           >
-            <a-radio-group v-model="activity_type" @change="onChangeActivity">
+            <a-radio-group v-model="activity_type">
               <a-radio :value="1">
                 所有线上客户
               </a-radio>
@@ -42,7 +42,7 @@
                 部分不可参与
               </a-radio>
             </a-radio-group>
-            <div v-if="activity_type != 1 && treeData.length>0" style="width: 400px;height: 80px;background-color: #fafafa;">
+            <div v-if="activity_type != 1 && treeData.length>0" style="width: 400px;min-height: 40px;">
               <a-tree-select
                 v-model="activePersons"
                 style="width: 100%"
@@ -58,7 +58,7 @@
             :wrapper-col="formItemLayout.wrapperCol"
             label="券类型"
           >
-            <a-radio-group v-model="volume_type" @change="onChangeActivity">
+            <a-radio-group v-model="volume_type">
               <a-radio :value="1">
                 油品券
               </a-radio>
@@ -86,7 +86,7 @@
             </a-radio-group>
             <div v-if="amount_type==1" style="width: 500px;height: 80px;line-height: 80px; background-color: #fafafa;text-align: center;">
               <span>固定金额</span>
-              <a-input-number style="margin: 0 10px;" :min="1" :max="1001" v-model="coupons_amount" @change="handleGdjeChange" />
+              <a-input-number style="margin: 0 10px;" :min="1" :max="1001" v-model="coupons_amount" />
               <span>元</span>
               <span style="color: #c7c7c7;margin-left: 10px;">最多支持一千元与两位小数，例：5.21元</span>
             </div>
@@ -111,7 +111,7 @@
             label="商品价值"
             v-if="volume_type == 2"
           >
-            <a-input-number style="margin: 0 10px;" :min="1" :max="1001" :value="coupons_amount" @change="handleGdjeChange" />
+            <a-input-number style="margin: 0 10px;" :min="1" :max="1001" v-model="coupons_amount" @change="handleGdjeChange" />
             <span>元</span>
             <span style="color: #c7c7c7;margin-left: 10px;">最多支持一千元与两位小数，例：5.21元</span>
           </a-form-item>
@@ -186,19 +186,11 @@
                 {{ item.oils_name }}
               </a-select-option>
             </a-select>
-            <a-select default-value="lucy" style="width: 80px;margin-left: 10px;" >
-              <a-select-option value="jack">
-                原价
-              </a-select-option>
-              <a-select-option value="lucy">
-                升数
-              </a-select-option>
-            </a-select>
-            <span style="margin: 0 10px;">满</span>
+            <span style="margin: 0 10px;">原价满</span>
             <a-input-number v-model="count_available" :min='0'></a-input-number>
             <span style="margin-left: 10px;">可用</span>
           </a-form-item>
-          <a-form-item
+         <!-- <a-form-item
             :label-col="formItemLayout.labelCol"
             :wrapper-col="formItemLayout.wrapperCol"
             label="时间限制"
@@ -214,10 +206,9 @@
                 时间内不可用
               </a-radio>
             </a-radio-group>
-          </a-form-item>
-          <div class="ant-row" v-show="limit_time != 1">
+          </a-form-item> -->
+         <!-- <div class="ant-row" v-show="limit_time != 1">
             <div class="ant-col ant-col-4">
-
             </div>
             <div class="ant-col ant-col-10" style="border: 1px solid #eee;padding: 20px;width: 500px;margin-bottom: 20px;" >
               <a-radio-group v-model="time_type" @change="onChangeActivity">
@@ -244,8 +235,7 @@
                 <a-time-picker v-model="limit_timer2" style="margin-left: 20px;"></a-time-picker>
                 </el-checkbox-group v-if="time_type==3"></div>
             </div>
-
-          </div>
+          </div> -->
           <a-form-item
             :label-col="formItemLayout.labelCol"
             :wrapper-col="formItemLayout.wrapperCol"
@@ -261,6 +251,21 @@
               下一步
             </a-button>
           </a-form-item>
+        </a-card>
+        <a-card v-show="step ==2" style="margin-top: 10px;">
+           <a-result
+              status="success"
+              title="营销券创建成功"
+            >
+              <template #extra>
+                <a-button key="console" @click="step=0">
+                  继续创建
+                </a-button>
+                <a-button key="buy">
+                  立即激活
+                </a-button>
+              </template>
+            </a-result>
         </a-card>
       </a-layout-content>
     </a-layout>
@@ -346,7 +351,10 @@ export default {
       })
     },
     laodLevel () {
-      getlevelAlls().then(res => {
+      let _obj={
+        type:3
+      }
+      getlevelAlls(_obj).then(res => {
         this.treeData = res.data
       })
     },
@@ -399,51 +407,80 @@ export default {
         this.$message.error('请输入优惠券名称')
         return
       }
-      this.post_obj.amount_type = this.amount_type
       this.post_obj.coupons_name = this.coupons_name
       this.post_obj.activity_type = this.activity_type
       this.post_obj.volume_type = this.volume_type
-      if (this.amount_type == 1) {
-        if (isEmpty(this.coupons_amount)) {
-          this.$message.error('请输入固定金额')
-          return
+      if(this.activity_type != 1){
+        if(this.activePersons.length==0){
+          this.$message.error('请选择活动人群范围')
+          return;
         }
-        this.post_obj.coupons_amount = this.coupons_amount
+        let _fixed_id=[]
+        let _dynamic_id=[]
+        let _grouping_id=[]
+        this.activePersons.forEach((item)=>{
+          if(item.indexOf('1_')!=-1){
+            _fixed_id.push(item.slice(2))
+          }
+          if(item.indexOf('2_')!=-1){
+            _dynamic_id.push(item.slice(2))
+          }
+          if(item.indexOf('3_')!=-1){
+            _grouping_id.push(item.slice(2))
+          }
+        })
+        this.post_obj.fixed_id = _fixed_id.join(',')
+        this.post_obj.dynamic_id = _dynamic_id.join(',')
+        this.post_obj.grouping_id = _grouping_id.join(',')
       }
-      if (this.amount_type == 2) {
-        if (this.sjMin == '' || this.sjMax == '') {
-          this.$message.error('请输入随机金额范围')
-          return
+      if(this.volume_type == 1){
+        if (this.amount_type == 1) {
+          if (isEmpty(this.coupons_amount)) {
+            this.$message.error('请输入固定金额')
+            return;
+          }
+          this.post_obj.coupons_amount = this.coupons_amount
         }
-        this.post_obj.min = this.sjMin
-        this.post_obj.max = this.sjMax
-      }
-      if (this.amount_type == 3) {
-        if (isEmpty(this.discount)) {
-          this.$message.error('请输入固定折扣')
-          return
+        if (this.amount_type == 2) {
+          if (this.sjMin == '' || this.sjMax == '') {
+            this.$message.error('请输入随机金额范围')
+            return;
+          }
+          this.post_obj.min = this.sjMin
+          this.post_obj.max = this.sjMax
         }
-        if (isEmpty(this.coupons_amount)) {
-          this.$message.error('请输入最大抵扣金额')
-          return
+        if (this.amount_type == 3) {
+          if (isEmpty(this.discount)) {
+            this.$message.error('请输入固定折扣')
+            return;
+          }
+          if (isEmpty(this.coupons_amount)) {
+            this.$message.error('请输入最大抵扣金额')
+            return;
+          }
+          this.post_obj.coupons_amount = this.coupons_amount
+          this.post_obj.discount = this.discount
         }
+        this.post_obj.amount_type = this.amount_type
+      }else{
         this.post_obj.coupons_amount = this.coupons_amount
-        this.post_obj.discount = this.discount
       }
       // 券有效期
       this.post_obj.validity_type = this.validity_type
-      if (this.validity_type == 1 && this.yxqValue.length == 0) {
-        this.$message.error('请输入选择有效期')
-        return
-      } else {
+      if (this.validity_type == 1) {
+        if(this.yxqValue.length == 0){
+          this.$message.error('请输入选择有效期')
+          return;
+        }
         this.post_obj.start_time = this.yxqValue[0]
         this.post_obj.end_time = this.yxqValue[1]
       }
-      if (this.validity_type == 2 && isEmpty(this.effective_day)) {
-        this.$message.error('请输入有效天数')
-        return
-      } else {
-        this.post_obj.validity_type = this.validity_type
+      if (this.validity_type == 2) {
+        if(isEmpty(this.effective_day)){
+          this.$message.error('请输入有效天数')
+          return
+        }
+        this.post_obj.effective_day = this.effective_day
       }
       this.step = 1
     },
@@ -453,52 +490,54 @@ export default {
         return
       }
       this.post_obj.coupons_limit = this.coupons_limit.length == 1 ? this.coupons_limit[0] : 3
-      this.post_obj.limit_time = this.limit_time
+      // this.post_obj.limit_time = this.limit_time
       if (this.oilChooseList.length == 0) {
         this.$message.error('请选择门槛油品');
         return
       }
       this.post_obj.oils_threshold = this.oilChooseList.join(',')
-      if (isEmpty(this.limit_timer1)||isEmpty(this.limit_timer2)) {
-        this.$message.error('请选择时间限制范围');
-        return
-      }
-      if(this.limit_time!=1){
-        this.post_obj.time_type = this.time_type;
-        if(isEmpty(this.time_type)){
-          this.$message.error('请选择重复方式？')
-          return;
-        }
-        if(this.time_type==2){
-          if (this.week_threshold.length == 0) {
-            this.$message.error('请选择每周几？')
-            return;
-          }
-          this.post_obj.total_data = [
-            {
-              'tart_time': this.limit_timer1, // 起止时间
-              'end_time': this.limit_timer2// 结束时间
-            }]
-           this.post_obj.week_threshold = this.week_threshold.toString(",");
-        }
-        if(this.limit_time==3){
-          if (this.month_threshold.length == 0) {
-            this.$message.error('请选择每月几日？')
-            return;
-          }
-          this.post_obj.total_data = [
-            {
-              'tart_time': this.limit_timer1, // 起止时间
-              'end_time': this.limit_timer2// 结束时间
-            }]
-          this.post_obj.month_threshold = this.month_threshold.toString(",");
-        }
-      }
-      
+      // if(this.limit_time!=1){
+      //   this.post_obj.time_type = this.time_type;
+      //   if(isEmpty(this.time_type)){
+      //     this.$message.error('请选择重复方式？')
+      //     return;
+      //   }
+      //   if(this.time_type==2){
+      //     if (this.week_threshold.length == 0) {
+      //       this.$message.error('请选择每周几？')
+      //       return;
+      //     }
+      //     this.post_obj.total_data = [
+      //       {
+      //         'tart_time': this.limit_timer1, // 起止时间
+      //         'end_time': this.limit_timer2// 结束时间
+      //       }]
+      //      this.post_obj.week_threshold = this.week_threshold.toString(",");
+      //   }
+      //   if(this.limit_time==3){
+      //     if (this.month_threshold.length == 0) {
+      //       this.$message.error('请选择每月几日？')
+      //       return;
+      //     }
+      //     this.post_obj.total_data = [
+      //       {
+      //         'tart_time': this.limit_timer1, // 起止时间
+      //         'end_time': this.limit_timer2// 结束时间
+      //       }]
+      //     this.post_obj.month_threshold = this.month_threshold.toString(",");
+      //   }
+      //   if (isEmpty(this.limit_timer1)||isEmpty(this.limit_timer2)) {
+      //     this.$message.error('请选择时间限制范围');
+      //     return
+      //   }
+      // }
       this.post_obj.count_available = this.count_available
+      this.post_obj.conditions = this.conditions
       this.post_obj.wechat_type = 2
       addCoupons(this.post_obj).then(res => {
-        console.log(res)
+        if(res.code=='200'){
+          this.step = 2;
+        }
       })
     },
     handleChange (e) {

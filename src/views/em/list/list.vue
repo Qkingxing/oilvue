@@ -1,176 +1,66 @@
 
 <template>
-  <div>开发中...</div>
-  <!-- <a-layout>
-    <a-layout-content :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '280px', position: 'relative' }">
+  <a-layout>
+    <a-layout-content 
+      v-if="!$route.query.activityId"
+      :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '600px', position: 'relative' }">
 
-      <a-tabs default-active-key="1" size="large">
-        <a-tab-pane key="1" tab="积分变动记录">
-          <div class="filterContentContainer">
-            <div class="screen"> -->
-              <!-- <a-range-picker show-time></a-range-picker> -->
-            <!-- </div>
-            <div>
-              <a-input-search placeholder="请输入活动id/活动名称" style="width: 200px" />
-            </div>
-          </div>
-          <div class="showDataForTable">
-            <s-table
-              ref="table"
-              size="default"
-              rowKey="key"
-              :columns="columns"
-              :data="loadData"
-            >
-              <span slot="action" slot-scope="text, record">
-                <template>
-                  <a @click="delTag(record)">撤回</a>
-                </template>
-              </span>
-            </s-table>
-          </div>
+      <a-tabs default-active-key="1">
+        <a-tab-pane key="1" tab="进行中">
+          <ActiveTable 
+            ref="ActiveTable"
+            :status="1" />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="积分获取记录">
-          <s-table
-            ref="table"
-            size="default"
-            rowKey="key"
-            :columns="columns"
-            :data="loadData"
-          >
-            <span slot="action" slot-scope="text, record">
-              <template>
-                <a @click="delTag(record)">撤回</a>
-              </template>
-            </span>
-          </s-table>
+        <a-tab-pane key="2" tab="审批中">
+          <ActiveTable 
+            ref="ActiveTable"
+            :status="2" />
         </a-tab-pane>
-        <a-tab-pane key="3" tab="积分消耗记录">
-          <s-table
-            ref="table"
-            size="default"
-            rowKey="key"
-            :columns="columns"
-            :data="loadData"
-          >
-            <span slot="action" slot-scope="text, record">
-              <template>
-                <a @click="delTag(record)">撤回</a>
-              </template>
-            </span>
-          </s-table>
+        <a-tab-pane key="3" tab="待开始">
+          <ActiveTable 
+            ref="ActiveTable"
+            :status="3" />
+        </a-tab-pane>
+        <a-tab-pane key="4" tab="被取消">
+          <ActiveTable 
+            ref="ActiveTable"
+            :status="4" />
+        </a-tab-pane>
+        <a-tab-pane key="5" tab="已结束">
+          <ActiveTable 
+            ref="ActiveTable"
+            :status="5" />
         </a-tab-pane>
       </a-tabs>
     </a-layout-content>
 
-  </a-layout> -->
+
+    <ActiveDetail 
+      v-if="$route.query.activityId"
+      ref="ActiveDetail" />
+  </a-layout>
 </template>
 
 <script>
-import { STable } from '@/components'
 
-import { getRoleList, getServiceList } from '@/api/manage'
 
 export default {
   name: 'EMlist',
   components: {
-    STable
+    ActiveTable: ()=>import('./list/ActiveTable'),
+    ActiveDetail: ()=>import('./list/ActiveDetail'),
   },
   data () {
     return {
-      // 表头
-      columns: [
-        {
-          title: '文件名称',
-          dataIndex: 'no'
-        },
-        {
-          title: '操作人',
-          dataIndex: 'description'
-        },
-        {
-          title: '成功数',
-          dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '失败数',
-          dataIndex: 'time',
-          needTotal: true
-        },
-        {
-          title: '总积分',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '总余额',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '加油卡名称',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '导入状态',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '导入时间',
-          // dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
-        }
-      ],
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
-      },
-      selectedRowKeys: [],
-      selectedRows: [],
 
-      // custom table alert & rowSelection
-      options: {
-        rowSelection: {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange
-        }
-      },
-      optionAlertShow: false
+
     }
   },
   created () {
-    this.tableOption()
-    getRoleList({ t: new Date() })
+    // console.log(this.$route.query)
   },
   methods: {
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
-        }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
-      }
-    }
+
   }
 }
 </script>
@@ -245,45 +135,5 @@ export default {
     }
   }
 }
-.filterContentContainer{
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  .screen{
-    font-size: 12px;
-    line-height: 22px;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-    .screen-li {
-      display: inline-block;
-      width: 48px;
-      height: 24px;
-      line-height: 24px;
-      margin-right: 20px;
-      text-align: center;
-      color: #040a46;
-      font-size: 12px;
-      cursor: pointer;
-      &.active{
-        background-color: #ecf3ff;
-        border-radius: 3px;
-        color: #3c85ff;
-      }
-    }
-  }
-}
-.showDataForTable{
-  position: relative;
-  display: block;
-  width: 100%;
-  padding-bottom: 60px;
-  margin-top: 20px;
-}
 
-.current-exprot{
-  border-color: #81a8f7;
-  color: #81a8f7;
-  margin-left: 15px;
-}
 </style>

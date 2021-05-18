@@ -194,3 +194,13 @@ export function follows(data){
         data
     })
 }
+
+// 营销 优惠券
+
+export function coupon (data){
+    return JavaRequest({
+        url:'/data/get_customer_overview',
+        method:'post',
+        data
+    })
+}

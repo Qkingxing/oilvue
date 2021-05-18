@@ -166,19 +166,7 @@ export default {
       return result
     },
     onChange (value) {
-      console.log(value)
-      this.loadData = parameter => {
-        return getInvoiceList(deleteNullAttr(this.form))
-          .then(res => {
-            return {
-              data: res.data, // 列表数组
-              pageNo: this.form.page, // 当前页码
-              pageSize: this.form.limit, // 每页页数
-              totalCount: res.countPage, // 列表总条数
-              totalPage: res.pageSize // 列表总页数
-            }
-          })
-      }
+      this.$refs.table.refresh()
     },
     showEditTag (type) {
       this.$refs['EditTag'].show(type)

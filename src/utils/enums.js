@@ -48,7 +48,16 @@ export const identity_types = [
   { label: '身份已认证', value: 1 },
   { label: '加油卡', value: 2 },
   { label: '会员', value: 3 },
-
+]
+// 活动类型
+export const activeType = [
+  { label: '价立减', value: 1 },
+  { label: '满额送', value: 2 },
+  { label: '满额减', value: 3 },
+  { label: '红包', value: 4 },
+  { label: '幸运抽奖', value: 5 },
+  { label: '好友邀请', value: 6 },
+  { label: '积分抵充值', value: 7 },
 ]
 // 客户列表 列配置
 export const oldcolumns = [

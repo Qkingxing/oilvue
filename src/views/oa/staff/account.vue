@@ -18,6 +18,7 @@
           />
         </div>
       </div>
+       <!-- 新增账号 -->
       <div v-if="show == 2" style="padding-bottom: 25px">
         <span>账号信息</span>
       </div>
@@ -75,6 +76,70 @@
         <a-button @click="fan">返回</a-button>
         <a-button style="margin-left: 5px" @click="add" type="primary"> 创建 </a-button>
       </div>
+
+      <!-- 修改账号 -->
+      <div v-if="show == 3" style="padding-bottom: 25px">
+        <span>账号信息</span>
+      </div>
+      <div v-if="show == 3" style="width: 400px; margin-left: 50px">
+        <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+          <a-form-item label="员工账号">
+            <a-input v-model="record.account" disabled/>
+          </a-form-item>
+          <a-form-item label="登录密码">
+            <a-input-password v-model="value6" placeholder='请输入账户登录密码' :disabled='disabled'/>
+            <span style="margin-left: 5px;cursor: pointer;" @click="poss">修改密码</span>
+          </a-form-item>
+          
+          <a-form-item label="员工姓名">
+            <a-input v-model="record.user_name" />
+          </a-form-item>
+          <a-form-item label="手机号">
+            <a-input v-model="record.mobile" />
+          </a-form-item>
+        </a-form>
+      </div>
+      <div v-if="show == 3">
+        <span>账号权限</span>
+      </div>
+      <div v-if="show == 3" style="width: 400px; margin-left: 50px">
+        <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+          <a-form-item label="账户类型">
+            <a-radio-group name="radioGroup" :default-value="1" @change="c">
+              <a-radio :value="1"> 单站账号 </a-radio>
+              <a-radio :value="2"> 片区账号 </a-radio>
+              <a-radio :value="3"> 集团账号 </a-radio>
+            </a-radio-group>
+          </a-form-item>
+          <a-form-item label="负责集团">
+            <a-select label-in-value :default-value="{ key: '鹰眼一站' }" style="width: 200px" @change="handleChange">
+              <a-select-option value="鹰眼一站"> 鹰眼一站 </a-select-option>
+              <a-select-option value="鹰眼第二加油站"> 鹰眼第二加油站 </a-select-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item label="账号角色">
+            <a-select
+              label-in-value
+              :default-value="{ key: '请选择账号角色' }"
+              style="width: 200px"
+              @change="handleChanges"
+            >
+              <a-select-option v-for="(name, index) in names" :key="index"> {{ name.role_name }} </a-select-option>
+              <!-- <a-select-option value="加油员"> 加油员 </a-select-option>
+              <a-select-option value="收银员"> 收银员 </a-select-option>
+              <a-select-option value="财务员"> 财务员 </a-select-option>
+              <a-select-option value="测试"> 测试 </a-select-option> -->
+            </a-select>
+          </a-form-item>
+        </a-form>
+      </div>
+      <div v-if="show == 3" style="width: 200px; margin: 0 auto">
+        <a-button @click="fan">返回</a-button>
+        <a-button style="margin-left: 5px" @click="addChuangjian" type="primary"> 创建 </a-button>
+      </div>
+
+
+
       <div class="box" v-if="show == 1">
         <!-- 表格 -->
         <div class="showDataForTable">
@@ -126,10 +191,15 @@ export default {
   },
   data() {
     return {
+      record:{},
       value1: '',
       value2: '',
       value3: '',
       value4: '',
+      value5:"",
+      value6:"",
+      value7:"",
+      value8:"",
       pageSize: 20,
       current: 4,
       //   visible: false,
@@ -168,6 +238,7 @@ export default {
           dataIndex: 'action',
           scopedSlots: { customRender: 'action' },
         },
+
       ],
       loadData: (parameter) => {
         let params = {
@@ -189,6 +260,7 @@ export default {
           }
         })
       },
+      disabled:true
     }
   },
   created() {
@@ -196,9 +268,13 @@ export default {
     this.rolelist()
   },
   methods: {
+    poss(){
+        this.disabled = false
+    },
     rolelist() {
       return rolelist({}).then((res) => {
         this.names = res.data.data
+        
       })
     },
     add() {
@@ -220,6 +296,12 @@ export default {
         this.$message.error('请输入正确手机号')
       }
     },
+    addChuangjian(){
+        return useraccount({id:this.record.id}).then(res=>{
+            console.log(res)
+            
+        })
+    },
     xinzeng() {
       this.show = 2
     },
@@ -233,6 +315,7 @@ export default {
     },
     delTag(record) {
       console.log(record)
+      this.record = record
       record.visible = true
     },
     fan() {
@@ -240,7 +323,9 @@ export default {
     },
     hide(record, index) {
       if (index == 1) {
+          this.show = 3
         record.visible = false
+        
       }
       if (index == 2) {
         let that = this
@@ -248,13 +333,12 @@ export default {
         this.$confirm({
           title: '系统温馨提示',
           content: '删除会清除标签全部信息，是否删除？',
+         
           onOk() {
-            // console.log(item)
             return userdelete({ id: record.id }).then((res) => {
-              console.log(res)
               that.$message.success('删除成功')
+             that.$refs.table.refresh()
             })
-            // console.log(res)
           },
           onCancel() {},
         })
@@ -267,7 +351,9 @@ export default {
             // console.log(item)
             return eliminatepwd({ id: record.id })
               .then((res) => {
-                console.log(res)
+               if(res.code == 200){
+                   that.$message.success(res)
+               }
                 record.visible = false
               })
               .catch((err) => {

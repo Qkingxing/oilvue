@@ -11,7 +11,7 @@
             <div class="aoe">
               <div class="admin">
                 <span class="a">登录账号</span>
-                <span class="b">openUser</span>
+                <span class="b">{{userInfo.account}}</span>
                 <!-- <span class="c">修改登陆密码</span> -->
                 <span class="text" type="primary" @click="amend"> 修改登陆密码 </span>
                 <div class="password">
@@ -52,16 +52,16 @@
                 </div>
               </div>
             </div>
-            <div class="aoe1">
+            <!-- <div class="aoe1">
               <div class="admin1">
                 <span class="a">账号类型</span>
                 <span class="b">集团账号</span>
               </div>
-            </div>
+            </div> -->
             <div class="aoe2">
               <div class="admin2">
                 <span class="a">员工角色</span>
-                <span class="b">管理员</span>
+                <span class="b">{{userInfo.role_name}}</span>
               </div>
             </div>
           </div>
@@ -74,13 +74,13 @@
             <div class="aoe">
               <div class="admin">
                 <span class="a">员工姓名</span>
-                <span class="b" style="font-weight: 700">对外演示账号</span>
+                <span class="b" style="font-weight: 700">{{userInfo.site_name}}</span>
               </div>
             </div>
             <div class="aoe1">
               <div class="admin1">
                 <span class="a">手机号</span>
-                <span class="b">18565639389</span>
+                <span class="b">{{userInfo.mobile}}</span>
               </div>
             </div>
             <div class="aoe3">
@@ -117,6 +117,11 @@
 <script>
 // import {FileImg} from '@/api/work'
 import { personage } from '@/api/work'
+// import { userinfo } from '@/api/work'
+import {useraccount} from '@/api/work'
+import { mapGetters } from 'vuex'
+import {getUserInfo} from '@/api/oa'
+
 // function getBase64(img, callback) {
 // 	console.log(img)
 //   const reader = new FileReader()
@@ -145,8 +150,20 @@ export default {
       },
     }
   },
-  created() {},
+  created() {
+    // this.useraccounts()
+    console.log(this.userInfo)
+  },
+  computed:{
+      ...mapGetters(['userInfo'])
+      
+  },
   methods: {
+      getUserInfos(img){
+          return  getUserInfo({}).then(res=>{
+              console.log(res)
+          })
+      },
     inp() {
       if (!this.input1) {
         this.show1 = 1
@@ -214,14 +231,20 @@ export default {
         return
       }
       if (info.file.status === 'done') {
-        // Get this url from response in real world.
         this.imageUrl = info.file.response.data
-        // getBase64(info.file.response.data, (imageUrl) => {
-        // 	console.log(imageUrl)
-        //   this.imageUrl = imageUrl
+        console.log(this.imageUrl)
+        this.getUserInfos(info.file.response.data)
+        this.useraccounts(info.file.response.data)
         this.loading = false
-        // })
       }
+    },
+
+     useraccounts(img) {
+      return useraccount({id:this.userInfo.site_id,image_photo:img}).then((res) => {
+        if(res == 200){
+            this.imageUrl = img
+        }
+      })
     },
     beforeUpload(file) {
       this.data1.file = file
@@ -350,7 +373,7 @@ export default {
                 text-align: center;
               }
               .text {
-                color: #7C7EE2;
+                color: #7c7ee2;
                 cursor: pointer;
               }
               .a {

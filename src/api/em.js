@@ -2,6 +2,14 @@ import JavaRequest from '@/utils/JavaRequest'
 import PhpRequest from '@/utils/PhpRequest'
 import store from '@/store'
 
+// 活动列表(详情通过id区分)
+export function getActivitlist (data) {
+  return PhpRequest({
+    url: '/activity/activitlist',
+    method: 'post',
+    data
+  })
+}
 // 优惠券列表
 export function getCoupons (data) {
   return JavaRequest({
@@ -43,6 +51,22 @@ export function updateCoupons (id) {
       id,
       activation_type: 1
     }
+  })
+}
+// 1营销活动--价立减--新增
+export function activitsave (data) {
+  return PhpRequest({
+    url: '/activity/activitsave',
+    method: 'post',
+    data
+  })
+}
+// 校验活动是否有冲突
+export function activitCheck (data) {
+  return PhpRequest({
+    url: '/activity/activitCheck',
+    method: 'post',
+    data
   })
 }
 

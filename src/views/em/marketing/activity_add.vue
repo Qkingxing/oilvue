@@ -101,9 +101,13 @@
         </div>
       </div>
     </a-layout-content>
-
+    
+    <!-- 价立减 -->
     <PriceCut v-if="$route.query.activityType == 102" />
+    <!-- 满额送 -->
+    <FullPayment v-if="$route.query.activityType == 5" />
 
+    <!-- 积分抵充值 -->
     <CreditRecharge v-if="$route.query.activityType == 14" />
 
   </a-layout>
@@ -114,6 +118,7 @@ export default {
   name: 'ActivityAdd',
   components: {
     PriceCut: () => import('./activity/priceCut'),
+    FullPayment: () => import('./activity/FullPayment'),
     CreditRecharge: () => import('./activity/creditRecharge')
   },
   data () {
