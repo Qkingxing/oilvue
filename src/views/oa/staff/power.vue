@@ -9,23 +9,24 @@
             <a>员工列表</a>
           </div>
           <div class="content">
-            <a-modal width="1300px" v-model="modal2Visible" centered @ok="() => (modal2Visible = false)" :footer="null">
+            <a-modal width="1300px" v-model="modal2Visible" centered :footer="null">
               <div class="fom">
                 <div
                   class="fom_a"
                   style="width: 100%; display: flex; justify-content: space-between; margin-bottom: 15px"
                 >
                   <div class="fom-a1" style="width: 150px; display: flex; justify-content: space-between">
-                    <a-button>全选</a-button>
-                    <a-button>删除</a-button>
+                    <!-- <a-button>全选</a-button> -->
+                    <!-- <a-button>删除</a-button> -->
                   </div>
                   <div style="width: 260px; margin-right: 60px">
-                    <a-input style="height: 40px" placeholder="请输入员工姓名/账号" />
+                    <a-input style="height: 40px" v-model="account" placeholder="请输入员工姓名/账号" />
                   </div>
                 </div>
 
                 <div class="showDataForTable">
                   <s-table
+                    v-if="modal2Visible"
                     ref="table"
                     size="default"
                     rowKey="id"
@@ -33,12 +34,12 @@
                     :data="loadData"
                     :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
                   >
-                    <span slot="name" slot-scope="text, record">
-                      <template>
-                        <router-link :to="{ name: 'CrmTagDetail', query: { id: record.id } }">{{ text }}</router-link>
-                      </template>
-                    </span>
-
+                  <span slot="account_type" slot-scope="text, record">
+                    <span v-if="text == 0">集团账号</span>
+                    <span v-if="text == 1">单站账号</span>
+                    <span v-if="text == 2">片区账号</span>
+                  </span>
+                    
                     <span slot="action" slot-scope="text, record">
                       <template>
                         <a @click="delTag(record)">删除</a>
@@ -47,7 +48,7 @@
                   </s-table>
                 </div>
                 <div style="width: 100px; margin: 20px auto">
-                  <a-button>取消</a-button>
+                  <a-button @click="modal2Visible = false">取消</a-button>
                 </div>
               </div>
             </a-modal>
@@ -78,14 +79,19 @@
                           <span @click="showModal(list.id)" style="color: #7C7EE2">详情</span>
                           <a-modal :mask="datas" v-model="modal2Visibles" centered :footer="null">
                             <a-tree
-                              :tree-data="treeDatas"
-                              :replaceFields="{ children: 'treeList', title: 'menu_title_code', key: 'menu_id' }"
-                              @expand="onExpand"
-                              @select="onSelect"
-                            />
+                               :selectable="false"
+                               v-model="modifyCheckKey"
+                               checkable
+                               :expanded-keys="expandedKeys1"
+                               :auto-expand-parent="autoExpandParent"
+                               :selected-keys="selectedKeys"
+                               :tree-data="treeDatas1"
+                               :replaceFields="{ children: 'treeList', title: 'menu_name', key: 'id' }"
+                               @expand="onExpands"
+                             />	
                           </a-modal>
                         </p>
-                        <p>角色列表<a @click="xiang" style="color: #7C7EE2">详情</a></p>
+                        <p>角色列表<a @click="roleInfo(list)" style="color: #7C7EE2">详情</a></p>
                       </div>
                     </a-card>
                   </template>
@@ -99,7 +105,7 @@
                   </div>
 
                   <div style="margin-bottom: 60px">
-                    <span style="white-space:none">配置自定义角色，并在该角色下配置员工账号，灵活管理员工账号权限</span>
+                    <span style="white-space:pre-wrap">配置自定义角色，并在该角色下配置员工账号，灵活管理员工账号权限</span>
                   </div>
 
                   <div style="display: flex; justify-content: space-between">
@@ -285,8 +291,9 @@ import { rolemenu,getRoleDetail,modifyRole } from '@/api/work'
 import { rolelist } from '@/api/work'
 import { STable } from '@/components'
 import { rolesave } from '@/api/work'
-import { groupmenulistt } from '@/api/work'
+import { groupmenulistt, userinfolist } from '@/api/work'
 import { getlabellist, labeldel } from '@/api/crm'
+import { isEmpty } from '@/utils/lzz.js'
 export default {
   name: 'Operformance',
   components: {
@@ -296,6 +303,7 @@ export default {
     return {
       obj: {},
       powerId:'',
+      account:'',
       expandedKeys: ['数据'],
       expandedKeys1:[],
       autoExpandParent: false,
@@ -312,27 +320,33 @@ export default {
       modal2Visibles: false,
       input: '',
       value: '',
+      groupId:'',
+      siteId:'',
       modal2Visible1: false,
       selectedRowKeys: [],
       selectedRows: [],
+      defaultProps: {
+        children: 'treeList',
+        label: 'menu_title_code'
+      },
       // 表头
       columns: [
         {
           title: '员工姓名',
-          dataIndex: 'name',
-          scopedSlots: { customRender: 'name' },
+          dataIndex: 'user_name',
         },
         {
           title: '账号',
-          dataIndex: 'count',
+          dataIndex: 'account',
         },
         {
           title: '账号类型',
-          dataIndex: 'create_time',
+          dataIndex: 'account_type',
+          scopedSlots: { customRender: 'account_type' },
         },
         {
           title: '角色权限',
-          dataIndex: 'update_time',
+          dataIndex: 'role_name',
         },
         {
           title: '所属油站',
@@ -340,43 +354,39 @@ export default {
         },
         {
           title: '绑定时间',
-          dataIndex: 'time',
+          dataIndex: 'create_time',
         },
-        {
-          title: '操作',
-          dataIndex: '操作',
-        },
-
         // {
-        //   title: '所属油站',
+        //   title: '操作',
         //   dataIndex: 'action',
-        //   scopedSlots: { customRender: 'action' },
-        // },
+        //   scopedSlots: { customRender: 'action' }
+        // }
+       
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: (parameter) => {
-        // console.log('loadData.parameter', parameter)
         let params = {
-          page: parameter.pageNo, // 页码
-          size: parameter.pageSize, // 每页页数
+          account:this.account,
+          role_id:this.powerId,
+          group_id:this.groupId,
+          site_id:this.siteId,
+          page: 1, // 页码
+          size: 10, // 每页页数
         }
-        return getlabellist(Object.assign(params)).then((res) => {
-          // 自定义出参
-          // console.log(res.data.list)
-          this.oldTotal = res.data.total
+        return userinfolist(Object.assign(params)).then((res) => {
           return {
             data: res.data.data, // 列表数组
             pageNo: res.data.current_page, // 当前页码
             pageSize: res.data.per_page, // 每页页数
             totalCount: res.data.total, // 列表总条数
-            // totalPage: res.data.totalPage // 列表总页数
+            totalPage: res.data.last_page // 列表总页数
           }
         })
       },
       lists: {},
       imgs: '',
       modal2Visible: false,
-	  arrs:[],
+      arrs:[],
     }
   },
   created() {
@@ -394,6 +404,9 @@ export default {
     checkedKeys1(val) {
       this.arrs = val
     },
+    account(val){
+      this.$refs.table.refresh()
+    }
   },
   methods: {
     modifySubmit(){
@@ -413,6 +426,12 @@ export default {
         this.rolelist()
       })
     },
+    roleInfo(item){
+      this.groupId = item.group_id
+      this.siteId = item.site_id
+      this.powerId = item.id
+      this.modal2Visible = true
+    },
     loadTree(){
       groupmenulistt({}).then((res) => {
         this.treeDatas1 = res.data.data
@@ -420,12 +439,12 @@ export default {
     },
     toModify(item){
       getRoleDetail({ id: item.id }).then(res=>{
-        console.log(res)
         this.powerId = res.data.id
         this.modifyInput = res.data.role_name
         this.modifyPermission = res.data.introduce
       })
       rolemenu({ role_id: item.id }).then(res=>{
+        this.modifyCheckKey = []
         for(let i in res.data){
           if(res.data[i].checked == 1){
             for(let j in res.data[i].treeList){
@@ -457,40 +476,36 @@ export default {
       this.modifyVisible = true;
     },
     showModal(id) {
-      return rolemenu({ role_id: id }).then((res) => {
+      rolemenu({ role_id: id }).then((res) => {
+        this.modifyCheckKey = []
         for(let i in res.data){
-          for(let j in res.data[i].treeList){
-            if(res.data[i].treeList[j].treeList){
-              for(let m in res.data[i].treeList[j].treeList){
-                if(res.data[i].treeList[j].treeList[m].checked == 0){
-                  delete res.data[i].treeList[j].treeList[m]
-                }
-              }
-            }
-          }
-        }
-        let _data = res.data
-        for(let i in res.data){
-          if(res.data[i].treeList.length>0){
+          if(res.data[i].checked == 1){
             for(let j in res.data[i].treeList){
-              if(res.data[i].treeList[j].treeList){
-                if(res.data[i].treeList[j].treeList[0]){
-                  // console.log(res.data[i].treeList[j].treeList[0])
-                }else{
-                  console.log(i)
-                }
-                // if(res.data[i].treeList[j].treeList[0] == undefined){
-                //   console.log(11)
-                //   delete res.data[i]
-                // }
+              for(let m in res.data[i].treeList[j].treeList){
+                this.modifyCheckKey.push(res.data[i].treeList[j].treeList[m].menu_id)
               }
-              
-              
+              if(!res.data[i].treeList[j].treeList){
+                this.modifyCheckKey.push(res.data[i].treeList[j].menu_id)
+              }
+            }
+          }else{
+            for(let j in res.data[i].treeList){
+              if(res.data[i].treeList[j].checked == 1){
+                for(let m in res.data[i].treeList[j].treeList){
+                  this.modifyCheckKey.push(res.data[i].treeList[j].treeList[m].menu_id)
+                }
+              }else{
+                for(let m in res.data[i].treeList[j].treeList){
+                  if(res.data[i].treeList[j].treeList[m].checked==1){
+                    this.modifyCheckKey.push(res.data[i].treeList[j].treeList[m].menu_id)
+                  }
+                }
+              }
             }
           }
         }
-        console.log(res.data)
-        // this.modal2Visibles = true
+        this.treeDatas = res.data;
+        this.modal2Visibles = true;
       })
     },
     onSelect(selectedKeys, info) {
@@ -509,8 +524,6 @@ export default {
       this.autoExpandParent = false
     },
 	onExpands(expandedKeys) {
-      console.log('onExpand', expandedKeys)
-      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
       // or, you can remove all expanded children keys.
       this.expandedKeys1 = expandedKeys
       this.autoExpandParent = false
@@ -552,9 +565,6 @@ export default {
         },
         onCancel() {},
       })
-    },
-    xiang() {
-      this.modal2Visible = true
     },
     a() {
       console.log(111)

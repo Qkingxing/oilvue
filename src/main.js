@@ -21,7 +21,7 @@ import countTo from 'vue-count-to'
 import {
   Cascader, CascaderPanel,
   Select, Option,
-  Loading, CheckboxGroup, CheckboxButton
+  Loading, CheckboxGroup, CheckboxButton,Tree
 
 } from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css'
@@ -45,7 +45,7 @@ Vue.component('countTo', countTo)
 
 Vue.use(Cascader).use(CascaderPanel)
    .use(Select).use(Option)
-   .use(Loading).use(CheckboxGroup).use(CheckboxButton) // global style
+   .use(Loading).use(CheckboxGroup).use(CheckboxButton).use(Tree) // global style
 
 Vue.config.productionTip = false
 
