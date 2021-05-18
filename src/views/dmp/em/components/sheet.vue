@@ -4,14 +4,14 @@
             <div class="sheet_a">
                 <span>券使用统计</span>
                 <div class="sheet_a1" >
-                    <div class="box">
-                        <p class="text1">领券数量</p>
+                    <div class="box" v-for="(list,index) in lists" :key="index">
+                        <p class="text1">{{list.coupons_name}}</p>
                         <div class="con-article">
                             <span class="text2">
                                  <countTo
                                 class="value"
                                 :startVal="0"
-                                :endVal="2693"
+                                :endVal="list.coupons_Number"
                                 :duration="3000"
                                 ></countTo>
                             </span>
@@ -26,7 +26,7 @@
                              <countTo
                             class="value"
                             :startVal="0"
-                            :endVal="26"
+                            :endVal="list.day_before | before"
                             :duration="3000"
                             ></countTo>
                             %
@@ -35,107 +35,7 @@
                         
                     </div>
                     </div>
-                    <div class="box">
-                        <p class="text1">领券数量</p>
-                        <div class="con-article">
-                            <span class="text2">0</span>
-                            <div class="con-art-unit">张</div>
-                        </div>
-                    <div class="con-footer">
-                        <div class="con-foo-caption">
-                            较前一天
-                        </div>
-                        <div class="con-foo-percentage">
-                            0%
-                        </div>
-                       
-                    </div>
-                    </div>
-                    <div class="box">
-                        <p class="text1">领券数量</p>
-                        <div class="con-article">
-                            <span class="text2">0</span>
-                            <div class="con-art-unit">张</div>
-                        </div>
-                    <div class="con-footer">
-                        <div class="con-foo-caption">
-                            较前一天
-                        </div>
-                        <div class="con-foo-percentage">
-                            0%
-                        </div>
-                    </div>
-                    </div>
-                    <div class="box">
-                        <p class="text1">领券数量</p>
-                        <div class="con-article">
-                            <span class="text2">0</span>
-                            <div class="con-art-unit">张</div>
-                        </div>
-                    <div class="con-footer">
-                        <div class="con-foo-caption">
-                            较前一天
-                        </div>
-                        <div class="con-foo-percentage">
-                            0%
-                        </div>
-                    </div>
-                    </div>
-                    <div class="box">
-                        <p class="text1">领券数量</p>
-                        <div class="con-article">
-                            <span class="text2">0</span>
-                            <div class="con-art-unit">张</div>
-                        </div>
-                    <div class="con-footer">
-                        <div class="con-foo-caption">
-                            较前一天
-                        </div>
-                        <div class="con-foo-percentage">
-                            0%
-                        </div>
-                    </div>
-                    </div>
-                    <div class="box">
-                        <p class="text1">领券数量</p>
-                        <div class="con-article">
-                            <span class="text2">0</span>
-                            <div class="con-art-unit">张</div>
-                        </div>
-                    <div class="con-footer">
-                        <div class="con-foo-caption">
-                            较前一天
-                        </div>
-                        <div class="con-foo-percentage">
-                            0%
-                        </div>
-                    </div>
-                    </div>
-                    <div class="box">
-                        <p class="text1">领券数量</p>
-                        <div class="con-article">
-                            <span class="text2">0</span>
-                            <div class="con-art-unit">张</div>
-                        </div>
-                    <div class="con-footer">
-                        <div class="con-foo-caption">
-                            较前一天
-                        </div>
-                        <div class="con-foo-percentage">
-                            0%
-                        </div>
-                        <a-popover title="使用率" overlayClassName="note">
-                                <template slot="content">
-                                    <div class="" style="width:435px">
-                                        <p>截止到查询时间，累计的优惠券使用率，该指标可反应出油站发放优惠券后客户的使用情况，计算公式：使用率=累计优惠券使用数量 / 累计领券数量 *100%</p>
-                                    </div>
-                                </template>
-                                <span class="anticon">
-                                    <a-icon type="question-circle" />
-                                </span>
-                            </a-popover>
-                    </div>
-                    </div>
+                    
                 </div>
             </div>
             <div class="sheet_b">
@@ -241,10 +141,21 @@ import biao2 from './biao2'
 import biao3 from './biao3'
 export default {
     components:{biao1,biao2,biao3},
-    props:['keys'],
+    props:['keys','lists'],
     data(){
         return{
            
+        }
+    },
+    mounted(){
+        console.log(this.lists)
+    },
+    filters:{
+        before(value){
+            if(value == 'Infinity' || value == 'NaN'){
+                return value=0
+            }
+            return value
         }
     }
 }

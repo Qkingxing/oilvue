@@ -4,7 +4,7 @@
 
 <script>
 // import { Pie } from '@antv/g2plot'
-import { Pie } from '@antv/g2plot';
+// import { Pie } from '@antv/g2plot';
 export default {
   props: ['cake2',],
   data() {

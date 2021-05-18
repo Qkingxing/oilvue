@@ -2,9 +2,9 @@
   <div class="block">
     <span>券类型</span>
     <div class="seleck">
-      <el-select multiple  collapse-tags v-model="selectedArray" @change="changeSelect" placeholder="请选择">
-        <el-option label="全选" value="全选" @click.native="selectAll"></el-option>
-        <el-option v-for="(item, index) in options" :key="index" :label="item.name" :value="item.name"></el-option>
+      <el-select  v-model="selectedArray" @change="changeSelect" placeholder="请选择">
+        <el-option label="全选" value="全选"></el-option>
+        <el-option v-for="(item, index) in options" :key="index" :label="item.name" :value="item.label"></el-option>
       </el-select>
     </div>
   </div>
@@ -16,32 +16,16 @@ export default {
     return {
       selectedArray: [],
       options: [
-        { name: '油品券', label: 'one' },
-        { name: '商品券', label: 'tow' },
+        { name: '油品券', label: '1' },
+        { name: '商品券', label: '2' },
       ],
     }
   },
   methods: {
-    selectAll() {
-      if (this.selectedArray.length < this.options.length) {
-        this.selectedArray = []
-        this.options.map((item) => {
-          this.selectedArray.push(item.name)
-        })
-        this.selectedArray.unshift('全选')
-      } else {
-        this.selectedArray = []
-        this.$message.warning('查询券类型、券名称领券渠道不能为空')
-      }
-    },
+
     changeSelect(val) {
-      if (!val.includes('全选') && val.length === this.options.length) {
-        this.selectedArray.unshift('全选')
-      } else if (val.includes('全选') && val.length - 1 < this.options.length) {
-        this.selectedArray = this.selectedArray.filter((item) => {
-          return item !== '全选'
-        })
-      }
+		console.log(val)
+		this.$emit('quan',val)
     },
     
   },
