@@ -583,7 +583,7 @@ export default {
           this.activePeoplesLine = activePeoplesLine
         }
         // 获取油品下拉
-        let oilRes = await getSitesoillist(this.form.site_ids)
+        let oilRes = await getSitesoillist(this.form.basic.site_ids)
         this.oilList = oilRes.data
         this.oilList.unshift({
           oils_name: '全选',
