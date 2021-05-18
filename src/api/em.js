@@ -64,7 +64,7 @@ export function activitsave (data) {
 // 校验活动是否有冲突
 export function activitCheck (data) {
   return PhpRequest({
-    url: 'activity/activitCheck',
+    url: '/activity/activitCheck',
     method: 'post',
     data
   })
