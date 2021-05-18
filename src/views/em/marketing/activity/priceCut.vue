@@ -466,7 +466,7 @@
   </a-layout-content>
 </template>
 <script>
-import { activitsave } from'@/api/em'
+import { activitsave, activitCheck } from'@/api/em'
 import { getSitelist, addIntegral } from '@/api/crm'
 import { getPayList } from '@/api/base'
 import { getSitesoillist } from '@/api/oil'
@@ -883,8 +883,28 @@ export default {
                 return false
               }
             }
-            // 下一步
-            this.step = step
+
+            activitCheck({
+              type: this.form.default.full_reduction_type,
+              site_id: this.form.basic.site_ids,
+              start_time: this.form.basic.start_time,
+              end_time: this.form.basic.end_time
+            }).then(res=>{
+              // console.log(res)
+              if (res.data) {
+                // 下一步
+                this.step = step
+              } else {
+                if (this.form.default.full_reduction_type==1) {
+                  this.$message.error(`一个油站在同一时间最多支持10个价立减活动`)
+                  return false
+                }
+                this.$message.error(res.msg)
+                return false
+              }
+              
+            })
+            
           } else {
             this.$message.error('请将错误改正，再次提交')
             return false
