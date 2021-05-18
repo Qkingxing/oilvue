@@ -2,6 +2,7 @@
 <template>
   <a-layout>
     <a-layout-content 
+      v-if="!$route.query.activityId"
       :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '600px', position: 'relative' }">
 
       <a-tabs default-active-key="1">
@@ -33,6 +34,10 @@
       </a-tabs>
     </a-layout-content>
 
+
+    <ActiveDetail 
+      v-if="$route.query.activityId"
+      ref="ActiveDetail" />
   </a-layout>
 </template>
 
@@ -42,16 +47,17 @@
 export default {
   name: 'EMlist',
   components: {
-    ActiveTable: ()=>import('./list/ActiveTable')
+    ActiveTable: ()=>import('./list/ActiveTable'),
+    ActiveDetail: ()=>import('./list/ActiveDetail'),
   },
   data () {
     return {
-      
+
 
     }
   },
   created () {
-
+    // console.log(this.$route.query)
   },
   methods: {
 
