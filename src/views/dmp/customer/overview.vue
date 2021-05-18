@@ -9,11 +9,11 @@
                    <a-button>创造标签</a-button>
               </div> -->
           </div>
-          <div class="overview_a1">
+          <!-- <div class="overview_a1">
               <shujian></shujian>
-          </div>
+          </div> -->
           <div class="overview_a2">
-              <biao :lists='lists' :arr='arr' ></biao>
+              <times :arr='arr' v-if="show" :lists='lists'></times>
           </div>
       </div>
   </div>
@@ -21,13 +21,14 @@
 
 <script>
 
-import shujian from './shujian'
-import biao from './biao'
+import coupon1 from './components/coupon1'
+import coupon2 from './components/coupon2'
+import times from './components/times'
 import {customer} from '@/api/data'
 import {customerStatistics} from '@/api/data'
 export default {
     name: 'Coverview',
-    components:{shujian,biao},
+     components: { coupon1, coupon2,times, },
     data(){
         return{
             lists:[],
@@ -38,22 +39,31 @@ export default {
     },
     created(){
         this.customers()
-        this.customerStatisticss()
+     this.customerStatisticss()
     },
     methods:{
-        customers(){
-            return customer({time_status:1}).then(res=>{
-                this.lists = res.data
-                console.log(this.lists)
-            })
-        },
-        customerStatisticss(){
-            return customerStatistics({ time_type:1}).then(res=>{
-                this.arr = res.data
-                this.show = true
-                console.log(this.arr)
-            })
+             customers(index,dateString){
+        if(index == 5){
+          let weekStarting_time = dateString[0]
+          let weekEnd_time = dateString[1]
+           return customer({time_status:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
+            this.lists = res.data
+            console.log(this.lists)
+          })
         }
+        return customer({time_status:index?index:1}).then(res =>{
+          this.lists = res.data
+          console.log(this.lists)
+        })
+      },
+      customerStatisticss(){
+          return customerStatistics({time_status:1}).then(res =>{
+             this.arr = res.data
+             console.log(this.arr)
+             this.show = true
+            
+          })
+      }
     },
 }
 </script>

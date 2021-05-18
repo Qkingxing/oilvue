@@ -40,14 +40,14 @@
             </div>
             <div class="sheet_b">
                 <div class="sheet_b1">
-                    <biao1></biao1>
+                    <biao1 :lineChart1='lineChart1' ></biao1>
                 </div>
                 <div v-if="keys == 1"  class="sheet_c1">
                    <div class="sale-ratio-name">
                        客户用券次数占比
                    </div>
                    <div class="sheet_c1_a">
-                        <biao2></biao2>
+                        <biao2 :cake1='cake1'></biao2>
                    </div>
                 </div>
             </div>  
@@ -55,17 +55,17 @@
         
         <div class="sheets_b">
             <div class="sheet_b1">
-                领券渠道占比
+                {{cake1.name}}
             </div>
             <div class="sheet_b2">
-                <biao2></biao2>
+                <biao2 :cake1='cake1'></biao2>
             </div>
         </div>
         <div class="sheets_c">
             <div class="sheets_c1">
                 券投入产出统计
             </div>
-            <div class="sheets_c2">
+            <!-- <div class="sheets_c2">
                 <div class="box">
                     <div class="con-title">优惠券成本</div>
                     <div class="con-article">
@@ -125,10 +125,10 @@
                         <div class="con-foo-percentage">0%</div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="sheets_c3">
                 <div class="sheets_c3_a">
-                    <biao3></biao3>
+                    <biao3 :lineChart2='lineChart2'></biao3>
                 </div>
             </div>
         </div>
@@ -141,14 +141,14 @@ import biao2 from './biao2'
 import biao3 from './biao3'
 export default {
     components:{biao1,biao2,biao3},
-    props:['keys','lists'],
+    props:['keys','lists','lineChart1','cake1','lineChart2'],
     data(){
         return{
            
         }
     },
     mounted(){
-        console.log(this.lists)
+        console.log(this.cake1, this.lineChart1,this.lineChart2)
     },
     filters:{
         before(value){
@@ -234,7 +234,7 @@ export default {
                     .sheet_b1{
                         position: relative;
                         width: 1320px;
-                        height: 600px;
+                        // height: 600px;
                         padding: 0px;
                         margin: 0px;
                         border-width: 0px;
@@ -354,7 +354,7 @@ export default {
                         .sheets_c3_a{
                             position: relative;
                             width: 1320px;
-                            height: 600px;
+                            // height: 600px;
                             padding: 0px;
                             margin: 0px;
                             border-width: 0px;

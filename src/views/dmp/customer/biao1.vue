@@ -173,7 +173,7 @@ export default {
   .overflow_box {
    width: 300px;
     height: 180px;
-    background-image: url('./img/bei.png');
+    background-image: url('./././img/bei.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     .overflow_li {

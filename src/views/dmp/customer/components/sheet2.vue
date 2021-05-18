@@ -5,13 +5,13 @@
                 <span>券使用统计</span>
                 <div class="sheet_a1" >
                     <div class="box" v-for="(list,index) in lists" :key="index">
-                        <p class="text1">{{list.coupons_name}}</p>
+                        <p class="text1">{{list.consumer_customers_name}}</p>
                         <div class="con-article">
                             <span class="text2">
                                  <countTo
                                 class="value"
                                 :startVal="0"
-                                :endVal="list.coupons_Number"
+                                :endVal="list.consumer_customers_number"
                                 :duration="3000"
                                 ></countTo>
                             </span>
@@ -61,87 +61,17 @@
                 <biao2 :cake1='cake1'></biao2>
             </div>
         </div>
-        <div class="sheets_c">
-            <div class="sheets_c1">
-                券投入产出统计
-            </div>
-            <!-- <div class="sheets_c2">
-                <div class="box">
-                    <div class="con-title">优惠券成本</div>
-                    <div class="con-article">
-                        <div class="con-art-caption">
-                             <countTo
-                            class="value"
-                            :startVal="0"
-                            :endVal="269383"
-                            :duration="3000"
-                            ></countTo>
-                        </div>
-                        <div class="con-art-unit">元</div>
-                    </div>
-                    <div class="con-footer">
-                        <div class="con-foo-caption">较上一周</div>
-                        <div class="con-foo-percentage">
-                             <countTo
-                            class="value"
-                            :startVal="0"
-                            :endVal="120"
-                            :duration="3000"
-                            ></countTo>
-                            %
-                        </div>
-                    </div>
-                </div>
-                <div class="box">
-                    <div class="con-title">优惠券成本</div>
-                    <div class="con-article">
-                        <div class="con-art-caption">0.00</div>
-                        <div class="con-art-unit">元</div>
-                    </div>
-                    <div class="con-footer">
-                        <div class="con-foo-caption">较上一周</div>
-                        <div class="con-foo-percentage">0%</div>
-                    </div>
-                </div>
-                <div class="box">
-                    <div class="con-title">优惠券成本</div>
-                    <div class="con-article">
-                        <div class="con-art-caption">0.00</div>
-                        <div class="con-art-unit">元</div>
-                    </div>
-                    <div class="con-footer">
-                        <div class="con-foo-caption">较上一周</div>
-                        <div class="con-foo-percentage">0%</div>
-                    </div>
-                </div>
-                <div class="box">
-                    <div class="con-title">优惠券成本</div>
-                    <div class="con-article">
-                        <div class="con-art-caption">0.00</div>
-                        <div class="con-art-unit">元</div>
-                    </div>
-                    <div class="con-footer">
-                        <div class="con-foo-caption">较上一周</div>
-                        <div class="con-foo-percentage">0%</div>
-                    </div>
-                </div>
-            </div> -->
-            <div class="sheets_c3">
-                <div class="sheets_c3_a">
-                    <biao3 :lineChart2='lineChart2'></biao3>
-                </div>
-            </div>
-        </div>
+     
     </div>
 </template>
 
 <script>
 import biao1 from './biao1'
 import biao2 from './biao2'
-import biao3 from './biao3'
+// import biao3 from './biao3'
 export default {
-    components:{biao1,biao2,biao3},
-    props:['keys','lists','lineChart1','cake1','lineChart2'],
+    components:{biao1,biao2},
+  props:['keys','lists','lineChart1','cake1','lineChart2','arr'],
     data(){
         return{
            
