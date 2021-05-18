@@ -45,4 +45,12 @@ export function updateCoupons (id) {
     }
   })
 }
+// 1营销活动--价立减--新增
+export function activitsave (data) {
+  return PhpRequest({
+    url: '/activity/activitsave',
+    method: 'post',
+    data
+  })
+}
 

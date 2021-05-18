@@ -1,6 +1,6 @@
 
 <template>
-  <a-layout-content :style="{padding: '0 0 24px', minHeight: '700px' }">
+  <a-layout-content v-loading="loading" :style="{padding: '0 0 24px', minHeight: '700px' }">
     <a-card class="head-card" style="margin-bottom: 10px;">
       <a-steps :current="step" style="width:70%;margin: 0 auto;">
         <a-step>
@@ -466,6 +466,7 @@
   </a-layout-content>
 </template>
 <script>
+import { activitsave } from'@/api/em'
 import { getSitelist, addIntegral } from '@/api/crm'
 import { getPayList } from '@/api/base'
 import { getSitesoillist } from '@/api/oil'
@@ -478,6 +479,7 @@ import moment from 'moment'
 export default {
   data () {
     return {
+      activityId:null,
       loading: false,
       showSiteError: false,
       step: 0,
@@ -940,6 +942,12 @@ export default {
 
 
       console.log(form)
+      // return
+      activitsave(form).then(res=>{
+        // console.log(res)
+        this.activityId = res.data.id
+        this.step = 2
+      })
 
       // this.step = 2
     },
@@ -950,7 +958,12 @@ export default {
       this.$router.push('/em/list/list')
     },
     goDetail () {
-      this.$router.push(`/em/list/list?activityId=39717`)
+      this.$router.push({
+        path: `/em/list/list`,
+        query:{
+          activityId: this.activityId
+        }
+      })
     }
   }
 }
@@ -985,6 +998,7 @@ export default {
 .activity-detail-group {
   background-color: #fafafa;
   padding: 16px 24px;
+  width: 610px;
   .form-item {
     display: flex;
     align-items: center;
