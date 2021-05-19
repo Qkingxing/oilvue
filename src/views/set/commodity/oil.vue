@@ -236,7 +236,7 @@
          
           </div>
         </a-tab-pane>
-        <a-tab-pane key="3" tab="加油机协议">
+        <!-- <a-tab-pane key="3" tab="加油机协议">
          <div>
             <span class="proto-item">91动力</span>
             <span class="proto-item" style="margin:0 10px">FCC</span>
@@ -304,7 +304,7 @@
                                 保存
                               </a-button>
                              </div></div>
-        </a-tab-pane>
+        </a-tab-pane> -->
       </a-tabs>
 
     </a-layout-content>
@@ -804,8 +804,10 @@ export default {
     },
     setSiteoillist(){
      
-      let that=this
-        api.setSiteoillist(that.pagination)
+      let that=this;
+      that.pagination.oils_status=1;
+      console.log(that.pagination);
+      api.setSiteoillist(that.pagination)
         .then(res => {
          
           that.setSiteoillistData=res.data.data
@@ -966,7 +968,7 @@ main .gun-item .mark-icon {
     margin-bottom: 16px;
 }
 .ant-input-number{
-  width:100%;
+  width:120px;
 }
 .terminal-box .terminal-block {
     -webkit-box-flex: 1;

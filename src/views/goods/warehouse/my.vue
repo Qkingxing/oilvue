@@ -81,6 +81,7 @@
 <script>
   import add from './add.vue'
   import modify from './modify.vue'
+  import { mapGetters } from 'vuex'
   const columns = [
     { title: '商品ID', dataIndex: 'id', key: '1' },
     {
@@ -132,6 +133,9 @@
 			this.loadCategoryList()
       this.loadGoodsList()
 		},
+    computed:{
+      ...mapGetters(['userInfo'])
+    },
 		methods: {
       modifyBack(){
         this.isModify = false
@@ -197,7 +201,7 @@
       },
 			loadCategoryList() {
 				let _param = {
-					site_id: 2,
+					site_id: this.userInfo.site_id,
 					page: 1,
 					limit: 10
 				}

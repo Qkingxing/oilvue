@@ -149,7 +149,7 @@ export default {
 
         }
         return getActivitlist(Object.assign(params)).then(res => {
-          console.log(res.data.list)
+          // console.log(res.data.list)
           return {
             data: res.data.list, // 列表数组
             pageNo: parameter.pageNo,  // 当前页码

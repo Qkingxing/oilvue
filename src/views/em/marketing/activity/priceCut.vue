@@ -466,7 +466,7 @@
   </a-layout-content>
 </template>
 <script>
-import { activitsave, activitCheck } from'@/api/em'
+import { activitsave, activitCheck, getActivitlist } from'@/api/em'
 import { getSitelist, addIntegral } from '@/api/crm'
 import { getPayList } from '@/api/base'
 import { getSitesoillist } from '@/api/oil'
@@ -547,13 +547,39 @@ export default {
     
     this.Init()
 
-    console.log(this.userInfo.site_id)
+    // console.log(this.userInfo.site_id)
   },
   methods: {
     moment,
     // 初始化
     async Init(){
       this.loading = true
+
+      let {
+        activityType,
+        editId,
+        isEdit
+      } = this.$route.query
+
+      // 编辑
+      if (isEdit) {
+        
+        let formRes = await getActivitlist({
+          id: editId
+        })
+
+        if (formRes) {
+          console.log(formRes.data)
+          this.form = formRes.data
+          this.form.basic.site_ids = this.form.basic.site_ids.map(e=>{return Number(e)})
+          this.form.basic.date = [
+            moment(this.form.basic.start_time),
+            moment(this.form.basic.end_time)
+          ]
+          this.form.id = editId
+        }
+      }
+
       // 集团
       if (this.userInfo.site_id==(-1)) {
         // 获取油站列表

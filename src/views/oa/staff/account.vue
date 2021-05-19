@@ -43,17 +43,18 @@
       </div>
       <div v-if="show == 2" style="width: 400px; margin-left: 50px">
         <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-          <a-form-item label="账户类型">
+          <!-- <a-form-item label="账户类型">
             <a-radio-group name="radioGroup" :default-value="1" @change="c">
               <a-radio :value="1"> 单站账号 </a-radio>
               <a-radio :value="2"> 片区账号 </a-radio>
               <a-radio :value="3"> 集团账号 </a-radio>
             </a-radio-group>
-          </a-form-item>
+          </a-form-item> -->
           <a-form-item label="负责集团">
-            <a-select label-in-value :default-value="{ key: '鹰眼一站' }" style="width: 200px" @change="handleChange">
-              <a-select-option value="鹰眼一站"> 鹰眼一站 </a-select-option>
-              <a-select-option value="鹰眼第二加油站"> 鹰眼第二加油站 </a-select-option>
+            <a-select label-in-value :default-value="{ keys: '请选择站点' }" style="width: 200px" @change="handleChange">
+              <!-- <a-select-option value="鹰眼一站"> 鹰眼一站 </a-select-option>
+              <a-select-option value="鹰眼第二加油站"> 鹰眼第二加油站 </a-select-option> -->
+              <a-select-option v-for="(name, index) in sitelistdata" :key="index"> {{ name.site_name }} </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item label="账号角色">
@@ -112,9 +113,10 @@
             </a-radio-group>
           </a-form-item>
           <a-form-item label="负责集团">
-            <a-select label-in-value :default-value="{ key: '鹰眼一站' }" style="width: 200px" @change="handleChange">
-              <a-select-option value="鹰眼一站"> 鹰眼一站 </a-select-option>
-              <a-select-option value="鹰眼第二加油站"> 鹰眼第二加油站 </a-select-option>
+            <a-select label-in-value :default-value="{ keys: '请选择站点' }" style="width: 200px" @change="handleChange">
+              <!-- <a-select-option value="鹰眼一站"> 鹰眼一站 </a-select-option>
+              <a-select-option value="鹰眼第二加油站"> 鹰眼第二加油站 </a-select-option> -->
+              <a-select-option v-for="(name, index) in sitelistdata" :key="index"> {{ name.site_name }} </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item label="账号角色">
@@ -181,6 +183,7 @@ import { STable } from '@/components'
 import { eliminatepwd } from '@/api/work'
 import { useraccount } from '@/api/work'
 import { rolelist } from '@/api/work'
+import { sitelist } from '@/api/work'
 import { userdelete } from '@/api/work'
 import EditTag from '../../crm/customer/components/EditTag'
 export default {
@@ -200,6 +203,7 @@ export default {
       value6:"",
       value7:"",
       value8:"",
+      
       pageSize: 20,
       current: 4,
       //   visible: false,
@@ -210,6 +214,7 @@ export default {
       show: 1,
       index: '',
       names: {},
+      sitelistdata:{},
       columns: [
         {
           title: '账号',
@@ -265,7 +270,8 @@ export default {
   },
   created() {
     // this.list()
-    this.rolelist()
+    this.rolelist();
+    this.sitelist();
   },
   methods: {
     poss(){
@@ -274,19 +280,25 @@ export default {
     rolelist() {
       return rolelist({}).then((res) => {
         this.names = res.data.data
-        
+      })
+    },
+    sitelist() {
+      return sitelist({}).then((res) => {
+        this.sitelistdata = res.data.data;
+        console.log(this.sitelistdata);
       })
     },
     add() {
       let mobile_mode = /^1[34578]\d{9}$/
       if (mobile_mode.test(this.value4)) {
         let data = {
-          role_id: this.index.key,
+          role_id: this.names[this.index.key]["id"],
           user_name: this.value3,
           account: this.value1,
-          account_type: this.account_type,
+          account_type: 0,
           password: this.value2,
           mobile: this.value4,
+          site_id:this.sitelistdata[this.site_id.key]["id"]
         }
         return useraccount(data).then((res) => {
           console.log(res)
@@ -367,6 +379,7 @@ export default {
     },
     handleChange(value) {
       console.log(value) // { key: "lucy", label: "Lucy (101)" }
+      this.site_id = value
     },
     handleChanges(value) {
       console.log(value) // { key: "lucy", label: "Lucy (101)" }

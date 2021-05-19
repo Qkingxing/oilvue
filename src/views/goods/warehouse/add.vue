@@ -148,6 +148,7 @@
   import {
   	getGoodsCategoryList, getGoodsList, getCouponsList, addGoods, modifyGoodsState
   } from '@/api/goods'
+  import { mapGetters } from 'vuex'
   export default{
     data(){
       return{
@@ -175,6 +176,9 @@
     	this.loadCategoryList()
       this.loadCouponsList()
       // this.$route.meta.title = 'menu.goods.warehouse.Classification'
+    },
+    computed:{
+      ...mapGetters(['userInfo'])
     },
     methods: {
       createGoods(type){
@@ -261,7 +265,7 @@
       },
     	loadCategoryList() {
     		let _param = {
-    			site_id: 2,
+    			site_id: this.userInfo.site_id,
     			page: 1,
     			limit: 10
     		}
