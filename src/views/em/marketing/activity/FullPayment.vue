@@ -211,7 +211,6 @@
                       <a-input-number
                         class="input-number"
                         :min="0"
-                        :max="stepItem.cost_max?stepItem.cost_max:99999"
                         :precision="2"
                         v-model="stepItem.cost_min"
                         :placeholder="'金额'"

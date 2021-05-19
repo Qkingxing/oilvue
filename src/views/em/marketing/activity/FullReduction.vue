@@ -68,35 +68,17 @@
           </a-form-model-item>
           <a-form-model-item label="活动人群" :colon="false">
             <a-radio-group v-model="form.basic.crowdtype">
-              <a-radio :value="1">
-                所有客户
-                <a-popover title="所有客户">
-                  <template slot="content">
-                    <div>所有线上客户（所有可以获取用户信息的客户）</div>
-                    <div>+线下客户（POS机、双屏机不进行用户登录的客户</div>
-                  </template>
-                  <a-icon type="question-circle" style="color:rgb(218, 218, 218)" />
-                </a-popover>
-              </a-radio>
-              <a-radio :value="2">
-                所有线上客户
-                <a-popover title="所有线上客户">
-                  <template slot="content">
-                    <div>所有可以获取用户信息的客户</div>
-                  </template>
-                  <a-icon type="question-circle" style="color:rgb(218, 218, 218)" />
-                </a-popover>
-              </a-radio>
+              <a-radio :value="2">所有线上客户</a-radio>
               <a-radio :value="3">部分可参与</a-radio>
               <a-radio :value="4">部分不可参与</a-radio>
             </a-radio-group>
           </a-form-model-item>
           <a-form-model-item label="  " :colon="false" v-if="form.basic.crowdtype==3||form.basic.crowdtype==4">
-            <div class="activity-detail-group">
+            <div class="activity-detail-group" style="padding: 16px 24px 4px;">
               <a-form-model-item :label="form.basic.crowdtype==3?'选择可参与客户':'选择不可参与客户'" :colon="false">
                 <el-cascader
                   :disabled="form.basic.site_ids.length==0"
-                  style="width: 600px;"
+                  style="width: 460px;"
                   v-model="form.basic.group"
                   :options="activePeoples"
                   :props="{ 
@@ -132,18 +114,33 @@
         style="min-width:700px;"
       >
         <a-form-model-item 
-          label="立减方式" :colon="false">
+          label="满减方式" :colon="false">
           <a-radio-group v-model="form.default.full_reduction_type">
-            <a-radio :value="1">金额立减</a-radio>
-            <a-radio :value="2">折扣立减</a-radio>
+            <a-radio :value="1">金额满减</a-radio>
+            <a-radio :value="2">折扣满减</a-radio>
           </a-radio-group>
         </a-form-model-item>
-        <a-form-model-item label="次数限制" :colon="false">
+
+        <a-form-model-item 
+          label="支付限制" :colon="false" prop="default.pay_type"
+          :rules="{ required: true, message: '请选择支付限制', trigger: 'blur' }">
+          <a-select v-model="form.default.pay_type" style="min-width: 240px" mode="multiple" placeholder="请选择支付限制">
+            <a-select-option 
+              v-for="(item, index) in payList"
+              :key="index"
+              :value="item.id">
+              {{item.name}}
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+
+        <a-form-model-item label="参与限制" :colon="false">
           <a-radio-group v-model="form.default.limit_type">
             <a-radio :value="1">不限制</a-radio>
             <a-radio :value="2">限制</a-radio>
           </a-radio-group>
         </a-form-model-item>
+
         <a-form-model-item label="  " :colon="false" v-if="form.default.limit_type==2">
           <div class="activity-detail-group">
             每个用户，每
@@ -177,201 +174,13 @@
             次
           </div>
         </a-form-model-item>
-        <a-form-model-item 
-          label="支付限制" :colon="false" prop="default.pay_type"
-          :rules="{ required: true, message: '请选择支付限制', trigger: 'blur' }">
-          <a-select v-model="form.default.pay_type" style="min-width: 240px" mode="multiple" placeholder="请选择支付限制">
-            <a-select-option 
-              v-for="(item, index) in payList"
-              :key="index"
-              :value="item.id">
-              {{item.name}}
-            </a-select-option>
-          </a-select>
-        </a-form-model-item>
-        <a-form-model-item label="重复方式" :colon="false">
-          <a-radio-group v-model="form.default.repeat_way" @change="onChangeRepeatWay">
-            <a-radio :value="1">活动期间</a-radio>
-            <a-radio :value="2">每天重复</a-radio>
-            <a-radio :value="3">每周重复</a-radio>
-            <a-radio :value="4">每月重复</a-radio>
-          </a-radio-group>
-        </a-form-model-item>
-        <a-form-model-item label="立减规则" :colon="false">
+        
+        <a-form-model-item label="满减规则" :colon="false">
           <div 
             class="activity-detail-group-wrapper"
             v-for="(ruleItem,ruleIndex) in form.default.activity_rule" :key="ruleIndex">
             <div class="activity-detail-group activity-detail-group-small">
-              <div class="form-item">
-                <div class="form-label" style="margin-top:4px;">规则时间</div>
-                <div class="form-wrapper">
-                  
-                  <span
-                    v-if="form.default.repeat_way==1">
-                    {{form.basic.start_time}} 至 {{form.basic.end_time}}
-                  </span>
-                  <!-- 每日重复 -->
-                  <div v-if="form.default.repeat_way==2">
-                    <div 
-                      class="contentForRuleLine"
-                      :haserr="checkDayTime(timeIndex, ruleIndex)"
-                      v-for="(timeItem,timeIndex) in ruleItem.arr_time_rule.arr_repeat_time"
-                      :key="timeIndex">
-                      <div class="dateHourEveryLine">
-                        <a-time-picker 
-                          :default-open-value="moment('00:00:00', 'HH:mm:ss')"
-                          v-model="timeItem.repeat_start_time"
-                          placeholder="请选择时间" />
 
-                        <span style="padding: 0px 15px;">至</span>
-
-                        <a-time-picker 
-                          :default-open-value="moment('00:00:00', 'HH:mm:ss')"
-                          v-model="timeItem.repeat_end_time"
-                          placeholder="请选择时间" />
-                        
-                        <div class="dateEveryLine_operationBox">
-                          <a-icon type="plus-circle" 
-                            @click="addDayTime(timeIndex, ruleIndex)"
-                            v-if="checkDayTime(timeIndex, ruleIndex)=='false' && 
-                              timeIndex==ruleItem.arr_time_rule.arr_repeat_time.length-1 && 
-                              timeItem.repeat_start_time && timeItem.repeat_end_time" />
-
-                          <a-icon type="minus-circle" 
-                            @click="deleteDayTime(timeIndex, ruleIndex)"
-                            v-if="ruleItem.arr_time_rule.arr_repeat_time.length>1" />
-
-                          <em 
-                            @click="delRule(ruleIndex)"
-                            v-if="form.default.activity_rule.length > 1">删除</em>
-                        </div>
-
-                        <div class="dateEveryLine_tips" v-if="timeItem.error">
-                          <a-icon type="exclamation-circle" />
-                          <span style="margin-left: 5px;">{{timeItem.error}}</span>
-                        </div>
-                      
-                      </div>
-                    </div>
-                  </div>
-                  <!-- 每周重复 -->
-                  <div v-if="form.default.repeat_way==3">
-                    <div class="dateMixinBox">
-                      <div class="dateMixinBoxLine">
-                        <div 
-                          class="dateMixinBoxLineBlock"
-                          v-for="weekItem in weekList"
-                          :key="weekItem" 
-                          :ischoice="ruleItem.arr_time_rule.arr_repeat_day.includes(weekItem)?1:''"
-                          @click="onChangeWeek(weekItem,ruleIndex)">
-                          {{weekItem}}
-                        </div>
-                      </div>
-
-                      <div 
-                        class="contentForRuleLine"
-                        :haserr="checkDayTime(timeIndex, ruleIndex)"
-                        v-for="(timeItem,timeIndex) in ruleItem.arr_time_rule.arr_repeat_time"
-                        :key="timeIndex">
-                        <div class="dateHourEveryLine">
-                          <a-time-picker 
-                            :default-open-value="moment('00:00:00', 'HH:mm:ss')"
-                            v-model="timeItem.repeat_start_time"
-                            placeholder="请选择时间" />
-
-                          <span style="padding: 0px 15px;">至</span>
-
-                          <a-time-picker 
-                            :default-open-value="moment('00:00:00', 'HH:mm:ss')"
-                            v-model="timeItem.repeat_end_time"
-                            placeholder="请选择时间" />
-                          
-                          <div class="dateEveryLine_operationBox">
-                            <a-icon type="plus-circle" 
-                              @click="addDayTime(timeIndex, ruleIndex)"
-                              v-if="checkDayTime(timeIndex, ruleIndex)=='false' && 
-                                timeIndex==ruleItem.arr_time_rule.arr_repeat_time.length-1 && 
-                                timeItem.repeat_start_time && timeItem.repeat_end_time" />
-
-                            <a-icon type="minus-circle" 
-                              @click="deleteDayTime(timeIndex, ruleIndex)"
-                              v-if="ruleItem.arr_time_rule.arr_repeat_time.length>1" />
-
-                            <em 
-                              @click="delRule(ruleIndex)"
-                              v-if="form.default.activity_rule.length > 1">删除</em>
-                          </div>
-
-                          <div class="dateEveryLine_tips" v-if="timeItem.error">
-                            <a-icon type="exclamation-circle" />
-                            <span style="margin-left: 5px;">{{timeItem.error}}</span>
-                          </div>
-                        
-                        </div>
-                      </div>
-
-                     
-                    </div>
-                  </div>
-                  <!-- 每月重复 -->
-                  <div v-if="form.default.repeat_way==4">
-                    <div class="dateMixinBox">
-                      <div class="dateMixinBoxLine">
-                        <div 
-                          class="dateMixinBoxLineBlock"
-                          :ischoice="ruleItem.arr_time_rule.arr_repeat_day.includes(monthItem)?1:''"
-                          v-for="monthItem in 31"
-                          :key="monthItem"
-                          @click="onChangeMonth(monthItem,ruleIndex)">
-                          {{monthItem}}
-                        </div>
-                      </div>
-                      <div 
-                        class="contentForRuleLine"
-                        :haserr="checkDayTime(timeIndex, ruleIndex)"
-                        v-for="(timeItem,timeIndex) in ruleItem.arr_time_rule.arr_repeat_time"
-                        :key="timeIndex">
-                        <div class="dateHourEveryLine">
-                          <a-time-picker 
-                            :default-open-value="moment('00:00:00', 'HH:mm:ss')"
-                            v-model="timeItem.repeat_start_time"
-                            placeholder="请选择时间" />
-
-                          <span style="padding: 0px 15px;">至</span>
-
-                          <a-time-picker 
-                            :default-open-value="moment('00:00:00', 'HH:mm:ss')"
-                            v-model="timeItem.repeat_end_time"
-                            placeholder="请选择时间" />
-                          
-                          <div class="dateEveryLine_operationBox">
-                            <a-icon type="plus-circle" 
-                              @click="addDayTime(timeIndex, ruleIndex)"
-                              v-if="checkDayTime(timeIndex, ruleIndex)=='false' && 
-                                timeIndex==ruleItem.arr_time_rule.arr_repeat_time.length-1 && 
-                                timeItem.repeat_start_time && timeItem.repeat_end_time" />
-
-                            <a-icon type="minus-circle" 
-                              @click="deleteDayTime(timeIndex, ruleIndex)"
-                              v-if="ruleItem.arr_time_rule.arr_repeat_time.length>1" />
-
-                            <em 
-                              @click="delRule(ruleIndex)"
-                              v-if="form.default.activity_rule.length > 1">删除</em>
-                          </div>
-
-                          <div class="dateEveryLine_tips" v-if="timeItem.error">
-                            <a-icon type="exclamation-circle" />
-                            <span style="margin-left: 5px;">{{timeItem.error}}</span>
-                          </div>
-                        
-                        </div>
-                      </div>
-                     
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div class="form-item">
                 <div class="form-label">消费油品</div>
                 <div class="form-wrapper">
@@ -386,60 +195,83 @@
                   </el-select>
                 </div>
               </div>
-              <div class="form-item">
-                <div class="form-label">立减门槛</div>
-                <div class="form-wrapper">
-                  <span>消费</span>
-                  <a-select 
-                    style="width: 80px;margin-left: 10px;" 
-                    v-model="ruleItem.rule_type" >
-                    <a-select-option :value="1">原价</a-select-option>
-                    <a-select-option :value="2">升数</a-select-option>
-                  </a-select>
 
-                  <a-form-model-item 
-                    class="form-item-inline"
-                    :prop="'default.activity_rule.' + ruleIndex + '.cost_origin_price'"
-                    :rules="{ required: true,type: 'number', message: '请输入数额', trigger: 'blur' }">
-                    <a-input-number
-                      class="input-number"
-                      :min="0"
-                      :precision="2"
-                      v-model="ruleItem.cost_origin_price"
-                      :placeholder="ruleItem.rule_type==1?'金额':'升数'"
-                    />
-                  </a-form-model-item>
+              <div class="form-item">
+                <div class="form-label" style="padding-top: 16px;">满减金额</div>
+                <div class="form-wrapper">
+                  <div 
+                    class="rule_item_price"
+                    v-for="(child,childIndex) in ruleItem.rules" :key="childIndex">
+                    <div class="grey_block">
+                      <span>原价满</span>
+                      
+                      <a-form-model-item 
+                        class="form-item-inline"
+                        :prop="`default.activity_rule.${ruleIndex}.rules.${childIndex}.man_award`"
+                        :rules="[
+                          { required: true,type: 'number', message: '请正确输入金额', trigger: 'blur' },
+                          { validator: (rule, value, callback)=>checkMan(rule, value, callback,ruleIndex,childIndex),type: 'number', trigger: 'blur' },
+                        ]">
+                        <a-input-number
+                          class="input-number"
+                          :min="0"
+                          :precision="2"
+                          v-model="child.man_award"
+                          :placeholder="'金额'"
+                        />
+                      </a-form-model-item>
+                      
+                      <span style="margin-left:10px;">元，立{{form.default.full_reduction_type==1?'减':'享'}}</span>
+
+                      <a-form-model-item 
+                        class="form-item-inline"
+                        :prop="`default.activity_rule.${ruleIndex}.rules.${childIndex}.step_award`"
+                        :rules="[
+                          { required: true,type: 'number', message: '请正确输入金额', trigger: 'blur' },
+                          { validator: (rule, value, callback)=>checkStep(rule, value, callback,ruleIndex,childIndex),type: 'number', trigger: 'blur' },
+                        ]">
+                        <a-input-number
+                          class="input-number"
+                          v-model="child.step_award"
+                          :placeholder="form.default.full_reduction_type==1?'金额':'折扣'"
+                          :min="0"
+                          :precision="2"
+                        ></a-input-number>
+                      </a-form-model-item>
+
+                      <span style="margin-left:10px;">{{form.default.full_reduction_type==1?'元':'折'}}</span>
+
+                    </div>
+                    <div class="price_operate">
+
+                      <a-icon 
+                        v-show="ruleItem.rules.length>1"
+                        type="minus-circle" @click="delChild(ruleIndex,childIndex)" />
+
+                      <a-icon 
+                        v-show="ruleItem.rules.length-1==childIndex"
+                        type="plus-circle"  @click="addChild(ruleIndex)"/>
+
+                    </div>
+                    
+                  </div>
                   
+                </div>
+              </div>
 
-                  {{ruleItem.rule_type==1?'元':'升'}}
-                </div>
+              <div 
+                v-if="form.default.activity_rule.length>1"
+                class="rule_delete" @click="delRule(ruleIndex)">
+                <a-icon type="close" />
               </div>
-              <div class="form-item">
-                <div class="form-label">立减{{form.default.full_reduction_type==1?'金额':'折扣'}}</div>
-                <div class="form-wrapper">
-                  每升立{{form.default.full_reduction_type==1?'减':'享'}}
-                  <a-form-model-item 
-                    class="form-item-inline"
-                    :prop="'default.activity_rule.' + ruleIndex + '.discount_per_litre'"
-                    :rules="{ required: true,type: 'number', message: '请输入数额', trigger: 'blur' }">
-                    <a-input-number
-                      class="input-number"
-                      v-model="ruleItem.discount_per_litre"
-                      :placeholder="form.default.full_reduction_type==1?'金额':'折扣'"
-                      :min="0"
-                      :precision="2"
-                    ></a-input-number>
-                    {{form.default.full_reduction_type==1?'元':'折'}}
-                  </a-form-model-item>
-                </div>
-              </div>
+
             </div>
           </div>
 
           <div 
             class="contentForRuleLine" style="padding-top: 20px;"
-            v-if="form.default.repeat_way!=1">
-            <a-button type="dashed" icon="plus" @click="addRule">添加规则</a-button>
+            >
+            <a-button type="dashed" icon="plus" @click="addRule">继续添加</a-button>
           </div>
 
         </a-form-model-item>
@@ -470,14 +302,12 @@ import { activitsave, activitCheck } from'@/api/em'
 import { getSitelist, addIntegral } from '@/api/crm'
 import { getPayList } from '@/api/base'
 import { getSitesoillist } from '@/api/oil'
-import { getAllSiteList } from '@/api/support'
-import { getOilSetList } from '@/api/order'
 import { getlevelAlls } from '@/api/user'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 
 export default {
-  name: 'PriceCut',
+  name: 'FullReduction',
   data () {
     return {
       activityId:null,
@@ -491,17 +321,16 @@ export default {
       oldChooseData: [],
       activePeoples: [],
       payList: [],
-      weekList:['日','一','二','三','四','五','六'],
       form: {
         id: undefined,
         basic: {
-          type: 1,
+          type: 3,
           activity_name: '', // 活动名称
           site_ids: [],// 生效油站
           date: [moment().startOf('day'), moment().endOf('day')],
           start_time: moment().startOf('day').format('YYYY-MM-DD HH:mm'), // 开始时间
           end_time: moment().endOf('day').format('YYYY-MM-DD HH:mm'),  // 结束时间
-          crowdtype: 1, // 活动人群1所有客户2所有线上客户3部分可参与4部分不可参与
+          crowdtype: 2, // 活动人群1所有客户2所有线上客户3部分可参与4部分不可参与
           group: [], // 优惠客群
         },
         default: {
@@ -510,24 +339,16 @@ export default {
           limit_day: null, //每几天
           limit_number: null, //可参与次数
           pay_type: [], //支付方式数组
-          repeat_way: 1,  //1活动期间2每天重复3每周重复4每月重复
           activity_rule: [ // 规则
             {
-              arr_time_rule: { //规则时间
-                arr_repeat_time: [
-                  {
-                    repeat_start_time: null, //开始时间
-                    repeat_end_time: null, // 结束时间
-                    error: null,
-                  }
-                ],
-                arr_repeat_day: [],//每周周几或者每月几号其他传空数组
-              },
               arr_oil_ids: [],// 油品id集合
               oldChooseData: [],
-              rule_type: 1, //优惠方式：1是原价2是升数
-              cost_origin_price: null, //立减门槛
-              discount_per_litre: null, //立减金额/折扣
+              rules: [  //规则
+                {
+                  man_award: null,  //满多少钱
+                  step_award: null,  //减多少钱
+                }
+              ]
             }
           ]
         },
@@ -608,6 +429,87 @@ export default {
 
       this.loading = false
     },
+    delChild(ruleIndex,childIndex){
+      if (this.form.default.activity_rule[ruleIndex].rules.length==1) {
+        return
+      }
+      this.form.default.activity_rule[ruleIndex].rules.splice(childIndex,1)
+    },
+    addChild(ruleIndex){
+      let obj = {
+        man_award: null,  //满多少钱
+        step_award: null,  //减多少钱
+      }
+      this.form.default.activity_rule[ruleIndex].rules.push(obj)
+    },
+    // 校验满金额
+    checkMan(rule, value, callback,ruleIndex,childIndex){
+      // 当前输入的值应大于右边
+      // 金额应大于上一层对应金额
+      // 金额应小于下一层对应金额
+
+      // 所有规则
+      let arr = this.form.default.activity_rule[ruleIndex].rules
+      // 当前子规则
+      let item = arr[childIndex]
+      // 上一个
+      let prev = arr[childIndex-1]
+      // 下一个
+      let next = arr[childIndex+1]
+
+      // console.log(arr)
+      // console.log(item)
+      // console.log(prev)
+      // console.log(next)
+
+      if (item.step_award&&value<=item.step_award) {
+        return callback(new Error('当前输入的值应大于右边'))
+      }
+
+      if (prev&&prev.man_award&&value<=prev.man_award) {
+        return callback(new Error('金额应大于上一层对应金额'))
+      }
+
+      if (next&&next.man_award&&value>=next.man_award) {
+        return callback(new Error('金额应小于下一层对应金额'))
+      }
+
+      return callback()
+    },
+    // 校验满金额
+    checkStep(rule, value, callback,ruleIndex,childIndex){
+      // 当前输入的值应小于左边
+      // 金额应大于上一层对应金额
+      // 金额应小于下一层对应金额
+
+      // 所有规则
+      let arr = this.form.default.activity_rule[ruleIndex].rules
+      // 当前子规则
+      let item = arr[childIndex]
+      // 上一个
+      let prev = arr[childIndex-1]
+      // 下一个
+      let next = arr[childIndex+1]
+
+      // console.log(arr)
+      // console.log(item)
+      // console.log(prev)
+      // console.log(next)
+
+      if (item.step_award&&value>=item.man_award) {
+        return callback(new Error('当前输入的值应小于左边'))
+      }
+
+      if (prev&&prev.man_award&&value<=prev.step_award) {
+        return callback(new Error('金额应大于上一层对应金额'))
+      }
+
+      if (next&&next.man_award&&value>=next.step_award) {
+        return callback(new Error('金额应小于下一层对应金额'))
+      }
+
+      return callback()
+    },
     // 变更活动时间
     onChangeActiveDate(date,text){
       // console.log(date)
@@ -627,129 +529,19 @@ export default {
       }
       this.form.default.activity_rule.splice(ruleIndex, 1)
     },
-    // 删除一条时间规则
-    deleteDayTime(timeIndex, ruleIndex){
-      if (this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_time.length===1) {
-        return
-      }
-      this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_time.splice(timeIndex,1)
-    },
-    // 增加一条时间规则
-    addDayTime(timeIndex, ruleIndex){
-      let obj = { repeat_start_time: null, repeat_end_time: null, error: null }
-      this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_time.push(obj)
-    },
-    // 校验时间
-    checkDayTime(timeIndex, ruleIndex){
-
-      let item = this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_time[timeIndex]
-
-      // console.log(item)
-      
-      let { repeat_start_time, repeat_end_time } = item
-      
-      if (repeat_start_time && repeat_end_time) {
-
-        // 开始时间不能大于结束时间
-        if (moment(repeat_start_time)>=moment(repeat_end_time)) {
-          item.error = '起始时间不能大于结束时间'
-          return 'true'
-        }
-        // 开始，结束时间不能与其他集合内任意时间重叠
-        let arr = this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_time.filter((e, dayIndex)=>{
-          return dayIndex !== timeIndex && e.repeat_start_time && e.repeat_end_time
-        })
-
-        // console.log(arr)
-
-        for (let dayIndex = 0; dayIndex < arr.length; dayIndex++) {
-          const e = arr[dayIndex];
-          if (moment(e.repeat_start_time)<=moment(repeat_start_time)&&moment(repeat_start_time)<=moment(e.repeat_end_time)) {
-            item.error = '当前规则有冲突'
-            return 'true'
-          }
-          if (moment(e.repeat_start_time)<=moment(repeat_end_time)&&moment(repeat_end_time)<=moment(e.repeat_end_time)) {
-            item.error = '当前规则有冲突'
-            return 'true'
-          }
-        }
-      }
-      item.error = null
-      // true 不合法， false 合法
-      return 'false'
-
-    },
-    // 变更重复方式
-    onChangeRepeatWay(){
-      // 重置规则
-      this.form.default.activity_rule = [
-        {
-          arr_time_rule: { //规则时间
-            arr_repeat_time: [
-              {
-                repeat_start_time: null, //开始时间
-                repeat_end_time: null, // 结束时间
-                error: null,
-              }
-            ],
-            arr_repeat_day: [],//每周周几或者每月几号其他传空数组
-          },
-          arr_oil_ids: [],// 油品id集合
-          oldChooseData: [],
-          rule_type: 1, //优惠方式：1是原价2是升数
-          cost_origin_price: null, //立减门槛
-          discount_per_litre: null, //立减金额/折扣
-        }
-      ]
-    },
     // 增加一条规则
     addRule(){
       let obj = {
-        arr_time_rule: { //规则时间
-          arr_repeat_time: [
-            {
-              repeat_start_time: null, //开始时间
-              repeat_end_time: null, // 结束时间
-              error: null,
-            }
-          ],
-          arr_repeat_day: [],//每周周几或者每月几号其他传空数组
-        },
         arr_oil_ids: [],// 油品id集合
         oldChooseData: [],
-        rule_type: 1, //优惠方式：1是原价2是升数
-        cost_origin_price: null, //立减门槛
-        discount_per_litre: null, //立减金额/折扣
+        rules: [  //规则
+          {
+            man_award: null,  //满多少钱
+            step_award: null,  //减多少钱
+          }
+        ]
       }
       this.form.default.activity_rule.push(obj)
-    },
-    // 选择重复月
-    onChangeMonth(item,ruleIndex){
-      let arr = this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_day.map(e=>{
-        return e
-      })
-      if (arr.includes(item)) {
-        let arr2 = arr.filter(e=>{
-          return e !== item
-        })
-        this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_day = arr2
-      }else{
-        this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_day.push(item)
-      }
-    },
-    // 选择重复周
-    onChangeWeek(item,ruleIndex){
-      let arr = this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_day.map(e=>{
-        return e
-      })
-      if (arr.includes(item)) {
-        let arr2 = arr.filter(e=>{
-          return e !== item
-        })
-        this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_day = arr2
-      }else{
-        this.form.default.activity_rule[ruleIndex].arr_time_rule.arr_repeat_day.push(item)
-      }
     },
     // 全选油品
     selectAllOil (val,index) {
@@ -896,8 +688,8 @@ export default {
                 // 下一步
                 this.step = step
               } else {
-                if (this.form.default.full_reduction_type==1) {
-                  this.$message.error(`一个油站在同一时间最多支持10个价立减活动`)
+                if (this.form.basic.type==3) {
+                  this.$message.error(`一个油站在同一时间最多支持1个满额送活动`)
                   return false
                 }
                 this.$message.error(res.msg)
@@ -953,16 +745,12 @@ export default {
         ruleItem.arr_oil_ids = ruleItem.arr_oil_ids.filter(e=>{
           return e !== 'ALL_SELECT'
         })
-        ruleItem.arr_time_rule.arr_repeat_time.forEach((timeItem,timeIndex)=>{
-          // console.log(timeItem)
-          timeItem.repeat_start_time = typeof timeItem.repeat_start_time==='string'?timeItem.repeat_start_time:moment(timeItem.repeat_start_time).format('HH:mm:ss')
-          timeItem.repeat_end_time = typeof timeItem.repeat_end_time==='string'?timeItem.repeat_end_time:moment(timeItem.repeat_end_time).format('HH:mm:ss')
-        })  
+
         
       })
 
 
-      console.log(form)
+      // console.log(form)
       // return
       activitsave(form).then(res=>{
         // console.log(res)
@@ -1175,5 +963,53 @@ export default {
 .activity-detail-group-wrapper+.activity-detail-group-wrapper{
   margin-top: 16px;
 }
-
+.rule_item_price{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+  .grey_block{
+    background-color: #fafafa;
+    padding: 16px 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    .form-item-inline{
+      margin: 0;
+      margin-right: 10px;
+    }
+  }
+  .price_operate{
+    white-space: nowrap;
+    margin-left: 8px;
+    &>i{
+      font-size: 16px;
+      cursor: pointer;
+    }
+    &>:last-child{
+      margin-left: 8px;
+    }
+  }
+}
+.activity-detail-group,.activity-detail-group-small{
+  position: relative;
+}
+.rule_delete{
+  position: absolute;
+  top: 4px;
+  right: -20px;
+  cursor: pointer;
+  line-height: 20px;
+  font-size: 16px;
+  color: #cad5e9;
+}
 </style>
