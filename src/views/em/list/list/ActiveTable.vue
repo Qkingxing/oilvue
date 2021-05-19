@@ -73,6 +73,10 @@
                 }
               }"
             >编辑</router-link>
+
+            <a 
+              v-if="status==3"
+              @click="activitdel(record)">删除</a>
             
           </template>
         </div>
@@ -84,7 +88,7 @@
 <script>
 import { STable } from '@/components'
 import { activeType } from '@/utils/enums'
-import { getActivitlist } from '@/api/em'
+import { getActivitlist, activitdel } from '@/api/em'
  
 export default {
   name: 'ActiveTable',
@@ -162,6 +166,21 @@ export default {
     }
   },
   methods:{
+    // 删除
+    activitdel(item){
+      let that = this
+
+      this.$confirm({
+        title: '操作提示',
+        content: '删除不可恢复，请确认是否继续',
+        onOk () {
+          activitdel(item.id).then(()=>{
+            that.$refs.table.refresh()
+          })
+        },
+        onCancel () {}
+      })
+    },
     activeTypeText(text){
       // console.log(text)
       let item = this.activeType.find(e=>{

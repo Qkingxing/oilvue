@@ -69,4 +69,22 @@ export function activitCheck (data) {
     data
   })
 }
+// 修改活动时间
+// end_time
+// id
+export function handleTimeIn (data) {
+  return PhpRequest({
+    url: '/activity/handleTimeIn',
+    method: 'post',
+    data
+  })
+}
+// 删除活动
+export function activitdel (id) {
+  return PhpRequest({
+    url: '/activity/activitdel',
+    method: 'post',
+    data: {id}
+  })
+}
 

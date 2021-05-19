@@ -19,6 +19,13 @@ export function userinfo(data){
     })
 }
 
+export function sitelist (data) {
+  return PhpRequest({
+      url: 'work/sitelist',
+      method: 'post',
+      data
+  })
+}
 // export function useraccount(data){
 //     return PhpRequest({
 //         url:'work/useraccount',

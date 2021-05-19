@@ -185,7 +185,7 @@
 </template>
 
 <script>
-import { getActivitlist } from '@/api/em'
+import { getActivitlist, handleTimeIn } from '@/api/em'
 import { activeType } from '@/utils/enums'
 import moment from 'moment';
 import { funcChangeNumToCHN } from '@/utils/util'
@@ -259,14 +259,21 @@ export default {
       };
     },
     onOkTime(date){
-      console.log(date)
+      // console.log(date)
 
       let that = this
       this.$confirm({
         title: '提醒',
         content: `是否将活动结束时间改为 ${date.format('YYYY-MM-DD HH:mm:ss')}`,
         onOk () {
-          
+          handleTimeIn({
+            id: that.detail.id,
+            end_time: date.format('YYYY-MM-DD HH:mm:ss')
+          }).then(res=>{
+            // console.log(res)
+            that.$message.success('修改成功')
+            that.onLoad()
+          })
         },
         onCancel () {}
       })
