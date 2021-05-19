@@ -20,7 +20,6 @@
           :model="form"
           :label-col="labelCol"
           :wrapper-col="wrapperCol"
-          style="min-width:700px;"
           :rules="rules">
           <a-form-model-item 
             label="活动名称" :colon="false" prop="basic.activity_name"
@@ -92,11 +91,11 @@
             </a-radio-group>
           </a-form-model-item>
           <a-form-model-item label="  " :colon="false" v-if="form.basic.crowdtype==3||form.basic.crowdtype==4">
-            <div class="activity-detail-group">
+            <div class="activity-detail-group" style="padding: 16px 24px 1px">
               <a-form-model-item :label="form.basic.crowdtype==3?'选择可参与客户':'选择不可参与客户'" :colon="false">
                 <el-cascader
                   :disabled="form.basic.site_ids.length==0"
-                  style="width: 600px;"
+                  style="width: 460px;"
                   v-model="form.basic.group"
                   :options="activePeoples"
                   :props="{ 
@@ -274,6 +273,7 @@
                         v-for="(timeItem,timeIndex) in ruleItem.arr_time_rule.arr_repeat_time"
                         :key="timeIndex">
                         <div class="dateHourEveryLine">
+
                           <a-time-picker 
                             :default-open-value="moment('00:00:00', 'HH:mm:ss')"
                             v-model="timeItem.repeat_start_time"
@@ -448,7 +448,7 @@
             上一步
           </a-button>
           <a-button type="primary" @click="checkForm(2)" style="margin-left: 10px;">
-            创建
+            {{isEdit?'保存':'创建'}}
           </a-button>
         </a-form-model-item>
       </a-form-model>
@@ -456,7 +456,7 @@
     <a-result
       v-if="step == 2"
       status="success"
-      title="创建成功"
+      :title="isEdit?'保存成功':'创建成功'"
     >
       <template #extra>
         <a-button @click="goList">返回</a-button>
@@ -537,6 +537,7 @@ export default {
         //   { required: true, message: '请输入1-12个字的营销活动名称', trigger: 'blur' }
         // ],
       },
+      isEdit: false,
 
     }
   },
@@ -561,22 +562,37 @@ export default {
         isEdit
       } = this.$route.query
 
+      this.isEdit = isEdit
+
       // 编辑
       if (isEdit) {
-        
+        // 拉取详情信息
         let formRes = await getActivitlist({
           id: editId
         })
 
         if (formRes) {
-          console.log(formRes.data)
+          // console.log(formRes.data)
+          // 表单复原
           this.form = formRes.data
-          this.form.basic.site_ids = this.form.basic.site_ids.map(e=>{return Number(e)})
+          this.form.basic.site_ids = this.form.basic.site_ids.map(Number)
           this.form.basic.date = [
             moment(this.form.basic.start_time),
             moment(this.form.basic.end_time)
           ]
           this.form.id = editId
+
+          this.form.default.activity_rule.forEach((ruleItem,ruleIndex)=>{
+            // console.log(ruleItem)
+            ruleItem.arr_time_rule.arr_repeat_time.forEach((timeItem,timeIndex)=>{
+              // console.log(timeItem.repeat_start_time)
+
+              timeItem.repeat_start_time = moment(timeItem.repeat_start_time, 'HH:mm:ss')
+              timeItem.repeat_end_time = moment(timeItem.repeat_end_time, 'HH:mm:ss')
+            })
+          })
+
+
         }
       }
 
@@ -592,9 +608,48 @@ export default {
             id: 'ALL_SELECT'
           })
         }
+
+        // 编辑
+        if (isEdit) {
+          // 获取固定、动态、客群三合一
+          let activePeopleRes = await getlevelAlls({type:3,site_id:this.form.basic.site_ids})
+          // console.log(activePeopleRes)
+          if (activePeopleRes) {
+            // console.log(activePeopleRes.data)
+            this.activePeoples = activePeopleRes.data
+            let activePeoplesLine = []
+            // 树状改平行结构
+            this.activePeoples.forEach(e=>{
+              activePeoplesLine = activePeoplesLine.concat(e.treeList)
+            })
+            // console.log(activePeoplesLine)
+            this.activePeoplesLine = activePeoplesLine
+          }
+          // console.log(this.activePeoples)
+          // console.log(this.activePeoplesLine)
+          // console.log(this.form.basic.group)
+
+          this.form.basic.group = this.form.basic.group.map(e=>{
+            return [this.findFather("1_28"),e]
+          })
+
+          // 获取油品下拉
+          let oilRes = await getSitesoillist(this.form.basic.site_ids)
+          this.oilList = oilRes.data
+          this.oilList.unshift({
+            oils_name: '全选',
+            id: 'ALL_SELECT'
+          })
+          
+
+        }
       }else{
       // 单站
-        this.form.basic.site_ids = [this.userInfo.site_id]
+        // 新增
+        if (!isEdit) {
+          this.form.basic.site_ids = [this.userInfo.site_id]
+        }
+        
         // 获取固定、动态、客群三合一
         let activePeopleRes = await getlevelAlls({type:3,site_id:this.form.basic.site_ids})
         // console.log(activePeopleRes)
@@ -609,6 +664,12 @@ export default {
           // console.log(activePeoplesLine)
           this.activePeoplesLine = activePeoplesLine
         }
+        // 编辑
+        if (isEdit) {
+          this.form.basic.group = this.form.basic.group.map(e=>{
+            return [this.findFather("1_28"),e]
+          })
+        }
         // 获取油品下拉
         let oilRes = await getSitesoillist(this.form.basic.site_ids)
         this.oilList = oilRes.data
@@ -619,10 +680,6 @@ export default {
 
       }
       
-      // 油品下拉
-      // getOilSetList().then(res => {
-        // this.oilList = res.data
-      // })
       // 获取支付方式列表
       let payRes = await getPayList()
       // console.log(payRes.data)
@@ -633,6 +690,19 @@ export default {
 
 
       this.loading = false
+    },
+    // 寻找父级id
+    findFather(childId){
+      // console.log(childId)
+      // console.log(this.activePeoples)
+      let father = this.activePeoples.find(ele=>{
+        // console.log(ele)
+        let arr = ele.treeList.map(e=>{return e.id})
+
+        return arr.includes(childId)
+      })
+      // console.log(father)
+      return father.id
     },
     // 变更活动时间
     onChangeActiveDate(date,text){
