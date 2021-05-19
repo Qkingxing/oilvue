@@ -70,6 +70,7 @@
                     <div class="activity-label">立减方式</div>
                     <div class="activity-content">{{detail.default.full_reduction_type==1?'金额立减':'折扣立减'}}</div>
                   </div>
+
                   <div class="activity-info">
                     <div class="activity-label">活动人群</div>
                     <div class="activity-content" v-if="detail.basic.crowdtype==1">所有客户</div>
@@ -77,6 +78,7 @@
                     <div class="activity-content" v-if="detail.basic.crowdtype==3">部分可参与({{detail.basic.group_name}})</div>
                     <div class="activity-content" v-if="detail.basic.crowdtype==4">部分不可参与({{detail.basic.group_name}})</div>
                   </div>
+
                   <div class="activity-info">
                     <div class="activity-label">次数限制</div>
                     <div class="activity-content" v-if="detail.default.limit_type==1">无限制</div>
@@ -84,6 +86,7 @@
                       每{{detail.default.limit_day}}天可参与{{detail.default.limit_number}}次
                     </div>
                   </div>
+
                   <div class="activity-info" v-if="detail.basic.type==1">
                     <div class="activity-label">时间限制</div>
                     <div class="activity-content" v-if="detail.default.repeat_way==1">活动期间</div>
@@ -91,17 +94,21 @@
                     <div class="activity-content" v-if="detail.default.repeat_way==3">每周重复</div>
                     <div class="activity-content" v-if="detail.default.repeat_way==4">每月重复</div>
                   </div>
-                  <div class="activity-info" v-if="detail.basic.type==1">
+
+                  <div class="activity-info" v-if="detail.basic.type==1||detail.basic.type==3">
                     <div class="activity-label">支付限制</div>
                     <div class="activity-content">{{detail.default.pay_name}}</div>
                   </div>
+                  
                   <div 
                     class="activity-info activity-info-rule"
                     v-for="(ruleItem,ruleIndex) in detail.default.activity_rule" :key="ruleIndex">
+
                     <div class="activity-label" style="padding-top: 24px;" v-if="detail.basic.type==1">立减规则{{funcChangeNumToCHN(ruleIndex+1)}}</div>
-                    <div class="activity-label" style="padding-top: 24px;" v-if="detail.basic.type==2">规则{{funcChangeNumToCHN(ruleIndex+1)}}</div>
+                    <div class="activity-label" style="padding-top: 24px;" v-if="detail.basic.type==2||detail.basic.type==3">规则{{funcChangeNumToCHN(ruleIndex+1)}}</div>
                     <div class="activity-content" >
                       <div class="rule-wrapper">
+
                         <div class="rule-item" v-if="detail.basic.type==1">
                           <div class="rule-label">规则时间</div>
                           <div class="rule-content" v-if="detail.default.repeat_way==1">{{detail.basic.start_time}} - {{detail.basic.end_time}} </div>
@@ -121,30 +128,46 @@
                             </span>
                           </div>
                         </div>
-                        <div class="rule-item" v-if="detail.basic.type==1">
+
+                        <div class="rule-item" v-if="detail.basic.type==1||detail.basic.type==3">
                           <div class="rule-label">消费油品</div>
                           <div class="rule-content">{{ruleItem.arr_oil_names}}</div>
                         </div>
+
                         <div class="rule-item" v-if="detail.basic.type==1">
                           <div class="rule-label">立减门槛</div>
                           <div class="rule-content">消费{{ruleItem.rule_type==1?'原价':'升数'}}{{ruleItem.cost_origin_price}}{{ruleItem.rule_type==1?'元':'升'}}</div>
                         </div>
+
                         <div class="rule-item" v-if="detail.basic.type==1">
                           <div class="rule-label">立减{{detail.default.full_reduction_type==1?'金额':'折扣'}}</div>
                           <div class="rule-content">每升立{{detail.default.full_reduction_type==1?'减':'享'}}{{ruleItem.discount_per_litre}}{{detail.default.full_reduction_type==1?'元':'折'}}</div>
                         </div>
+
                         <!-- 满额送 -->
                         <div class="rule-item" v-if="detail.basic.type==2">
                           <div class="rule-label">消费油品</div>
                           <div class="rule-content">{{ruleItem.arr_oil_names}}-{{ruleItem.rule_type==1?'原价':'实付'}}</div>
                         </div>
+
                         <div class="rule-item" v-if="detail.basic.type==2">
                           <div class="rule-label">梯度奖励</div>
-                          <div data-v-a47bb5b4="" class="rule-content">
+                          <div class="rule-content">
                             <span
                               v-for="(stepItem,stepIndex) in ruleItem.step_award" :key="stepIndex">消费{{stepItem.cost_min}}-{{stepItem.cost_max}}元，奖励{{stepItem.arr_coupon_id_amount.length}}种{{computCouponTotal(ruleIndex,stepIndex)}}张优惠券<br></span>
                           </div>
                         </div>
+
+                        <!-- 满额减 -->
+                        <div class="rule-item" v-if="detail.basic.type==3">
+                          <div class="rule-label">满减优惠</div>
+                          <div class="rule-content">
+                            <span
+                              v-for="(child,childIndex) in ruleItem.rules" :key="childIndex">原价满{{child.man_award}}元，立{{detail.default.full_reduction_type==1?'减':'享'}}{{child.step_award}}{{detail.default.full_reduction_type==1?'元':'折'}}<br></span>
+                          </div>
+                        </div>
+
+
 
                       </div>
                     </div>
