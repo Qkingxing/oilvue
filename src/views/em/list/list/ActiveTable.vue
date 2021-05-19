@@ -57,8 +57,23 @@
         </div>
         <div slot="action" slot-scope="text, record" class="optionBox">
           <template>
-            <router-link :to="{path:'/dmp/em/statistics'}">活动统计</router-link>
+            <router-link
+              v-if="status==1||status==5"
+             :to="{path:'/dmp/em/statistics'}">活动统计</router-link>
             <!-- <a>发送通知</a> -->
+
+            <router-link 
+              v-if="status==3&&(record.type==1)"
+              :to="{
+                path:'/em/marketing/activity_add',
+                query:{
+                  activityType: 102,
+                  editId: record.id,
+                  isEdit: 'true'
+                }
+              }"
+            >编辑</router-link>
+            
           </template>
         </div>
       </s-table>

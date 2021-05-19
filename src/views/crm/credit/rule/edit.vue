@@ -434,9 +434,9 @@ export default {
       weekList:['日','一','二','三','四','五','六'],
       oilList:[],//油品下拉
       form: {
-        date: [ moment().startOf('day'), moment().endOf('day') ],
-        start_time: moment().startOf('day').format('YYYY-MM-DD HH:mm:ss'), // 开始时间
-        end_time: moment().endOf('day').format('YYYY-MM-DD HH:mm:ss'), // 结束时间
+        date: [ moment().add(1,'days').startOf('day'), moment().add(1,'days').endOf('day') ],
+        start_time: moment().add(1,'days').startOf('day').format('YYYY-MM-DD HH:mm:ss'), // 开始时间
+        end_time: moment().add(1,'days').endOf('day').format('YYYY-MM-DD HH:mm:ss'), // 结束时间
         site_ids: [], // 生效油站
         integralset: [  // 规则列表
           {
