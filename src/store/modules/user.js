@@ -189,7 +189,9 @@ const user = {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           storage.remove(ACCESS_TOKEN)
+          storage.remove(GROUP_ID)
           storage.remove(SITE_ID)
+          storage.remove(USER_ID)
           resolve()
         }).catch(() => {
           resolve()

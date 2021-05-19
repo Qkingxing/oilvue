@@ -178,7 +178,7 @@
                       style="width: 80px;margin-left: 10px;" 
                       v-model="ruleItem.rule_type" >
                       <a-select-option :value="1">原价</a-select-option>
-                      <a-select-option :value="2">升数</a-select-option>
+                      <a-select-option :value="2">实付</a-select-option>
                     </a-select>
 
                     <div 
@@ -205,7 +205,8 @@
                       :prop="`default.activity_rule.${ruleIndex}.step_award.${stepIndex}.cost_min`"
                       :rules="[
                         { required: true,type: 'number', message: '请输入合法的数字', trigger: 'blur' },
-                        { min: 0, max: stepItem.cost_max?stepItem.cost_max:99999,type: 'number', message: '当前输入的值不能大于右边（可以相等）', trigger: 'blur' },
+                        { max: stepItem.cost_max?stepItem.cost_max:99999,type: 'number', message: '当前输入的值不能大于右边（可以相等）', trigger: 'blur' },
+                        { min: minNumber(ruleIndex,stepIndex), type: 'number', message: '当前规则和上一条规则冲突区间范围，请修改合理的梯度规则', trigger: 'blur' },
                       ]">
                       <a-input-number
                         class="input-number"
@@ -324,6 +325,7 @@ export default {
     SendCouponModal: ()=>import('./components/SendCouponModal')
   },
   data () {
+
     return {
       activityId:null,
       loading: false,
@@ -381,7 +383,7 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(['userInfo'])
+    ...mapGetters(['userInfo']),
   },
   created () {
     
@@ -435,6 +437,22 @@ export default {
       
 
       this.loading = false
+    },
+    minNumber(ruleIndex,stepIndex){
+      let arr = this.form.default.activity_rule[ruleIndex].step_award
+      let min = 0
+      
+      // 如果有多条规则
+      if (arr.length>1&&arr[stepIndex-1]) {
+        // console.log(arr[stepIndex-1])
+        if (arr[stepIndex-1].cost_max) {
+          console.log(arr[stepIndex-1])
+          min = arr[stepIndex-1].cost_max
+        }
+      }
+      console.log(min)
+
+      return min
     },
     // 计算优惠券张数
     computCouponTotal(ruleIndex,stepIndex){
@@ -795,7 +813,7 @@ export default {
 .activity-detail-group {
   background-color: #fafafa;
   padding: 16px 24px;
-  min-width: 1010px;
+  min-width: 900px;
   .form-item {
     display: flex;
     align-items: center;
@@ -895,13 +913,13 @@ export default {
 }
 .contentForRuleLine{
   position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  // display: -webkit-box;
+  // display: -ms-flexbox;
   display: flex;
   margin: 5px 0 11px;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+  // -webkit-box-align: center;
+  // -ms-flex-align: center;
+  // align-items: center;
   &[haserr=true]{
     /deep/i{
       color: #ea4b4b;
@@ -942,10 +960,10 @@ export default {
 }
 .form-wrapper{
   .contentForRuleLine{
-    display: -webkit-box;
-    display: -ms-flexbox;
+    // display: -webkit-box;
+    // display: -ms-flexbox;
     display: flex;
-    align-items: center;
+    // align-items: center;
     margin: 0;
     margin-bottom: 16px;
     .contentForRuleLineInterval{
@@ -982,5 +1000,7 @@ export default {
   color: #ddd;
   cursor: pointer;
 }
-
+/deep/.ant-form-explain{
+  white-space: normal;
+}
 </style>

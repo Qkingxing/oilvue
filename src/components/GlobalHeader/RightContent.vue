@@ -210,6 +210,8 @@ export default {
         // console.log(item.data)
         // console.log(this.userInfo)
         // 当前账号是单站账号
+        // account_type
+        // [string]	是	账号类型账号类型，0集团账号1单站账号2片区账号，
         if (this.userInfo.account_type) {
           notification.error({
             message: '错误',
