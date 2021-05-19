@@ -27,8 +27,11 @@
                   <a-radio value="1">
                     优惠券
                   </a-radio>
+                  <a-radio value="2">
+                    实物商品
+                  </a-radio>
                 </a-radio-group>
-                <div style="padding: 20px 92px 25px 20px;  width: 640px;  background-color: #f5f5fa;">
+                <div v-if="goodsInfo.goods_type == 1" style="padding: 20px 92px 25px 20px;  width: 640px;  background-color: #f5f5fa;">
                   <div>
                     <span>优惠券</span>
                      <a-select
@@ -36,7 +39,7 @@
                         v-model="couponsChooseList"
                         style="width:200px;margin:0 10px"
                         placeholder="请选择奖励优惠券"
-                         @change="couponsChange()"
+                         @change="couponsChange"
                       >
                         <a-select-option v-for="(item,index) in couponsList" :key="item.id">
                           {{item.coupons_name}}
@@ -45,18 +48,18 @@
                       <span>没有合适的优惠券？</span>
                       <a href="">去创建</a>
                   </div>
-                  <div style="margin-left: 50px;text-align: center;" v-if="couponsChooseInfoList.length>0">
+                  <div style="margin-left: 50px;text-align: center;" v-if="goodsInfo.coupons.length>0">
                     <div class="title" style="background-color: #f9fafc;border: 1px solid #f6f6f6;">
                       <span style="width: 100px;display: inline-block;">券名称</span>
                       <span style="width: 100px;display: inline-block;">券金额</span>
                       <span style="width: 100px;display: inline-block;">数量</span>
                       <span style="width: 100px;display: inline-block;">操作</span>
                     </div>
-                    <div class="item" style="background-color: #FFFFFF;" v-for="(item,index) in couponsChooseInfoList" :key="item.id">
+                    <div class="item" style="background-color: #FFFFFF;" v-for="(item,index) in goodsInfo.coupons" :key="item.id">
                       <span style="width: 100px;display: inline-block;">{{item.coupons_name}}</span>
                       <span style="width: 100px;display: inline-block;">{{item.coupons_amount}}</span>
                       <span style="width: 100px;display: inline-block;">
-                        <a-input type="number" :value="item.count"></a-input>
+                        <a-input-number v-model="item.count"></a-input-number>
                       </span>
                       <span style="width: 100px;display: inline-block;">
                         <a @click="deleteChooseInfo(index)">删除</a>
@@ -66,24 +69,46 @@
                 </div>
               </a-form-item>
             </a-col>
+            <a-col :md="24" :sm="24" class="screen-item" v-if="goodsInfo.goods_type == 2">
+              <a-form-item label="商品条码">
+                <a-input style="width: 200px;" placeholder="请输入商品条码" v-model="goodsInfo.barcode"></a-input>
+              </a-form-item>
+            </a-col>
             <a-col :md="24" :sm="24" class="screen-item">
               <a-form-item label="商品库存">
                 <a-input-number style="width: 200px;" :min="0" v-model="goodsInfo.goods_inventory"></a-input-number>
               </a-form-item>
             </a-col>
-            <!-- <a-col :md="24" :sm="24" class="screen-item">
-              <a-form-item label="油品券">
-              </a-form-item>
-            </a-col> -->
             <a-col :md="24" :sm="24" class="screen-item">
               <a-form-item label="商品介绍">
                 <a-textarea v-model="goodsInfo.goods_introduce" style="width: 200px;height: 100px;"></a-textarea>
               </a-form-item>
             </a-col>
+            <a-col  :md="24" :sm="24" class="screen-item">
+              <a-form-item label="商品图片">
+                <a-upload
+                   name="avatar"
+                   list-type="picture-card"
+                   class="avatar-uploader"
+                   :show-upload-list="false"
+                   action="https://oiljava.ldyxx.com/goods/FileImg"
+                   :data="imgData"
+                   :before-upload="beforeUpload"
+                   @change="handleImgChange"
+                 >
+                   <img v-if="goodsInfo.goods_cover" :src="goodsInfo.goods_cover" style="width: 100px;" alt="avatar" />
+                   <div v-else>
+                     <a-icon :type="loading ? 'loading' : 'plus'" />
+                     <div class="ant-upload-text">
+                       Upload
+                     </div>
+                   </div>
+                 </a-upload>
+                 <div class="text">请上传形象照，图片大小不超过1M</div>
+              </a-form-item>
+            </a-col>
           </a-row>
         </a-form>
-        <span style="margin-top: 3.125rem;">购买设置</span>
-        <a-divider />
         <a-form layout="inline" >
           <a-row :gutter="48">
             <a-col :md="24" :sm="24" class="screen-item">
@@ -102,18 +127,18 @@
                 <div style="padding: 20px 92px 25px 20px;  width: 640px;  background-color: #f5f5fa;">
                   <div v-show="goodsInfo.management_type!=3">
                     <span>所需积分</span>
-                    <a-input-number style="width: 100px;margin: 0 10px;" v-model="goodsInfo.integral"></a-input-number>
+                    <a-input-number style="width: 100px;margin: 0 10px;" :min="0" v-model="goodsInfo.integral"></a-input-number>
                     <span>分</span>
                   </div>
                   <div v-show="goodsInfo.management_type!=1">
                     <span>所需金额</span>
-                    <a-input-number style="width: 100px;margin: 0 10px;"></a-input-number>
+                    <a-input-number style="width: 100px;margin: 0 10px;" :min="0" v-model="goodsInfo.goods_amount"></a-input-number>
                     <span>元</span>
                   </div>
                 </div>
               </a-form-item>
             </a-col>
-            <a-col :md="24" :sm="24" class="screen-item">
+            <a-col :md="24" :sm="24" class="screen-item" v-if="goodsInfo.goods_type == 1">
               <a-form-item label="购买限制">
                 <a-radio-group v-model="goodsInfo.limit_type">
                   <a-radio value="1">
@@ -148,7 +173,7 @@
   import {
   	getGoodsCategoryList, getGoodsList, getCouponsList, modifyGoods
   } from '@/api/goods'
-  import { isEmpty } from '@/utils/lzz.js'
+  import { isEmpty, deepCopy } from '@/utils/lzz.js'
   import { mapGetters } from 'vuex'
   export default{
     data(){
@@ -157,14 +182,19 @@
         goodsList:[],
         couponsList:[],
         couponsChooseList:[],
-        couponsChooseInfoList:[],
+        imgData:{
+          file: {},
+        },
+        loading: false,
         goodsInfo:{
+          barcode:'',
           goods_name:'',
           goods_inventory:'',
           categoryId:'',
           goods_introduce:'',
           goods_type:'1',
           integral:'',
+          goods_amount:'',
           count:'',
           limit_type:'1',
           management_type:"1",
@@ -188,6 +218,28 @@
       ...mapGetters(['userInfo'])
     },
     methods: {
+      handleImgChange(info) {
+        if (info.file.status === 'uploading') {
+          this.loading = true;
+          return;
+        }
+        if (info.file.status === 'done') {
+          this.goodsInfo.goods_cover = info.file.response.data
+          this.loading = false
+        }
+      },
+      beforeUpload(file) {
+        this.imgData.file = file
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+        if (!isJpgOrPng) {
+          this.$message.error('请上传 JPG 或 IPG 格式的照片!')
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2
+        if (!isLt2M) {
+          this.$message.error('Image must smaller than 2MB!')
+        }
+        return isJpgOrPng && isLt2M
+      },
       loadGoodsInfo(){
         let _param={
           limit:10,
@@ -196,21 +248,21 @@
         }
         getGoodsList(_param).then(res=>{
           this.goodsInfo = res.data[0]
-          this.goodsInfo.coupons.forEach(item=>{
+          let _coupons = deepCopy(this.goodsInfo.coupons)
+          this.goodsInfo.coupons = []
+          _coupons.forEach(item=>{
             this.couponsChooseList.push(item.id)
+            let _obj={
+              'coupons_amount':item.coupons_amount,
+              'coupons_name':item.coupons_name,
+              'couponsId':item.id,
+              'count':1
+            }
+            this.goodsInfo.coupons.push(_obj)
           })
-          this.couponsChooseInfoList = this.goodsInfo.coupons
         })
       },
       modifyGoods(){
-        this.goodsInfo.coupons.length = 0
-        this.couponsChooseInfoList.forEach(res=>{
-          let _obj={
-            couponsId:res.id,
-            count:res.count
-          }
-          this.goodsInfo.coupons.push(_obj)
-        })
         if(this.goodsInfo.goods_name == ""){
            this.$message.error("请填写商品名称")
            return;
@@ -219,8 +271,16 @@
            this.$message.error("请选择商品类目")
            return;
         }
-        if(this.goodsInfo.coupons.length == 0){
+        if(this.goodsInfo.goods_type == 1 && this.goodsInfo.coupons.length == 0){
           this.$message.error("请配置优惠券")
+          return;
+        }
+        for(let i in this.goodsInfo.coupons){
+          delete this.goodsInfo.coupons[i].coupons_name;
+          delete this.goodsInfo.coupons[i].coupons_amount;
+        }
+        if(this.goodsInfo.goods_type == 2 && this.goodsInfo.barcode == ''){
+          this.$message.error("请填写商品条码")
           return;
         }
         if(this.goodsInfo.goods_inventory == ""){
@@ -249,17 +309,21 @@
       countChange(value){
       },
       deleteChooseInfo(index){
-        this.couponsChooseInfoList.splice(index,1)
+        this.goodsInfo.coupons.splice(index,1)
         this.couponsChooseList.splice(index,1)
       },
-      couponsChange(){
-        this.couponsChooseInfoList.length = 0
+      couponsChange(value){
+        this.goodsInfo.coupons = []
         this.couponsChooseList.forEach(res=>{
           this.couponsList.forEach(item=>{
             if(res==item.id){
-              item.count = 2
-              this.couponsChooseInfoList.push(item)
-              console.log(this.couponsChooseInfoList)
+              let _obj={
+                'coupons_amount':item.coupons_amount,
+                'coupons_name':item.coupons_name,
+                'couponsId':item.id,
+                'count':1
+              }
+              this.goodsInfo.coupons.push(_obj)
             }
           })
         })
@@ -290,7 +354,13 @@
 <style lang="less" scoped="scoped">
  .screen-item{
    margin-bottom: 16px;
-   margin-left: 50px;
    color: #040a46;
+ }
+ .avatar-uploader{
+   vertical-align: top;
+ }
+ .avatar-uploader > .ant-upload {
+   width: 128px;
+   height: 128px;
  }
 </style>

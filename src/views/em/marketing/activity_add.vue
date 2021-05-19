@@ -119,7 +119,7 @@
 export default {
   name: 'ActivityAdd',
   components: {
-    PriceCut: () => import('./activity/PriceCut'),
+    PriceCut: () => import('./activity/priceCut'),
     FullPayment: () => import('./activity/FullPayment'),
     FullReduction: () => import('./activity/FullReduction'),
     CreditRecharge: () => import('./activity/creditRecharge')
