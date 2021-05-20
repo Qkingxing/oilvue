@@ -116,7 +116,7 @@
                   <span v-else>享</span>
 
                   <a-input-number 
-                    :min="0"
+                    :min="0.01"
                     :max="10"
                     :precision="2"
                     :step="0.01"
@@ -677,6 +677,8 @@ export default {
   .discount-rule-list{
     margin-top: 8px;
     width: 600px;
+    display: flex;
+    flex-direction: column;
 
     .handle-btn-add-wrapper{
       .handle-btn-add{
