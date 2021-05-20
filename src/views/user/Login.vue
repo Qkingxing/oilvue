@@ -51,7 +51,12 @@
           </a-form-item>
         </a-tab-pane>
         <a-tab-pane key="tab2" :tab="$t('user.login.tab-login-mobile')">
-          <a-form-item>
+
+          <div class="qrcode_wrap">
+            <img src="" alt="二维码">
+          </div>
+          
+          <!-- <a-form-item>
             <a-input size="large" type="text" :placeholder="$t('user.login.mobile.placeholder')" v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: $t('user.login.mobile.placeholder') }], validateTrigger: 'change'}]">
               <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
@@ -74,7 +79,7 @@
                 v-text="!state.smsSendBtn && $t('user.register.get-verification-code') || (state.time+' s')"
               ></a-button>
             </a-col>
-          </a-row>
+          </a-row> -->
         </a-tab-pane>
       </a-tabs>
 
@@ -357,6 +362,17 @@ export default {
     .register {
       float: right;
     }
+  }
+}
+.qrcode_wrap{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  img{
+    width: 120px;
+    height: 120px;
+    border: 1px solid #dadada;
   }
 }
 </style>
