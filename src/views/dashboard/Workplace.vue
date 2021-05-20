@@ -282,7 +282,7 @@ export default {
         font-size: 14px;
 
         &:hover {
-          color: #1890ff;
+          color: #7c7ee2;
         }
       }
     }
@@ -308,7 +308,7 @@ export default {
         flex: 1 1 0;
 
         &:hover {
-          color: #1890ff;
+          color: #7c7ee2;
         }
       }
 
@@ -360,7 +360,7 @@ export default {
 
       &:hover {
         span {
-          color: #1890ff;
+          color: #7c7ee2;
         }
       }
     }

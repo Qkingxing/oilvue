@@ -317,7 +317,7 @@ export default {
 }
 .rule-status {
   padding-left: 10px;
-  color: #1890ff;
+  color: #7c7ee2;
 }
 .page-content {
   margin-top: 30px;

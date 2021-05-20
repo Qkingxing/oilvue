@@ -269,7 +269,7 @@ export default {
   cursor: pointer;
 }
 .link-text{
-  color: #1890ff;
+  color: #7c7ee2;
   cursor: pointer;
 }
 </style>

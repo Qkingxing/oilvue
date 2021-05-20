@@ -142,7 +142,7 @@
                   <a-button type="primary" class="search-btn" style="min-width:82px;" @click="toSearch()"> 搜索 </a-button>
                 </a-form-item>
                 <a-form-item>
-                  <span @click="advanceSearchChange" style="cursor: pointer;vertical-align: middle;color: #1890ff;">{{ searchType }}</span>
+                  <span @click="advanceSearchChange" style="cursor: pointer;vertical-align: middle;color: #7c7ee2;">{{ searchType }}</span>
                 </a-form-item>
               </a-col>
             </a-row>

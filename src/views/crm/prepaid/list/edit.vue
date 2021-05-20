@@ -1334,7 +1334,7 @@ export default {
           transform: translate3d(-50%,-50%,0);
           .icon_success{
             text-align: center;
-            color: #1890ff;
+            color: #7c7ee2;
             margin-bottom: 14px;
             .iconfont{
               transition: color .3s;
