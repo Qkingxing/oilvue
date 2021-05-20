@@ -53,8 +53,8 @@
                       placeholder="请选择可用油站"
                     >
                       <a-select-option 
-                        v-for="(item,index) in siteList" 
-                        :key="index"
+                        v-for="(item,siteIndex) in siteList" 
+                        :key="siteIndex"
                         :disabled="item.id==site_id">
                         {{item.site_name}}
                       </a-select-option>
@@ -63,8 +63,8 @@
                   <a-form-model-item label="卡类型" :colon="false">
                     <a-radio-group v-model="form.card_type">
                       <a-radio
-                        v-for="(item,index) in cardTypeList"
-                        :key="index"
+                        v-for="(item,cardIndex) in cardTypeList"
+                        :key="cardIndex"
                         :value="item.value">
                         {{item.label}}
                       </a-radio>
@@ -81,8 +81,8 @@
                           @click="form.card_style = item"
                           class="cardPanelTemplateItem"
                           :class="{'activeCardPanel': item==form.card_style}"
-                          v-for="(item, index) in templateList"
-                          :key="index">
+                          v-for="(item, temIndex) in templateList"
+                          :key="temIndex">
                           <img :src="item" alt="">
                         </span>
                       </div>
@@ -178,10 +178,9 @@
 
                   <a-form-model-item label="充值限制" :colon="false">
                     <a-form-model-item label="" ref="min_refill" prop="min_refill" :colon="false" class="limit_formitem">
-                      <a-input 
+                      <a-input-number 
                         v-model="form.min_refill" 
                         placeholder="金额" 
-                        type="number"
                         @change="
                           () => {
                             $refs.ruleForm2.validate()
@@ -190,10 +189,9 @@
                     </a-form-model-item>
                     <span style="color: rgba(0, 0, 0, 0.65); padding: 0px 10px;">至</span>
                     <a-form-model-item label="" ref="max_refill" prop="max_refill" :colon="false" class="limit_formitem">
-                      <a-input 
+                      <a-input-number 
                         v-model="form.max_refill" 
                         placeholder="金额" 
-                        type="number"
                         @change="
                           () => {
                             $refs.ruleForm2.validate()
@@ -219,8 +217,8 @@
                       placeholder="请选择可用油品"
                     >
                       <a-select-option 
-                        v-for="(item,index) in oilList" 
-                        :key="index">
+                        v-for="(item,oi) in oilList" 
+                        :key="oi">
                         {{item.oils_name}}
                       </a-select-option>
                     </a-select>
@@ -246,13 +244,12 @@
                       <div class="noDiscountContent">
                         <div 
                           class="noDiscountItem"
-                          v-for="(item, index) in form.editGiverule"
-                          :key="index">
-                          <a-input 
+                          v-for="(item, editGiveRIndex) in form.editGiverule"
+                          :key="editGiveRIndex">
+                          <a-input-number
                             v-model="item.refillmoney" 
                             placeholder="金额" 
-                            type="number"
-                            @change="(e)=>checkNoGive(e, index)"/>
+                            @change="(e)=>checkNoGive(e, editGiveRIndex)"/>
                           <div v-show="item.error" class="noDiscountError" style="">充值金额超出限制范围</div>
                         </div>
                         <div class="noDiscountItem" style="visibility: hidden; padding-bottom: 0px;"></div>
@@ -278,10 +275,9 @@
                             :prop="'editGiverule.' + index + '.refillmoney'"
                             :rules="refillmoneyRule">
 
-                            <a-input 
+                            <a-input-number
                               v-model="item.refillmoney" 
                               placeholder="金额" 
-                              type="number" 
                               @change="
                                 () => {
                                   $refs['editGiverule.refillmoney'][index].onFieldBlur()
@@ -301,10 +297,9 @@
                             :prop="'editGiverule.' + index + '.givemoney'"
                             :rules="givemoneyRule">
 
-                            <a-input 
+                            <a-input-number
                               v-model="item.givemoney" 
                               :placeholder="form.type===3?'数字':'金额'" 
-                              type="number"
                               @change="
                                 () => {
                                   $refs.ruleForm2.validate()
@@ -343,12 +338,12 @@
                         prop="first_give"
                         :rules="firstGiveRule">
                        
-                        <a-input 
+                        <a-input-number
                           v-model="form.first_give" 
+                          :precision="0"
                           placeholder="整数" 
                           class="limit_input" 
-                          style="margin: 0px 8px;"
-                          type="number" />
+                          style="margin: 0px 8px;" />
 
                       </a-form-model-item>
                       <span style="margin-left:15px;">元</span>
@@ -474,21 +469,21 @@ export default {
   name: 'PrepaidEdit',
   data(){
     const checkMin = (rule, value, callback) => {
-      if (Number(value)<0) {
+      if (value<=0) {
         callback(new Error('请输入合法金额！'))
       }
       // console.log(this.form.max_refill)
-      if (Number(value) > Number(this.form.max_refill)) {
+      if (value >= Number(this.form.max_refill)) {
         callback(new Error('请输入合法金额！'))
       }else{
         callback()
       }
     }
     const checkMax = (rule, value, callback) => {
-      if (Number(value)<0) {
+      if (value<=0) {
         callback(new Error('请输入合法金额！'))
       }
-      if (Number(value) < Number(this.form.min_refill)) {
+      if (value <= Number(this.form.min_refill)) {
         callback(new Error('最大金额不能小于最小金额'))
       }else{
         callback()
@@ -497,7 +492,7 @@ export default {
     }
     // 充值校验
     const refillmoneyCheck = (rule, value, callback) => {
-      if (Number(value)<0) {
+      if (value<=0) {
         callback(new Error('请输入合法金额！'))
       }
       let count = this.form.editGiverule.filter(e=>{
@@ -517,7 +512,7 @@ export default {
     }
     // 赠送立减优惠校验
     const givemoneyCheck = (rule, value, callback) => {
-      if (Number(value)<0) {
+      if (value<=0) {
         callback(new Error('请输入合法金额！'))
       }
       if (this.form.type===3) {
@@ -532,7 +527,7 @@ export default {
       // console.log(index)
       if (isRangeIn(value,this.form.max_refill,this.form.min_refill)) {
         if (this.form.editGiverule[index].refillmoney) {
-          if (Number(value) > Number(this.form.editGiverule[index].refillmoney)) {
+          if (value >= Number(this.form.editGiverule[index].refillmoney)) {
             if (this.form.type===1) {
               callback(new Error('优惠不能大于充值金额'))
             }
@@ -551,7 +546,7 @@ export default {
     }
     const firstGiveCheck = (rule, value, callback) => {
       let that = this
-      if (Number(value)<0) {
+      if (value<=0) {
         callback(new Error('请输入合法金额！'))
       }
       
@@ -569,7 +564,7 @@ export default {
       // console.log(cha)
       // console.log(Number(value))
 
-      if (cha < Number(value)) {
+      if (cha <= value) {
         callback(new Error('总优惠金额不能大于充值金额'))
       } else {
         callback()
@@ -644,12 +639,12 @@ export default {
           { min: 1, max: 12, message: '请输入合法名称', trigger: 'blur' },
         ],
         min_refill:[
-          { required: true, message: '请输入合法金额！', trigger: 'blur' },
-          { validator: checkMin, trigger: 'blur' },
+          { required: true,type:'number', message: '请输入合法金额！', trigger: 'blur' },
+          { validator: checkMin,type:'number', trigger: 'blur' },
         ],
         max_refill:[
-          { required: true, message: '请输入合法金额！', trigger: 'blur' },
-          { validator: checkMax, trigger: 'blur' },
+          { required: true,type:'number', message: '请输入合法金额！', trigger: 'blur' },
+          { validator: checkMax, type:'number',trigger: 'blur' },
         ],
         oils:[
           { required: true, message: '油品限制为必填，不能为空！', trigger: 'blur' },
@@ -657,16 +652,16 @@ export default {
         
       },
       refillmoneyRule:[
-        { required: true, message: '请输入合法金额！', trigger: 'blur' },
-        { validator: refillmoneyCheck, trigger: 'blur' },
+        { required: true,type:'number', message: '请输入合法金额！', trigger: 'blur' },
+        { validator: refillmoneyCheck,type:'number', trigger: 'blur' },
       ],
       givemoneyRule:[
-        { required: true, message: '请输入合法金额！', trigger: 'blur', },
-        { validator: givemoneyCheck, trigger: 'blur' },
+        { required: true,type:'number', message: '请输入合法金额！', trigger: 'blur', },
+        { validator: givemoneyCheck,type:'number', trigger: 'blur' },
       ],
       firstGiveRule:[
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { validator: firstGiveCheck, trigger: 'blur' },
+        { required: true,type:'number', message: '请输入金额', trigger: 'blur' },
+        { validator: firstGiveCheck,type:'number', trigger: 'blur' },
       ],
       cardTypeList,
       cardCovertype: 1, // 卡面样式 1 模板 2 自定义
@@ -801,8 +796,9 @@ export default {
     // 检查固定金额
     checkNoGive(e,index){
 
-      let val = e.target.value
-      if (Number(val) <= Number(this.form.max_refill) && Number(val) >= Number(this.form.min_refill)) {
+      let val = e
+
+      if (val <= Number(this.form.max_refill) && val >= Number(this.form.min_refill)) {
         this.form.editGiverule[index].error = false
       }else{
         this.form.editGiverule[index].error = true
