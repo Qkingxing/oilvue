@@ -287,7 +287,9 @@ export default {
         site_id:1
       })
         .then(res => {
-         
+         if(!res.data){
+           return
+         }
             that.formData=res.data
             if(res.data.file){
                that.fileList=res.data.file.map(item=>{
