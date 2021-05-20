@@ -1192,7 +1192,7 @@ export default {
                     bottom: 16px;
                     width: 72px;
                     height: 30px;
-                    background: #1e3cfa;
+                    background: #7c7ee2;
                     border-radius: 17px;
                     font-size: 12px;
                     font-family: PingFangSC-Regular,PingFang SC;

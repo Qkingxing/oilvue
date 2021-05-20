@@ -283,7 +283,7 @@ export default {
     text-align: center;
     background: rgba(51,119,255,.1);
     border-radius: 4px;
-    color: #37f;
+    color: #7c7ee2;
     font-size: 12px;
     margin-left: 8px;
     &[has-act=true]{
@@ -343,7 +343,7 @@ export default {
         display: block;
       }
       .modify{
-        color: #37f;
+        color: #7c7ee2;
         margin-left: 16px;
         cursor: pointer;
       }

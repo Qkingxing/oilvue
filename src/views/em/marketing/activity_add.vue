@@ -182,7 +182,7 @@ export default {
           flex: 1;
         }
         .activity-btn {
-          color: #1e3cfa;
+          color: #7c7ee2;
           font-size: 14px;
           cursor: pointer;
           .activity-btn-text {

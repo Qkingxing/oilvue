@@ -158,7 +158,7 @@ export default {
   font-size: 14px;
 }
 .grade-name{
-  color: #37f;
+  color: #7c7ee2;
 }
 .grade-form-item{
   text-align: left;

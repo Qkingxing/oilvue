@@ -201,7 +201,7 @@ export default {
   color: #3c3c46;
   margin-bottom: 8px;
   span{
-    color: #37f;
+    color: #7c7ee2;
   }
 }
 </style>

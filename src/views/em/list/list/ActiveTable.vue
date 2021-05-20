@@ -242,7 +242,7 @@ export default {
   }
 }
 .total-info-num{
-  color: #37f;
+  color: #7c7ee2;
 }
 .total-info-title{
   font-size: 14px;

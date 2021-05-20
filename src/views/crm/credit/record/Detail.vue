@@ -207,7 +207,7 @@ export default {
     }
     .creditsEdit{
       cursor: pointer;
-      color: #37f;
+      color: #7c7ee2;
       padding-right: 15px;
       em{
         font-style: normal;
