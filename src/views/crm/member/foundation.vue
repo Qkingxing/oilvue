@@ -200,7 +200,7 @@ export default {
   }
 }
 .themeColor {
-  color: #3b85ff;
+  color: #7c7ee2;
 }
 .select-all {
   margin-left: 16px;

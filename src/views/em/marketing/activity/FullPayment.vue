@@ -949,7 +949,7 @@ export default {
     position: relative;
     font-size: 12px;
     font-style: normal;
-    color: #3b85ff;
+    color: #7c7ee2;
     margin-left: 30px;
     cursor: pointer;
   }
@@ -976,7 +976,7 @@ export default {
           color: #1e1e28;
         }
         i{
-          color: #3b85ff;
+          color: #7c7ee2;
           &[hasmain=true]{
             padding: 0 2px;
             font-size: 17px;

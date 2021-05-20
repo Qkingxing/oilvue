@@ -209,7 +209,7 @@ export default {
   font-size: 14px;
   color: #1e1e28;
   a{
-    color: #3b85ff;
+    color: #7c7ee2;
   }
 }
 .multipleChoiceContainer{

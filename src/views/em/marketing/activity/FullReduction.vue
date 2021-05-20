@@ -955,7 +955,7 @@ export default {
     position: relative;
     font-size: 12px;
     font-style: normal;
-    color: #3b85ff;
+    color: #7c7ee2;
     margin-left: 30px;
     cursor: pointer;
   }
