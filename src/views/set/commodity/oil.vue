@@ -183,7 +183,7 @@
           </div>
 
           <a-row class="list-wrap" type="flex" justify="space-between">
-            <a-col :span="18">
+            <!-- <a-col :span="18">
               <span class="label-left">排列类型:</span>
               <a-radio-group name="radioGroup" :default-value="1">
                 <a-radio :value="1">
@@ -194,15 +194,15 @@
                 </a-radio>
                
               </a-radio-group>
-            </a-col>
-            <a-col :span="6" style="text-align:right;padding-right:10px;">
+            </a-col> -->
+            <!-- <a-col :span="6" style="text-align:right;padding-right:10px;">
               <span style="margin-right:10px">油枪</span>
               <a-switch default-checked />
-            </a-col>
+            </a-col> -->
           </a-row>
           <a-row class="list-wrap" type="flex" justify="space-between">
             <a-col :span="6">
-              <span class="label-left">油枪列表共「{{youqiangList.length}}」支油枪</span>
+              <span class="label-left">油枪列表共「<span style="font-weight:bold;color:#7c7ee2">{{youqiangList.length}}</span>」支油枪</span>
             </a-col>
             <a-col :span="18" style="text-align:right;padding-right:10px;">
               <a-button v-if="showBtns" type="primary" style="margin-right:12px" @click="addyq">
@@ -230,8 +230,8 @@
               </span>
               <span  class="item-name">{{item.gun_name}}</span>
               <span  class="item-type">{{item.oils_name}}</span>
-              <span :class="{ 'mark-icon-down': item.check, 'mark-icon-open': !item.check }"  class="mark-icon"></span>
-              <span  class="mark-icon-tip">零管</span>
+              <!-- <span :class="{ 'mark-icon-down': item.check, 'mark-icon-open': !item.check }"  class="mark-icon"></span>
+              <span  class="mark-icon-tip">零管</span> -->
           </div>
          
           </div>
@@ -450,6 +450,7 @@ export default {
     
   },
   computed:{
+    
     unLength(){
       
       return this.opArr.length>1?true:false
@@ -583,6 +584,7 @@ export default {
     yqChange(val){
       console.log(val)
     },
+    
     addNewOil(){
       
      

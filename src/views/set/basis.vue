@@ -114,7 +114,7 @@
      
                 可上传5张，图片建议尺寸850像素*350像素，大小不超过1M
                 </a-form-item>
-            <a-form-item label="零管系统">
+            <!-- <a-form-item label="零管系统">
             <a-radio-group  v-model="formData.zerotube">
               <a-radio :value="1">
                启用
@@ -124,8 +124,8 @@
               </a-radio>
              
             </a-radio-group>
-          </a-form-item>
-           <a-form-item label="ETC直扣注册">
+          </a-form-item> -->
+           <!-- <a-form-item label="ETC直扣注册">
             <a-radio-group v-model="formData.ETC">
               <a-radio value="1">
                需注册
@@ -135,15 +135,19 @@
               </a-radio>
              
             </a-radio-group>
-          </a-form-item>
+          </a-form-item> -->
 
-        
+         <a-form-item :wrapper-col="{ span: 12, offset: 6 }">
+            <a-button @click="store" type="primary">
+              保存
+            </a-button>
+          </a-form-item>
         </a-form>
       </div>
-      <div class="header">
+      <!-- <div class="header">
         第三方绑定
-      </div>
-      <div class="form-wrap">
+      </div> -->
+      <!-- <div class="form-wrap">
         <a-form
          v-bind="formItemLayout"
          
@@ -202,7 +206,7 @@
             </a-button>
           </a-form-item>
         </a-form>
-      </div>
+      </div> -->
     </div>
 
 
@@ -219,6 +223,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import api from '../../api/set.js'
 export default {
     name: 'Basis',
@@ -249,9 +254,15 @@ export default {
   
   created(){
     this.userGetProvince(0,'sheng')
-    this.setBasicslist()
+    //this.setBasicslist()
+    this.setSiteDefault()
   },
+  mounted(){
+      console.log('6666666666666666666666')
+      console.log(this.userInfo)
+    },
   computed:{
+    ...mapGetters(['userInfo']),
     lastAddress(){
       this.formData.address=this.formData.address.slice(0,50)
       return this.formData.address.length+'/50'
@@ -269,6 +280,38 @@ export default {
       this.shiArr=[]
       this.xianArr=[]
       this.userGetProvince(val,'shi')
+    },
+    setSiteDefault(){
+      let that=this
+      api.setSiteDefault({
+        site_id:1
+      })
+        .then(res => {
+         
+            that.formData=res.data
+            if(res.data.file){
+               that.fileList=res.data.file.map(item=>{
+                item.url=item.path;
+                item.status='done'
+                item.uid=item.path
+                return item
+              })
+            }
+           
+
+            that.city_id=res.data.city_id
+            that.district_id=res.data.district_id
+            
+            that.province_id=res.data.province_id
+            if(that.province_id){
+              console.log('yyyyyyyyyyyyyyy')
+              that.userGetProvince(that.province_id,'shi')
+            }
+             if(that.district_id){
+              that.userGetProvince(that.district_id,'xian')
+            }
+           
+        })
     },
     setBasicslist(){
       let that=this
@@ -319,7 +362,12 @@ export default {
         }
         that.formData.files.push(obj)
       }
-      
+
+      that.formData.city_id=that.city_id
+            that.formData.district_id=that.district_id
+            
+            
+      that.formData.province_id=that.province_id
       delete that.formData.file
       api.setBasicsset(that.formData)
         .then(res => {
