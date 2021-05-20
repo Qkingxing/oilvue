@@ -281,6 +281,18 @@
               </template>
             </span>
 
+            <span slot="action" slot-scope="text, record">
+              <template>
+                <div class="label-box" v-if="record.label.length">
+                  <div class="label-item" v-for="(tag,ti) in record.label" :key="ti">{{tag.name}}</div>
+                </div>
+
+                <a @click="showEditTag('edit',record)" v-if="record.label.length">修改</a>
+
+                <a @click="showEditTag('add',record)" v-else>加标签</a>
+              </template>
+            </span>
+
           </s-table>
         </div>
 
@@ -312,17 +324,33 @@
           </div>
           <s-table
             ref="table2"
-            rowKey="id"
+            rowKey="data_id"
             :scroll="{ x: true }"
             :columns="columns"
             :data="loadData"
             :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           >
+            <span slot="sonnumber" slot-scope="text, record">
+              <template>
+                <router-link 
+                  v-if="text"
+                  :to="{
+                    path:'/crm/customer/list/detail',
+                    query:{
+                      id: record.id
+                    }
+                  }">
+                  {{text}}
+                </router-link>
+                <span v-else>-</span>
+              </template>
+            </span>
             <span slot="action" slot-scope="text, record">
               <template>
-                <a @click="showEditTag('edit',record)" v-if="radioValue=='old'">修改</a>
-                <a-divider type="vertical" />
-                <a @click="showEditTag('add',record)">加标签</a>
+
+                <a @click="showEditTag('edit',record)" v-if="record.label.length">修改</a>
+
+                <a @click="showEditTag('add',record)" v-else>加标签</a>
               </template>
             </span>
           </s-table>
@@ -364,7 +392,7 @@ import { mapGetters } from 'vuex'
 import { STable } from '@/components'
 import { identitySelect, oldcolumns } from '@/utils/enums'
 import _ from 'lodash'
-
+import moment from 'moment'
 import { getOldUserList, getSonoillist, getSonsitelist,getlevelAll,getNewUserList } from '@/api/crm'
 
 import EditTag from '../components/EditTag'
@@ -488,55 +516,66 @@ export default {
       columns: [
         {
           title: '客户子编号',
-          dataIndex: 'no'
+          dataIndex: 'sonnumber',
+          scopedSlots: { customRender: 'sonnumber' },
         },
         {
           title: '手机号',
-          dataIndex: 'description'
+          dataIndex: 'mobile'
         },
         {
           title: '消费次数',
-          dataIndex: 'status',
+          dataIndex: 'consumption_count',
         },
         {
           title: '会员等级',
-          // dataIndex: 'status',
+          dataIndex: 'level_name',
         },
         {
           title: '现有积分',
-          // dataIndex: 'status',
+          dataIndex: 'integral',
         },
         {
           title: '加油卡余额',
-          // dataIndex: 'status',
+          dataIndex: 'money',
         },
-        {
-          title: '标签',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
-        }
+        // {
+        //   title: '标签',
+        //   dataIndex: 'action',
+        //   scopedSlots: { customRender: 'action' }
+        // }
       ],
       newTotal: 0,
       loadData: parameter => {
+        // console.log('loadData.parameter', parameter)
         let params = {
           page: parameter.pageNo, // 页码
           size: parameter.pageSize, // 每页页数
+          create_time: moment().startOf('day').format('YYYY-MM-DD HH:mm:ss')
+        }
+        // 站点查询
+        if (this.userInfo.site_id!==(-1)) {
+          params.site_id = this.userInfo.site_id
+        }else{
+          params.group_id = this.userInfo.group_id
         }
         params[this.queryParam.numberType] = this.queryParam.searchNumber
-
-        return getNewUserList(Object.assign(params))
+        console.log(this.queryParam)
+        // console.log(params)
+        return getOldUserList(Object.assign(params))
         .then((res)=>{
           // 自定义出参
-          // console.log(res)
+          // console.log(res.data.list)
           this.newTotal = res.data.total
           return {
-            data: res.data.data, // 列表数组
-            pageNo: res.data.current_page,  // 当前页码
-            pageSize: res.data.per_page,  // 每页页数
-            totalCount: res.data.total, // 列表总条数
-            totalPage: res.data.total // 列表总页数
+            data: res.data.list, // 列表数组
+            pageNo: res.data.pageNo,  // 当前页码
+            pageSize: res.data.pageSize,  // 每页页数
+            totalCount: res.data.totalCount, // 列表总条数
+            totalPage: res.data.totalPage // 列表总页数
           }
         })
+
       },
       selectedRowKeys: [],
       selectedRows: [],
@@ -603,6 +642,7 @@ export default {
           scopedSlots: { customRender: 'action' },
           fixed: 'right',
         }
+        this.columns.push(last_colum)
       }else{
         // 集团查询
         last_colum = {
@@ -629,7 +669,7 @@ export default {
       }else{
         // console.log(this.selectedRows)
         ids = this.selectedRows.map(e=>{return e.id})
-        console.log(this.ids)
+        // console.log(this.ids)
       }
 
       if(item){
@@ -678,8 +718,17 @@ export default {
         this.oldqueryParam.last_time2 = dateString[1]
       }
     },
-    showEditTag (type) {
-      this.$refs['EditTag'].show(type)
+    showEditTag (type,item) {
+      // console.log(item)
+      // 缺少label，，id
+      alert('有问题')
+      return
+      // 备忘
+      // this.$refs['EditTag'].show(type)
+      this.$refs.AddTagModal.showModal({
+        user_id: item.id,
+        tags: item.label
+      })
     },
     openColSetting(){
       this.$refs['ColumnsModal'].show()
@@ -783,5 +832,24 @@ export default {
   margin-left: 16px;
   cursor: pointer;
 }
-
+.label-box{
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  .label-item{
+    padding: 0 5px;
+    margin: 2px 4px 2px 0;
+    border: 1px solid #eaeaf4;
+    border-radius: 2px;
+    background: #fafafa;
+  }
+}
 </style>

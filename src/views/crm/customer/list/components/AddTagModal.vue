@@ -62,7 +62,7 @@ export default {
       // console.log(value);
     },
     showModal(obj) {
-      // console.log(ids)
+      // console.log(obj)
       this.user_id = obj.user_id
       this.tags = obj.tags
       this.visible = true;
