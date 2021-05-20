@@ -219,7 +219,7 @@
           </div>
           <s-table
             ref="table"
-            rowKey="id"
+            rowKey="data_id"
             :scroll="{ x: true }"
             :columns="oldcolumns"
             :data="oldloadData"
@@ -255,6 +255,32 @@
                 <span v-else>-</span>
               </template>
             </span>
+            <span slot="is_consumption" slot-scope="text, record">
+              <template>
+                {{text==1?'已消费':'未消费'}}
+              </template>
+            </span>
+
+            <span slot="identity_id" slot-scope="text, record">
+              <template>
+                {{identityText(text)}}
+              </template>
+            </span>
+
+            <span slot="plate_number" slot-scope="text, record">
+              <template>
+                <span v-if="text.length">{{text[0].plate_number}}</span>
+                <span v-else>-</span>
+                <a-popover placement="top" v-if="text.length>1" title="所有车牌">
+                  <template slot="content">
+                    {{text.map(e=>{return e.plate_number}).join(',')}}
+                  </template>
+                  <span class="themeColor" style="margin-left: 5px;">···</span>
+                </a-popover>
+                
+              </template>
+            </span>
+
           </s-table>
         </div>
 
@@ -556,6 +582,16 @@ export default {
     
   },
   methods: {
+    identityText(id){
+      let item = this.identitySelect.find(e=>{
+        return e.value === id
+      })
+      if (item&&item.value) {
+        return item.label
+      }else{
+        return '-'
+      }
+    },
     // 创建最后一列
     creatLastColum(){
       // 站点查询
