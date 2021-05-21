@@ -13,7 +13,11 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: 'menu.home' },
-    redirect: '/dmp/overview/dashboard',
+    // redirect: '/dmp/overview/dashboard',
+    // redirect: to => {
+    //   console.log(to)
+    //   return '/dmp/overview/dashboard'
+    // },
     children: [
       // dmp
       {
