@@ -675,7 +675,7 @@ export default {
       if (payRes) {
         this.payList = payRes.data
       }
-      console.log(this.form)
+      // console.log(this.form)
       this.loading = false
     },
     // 寻找父级id

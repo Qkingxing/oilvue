@@ -358,6 +358,16 @@ export function queryUserList (data) {
     data
   })
 }
+// 下载固定等级二维码
+export function generateCode (id) {
+  return PhpRequest({
+    url: '/app/generateCode',
+    method: 'post',
+    data:{ id },
+    timeout: 0,
+    // responseType: "blob"
+  })
+}
 // 查询动态等级信息
 export function queryMemberSpalevel (data) {
   return JavaRequest({
