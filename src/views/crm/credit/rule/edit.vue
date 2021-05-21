@@ -101,7 +101,7 @@
                 <span class="m_l_24">客户群体</span>
                 <span style="margin-left: 16px;">
                   <el-cascader
-                    :disabled="userInfo.site_id==(-1)"
+                    :disabled="!form.site_ids.length"
                     style="width: 600px;"
                     v-model="item.activity_ids"
                     :options="activePeoples"
