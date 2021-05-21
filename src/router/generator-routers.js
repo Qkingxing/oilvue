@@ -478,13 +478,11 @@ export const generatorDynamicRouter = () => {
         rootRouter.children = childrenNav
         menuNav.push(rootRouter)
         // console.log('menuNav', menuNav)
-        // console.log('menuNav', menuNav)
+
         const routers = generator(menuNav)
         routers.push(notFoundRouter)
         // console.log('routers', routers)
-        // routers[]
-        // console.log(routers[0].redirect)
-        // console.log(routers[0].children[0].redirect)
+
         // 重造index重定向
         routers[0].redirect = routers[0].children[0].redirect
         resolve(routers)
