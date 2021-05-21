@@ -587,3 +587,14 @@ export function oneselfcardlist (data) {
     data
   })
 }
+// 个人卡冻结
+export function freeze (id) {
+  return PhpRequest({
+    url: '/user/freeze',
+    method: 'post',
+    data: {
+      id,
+      card_type: 0,//0是冻结 1是解冻
+    }
+  })
+}

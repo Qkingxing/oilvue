@@ -68,8 +68,8 @@
       <div class="showDataForTable">
         <s-table 
           ref="table" 
-          size="default" 
-          rowKey="id" 
+          :scroll="{ x: true }"
+          rowKey="card_no" 
           :columns="columns" 
           :data="loadData">
 
@@ -81,18 +81,18 @@
           
           <span slot="action" slot-scope="text, record">
             <template>
-              <span 
+              <!-- <span 
                 @click="Recharge(record)"
                 style="margin-right: 10px; color: #7c7ee2; cursor: pointer;">
-                充值</span>
+                充值</span> -->
               <span 
                 @click="frozen(record)"
                 style="margin-right: 10px; color: #7c7ee2; cursor: pointer;">
                 冻结</span>
-              <span 
+              <!-- <span 
                 @click="cancellation(record)"
                 style="margin-right: 10px; color: #7c7ee2; cursor: pointer;">
-                销户</span>
+                销户</span> -->
             </template>
           </span>
 
@@ -106,7 +106,7 @@
 <script>
 import { STable } from '@/components'
 
-import { oneselfcardlist } from '@/api/crm'
+import { oneselfcardlist, freeze } from '@/api/crm'
 
 export default {
   name: 'Client',
@@ -175,7 +175,9 @@ export default {
         },
         {
           title: '操作',
-          scopedSlots: { customRender: 'action' }
+          dataIndex: 'action',
+          scopedSlots: { customRender: 'action' },
+          fixed: 'right'
         }
       ],
       // 加载数据方法 必须为 Promise 对象
@@ -243,9 +245,9 @@ export default {
           </div>
         ),
         onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
+          freeze(item.id).then(res=>{
+            that.$refs.table.refresh()
+          })
         },
         onCancel () {}
       })
