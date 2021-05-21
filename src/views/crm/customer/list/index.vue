@@ -203,7 +203,9 @@
                   {{oldTotal}}
                 </span>
                 」位
-                <!-- <span class="themeColor select-all">选择全部</span> -->
+                <span class="themeColor select-all" @click="selectAll" v-if="userInfo.site_id!=-1&&oldTotal>1">
+                  选择全部
+                </span>
               </span>
             </span>
             <div>
@@ -287,9 +289,9 @@
                   <div class="label-item" v-for="(tag,ti) in record.label" :key="ti">{{tag.name}}</div>
                 </div>
 
-                <a @click="showEditTag('edit',record)" v-if="record.label.length">修改</a>
+                <a @click="showEditTag(record)" v-if="record.label.length">修改</a>
 
-                <a @click="showEditTag('add',record)" v-else>加标签</a>
+                <a @click="showEditTag(record)" v-else>加标签</a>
               </template>
             </span>
 
@@ -306,9 +308,9 @@
                   {{newTotal}}
                 </span>
                 」位
-                <!-- <span class="themeColor select-all" @click="showEditTag('all')">
+                <span class="themeColor select-all" @click="selectAll" v-if="userInfo.site_id!=-1&&newTotal>1">
                   选择全部
-                </span> -->
+                </span>
               </span>
             </span>
             <div>
@@ -347,16 +349,19 @@
             </span>
             <span slot="action" slot-scope="text, record">
               <template>
+                <div class="label-box" v-if="record.label.length">
+                  <div class="label-item" v-for="(tag,ti) in record.label" :key="ti">{{tag.name}}</div>
+                </div>
 
-                <a @click="showEditTag('edit',record)" v-if="record.label.length">修改</a>
+                <a @click="showEditTag(record)" v-if="record.label.length">修改</a>
 
-                <a @click="showEditTag('add',record)" v-else>加标签</a>
+                <a @click="showEditTag(record)" v-else>加标签</a>
               </template>
             </span>
           </s-table>
         </div>
       </a-layout-content>
-      <EditTag ref="EditTag"></EditTag>
+
     </a-layout>
 
     
@@ -395,13 +400,12 @@ import _ from 'lodash'
 import moment from 'moment'
 import { getOldUserList, getSonoillist, getSonsitelist,getlevelAll,getNewUserList } from '@/api/crm'
 
-import EditTag from '../components/EditTag'
+
 
 export default {
   name: 'Clist',
   components: {
     STable,
-    EditTag,
     ColumnsModal: ()=>import('./components/ColumnsModal'),
     SendCoupon: ()=> import('./components/SendCoupon'),
     AddAllTagModal: ()=> import('./components/AddAllTagModal'),
@@ -479,13 +483,14 @@ export default {
           params.love_site_id = this.oldqueryParam.love_site_id
         }
         params[this.oldqueryParam.numberType] = this.oldqueryParam.searchNumber
-        console.log(this.oldqueryParam)
+        // console.log(this.oldqueryParam)
         // console.log(params)
         return getOldUserList(Object.assign(params))
         .then((res)=>{
           // 自定义出参
           // console.log(res.data.list)
           this.oldTotal = res.data.totalCount
+          this.oldAllIds = res.data.ids
           return {
             data: res.data.list, // 列表数组
             pageNo: res.data.pageNo,  // 当前页码
@@ -560,13 +565,14 @@ export default {
           params.group_id = this.userInfo.group_id
         }
         params[this.queryParam.numberType] = this.queryParam.searchNumber
-        console.log(this.queryParam)
+        // console.log(this.queryParam)
         // console.log(params)
         return getOldUserList(Object.assign(params))
         .then((res)=>{
           // 自定义出参
-          // console.log(res.data.list)
-          this.newTotal = res.data.total
+          // console.log(res.data.totalCount)
+          this.newTotal = res.data.totalCount
+          this.allIds = res.data.ids
           return {
             data: res.data.list, // 列表数组
             pageNo: res.data.pageNo,  // 当前页码
@@ -588,7 +594,9 @@ export default {
         }
       },
       optionAlertShow: false,
-      ids: []
+      ids: [],
+      oldAllIds: [],
+      allIds: [],
     }
   },
   computed: {
@@ -659,6 +667,16 @@ export default {
       // console.log(this.oldcolumns)
       this.creatLastColum()
     },
+    // 表格全选
+    selectAll(){
+      let ids = []
+      if (this.radioValue==='old') {
+        ids = this.oldAllIds
+      }else{
+        ids = this.allIds
+      }
+      this.$refs.AddAllTagModal.showModal(ids)
+    },
     // 打开加标签弹窗
     openAddTag(item){
       let ids = []
@@ -718,16 +736,12 @@ export default {
         this.oldqueryParam.last_time2 = dateString[1]
       }
     },
-    showEditTag (type,item) {
+    // 添加修改标签
+    showEditTag (item) {
       // console.log(item)
-      // 缺少label，，id
-      alert('有问题')
-      return
-      // 备忘
-      // this.$refs['EditTag'].show(type)
       this.$refs.AddTagModal.showModal({
         user_id: item.id,
-        tags: item.label
+        tags: item.label.map(e=>{return e.id})
       })
     },
     openColSetting(){
@@ -772,7 +786,7 @@ export default {
       }
     },
     onSelectChange (selectedRowKeys, selectedRows) {
-      console.log()
+      // console.log()
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     }
