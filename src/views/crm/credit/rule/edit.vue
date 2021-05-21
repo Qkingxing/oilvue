@@ -512,76 +512,38 @@ export default {
     // 初始化
     async Init(){
       this.loading = true
-      // 获取固定、动态、客群三合一
-      let activePeopleRes = await getlevelAlls({type:3})
-      // console.log(activePeopleRes)
-      if (activePeopleRes) {
-        // console.log(activePeopleRes.data)
-        this.activePeoples = activePeopleRes.data
-        let activePeoplesLine = []
-        // 树状改平行结构
-        this.activePeoples.forEach(e=>{
-          activePeoplesLine = activePeoplesLine.concat(e.treeList)
-        })
-        // console.log(activePeoplesLine)
-        this.activePeoplesLine = activePeoplesLine
-      }
-      let SitelistRes = null
-      // 如果是集团权限
-      if (this.userInfo.site_id === (-1)) {
-        // 获取油站列表
-        SitelistRes = await getSitelist({sreach:''})
-        // console.log(SitelistRes.data.data)
-        if (SitelistRes) {
-          this.sitelist = SitelistRes.data.data
-          this.sitelist.unshift({
-            site_name: '全选',
-            id: 'ALL_SELECT'
-          })
-        }
-      }else{
-        // 单站权限
-        this.form.site_ids = [this.userInfo.site_id]
-        // 获取油品下拉
-        let oilRes = await getSitesoillist(this.form.site_ids)
-        this.oilList = oilRes.data
-        this.oilList.unshift({
-          oils_name: '全选',
-          id: 'ALL_SELECT'
-        })
-      }
-      // 获取支付方式列表
-      let payRes = await getPayList()
-      // console.log(payRes.data)
-      if (payRes) {
-        this.payList = payRes.data
-      }
+
       if (this.pageType==='edit') {
         // console.log(this.itemData)
         // 编辑模式，拉取详情
         let formRes = await getIntegrallists(this.itemData.id)
         let form = _.cloneDeep(formRes.data)
 
-        form.date = [form.start_time,form.end_time]
+        form.date = [moment(form.start_time),moment(form.end_time)]
         form.site_ids = form.site_ids.map(Number)
-        // 获取油品下拉
-        let oilRes = await getSitesoillist(form.site_ids)
-        this.oilList = oilRes.data
-        this.oilList.unshift({
-          oils_name: '全选',
-          id: 'ALL_SELECT'
-        })
+        
         // console.log(form)
         form.integralset.forEach((e,i)=>{
           // console.log(e)
           e.giveintegral.forEach((e2,i2)=>{
-            // console.log(e2)
-            if (!e2.day) {
+            
+            if (e2.day) {
+              e2.day.map(me=>{
+                return { start: moment(me.start, 'HH:mm:ss'), end: moment(me.end, 'HH:mm:ss'), error: null }
+              })
+            }else{
               e2.day = [
                 { start: null, end: null, error: null }
               ]
             }
-            if (!e2.week) {
+            if (e2.week&&e2.week.day.length) {
+              e2.week = {
+                week_list: [],
+                day: e2.week.day.map(me=>{
+                  return { start: moment(me.start, 'HH:mm:ss'), end: moment(me.end, 'HH:mm:ss'), error: null }
+                })
+              }
+            }else{
               e2.week = {
                 week_list: [],
                 day: [
@@ -589,7 +551,14 @@ export default {
                 ],
               }
             }
-            if(!e2.month){
+            if (e2.month&&e2.month.day.length) {
+              e2.month = {
+                month_list: [],
+                day: e2.month.day.map(me=>{
+                  return { start: moment(me.start, 'HH:mm:ss'), end: moment(me.end, 'HH:mm:ss'), error: null }
+                })
+              }
+            }else{
               e2.month = {
                 month_list:[],
                 day: [
@@ -597,6 +566,7 @@ export default {
                 ],
               }
             }
+            // console.log(e2)
             e2.pay_id = e2.pay_id.map(Number)
             e2.getintegral.forEach((e3,i3)=>{
               e3.oldChooseData = []
@@ -605,18 +575,132 @@ export default {
             
           })
         })
-        
         // console.log(form)
         this.$set(this,'form',form)
-
       }
-      
+
+      // 如果是集团权限
+      if (this.userInfo.site_id === (-1)) {
+        // 获取油站列表
+        let SitelistRes = await getSitelist({sreach:''})
+        // console.log(SitelistRes.data.data)
+        if (SitelistRes) {
+          this.sitelist = SitelistRes.data.data
+          this.sitelist.unshift({
+            site_name: '全选',
+            id: 'ALL_SELECT'
+          })
+        }
+        // 编辑
+        if (this.pageType==='edit') {
+          // 获取固定、动态、客群三合一
+          let activePeopleRes = await getlevelAlls({type:3,site_id:this.form.site_ids})
+          // console.log(activePeopleRes)
+          if (activePeopleRes) {
+            // console.log(activePeopleRes.data)
+            this.activePeoples = activePeopleRes.data
+            let activePeoplesLine = []
+            // 树状改平行结构
+            this.activePeoples.forEach(e=>{
+              activePeoplesLine = activePeoplesLine.concat(e.treeList)
+            })
+            // console.log(activePeoplesLine)
+            this.activePeoplesLine = activePeoplesLine
+          }
+
+          this.form.integralset.forEach((e,i)=>{
+            e.activity_ids = e.activity_ids.map(me=>{
+              return [this.findFather(me),me]
+            })
+          })
+
+
+          // 获取油品下拉
+          let oilRes = await getSitesoillist(this.form.site_ids)
+          if (oilRes) {
+            this.oilList = oilRes.data
+            this.oilList.unshift({
+              oils_name: '全选',
+              id: 'ALL_SELECT'
+            })
+          }
+        }
+
+
+      }else{
+        // 单站权限
+
+        // 新增
+        if (this.pageType==='add') {
+          this.form.site_ids = [this.userInfo.site_id]
+        }
+
+        // 获取固定、动态、客群三合一
+        let activePeopleRes = await getlevelAlls({type:3,site_id:this.form.site_ids})
+        // console.log(activePeopleRes)
+        if (activePeopleRes) {
+          // console.log(activePeopleRes.data)
+          this.activePeoples = activePeopleRes.data
+          let activePeoplesLine = []
+          // 树状改平行结构
+          this.activePeoples.forEach(e=>{
+            activePeoplesLine = activePeoplesLine.concat(e.treeList)
+          })
+          // console.log(activePeoplesLine)
+          this.activePeoplesLine = activePeoplesLine
+        }
+
+        if (this.pageType==='edit') {
+          this.form.integralset.forEach((e,i)=>{
+            e.activity_ids = e.activity_ids.map(me=>{
+              return [this.findFather(me),me]
+            })
+          })
+        }
+        
+        // 获取油品下拉
+        let oilRes = await getSitesoillist(this.form.site_ids)
+        if (oilRes) {
+          this.oilList = oilRes.data
+        }
+        this.oilList.unshift({
+          oils_name: '全选',
+          id: 'ALL_SELECT'
+        })
+      }
+
+      // 获取支付方式列表
+      let payRes = await getPayList()
+      // console.log(payRes.data)
+      if (payRes) {
+        this.payList = payRes.data
+      }
+      console.log(this.form)
       this.loading = false
     },
-    activePeoplesText(arr){
-      let filterArr = this.activePeoplesLine.filter(e=>{
-        return arr.includes(e.id)
+    // 寻找父级id
+    findFather(childId){
+      // console.log(childId)
+      // console.log(this.activePeoples)
+      let father = this.activePeoples.find(ele=>{
+        // console.log(ele)
+        let arr = ele.treeList.map(e=>{return e.id})
+
+        return arr.includes(childId)
       })
+      // console.log(father)
+      return father.id
+    },
+    activePeoplesText(arr){
+      // console.log(arr)
+      let arr2 = arr.map(e=>{
+        return e[1]
+      })
+      // console.log(arr2)
+      let filterArr = this.activePeoplesLine.filter(e=>{
+        return arr2.includes(e.id)
+      })
+      // console.log(this.activePeoplesLine)
       // console.log(filterArr)
       let textArr = filterArr.map(e=>{return e.name})
 
@@ -944,7 +1028,7 @@ export default {
       }).catch(()=>{})
     },
     // 全选油站
-    selectAllSite (val) {
+    async selectAllSite (val) {
       
       const allValues = this.sitelist.map(item => {
         return item.id;
@@ -980,29 +1064,47 @@ export default {
       // 储存当前选择的最后结果 作为下次的老数据
       this.oldChooseData = this.form.site_ids;
 
-      // 校验油站规则是否有冲突
-      this.checkSiteRule()
-
-      // 根据选择油站，拉取油品列表
-      // console.log(this.form.site_ids)
       let site_ids = this.form.site_ids.filter((e)=>{
         return e!=='ALL_SELECT'
       })
-      // console.log(site_ids)
-      if (site_ids.length) {
-        this.loading = true
-        getSitesoillist(site_ids).then((res)=>{
-          // console.log(res.data)
-          this.oilList = res.data
-          this.oilList.unshift({
-            oils_name: '全选',
-            id: 'ALL_SELECT'
-          })
-          this.loading = false
-        })
-      }else{
-        this.oilList = []
+      if (!site_ids.length) {
+        return
       }
+      // 校验油站规则是否有冲突
+      this.checkSiteRule()
+
+      this.loading = true
+
+      // 获取固定、动态、客群三合一
+      let activePeopleRes = await getlevelAlls({type:3,site_id:site_ids})
+        // console.log(activePeopleRes)
+      if (activePeopleRes) {
+        // console.log(activePeopleRes.data)
+        this.activePeoples = activePeopleRes.data
+        let activePeoplesLine = []
+        // 树状改平行结构
+        this.activePeoples.forEach(e=>{
+          activePeoplesLine = activePeoplesLine.concat(e.treeList)
+        })
+        // console.log(activePeoplesLine)
+        this.activePeoplesLine = activePeoplesLine
+      }
+
+      // 根据选择油站，拉取油品列表
+      
+      // 重新获取油品
+      this.oilList = []
+      let oilListRes = await getSitesoillist(site_ids)
+
+      if (oilListRes) {
+          // console.log(res.data)
+        this.oilList = oilListRes.data
+        this.oilList.unshift({
+          oils_name: '全选',
+          id: 'ALL_SELECT'
+        })
+      }
+      this.loading = false
 
     },
     // 校验油站规则是否有冲突
