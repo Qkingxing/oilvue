@@ -19,8 +19,6 @@ const permission = {
     GenerateRoutes ({ commit }, data) {
       return new Promise(resolve => {
         // const { token } = data
-        // 重置路由
-        commit('SET_ROUTERS', [])
         generatorDynamicRouter().then(routers => {
           // console.log(routers)
           commit('SET_ROUTERS', routers)
