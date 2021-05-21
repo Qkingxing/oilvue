@@ -625,12 +625,10 @@ export default {
             // console.log(activePeoplesLine)
             this.activePeoplesLine = activePeoplesLine
           }
-          // console.log(this.activePeoples)
-          // console.log(this.activePeoplesLine)
-          // console.log(this.form.basic.group)
 
           this.form.basic.group = this.form.basic.group.map(e=>{
-            return [this.findFather("1_28"),e]
+            // console.log(e)
+            return [this.findFather(e),e]
           })
 
           // 获取油品下拉
@@ -667,7 +665,7 @@ export default {
         // 编辑
         if (isEdit) {
           this.form.basic.group = this.form.basic.group.map(e=>{
-            return [this.findFather("1_28"),e]
+            return [this.findFather(e),e]
           })
         }
         // 获取油品下拉

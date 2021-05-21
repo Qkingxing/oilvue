@@ -158,8 +158,15 @@
               <a-button style="margin-left: 8px;">导出报表</a-button>
             </div>
           </div>
-          <a-table ref="table" :columns="columns"  :rowKey='record=>record.id' :data-source="orderList" :scroll="{ x: 1300 }">
-          </a-table>
+          <s-table
+            ref="table"
+            size="default"
+            rowKey="id"
+            :columns="columns"
+            :data="loadData"
+            :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+          >
+          </s-table>
         </div>
       </a-layout-content>
     </a-layout>
@@ -168,6 +175,7 @@
 </template>
 
 <script>
+import { STable } from '@/components'
 import { deleteNullAttr } from '@/utils/lzz.js'
 import moment from 'moment'
 import { getOrderList, getOilSetList, getGunList, getPayList, getDepotslist } from '@/api/order'
@@ -245,7 +253,23 @@ export default {
         },
         {
           title: '支付方式',
-          dataIndex:'order_type_name'
+          customRender: function (text) {
+            if (text.order_type == 118) {
+              return '支付宝（商户被扫）'
+            } else if (text.order_type == 108) {
+              return '微信（商户主扫）'
+            } else if (text.order_type == 109) {
+              return '微信（小程序）'
+            } else if (text.order_type == 117) {
+              return '支付宝（商户主扫）'
+            } else if (text.order_type == 9) {
+              return '现金支付'
+            } else if (text.order_type == 10) {
+              return '银行卡支付'
+            } else if (text.order_type == 5) {
+              return '加油卡支付'
+            }
+          }
         },
         {
           title: '状态时间',
@@ -253,13 +277,33 @@ export default {
           needTotal: true
         }
       ],
+      // 加载数据方法 必须为 Promise 对象
+      loadData: (parameter) => {
+        let params = {
+          page: 1, // 页码
+          size: 10, // 每页页数
+        }
+        return getOrderList(Object.assign(this.form,params)).then((res) => {
+          console.log(res)
+          return {
+            data: res.data, // 列表数组
+            pageNo: params.page, // 当前页码
+            pageSize: params.size, // 每页页数
+            totalCount: res.countPage, // 列表总条数
+            totalPage: res.pageSize // 列表总页数
+          }
+        })
+      },
       selectedRowKeys: [],
       selectedRows: [],
       depotslist: []
     }
   },
+  components:{
+    STable
+  },
   created () {
-    this.loadOrderList()
+    // this.loadOrderList()
   },
   methods: {
     moment,

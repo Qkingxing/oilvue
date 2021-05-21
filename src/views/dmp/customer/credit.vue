@@ -35,7 +35,7 @@ export default {
 	},
 	methods:{
 		biao(){
-			return statistics({}).then(res =>{
+			return statistics({time_status: 1}).then(res =>{
 				this.lists = res.data
 				this.show = true
 			})

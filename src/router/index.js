@@ -17,10 +17,10 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
-
-router.selfaddRoutes = function (params){
-  router.matcher = new Router().matcher;
-  router.addRoutes(params)
+// 重置路由
+export function resetRouter() {
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher;
 }
 
 export default router

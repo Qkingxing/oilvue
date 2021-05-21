@@ -68,6 +68,10 @@ const rootRouter = {
   path: '',
   component: 'BasicLayout',
   redirect: '/dmp/overview/dashboard',
+  // redirect: to => {
+  //   console.log(to)
+  //   return '/dmp/overview/dashboard'
+  // },
   meta: {
     title: '首页'
   },
@@ -470,12 +474,17 @@ export const generatorDynamicRouter = () => {
         const childrenNav = []
         // 后端数据, 根级树数组,  根级 PID
         listToTree(data, childrenNav, 0)
+
         rootRouter.children = childrenNav
         menuNav.push(rootRouter)
-        console.log('menuNav', menuNav)
+        // console.log('menuNav', menuNav)
+
         const routers = generator(menuNav)
         routers.push(notFoundRouter)
-        console.log('routers', routers)
+        // console.log('routers', routers)
+
+        // 重造index重定向
+        routers[0].redirect = routers[0].children[0].redirect
         resolve(routers)
       }
     }).catch(err => {
@@ -535,6 +544,7 @@ export const generator = (routerMap, parent) => {
     if (item.children && item.children.length > 0) {
       // Recursion
       currentRouter.children = generator(item.children, currentRouter)
+      // console.log(currentRouter)
     }
     return currentRouter
   })
@@ -555,8 +565,10 @@ const listToTree = (list, tree, parentId) => {
         key: item.key || item.name,
         children: []
       }
+      
       // 迭代 list， 找到当前菜单相符合的所有子菜单
       listToTree(list, child.children, item.id)
+
       // 删掉不存在 children 值的属性
       if (child.children.length <= 0) {
         delete child.children

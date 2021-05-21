@@ -103,9 +103,9 @@
 
 <script>
 import { STable } from '@/components'
-
+import { Loading } from 'element-ui'
 import { mapGetters } from 'vuex'
-import { queryFixedLevel,delFixedLevel } from '@/api/crm'
+import { queryFixedLevel,delFixedLevel,generateCode } from '@/api/crm'
 
 export default {
   name: 'Fixed',
@@ -216,16 +216,68 @@ export default {
       })
     },
     download (item) {
-      this.$confirm({
-        title: '操作提示',
-        content: '开发中...',
-        onOk () {
-          return new Promise((resolve, reject) => {
-            resolve()
-          }).catch(() => console.log('Oops errors!'))
-        },
-        onCancel () {}
+      const loading = Loading.service({
+        lock: true,
+        text: '拼命加载中...'
+        // spinner: 'el-icon-loading',
+        // background: 'rgba(0, 0, 0, 0.9)'
       })
+      let that = this
+      let name = item.level_name
+      generateCode(item.id).then(res=>{
+        // console.log(res)
+        let base64 =  `data:image/png;base64,${res.data}`
+        // console.log(base64)
+        // 图片转为base64
+        var blob = that.convertBase64UrlToBlob(base64); // 转为blob对象
+        
+        // 下载
+        if (that.myBrowser() == "IE") {
+          window.navigator.msSaveBlob(blob, name + ".jpg");
+        } else if (that.myBrowser() == "FF") {
+          window.location.href = url;
+        } else {
+          var a = document.createElement("a");
+          a.download = name;
+          a.href = URL.createObjectURL(blob);
+          a.click();
+        }
+        loading.close()
+      })
+    },
+    // 转换成 blob 对象
+    convertBase64UrlToBlob(base64) {
+      var parts = base64.split(";base64,");
+      var contentType = parts[0].split(":")[1];
+      var raw = window.atob(parts[1]);
+      var rawLength = raw.length;
+      var uInt8Array = new Uint8Array(rawLength);
+      for (var i = 0; i < rawLength; i++) {
+          uInt8Array[i] = raw.charCodeAt(i);
+      }
+      return new Blob([uInt8Array], { type: contentType });
+    },
+    // 判断浏览器的类型
+    myBrowser() {
+      var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+      if (userAgent.indexOf("OPR") > -1) {
+          return "Opera";
+      } //判断是否Opera浏览器 OPR/43.0.2442.991
+      if (userAgent.indexOf("Firefox") > -1) {
+          return "FF";
+      } //判断是否Firefox浏览器  Firefox/51.0
+      if (userAgent.indexOf("Trident") > -1) {
+          return "IE";
+      } //判断是否IE浏览器  Trident/7.0; rv:11.0
+      if (userAgent.indexOf("Edge") > -1) {
+          return "Edge";
+      } //判断是否Edge浏览器  Edge/14.14393
+      if (userAgent.indexOf("Chrome") > -1) {
+          return "Chrome";
+      } // Chrome/56.0.2924.87
+      if (userAgent.indexOf("Safari") > -1) {
+          return "Safari";
+      } //判断是否Safari浏览器 AppleWebKit/534.57.2 Version/5.1.7 Safari/534.57.2
     },
     delTag () {
       this.$confirm({

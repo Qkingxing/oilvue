@@ -52,8 +52,6 @@
           </a-form-item> -->
           <a-form-item label="负责集团">
             <a-select label-in-value :default-value="{ keys: '请选择站点' }" style="width: 200px" @change="handleChange">
-              <!-- <a-select-option value="鹰眼一站"> 鹰眼一站 </a-select-option>
-              <a-select-option value="鹰眼第二加油站"> 鹰眼第二加油站 </a-select-option> -->
               <a-select-option v-for="(name, index) in sitelistdata" :key="index"> {{ name.site_name }} </a-select-option>
             </a-select>
           </a-form-item>
@@ -65,10 +63,6 @@
               @change="handleChanges"
             >
               <a-select-option v-for="(name, index) in names" :key="index"> {{ name.role_name }} </a-select-option>
-              <!-- <a-select-option value="加油员"> 加油员 </a-select-option>
-              <a-select-option value="收银员"> 收银员 </a-select-option>
-              <a-select-option value="财务员"> 财务员 </a-select-option>
-              <a-select-option value="测试"> 测试 </a-select-option> -->
             </a-select>
           </a-form-item>
         </a-form>
@@ -105,42 +99,25 @@
       </div>
       <div v-if="show == 3" style="width: 400px; margin-left: 50px">
         <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-          <a-form-item label="账户类型">
-            <a-radio-group name="radioGroup" :default-value="1" @change="c">
-              <a-radio :value="1"> 单站账号 </a-radio>
-              <a-radio :value="2"> 片区账号 </a-radio>
-              <a-radio :value="3"> 集团账号 </a-radio>
-            </a-radio-group>
-          </a-form-item>
           <a-form-item label="负责集团">
-            <a-select label-in-value :default-value="{ keys: '请选择站点' }" style="width: 200px" @change="handleChange">
-              <!-- <a-select-option value="鹰眼一站"> 鹰眼一站 </a-select-option>
-              <a-select-option value="鹰眼第二加油站"> 鹰眼第二加油站 </a-select-option> -->
-              <a-select-option v-for="(name, index) in sitelistdata" :key="index"> {{ name.site_name }} </a-select-option>
+            <a-select v-model="record.site_id" style="width: 200px" @change="handleChange">
+              <a-select-option v-for="(name, index) in sitelistdata" :key="index" :value="name.id"> {{ name.site_name }} </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item label="账号角色">
             <a-select
-              label-in-value
-              :default-value="{ key: '请选择账号角色' }"
+              v-model="record.role_id"
               style="width: 200px"
-              @change="handleChanges"
             >
-              <a-select-option v-for="(name, index) in names" :key="index"> {{ name.role_name }} </a-select-option>
-              <!-- <a-select-option value="加油员"> 加油员 </a-select-option>
-              <a-select-option value="收银员"> 收银员 </a-select-option>
-              <a-select-option value="财务员"> 财务员 </a-select-option>
-              <a-select-option value="测试"> 测试 </a-select-option> -->
+              <a-select-option v-for="(name, index) in names" :key="name.id"  :value="name.id"> {{ name.role_name }} </a-select-option>
             </a-select>
           </a-form-item>
         </a-form>
       </div>
       <div v-if="show == 3" style="width: 200px; margin: 0 auto">
         <a-button @click="fan">返回</a-button>
-        <a-button style="margin-left: 5px" @click="addChuangjian" type="primary"> 创建 </a-button>
+        <a-button style="margin-left: 5px" @click="modifyUser" type="primary">修改</a-button>
       </div>
-
-
 
       <div class="box" v-if="show == 1">
         <!-- 表格 -->
@@ -186,6 +163,7 @@ import { rolelist } from '@/api/work'
 import { sitelist } from '@/api/work'
 import { userdelete } from '@/api/work'
 import EditTag from '../../crm/customer/components/EditTag'
+import store from '@/store'
 export default {
   name: 'Account',
   components: {
@@ -285,7 +263,6 @@ export default {
     sitelist() {
       return sitelist({}).then((res) => {
         this.sitelistdata = res.data.data;
-        console.log(this.sitelistdata);
       })
     },
     add() {
@@ -295,30 +272,38 @@ export default {
           role_id: this.names[this.index.key]["id"],
           user_name: this.value3,
           account: this.value1,
-          account_type: 0,
           password: this.value2,
           mobile: this.value4,
           site_id:this.sitelistdata[this.site_id.key]["id"]
         }
+        if (store.getters.site_id == (-1)) {
+          data.account_type = 0;
+        } else {
+          data.account_type = 1;
+        }
         return useraccount(data).then((res) => {
-          console.log(res)
           this.show = 1
         })
       } else {
         this.$message.error('请输入正确手机号')
       }
     },
-    addChuangjian(){
-        return useraccount({id:this.record.id}).then(res=>{
-            console.log(res)
-            
-        })
+    modifyUser(){
+      let data = {
+        id:this.record.id,
+        role_id: this.record.role_id,
+        user_name: this.record.user_name,
+        mobile: this.record.mobile,
+        site_id:this.record.site_id
+      }
+      return useraccount(data).then((res) => {
+        this.show = 1
+      })
     },
     xinzeng() {
       this.show = 2
     },
     onSelectChange(selectedRowKeys, selectedRows) {
-      console.log()
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
@@ -326,7 +311,6 @@ export default {
       this.$refs.table.refresh(true)
     },
     delTag(record) {
-      console.log(record)
       this.record = record
       record.visible = true
     },
@@ -335,9 +319,9 @@ export default {
     },
     hide(record, index) {
       if (index == 1) {
-          this.show = 3
+        this.show = 3
         record.visible = false
-        
+        console.log(this.record)
       }
       if (index == 2) {
         let that = this

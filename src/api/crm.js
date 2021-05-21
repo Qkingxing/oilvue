@@ -43,11 +43,11 @@ export function getNewUserList (data) {
   })
 }
 // 获取客户详情
-export function getUserdefault (id) {
+export function getUserdefault (data) {
   return PhpRequest({
     url: '/user/userdefault',
     method: 'post',
-    data: {id}
+    data
   })
 }
 // 给客户修改用户等级（只能修改固定等级）
@@ -358,6 +358,16 @@ export function queryUserList (data) {
     data
   })
 }
+// 下载固定等级二维码
+export function generateCode (id) {
+  return PhpRequest({
+    url: '/app/generateCode',
+    method: 'post',
+    data:{ id },
+    timeout: 0,
+    // responseType: "blob"
+  })
+}
 // 查询动态等级信息
 export function queryMemberSpalevel (data) {
   return JavaRequest({
@@ -575,5 +585,16 @@ export function oneselfcardlist (data) {
     url: '/user/oneselfcardlist',
     method: 'post',
     data
+  })
+}
+// 个人卡冻结
+export function freeze (id) {
+  return PhpRequest({
+    url: '/user/freeze',
+    method: 'post',
+    data: {
+      id,
+      card_type: 0,//0是冻结 1是解冻
+    }
   })
 }

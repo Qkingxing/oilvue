@@ -512,7 +512,9 @@ export default {
     }
     // 赠送立减优惠校验
     const givemoneyCheck = (rule, value, callback) => {
+      // console.log(value)
       if (value<=0) {
+        // console.log(111)
         callback(new Error('请输入合法金额！'))
       }
       if (this.form.type===3) {
@@ -524,25 +526,23 @@ export default {
       }
       // console.log(rule.field)
       let index = rule.field.split('.')[1]
-      // console.log(index)
-      if (isRangeIn(value,this.form.max_refill,this.form.min_refill)) {
-        if (this.form.editGiverule[index].refillmoney) {
-          if (value >= Number(this.form.editGiverule[index].refillmoney)) {
-            if (this.form.type===1) {
-              callback(new Error('优惠不能大于充值金额'))
-            }
-            if (this.form.type===2) {
-              callback(new Error('立减不能大于充值金额'))
-            }
-          }else{
-            callback()
+      // console.log(value)
+
+      if (this.form.editGiverule[index].refillmoney) {
+        if (value >= Number(this.form.editGiverule[index].refillmoney)) {
+          if (this.form.type===1) {
+            callback(new Error('优惠不能大于充值金额'))
+          }
+          if (this.form.type===2) {
+            callback(new Error('立减不能大于充值金额'))
           }
         }else{
           callback()
         }
       }else{
-        callback(new Error('请输入合法金额！'))
+        callback()
       }
+
     }
     const firstGiveCheck = (rule, value, callback) => {
       let that = this
@@ -623,7 +623,7 @@ export default {
         is_open: 2,
         // 是否开启自定义金额，1开，2关
         oils: [], // 支持的油品
-        type: 0,
+        type: 1,
         // 所属类型 1是充值赠送 2是充值立减 3是充值折扣 0是没有优惠
         giverule: [
           { refillmoney: '', givemoney: '', error: false }
