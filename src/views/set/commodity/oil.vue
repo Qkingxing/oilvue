@@ -183,8 +183,8 @@
           </div>
 
           <a-row class="list-wrap" type="flex" justify="space-between">
-            <!-- <a-col :span="18">
-              <span class="label-left">排列类型:</span>
+            <a-col :span="18">
+              <!-- <span class="label-left">排列类型:</span>
               <a-radio-group name="radioGroup" :default-value="1">
                 <a-radio :value="1">
                   按油枪号
@@ -193,12 +193,12 @@
                  按油品
                 </a-radio>
                
-              </a-radio-group>
-            </a-col> -->
-            <!-- <a-col :span="6" style="text-align:right;padding-right:10px;">
+              </a-radio-group> -->
+            </a-col>
+            <a-col :span="6" style="text-align:right;padding-right:10px;">
               <span style="margin-right:10px">油枪</span>
               <a-switch default-checked />
-            </a-col> -->
+            </a-col>
           </a-row>
           <a-row class="list-wrap" type="flex" justify="space-between">
             <a-col :span="6">
