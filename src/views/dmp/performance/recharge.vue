@@ -22,7 +22,7 @@
             <div class="title">统计时间</div>
             <div class="assembly">
               <div class="accd">
-                <a-radio-group v-model="size" style="margin-bottom: 16px" size="default">
+                <a-radio-group @change="bba(size)" v-model="size" style="margin-bottom: 16px" size="default">
                   <a-radio-button value="ri"> 今日 </a-radio-button>
                   <a-radio-button value="zhou"> 本周 </a-radio-button>
                   <a-radio-button value="yue"> 本月 </a-radio-button>
@@ -137,7 +137,7 @@
                 <div class="tap-title">
                   {{ cake1.name }}
                 </div>
-                <biao3 :cake1="cake1" v-if="show1"></biao3>
+                <biao9 :cake1="cake1" v-if="show1"></biao9>
               </div>
               <div class="pie-view">
                 <div class="tap-title">
@@ -192,7 +192,7 @@
                 <div class="tap-title">
                   {{ cake1.name }}
                 </div>
-                <biao3 :cake1="cake1" v-if="show1"></biao3>
+                <biao9 :cake1="cake1" v-if="show1"></biao9>
               </div>
               <div class="pie-view">
                 <div class="tap-title">
@@ -247,7 +247,7 @@
                 <div class="tap-title">
                   {{ cake1.name }}
                 </div>
-                <biao3 :cake1="cake1" v-if="show1"></biao3>
+                <biao9 :cake1="cake1" v-if="show1"></biao9>
               </div>
               <div class="pie-view">
                 <div class="tap-title">
@@ -268,11 +268,12 @@ import labels from './labels'
 import labels1 from './labels1'
 import { recharge } from '@/api/data'
 import biao from './biao'
+import biao9 from './biao9'
 import biao4 from './biao4'
 import { RechargeStatistics } from '@/api/data'
 export default {
   name: 'Refueling',
-  components: { labels, labels1, biao, biao4 },
+  components: { labels, labels1, biao, biao4,biao9 },
   data() {
     return {
       size: 'ri',
@@ -288,14 +289,37 @@ export default {
     this.biao1()
   },
   methods: {
+      bba(vale){
+          if(vale == 'ri'){
+              this.biao('1')
+          }
+          if(vale == 'zhou'){
+              this.biao('2')
+          }
+          if(vale == 'yue'){
+              this.biao('3')
+          }
+          if(vale == 'yue1'){
+              this.biao('4')
+          }
+      },
     onChange(date, dateString) {
       console.log(date, dateString)
+      this.biao(5,dateString)
     },
-    biao() {
-      return recharge({ time_status: 1 }).then((res) => {
-        this.lists = res.data
-        this.show = true
-      })
+    biao(index,dateString) {
+        if(index == 5){
+            let weekStarting_time = dateString[0]
+            let weekEnd_time = dateString[1]
+            return recharge({ time_status: 5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then((res) => {
+                this.lists = res.data
+                this.show = true
+            })
+        }
+        return recharge({ time_status: index?index:'1'}).then((res) => {
+            this.lists = res.data
+            this.show = true
+        })
     },
     biao1() {
       return RechargeStatistics({ time_type: 1 }).then((res) => {

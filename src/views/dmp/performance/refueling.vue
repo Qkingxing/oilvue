@@ -22,7 +22,7 @@
 					  <div class="title">统计时间</div>
 					  <div class="assembly">
 						  <div class="accd" >
-							  	<a-radio-group v-model="size" style="margin-bottom: 16px" size='default'>
+							  	<a-radio-group @change="bba(size)" v-model="size" style="margin-bottom: 16px" size='default'>
 									<a-radio-button  value="ri">
 										今日
 									</a-radio-button>
@@ -377,16 +377,39 @@ export default {
 		this.biao1()
 	},
 	methods:{
+         bba(vale){
+          if(vale == 'ri'){
+              this.biao('1')
+          }
+          if(vale == 'zhou'){
+              this.biao('2')
+          }
+          if(vale == 'yue'){
+              this.biao('3')
+          }
+          if(vale == 'yue1'){
+              this.biao('4')
+          }
+      },
 		onChange(date, dateString) {
       		console.log(date, dateString);
+                this.biao(5,dateString)
     	},
-		biao(){
-			return revenues({}).then(res =>{
-				this.lists = res.data
-				
-				this.show = true
-			})
-		},
+        biao(index,dateString) {
+            if(index == 5){
+                let weekStarting_time = dateString[0]
+                let weekEnd_time = dateString[1]
+                return revenues({ time_status: 5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then((res) => {
+                    this.lists = res.data
+                    this.show = true
+                })
+            }
+            return revenues({ time_status: index?index:'1'}).then((res) => {
+                this.lists = res.data
+                this.show = true
+            })
+        },
+        
 		biao1(){
 			return oilingStatistics({time_type:1}).then(res =>{
 				this.cake1 = res.data.cake1

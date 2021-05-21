@@ -12,7 +12,7 @@
           </div>
           <div class="trend_info">
             <span>较上一周期</span>
-            <span class="percente percent-up">{{list.day_before}}</span>
+            <span class="percente percent-up">{{list.day_before | num}}</span>
             <i class="trend">
               <a-icon type="arrow-down" />
             </i>
@@ -44,6 +44,14 @@ export default {
   methods: {
     income() {},
   },
+  filters:{
+      num(val){
+          if(val == 'NaN'){
+              return val = 0
+          }
+          return val
+      }
+  }
 }
 </script>
 

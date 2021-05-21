@@ -7,7 +7,7 @@
           <div class="search">
             <div class="searchItem">
               <a-form-item label="月报时间">
-                <a-input placeholder="请输入到处报表名称" />
+                <a-input placeholder="请输入到处报表名称" v-model="input" />
               </a-form-item>
             </div>
             <div class="searchItem">
@@ -38,10 +38,10 @@
         </a-form>
         <h3 style="margin-top: 10px">列表</h3>
         <div class="showDataForTable">
-          <s-table ref="table" size="default" rowKey="key" :columns="columns" :data='loadData'>
+          <s-table ref="table" size="default" rowKey="id" :columns="columns" :data='loadData'>
             <span slot="action" slot-scope="text, record">
               <template>
-                <a @click="delTag(record)">删除</a>
+                <a :href="record.report_url" download="下载模板">下载</a>
               </template>
             </span>
           </s-table>
@@ -53,7 +53,6 @@
 
 <script>
 import { STable } from '@/components'
-import { getServiceList } from '@/api/manage'
 import {download} from '@/api/data'
 
 export default {
@@ -66,32 +65,31 @@ export default {
 
   data () {
     return {
+        url:'',
       queryParam: {
-		  
+		 
 	  },
+      input:'',
       columns: [
         {
           title: '导出报表名称',
-          dataIndex: 'no'
+          dataIndex: 'report_name'
         },
         {
           title: '类型',
-          dataIndex: 'description'
+          dataIndex: 'report_type'
         },
         {
           title: '下载次数',
-          dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'download_count',
         },
         {
           title: '报表生成时间',
-          dataIndex: 'time',
-          needTotal: true
+          dataIndex: 'generate_time',
         },
         {
           title: '导出人',
-          // dataIndex: 'status',
-          needTotal: true
+          dataIndex: 'user_name',
         },
         {
           title: '操作',
@@ -100,10 +98,19 @@ export default {
         }
       ],
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
+          let params = {
+                page: parameter.pageNo, // 页码
+               limit: parameter.pageSize, // 每页页数
+          }
+        return download(Object.assign(params)).then(res => {
+		  return {
+              data:res.data,
+              pageNo: parameter.pageNo,  // 当前页码
+              pageSize: parameter.pageSize,  // 每页页数
+              totalCount: res.pageSize, // 列表总条数
+              totalPage: res.countPage // 列表总页数
           
-		  console.log( res.result)
-		  return res.result
+          }
         })
       }
     }
@@ -111,6 +118,7 @@ export default {
 
   beforeCreate () {
     this.form = this.$form.createForm(this, { name: '' })
+    console.log(this.form)
   },
 
 
@@ -119,22 +127,19 @@ export default {
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
+          console.log(err)
         if (!err) {
           console.log('Received values of form: ', values)
         }
       })
     },
-	delTag(value){
-		console.log(value)
-	}
-	//  downloads(){
-	// 	return  download({page:1,limit:10}).then(res =>{
-	// 		this.lists = res.data
-	// 	})
+	// delTag(value){
+    //     console.log(value)
+	// 	location.href(value.report_url)
 	// }
   },
   created(){
-	//   this.downloads()
+
   }
   
 }
