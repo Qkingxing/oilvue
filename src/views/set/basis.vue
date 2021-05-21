@@ -373,7 +373,8 @@ export default {
       delete that.formData.file
       api.setBasicsset(that.formData)
         .then(res => {
-           
+           that.$message.success('保存成功');
+           that.setSiteDefault()
         })
       
     },

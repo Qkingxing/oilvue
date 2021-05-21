@@ -2373,14 +2373,14 @@ export default {
     display: flex;
    
     align-items: center;
-    width: 576px;
+    width: 776px;
    
     justify-content: space-between;
     margin-top: -7px;
 }
 .list_wrap .list_item {
     background: #f5f5fa;
-    width: 576px;
+    width: 776px;
     padding: 27px 0 0;
     margin-bottom: 8px;
    
