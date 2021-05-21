@@ -135,7 +135,7 @@
                     type="minus-circle" 
                     class="item-icon"/>
 
-                  <a-popover v-if="form.discount_type==2&&item.discount<8" :visible="true" placement="right" content="优惠力度过大，请谨慎提交">
+                  <a-popover v-if="item.discount&&form.discount_type==2&&item.discount<8" :visible="true" placement="right" content="优惠力度过大，请谨慎提交">
                     <a-icon 
                       type="exclamation-circle" 
                       style="color: rgb(247, 182, 2); font-size: 16px; margin-left: 8px;"/>
