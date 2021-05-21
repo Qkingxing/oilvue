@@ -234,7 +234,8 @@
                   :to="{
                     path:'/crm/customer/list/detail',
                     query:{
-                      id: record.id
+                      id: record.id,
+                      site_id: record.site_id
                     }
                   }">
                   {{text}}
@@ -249,7 +250,8 @@
                   :to="{
                     path:'/crm/customer/list/detail',
                     query:{
-                      id: record.id
+                      id: record.id,
+                      site_id: record.site_id
                     }
                   }">
                   {{text}}
@@ -339,7 +341,8 @@
                   :to="{
                     path:'/crm/customer/list/detail',
                     query:{
-                      id: record.id
+                      id: record.id,
+                      site_id: record.site_id
                     }
                   }">
                   {{text}}

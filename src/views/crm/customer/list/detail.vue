@@ -199,7 +199,10 @@ export default {
   },
   methods: {
     async onLoad(){
-      getUserdefault(this.$route.query.id).then(res=>{
+      getUserdefault({
+        id: this.$route.query.id,
+        site_id: this.$route.query.site_id
+      }).then(res=>{
         // console.log(res)
         this.detail = res.data
       })

@@ -43,11 +43,11 @@ export function getNewUserList (data) {
   })
 }
 // 获取客户详情
-export function getUserdefault (id) {
+export function getUserdefault (data) {
   return PhpRequest({
     url: '/user/userdefault',
     method: 'post',
-    data: {id}
+    data
   })
 }
 // 给客户修改用户等级（只能修改固定等级）
