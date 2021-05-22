@@ -236,10 +236,10 @@ export default {
           })
           return {
             data: res.data.data, // 列表数组
-            pageNo: res.data.current_page, // 当前页码
-            pageSize: res.data.per_page, // 每页页数
-            totalCount: res.data.total, // 列表总条数
-            // totalPage: res.data.totalPage // 列表总页数
+            pageNo: res.page, // 当前页码
+            pageSize: res.limit, // 每页页数
+            totalCount: res.countPage, // 列表总条数
+            totalPage: res.pageSize // 列表总页数
           }
         })
       },

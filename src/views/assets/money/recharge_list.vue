@@ -46,7 +46,16 @@
               充值记录
             </span>
           </div>
-          <a-table ref="table" :columns="columns"  :rowKey='record=>record.id' :data-source="recordList" :scroll="{ x: 1300 }">
+          <s-table
+            ref="table"
+            size="default"
+            rowKey="id"
+            :columns="columns"
+            :data="loadData"
+            :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+          >
+          </s-table>
+          <!-- <a-table ref="table" :columns="columns"  :rowKey='record=>record.id' :data-source="recordList" :scroll="{ x: 1300 }">
             <span slot="zf_type" slot-scope="text,record" href="javascript:;">
              <span v-if="text.zf_type==1">对公转账</span>
              <span v-if="text.zf_type==2">微信支付</span>
@@ -55,7 +64,7 @@
              <span v-if="text.tradeStatus==0">待支付</span>
              <span v-if="text.tradeStatus==1">支付成功</span>
             </span>
-          </a-table>
+          </a-table> -->
         </div>
       </a-layout-content>
     </a-layout>
@@ -80,6 +89,8 @@ export default {
       timer:'',
       dateRange:[],
       recordList:[],
+      selectedRowKeys: [],
+      selectedRows: [],
       // 表头
       columns: [
         {
@@ -109,13 +120,25 @@ export default {
       ],
       selectedRowKeys: [],
       selectedRows: [],
+      loadData: (parameter) => {
+        return getMoneyTransfer(Object.assign(this.params)).then((res) => {
+          console.log(res)
+          return {
+            data: res.data, // 列表数组
+            pageNo: this.params.page, // 当前页码
+            pageSize: this.params.limit, // 每页页数
+            totalCount: res.countPage, // 列表总条数
+            totalPage: res.pageSize // 列表总页数
+          }
+        })
+      },
       params:{
         starting_time:'',
         end_time:'',
         order_number:'',
         tradeStatus:'',
         page:1,
-        limit:1000,
+        limit:10,
       }
     }
   },
@@ -131,10 +154,13 @@ export default {
       }
       return result;
     },
+    onSelectChange (selectedRowKeys, selectedRows) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedRows = selectedRows
+    },
     search(){
      getMoneyTransfer(this.params).then(res => {
        this.recordList = res.data
-	   console.log(res)
      })
     },
     loadRechargeList(){

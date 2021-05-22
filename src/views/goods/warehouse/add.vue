@@ -278,7 +278,7 @@
             // })
           }else{
             this.$message.success("添加商品成功")
-            this.$emit("addOver");
+            // this.$emit("addOver");
           }
         })
       },

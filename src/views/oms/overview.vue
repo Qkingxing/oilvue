@@ -195,8 +195,6 @@ export default {
         handle_end: '',
         paid_starting: '',
         paid_end: '',
-        page: 1,
-        limit: 1000,
         time_type: 1,
         starting_time: '',
         end_time: '',
@@ -280,15 +278,15 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: (parameter) => {
         let params = {
-          page: 1, // 页码
-          size: 10, // 每页页数
+          page:parameter.pageNo,
+          limit:parameter.pageSize
         }
         return getOrderList(Object.assign(this.form,params)).then((res) => {
           console.log(res)
           return {
             data: res.data, // 列表数组
-            pageNo: params.page, // 当前页码
-            pageSize: params.size, // 每页页数
+            pageNo: parameter.pageNo, // 当前页码
+            pageSize: parameter.pageSize, // 每页页数
             totalCount: res.countPage, // 列表总条数
             totalPage: res.pageSize // 列表总页数
           }
@@ -371,7 +369,7 @@ export default {
       }
     },
     timeRadioChange (value) {
-      value.target.value == 5 ? this.diyDate = true : this.diyDate = false
+      this.$refs.table.refresh()
     },
     showEditTag (type) {
       this.$refs['EditTag'].show(type)
@@ -440,5 +438,4 @@ export default {
   margin-left: 16px;
   cursor: pointer;
 }
-
 </style>
