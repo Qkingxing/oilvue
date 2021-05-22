@@ -111,15 +111,7 @@ export default {
       cake2:{}
     }
   },
-  // watch:{
-  //   lists:{
-  //     handler(value){
-  //       this.lists = value
-  //     },
-  //     immediate:true,
-  //     deep:true
-  //   }
-  // },
+
   created(){
       this.biaos()
   },
@@ -147,6 +139,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+
 .biao {
   .head_title {
     height: 16px;
@@ -304,7 +297,7 @@ export default {
     }
     .pie-chart-canvas {
       width: 100%;
-      height: 420px;
+    //   height: 420px;
       min-width: 440px;
       text-align: center;
       span {

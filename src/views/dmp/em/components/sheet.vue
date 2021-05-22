@@ -350,7 +350,7 @@ export default {
                     position: relative;
                     margin-top: 35px;
                     width: 100%;
-                    height: 600px;
+                    // height: 600px;
                         .sheets_c3_a{
                             position: relative;
                             width: 1320px;

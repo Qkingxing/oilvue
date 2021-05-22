@@ -240,7 +240,7 @@ export default {
     // 油站树初始化
     treeLoad(sreach){
       this.treeShow = false
-      this.getSitelist({ sreach }).then(res=>{
+      this.getSitelist({ sreach, head: true }).then(res=>{
         
         if (res.code === 200) {
           // console.log(res.data.data)

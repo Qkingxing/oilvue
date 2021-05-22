@@ -11,8 +11,7 @@ export default {
   props: ['cake1'],
   data() {
     return {
-      lists: {},
-      lists1:{}
+    
     }
   },
   
@@ -28,7 +27,7 @@ export default {
         // { type: '分类四', value: 15 },
         // { type: 'Other', value: 15 },
       ]
-      console.log(this.cake1)
+      console.log(this.cake2)
       for(let i = 0; i < this.cake1.data.length; i++){
           let item = {}
           item.type =  this.cake1.data[i].name

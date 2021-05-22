@@ -1,75 +1,93 @@
 <template>
-  <div id="canvas_box" ref="canvas_box"></div>
+  <div>
+    <div id="charts" style="margin: auto" ref="charts"></div>
+  </div>
 </template>
 
 <script>
-import { Pie } from '@antv/g2plot'
+import { Chart, registerShape } from '@antv/g2'
+
 export default {
   props: ['cake3'],
   data() {
     return {
-      arrs: [],
+    
     }
   },
-  mounted() {
-    this.biao1()
-    // console.log(this.cake1)
-  },
-  watch: {
-    cake3: {
-      immediate: true,
-      handler(item) {
-        this.arrs = item
-        
-      },
-      deep: true,
-    },
   
-  },
+
+  created() {},
+
   methods: {
-    biao1() {
-      const data = []
-      for (let i = 0; i < this.arrs.data.length; i++) {
-          let items = {}
-          items.type = this.arrs.data[i].name
-          items.value = Number(this.arrs.data[i].value)
-           data.push(items)
+    init() {
+      const data = [
+        // { type: '分类一', value: 20 },
+        // { type: '分类二', value: 18 },
+        // { type: '分类三', value: 32 },
+        // { type: '分类四', value: 15 },
+        // { type: 'Other', value: 15 },
+      ]
+      for(let i = 0; i < this.cake3.data.length; i++){
+          let item = {}
+          item.type =  this.cake3.data[i].name
+          item.value = this.cake3.data[i].value
+          data.push(item)
       }
-      const piePlot = new Pie(this.$refs.canvas_box, {
-        appendPadding: 10,
-        data,
-        angleField: 'value',
-        colorField: 'type',
-        radius: 0.5,
-        innerRadius: 0.6,
-        label: {
-          type: 'inner',
-          offset: '-50%',
-          content: '{value}',
-          style: {
-            textAlign: 'center',
-            fontSize: 14,
-          },
-        },
-        interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
-        statistic: {
-          title: false,
-          content: {
-            style: {
-              whiteSpace: 'pre-wrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
+    //   for (let key in this.cake1) {
+    //       let item = {}
+    //       item.type = this.lists[key].name
+    //       item.value = this.lists[key].value
+    //        data.push(item)
+    //   }
+
+      // 可以通过调整这个数值控制分割空白处的间距，0-1 之间的数值
+      const sliceNumber = 0.01
+
+      // 自定义 other 的图形，增加两条线
+      registerShape('interval', 'slice-shape', {
+        draw(cfg, container) {
+          const points = cfg.points
+          let path = []
+          path.push(['M', points[0].x, points[0].y])
+          path.push(['L', points[1].x, points[1].y - sliceNumber])
+          path.push(['L', points[2].x, points[2].y - sliceNumber])
+          path.push(['L', points[3].x, points[3].y])
+          path.push('Z')
+          path = this.parsePath(path)
+          return container.addShape('path', {
+            attrs: {
+              fill: cfg.color,
+              path,
             },
-            // formatter: () => 'AntV\nG2Plot',
-          },
+          })
         },
       })
 
-      piePlot.render()
+      const chart = new Chart({
+        container: this.$refs.charts,
+        autoFit: true,
+        height: 500,
+      })
+
+      chart.data(data)
+      chart.coordinate('theta', {
+        radius: 0.75,
+        innerRadius: 0.6,
+      })
+      chart.tooltip({
+        showTitle: false,
+        showMarkers: false,
+      })
+      chart.interval().adjust('stack').position('value').color('type').shape('slice-shape')
+
+      chart.render()
     },
+  },
+
+  mounted() {
+    this.init()
   },
 }
 </script>
 
-<style>
-</style>
+<style></style>

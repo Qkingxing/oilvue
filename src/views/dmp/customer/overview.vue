@@ -42,19 +42,19 @@ export default {
      this.customerStatisticss()
     },
     methods:{
-             customers(index,dateString){
-        if(index == 5){
-          let weekStarting_time = dateString[0]
-          let weekEnd_time = dateString[1]
-           return customer({time_status:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
+        customers(index,dateString){
+            if(index == 5){
+            let weekStarting_time = dateString[0]
+            let weekEnd_time = dateString[1]
+            return customer({time_status:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
+                this.lists = res.data
+                console.log(this.lists)
+            })
+            }
+            return customer({time_status:index?index:1}).then(res =>{
             this.lists = res.data
             console.log(this.lists)
-          })
-        }
-        return customer({time_status:index?index:1}).then(res =>{
-          this.lists = res.data
-          console.log(this.lists)
-        })
+            })
       },
       customerStatisticss(){
           return customerStatistics({time_status:1}).then(res =>{
