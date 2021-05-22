@@ -204,7 +204,6 @@ const user = {
     getSitelist ({ commit, state }, params) {
       return new Promise((resolve, reject) => {
         getSitelist(params).then((res) => {
-          // commit('SET_TOKEN', '')
           // console.log(res)
           if (res.code===200) {
             resolve(res)

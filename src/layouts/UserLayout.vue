@@ -224,7 +224,7 @@ export default {
     max-width: 400px;
     justify-content: flex-end;
     width: 400px;
-    height: 476px;
+    // height: 476px;
     background: #fff;
     box-shadow: 0 17px 41px 0 rgba(241,242,247,.8);
     border-radius: 8px;
