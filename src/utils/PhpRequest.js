@@ -23,13 +23,13 @@ const errorHandler = (error) => {
     const token = storage.get(ACCESS_TOKEN)
     if (error.response.status === 500) {
       notification.error({
-        message: 'Forbidden',
+        message: '警告',
         description: data.message
       })
     }
     if (error.response.status === 403) {
       notification.error({
-        message: 'Forbidden',
+        message: '警告',
         description: data.message
       })
     }
@@ -69,7 +69,7 @@ PhpRequest.interceptors.response.use((response) => {
     return res
   }else if(res.code==400){
     notification.error({
-      message: 'Forbidden',
+      message: '警告',
       description: res.msg
     })
     store.dispatch('Logout').then(() => {
@@ -79,7 +79,7 @@ PhpRequest.interceptors.response.use((response) => {
     })
   }else{
     notification.error({
-      message: 'Forbidden',
+      message: '警告',
       description: res.msg
     })
 

@@ -20,7 +20,7 @@ const errorHandler = (error) => {
     const token = storage.get(ACCESS_TOKEN)
     if (error.response.status === 403) {
       notification.error({
-        message: 'Forbidden',
+        message: '警告',
         description: data.message
       })
     }
