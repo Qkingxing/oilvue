@@ -55,12 +55,20 @@ export default {
           console.log(this.lists)
         })
       },
-      discount1s(){
-          return discount1({time_status:1}).then(res =>{
-             this.arr = res.data
-             this.show = true
-            
-          })
+      discount1s(index,dateString){
+          if(index == 5){
+              let weekStarting_time = dateString[0]
+             let weekEnd_time = dateString[1]
+                return discount1({time_status:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
+                    this.arr = res.data
+                    this.show = true  
+                })
+          }
+          return discount1({time_status:index?index:1}).then(res =>{
+            this.arr = res.data
+            this.show = true  
+         })
+         
       }
   }
 }

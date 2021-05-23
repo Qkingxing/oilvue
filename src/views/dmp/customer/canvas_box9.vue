@@ -17,26 +17,29 @@ export default {
   },
   mounted() {
     this.biao3()
+    console.log(this.lineChart2)
   },
-  watch: {
-    lineChart2: {
-      immediate: true,
-      handler(newObj, index) {
-        console.log(newObj)
-        this.lists = newObj
-      },
-      deep: true,
-    },
-  },
+//   watch: {
+//     lineChart2: {
+//       immediate: true,
+//       handler(newObj, index) {
+//         console.log(newObj)
+//         this.lists = newObj
+//         console.log(this.lists)
+//       },
+//       deep: true,
+//     },
+//   },
   methods: {
     biao3() {
     let data = []
-      for (let i = 0; i < this.lists.series.length; i++) {
-        for (let j = 0; j < this.lists.xAxis.length; j++) {
+    console.log(this.lineChart2.series)
+      for (let i = 0; i < this.lineChart2.series.length; i++) {
+        for (let j = 0; j < this.lineChart2.xAxis.length; j++) {
           let item = {}
-          item.month = this.lists.xAxis[j]
-          item.city = this.lists.legend[i]
-          item.temperature = this.lists.series[i][j]
+          item.month = this.lineChart2.xAxis[j]
+          item.city = this.lineChart2.legend[i]
+          item.temperature = this.lineChart2.series[i][j]
           data.push(item)
         }
       }

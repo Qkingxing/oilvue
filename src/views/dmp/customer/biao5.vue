@@ -87,11 +87,11 @@ export default {
     }
   },
    created(){
-      if(this.index){
+       if(this.index){
           this.biaos(this.index)
       }
    },
-   filters:{
+    filters:{
        num(val){
            if(val == 'NaN' || val == 'Infinity'){
                return  val = 0

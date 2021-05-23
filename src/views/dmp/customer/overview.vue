@@ -56,8 +56,17 @@ export default {
             console.log(this.lists)
             })
       },
-      customerStatisticss(){
-          return customerStatistics({time_status:1}).then(res =>{
+      customerStatisticss(index,dateString){
+          if(index == 5){
+            let weekStarting_time = dateString[0]
+            let weekEnd_time = dateString[1]
+                return customerStatistics({time_status:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
+                    this.arr = res.data
+                    console.log(this.arr)
+                    this.show = true
+                })
+          }
+          return customerStatistics({time_status:index?index:1}).then(res =>{
              this.arr = res.data
              console.log(this.arr)
              this.show = true

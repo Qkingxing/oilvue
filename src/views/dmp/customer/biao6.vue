@@ -87,9 +87,9 @@ export default {
     }
   },
    created(){
-      if(this.index){
-          this.biaos(this.index)
-      }
+       if(this.index){
+           this.biaos(this.index)
+       }
    },
    filters:{
        num(val){
@@ -100,8 +100,8 @@ export default {
        }
    },
    methods:{
-       biaos(index){
-           if(index == 5){
+       biaos(index,dateString){
+           if(index == 5 && dateString){
                
                let weekStarting_time = dateString[0]
               let weekEnd_time = dateString[1]

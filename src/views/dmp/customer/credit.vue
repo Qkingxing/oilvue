@@ -7,11 +7,11 @@
 				  <p>积分统计</p>
 			  </div>
 			  <div class="dateTabForSquareContainer">
-				  <shujian></shujian>
+				  <shujian :lists='lists' v-if="show"></shujian>
 			  </div>
-			  <div class="content">
-				  <biao2 :lists='lists' v-if="show"></biao2>
-			  </div>
+			  <!-- <div class="content">
+				  <biao2 :lists='lists' :index='index' :dateString='dateString' v-if="show"></biao2>
+			  </div> -->
 		  </div>
       </div>
   </div>
@@ -19,27 +19,56 @@
 
 <script>
 import shujian from './shujian'
-import biao2 from './biao2'
+// import biao2 from './biao2'
 import {statistics} from '@/api/data'
+import {customerIntegralStatistics} from '@/api/data'
 export default {
-	components:{shujian,biao2},
+	components:{shujian},
     name: 'Credit',
     data(){
         return{
 			lists:[],
-			show:false
+            lineChart1:[],
+            lineChart2:[],
+			show:false,
         }
     },
 	mounted(){
 		this.biao()
+        // this.biaos()
 	},
 	methods:{
-		biao(){
-			return statistics({time_status: 1}).then(res =>{
+		biao(index,dateString){
+            if(index == 5){
+                let weekStarting_time = dateString[0]
+                let weekEnd_time = dateString[1]
+                return statistics({time_status:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
 				this.lists = res.data
 				this.show = true
 			})
-		}
+            }
+			return statistics({time_status:index?index:1}).then(res =>{
+				this.lists = res.data
+				this.show = true
+			})
+		},
+         biaos(index,dateString){
+           if(index == 5){
+               let weekStarting_time = dateString[0]
+              let weekEnd_time = dateString[1]
+              return customerIntegralStatistics({time_type:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
+             this.lineChart1 = res.data.lineChart1
+             this.lineChart2 = res.data.lineChart2
+               console.log(this.lineChart1)
+           })
+           }
+           return customerIntegralStatistics({time_type:index?index:1}).then(res =>{
+             this.lineChart1 = res.data.lineChart1
+             this.lineChart2 = res.data.lineChart2
+             this.show = true
+              console.log(this.lineChart2)
+           })
+       },
 	}
 }
 </script>

@@ -9,7 +9,11 @@
               :endVal="Number(list.number)"
               :duration="3000"
             ></countTo>
-        <span class="unte">元</span>
+        <span v-if="list.orderName=='便利店销售收入'" class="unte">分</span>
+        <span v-else-if="list.orderName == '闪付订单数' ||list.orderName == '油品订单数' " class="unte">笔</span>
+         <span v-else-if="list.orderName == '客单价'" class="unte">元/笔</span>
+          <span v-else-if="list.orderName == '总加油量（升）'" class="unte">升</span>
+          <span v-else class="unte">元</span>
       </div>
       <div class="info">
           <span>{{zhou}}</span>   
@@ -58,18 +62,22 @@ export default {
   },
   methods: {
     mapDate(){
-     
-     if(sessionStorage.getItem('key') == '1'||sessionStorage.getItem('key') == '2'){
+        if(sessionStorage.getItem('key')){
+            if(sessionStorage.getItem('key') == '1'||sessionStorage.getItem('key') == '2'){
          
-         this.zhou = '周同比'
-     }else if(sessionStorage.getItem('key') == '3'){
-         
-         this.zhou = '周环比'
-     }else if(sessionStorage.getItem('key') == '4'){
-         
-         this.zhou = '月环比'
-     }
-     console.log(sessionStorage.getItem('key') )
+                this.zhou = '周同比'
+            }else if(sessionStorage.getItem('key') == '3'){
+                
+                this.zhou = '周环比'
+            }else if(sessionStorage.getItem('key') == '4'){
+                
+                this.zhou = '月环比'
+            }else{
+                this.zhou = '周同比'
+            }
+        }else{
+            this.zhou = '周同比'
+        }
     }
   },
   filters:{

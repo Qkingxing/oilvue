@@ -77,7 +77,7 @@ import canvas_box5 from './canvas_box'
 import {customerIntegralStatistics} from '@/api/data'
 export default {
   components: { canvas_box5 ,canvas_box8,canvas_box9},
-  props: ['lists','index','dateString'],
+  props: ['lists','index','dateString','index'],
   data() {
     return {
       lineChart1:{},
@@ -87,9 +87,10 @@ export default {
     }
   },
    created(){
-      if(this.index){
+        if(this.index){
           this.biaos(this.index)
-      }
+        }
+       
    },
    filters:{
        num(val){
@@ -100,7 +101,7 @@ export default {
        }
    },
    methods:{
-       biaos(index){
+        biaos(index){
            if(index == 5){
                
                let weekStarting_time = dateString[0]
@@ -119,6 +120,25 @@ export default {
                console.log(res)
            })
        },
+    //        console.log(this.index,this.dateString)
+    //        if(this.index == 5){
+               
+    //            let weekStarting_time = this.dateString[0]
+    //           let weekEnd_time = this.dateString[1]
+    //           return customerIntegralStatistics({time_type:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
+    //          this.lineChart1 = res.data.lineChart1
+    //          this.lineChart2 = res.data.lineChart2
+    //          this.show = true
+    //            console.log(res)
+    //        })
+    //        }
+    //        return customerIntegralStatistics({time_type:this.index?this.index:1}).then(res =>{
+    //          this.lineChart1 = res.data.lineChart1
+    //          this.lineChart2 = res.data.lineChart2
+    //          this.show = true
+    //            console.log(res)
+    //        })
+    //    },
        bba(){
          this.a = 2
        }

@@ -83,18 +83,22 @@ export default {
        if(key == 'jintian'){
 		   this.show1 = false
 		   this.$parent.discounts(1)
+           this.$parent.discount1s(1)
        }
        if(key == 'zuotian'){
 	    this.show1 = false
          this.$parent.discounts(2)
+          this.$parent.discount1s(2)
        }
         if(key == 'benzhou'){
 		this.show1 = false
          this.$parent.discounts(3)
+          this.$parent.discount1s(3)
        }
         if(key == 'benyue'){
 		this.show1 = false
          this.$parent.discounts(4)
+          this.$parent.discount1s(4)
        }
 	   if(key == 'zidingyi'){
 		   this.show1 = true
@@ -106,6 +110,7 @@ export default {
     onChange(date, dateString) {
 
 		this.$parent.discounts(5,dateString)
+         this.$parent.discount1s(5,dateString)
     },
   },
 }

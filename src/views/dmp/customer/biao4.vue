@@ -87,10 +87,11 @@ export default {
     }
   },
    created(){
-      if(this.index){
+         if(this.index){
           this.biaos(this.index)
       }
    },
+
    filters:{
        num(val){
            if(val == 'NaN' || val == 'Infinity'){
@@ -101,10 +102,10 @@ export default {
    },
    methods:{
        biaos(index){
-           if(index == 5){
+           if(this.index == 5){
                
-               let weekStarting_time = dateString[0]
-              let weekEnd_time = dateString[1]
+               let weekStarting_time = this.dateString[0]
+              let weekEnd_time = this.dateString[1]
               return customerIntegralStatistics({time_type:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
              this.lineChart1 = res.data.lineChart1
              this.lineChart2 = res.data.lineChart2
