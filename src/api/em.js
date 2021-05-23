@@ -87,4 +87,15 @@ export function activitdel (id) {
     data: {id}
   })
 }
+// 审批活动
+export function activityApproval (id) {
+  return PhpRequest({
+    url: '/activity/activityApproval',
+    method: 'post',
+    data: {
+      id,
+      status: 3,//修改状态状态1开始中2.审批中3.待开始4.被取消5已结束
+    }
+  })
+}
 

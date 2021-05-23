@@ -75,6 +75,9 @@
             >编辑</router-link>
 
             <a 
+              v-if="status==2"
+              @click="activityApproval(record)">审批</a>
+            <a 
               v-if="status==3"
               @click="activitdel(record)">删除</a>
             
@@ -88,7 +91,7 @@
 <script>
 import { STable } from '@/components'
 import { activeType } from '@/utils/enums'
-import { getActivitlist, activitdel } from '@/api/em'
+import { getActivitlist, activitdel,activityApproval } from '@/api/em'
  
 export default {
   name: 'ActiveTable',
@@ -166,6 +169,12 @@ export default {
     }
   },
   methods:{
+    activityApproval(item){
+      activityApproval(item.id).then(res=>{
+        this.$message.success('操作成功')
+        this.$refs.table.refresh()
+      })
+    },
     // 删除
     activitdel(item){
       let that = this
@@ -175,6 +184,7 @@ export default {
         content: '删除不可恢复，请确认是否继续',
         onOk () {
           activitdel(item.id).then(()=>{
+            that.$message.success('删除成功')
             that.$refs.table.refresh()
           })
         },
