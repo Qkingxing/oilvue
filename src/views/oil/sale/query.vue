@@ -7,80 +7,56 @@
          <div class="screen-box">
           <a-form layout="inline" >
             <a-row :gutter="48">
-              
-              <a-col :md="24" :sm="24">
-                <a-form-item label="统计方式" class="screen-item-inline">
-                  <a-radio-group>
-                     <a-radio-button value="a">
-                       按时间
-                     </a-radio-button>
-                     <a-radio-button value="b">
-                       按班次
-                     </a-radio-button>
-                   </a-radio-group>
-                </a-form-item> 
-              </a-col>
                <a-col :md="24" :sm="24">
                  <a-form-item label="统计时间" class="screen-item">
-                   <!-- <a-input v-model="queryParam.keywords" placeholder="请输入搜索内容" /> -->
-                   <a-radio-group v-model="orderTime" @change="onChange">
+                   <a-radio-group v-model="form.time_type">
                      <a-radio-button :value="1">
-                       今日
+                       今天
                      </a-radio-button>
                      <a-radio-button :value="2" >
-                       本周
+                       昨天
                      </a-radio-button>
                      <a-radio-button :value="3" >
+                       本周
+                     </a-radio-button>
+                     <a-radio-button :value="4" >
                        本月
+                     </a-radio-button>
+                     <a-radio-button :value="5" >
+                       自定义
                      </a-radio-button>
                    </a-radio-group>
                    <a-range-picker
                      style="margin-left: 10px;"
-                     :disabled-date="disabledDate"
-                     :disabled-time="disabledRangeTime"
                      :show-time="{
                        hideDisabledOptions: true,
                        defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
                      }"
+                     v-model="diyTime"
+                     @change="timeChange()"
                      format="YYYY-MM-DD HH:mm:ss"
                     />
                  </a-form-item>
                </a-col>
                <a-col :md="24" :sm="24">
                  <a-form-item label="加油金额" class="screen-item-inline">
-                   <a-input-number id="inputNumber" placeholder="数字" v-model="form.handle_starting" @change="onChange" />
+                   <a-input-number id="inputNumber" placeholder="数字" v-model="form.moneyleft" :min="0"/>
                    <span style="margin: 0 10px;">至</span>
-                   <a-input-number id="inputNumber" placeholder="数字" v-model="form.handle_end" @change="onChange" />
+                   <a-input-number id="inputNumber" placeholder="数字" v-model="form.moneyright" :min="0"/>
                  </a-form-item>
                </a-col>
                 <a-col :md="24" :sm="24">
                   <a-form-item label="油品型号" class="screen-item-inline">
-                    <a-select mode="multiple" default-value="lucy" style="width: 200px">
-                      <a-select-option value="jack">
-                        Jack
-                      </a-select-option>
-                      <a-select-option value="lucy">
-                        Lucy
+                    <a-select style="width: 200px" v-model="form.oil_id">
+                      <a-select-option :value="item.id" v-for="(item,index) in oilList" :key="item.id">
+                        {{ item.oils_name }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                   <a-form-item label="枪号" class="screen-item-inline">
-                    <a-select mode="multiple"  default-value="lucy" style="width: 200px">
-                      <a-select-option value="jack">
-                        Jack
-                      </a-select-option>
-                      <a-select-option value="lucy">
-                        Lucy
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                  <a-form-item label="IC卡号" class="screen-item-inline">
-                    <a-select mode="multiple"  default-value="lucy" style="width: 200px">
-                      <a-select-option value="jack">
-                        Jack
-                      </a-select-option>
-                      <a-select-option value="lucy">
-                        Lucy
+                    <a-select style="width: 200px" v-model="form.gun_id">
+                      <a-select-option :value="item.id" v-for="(item,index) in gunList" :key="item.id">
+                        {{ item.gun_name }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
@@ -88,7 +64,6 @@
               <a-col :md="24" :sm="24">
                 <a-form-item>
                   <a-button type="primary" class="search-btn" style="min-width:82px;" @click="toSearch()"> 搜索 </a-button>
-                  <a-button style="min-width:82px;"> 导出报表 </a-button>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -98,12 +73,8 @@
         <div class="showDataForTable">
           <div class="showSearchAndTotal">
             <span class="title">
-              订单列表
+              销售明细列表
             </span>
-            <div>
-              <a-button style="margin-left: 8px;">导出报表</a-button>
-              <a-button style="margin-left: 8px;" @click="setVisible=true" icon="setting"/>
-            </div>
           </div>
           <s-table
             ref="table"
@@ -111,58 +82,21 @@
             rowKey="key"
             :columns="columns"
             :data="loadData"
-            :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           >
           </s-table>
         </div>
       </a-layout-content>
     </a-layout>
-    <a-modal
-        title="自定义展示"
-        :visible="setVisible"
-        :confirm-loading="setConfirmLoading"
-        @ok="handleSetOk"
-        @cancel="handleSetCancel"
-      >
-      <div style="display: flex;">
-        <span style="flex: 1;">可选字段</span>
-        <a style="flex: 0 0 50px;">重置</a>
-        <a style="flex: 0 0 60px;">恢复默认</a>
-      </div>
-      <a-divider />
-      <div>
-        <a-checkbox-group @change="onChangeTableOption" :value="tableOptionChoose">
-            <a-row>
-              <a-col :span="6" v-for="(item,index) in tableOptions" :key="index" style="margin-bottom: 10px;">
-                <a-checkbox :value="item.value" :disabled="item.disabled">
-                  {{item.label}}
-                </a-checkbox>
-              </a-col>
-            </a-row>
-          </a-checkbox-group>
-      </div>
-      </a-modal>
     <router-view />
   </div>
 </template>
 
 <script>
-import { deleteNullAttr } from '@/utils/lzz.js'
+import { deleteNullAttr, isEmpty } from '@/utils/lzz.js'
 import moment from 'moment';
 import { STable } from '@/components'
-import { getOrderList } from '@/api/order'
-const tableOptions = [
-  { label: '订单号', value: '订单号', disabled: true },
-  { label: '订单状态', value: '订单状态', disabled: true },
-  { label: '订单类型', value: '订单类型', disabled: true },
-  { label: '应付金额', value: '应付金额', disabled: true },
-  { label: '优惠金额', value: '优惠金额' },
-  { label: '实付金额', value: '实付金额' },
-  { label: '支付方式', value: '支付方式' },
-  { label: '状态时间', value: '状态时间' },
-  { label: '手机号', value: '手机号' },
-  { label: '会员等级', value: '会员等级' },
-];
+import { getSelldetailList } from '@/api/oa'
+import { getOilSetList,getGunList} from '@/api/order'
 export default {
   name: 'query',
   components: {
@@ -170,94 +104,85 @@ export default {
   },
   data () {
     return {
-      tableOptions,
       setVisible:false,
       setConfirmLoading: false,
       searchType:'高级搜索',
+      gunList:[],
+      oilList:[],
       diyDate:false,
+      diyTime:null,
       form:{
-        handle_starting:'',
-        handle_end:'',
-        paid_starting:'',
-        paid_end:'',
-        page:1,
-        limit:10,
-        time_type:''
+        moneyleft:'',
+        moneyright:'',
+        start_time:'',
+        end_time:'',
+        time_type:'',
+        oil_id:'',
+        gun_id:''
       },
-      radioValue: 'new',
-      tableOptionChoose:['优惠金额','实付金额','支付方式','状态时间'],
       value:'',
-      // 查询参数
-      queryParam: {
-        keyType: '86'
-      },
       // 表头
       columns: [
         {
-          title: '班次',
-          dataIndex: 'oils_id'
+          title: '订单编号',
+          dataIndex: 'zf_number'
         },
         {
-          title: '枪号',
-          dataIndex: 'order_status',
-          customRender:function(text){
-            if(text==1){
-              return "交易成功"
-            }else if(text==2){
-              return "待支付"
-            }else if(text==3){
-              return "支付失败"
-            }
-          }
+          title: '订单状态',
+          dataIndex: 'order_status'
         },
         {
-          title: '油品',
-          customRender:function(){
-            return "未找到"
-          }
-        },
-        {
-          title: '接班泵码(升)',
-          dataIndex: 'order_total',
-        },
-        {
-          title: '交班泵码(升)',
-          dataIndex: 'count_discount',
-          needTotal: true
-        },
-        {
-          title: '单价(元/升)',
-          dataIndex: 'actually_paid',
-          needTotal: true
-        },
-        {
-          title: '销售量(升)',
-          customRender:function(text){
-            if(text.order_type==1){
-              return "微信"
-            }else if(text.order_type==2){
-              return "支付宝"
-            }else if(text.order_type==3){
-              return "对公转账"
-            }
-          }
+          title: '订单支付方式',
+          dataIndex: 'order_type',
         },
         {
           title: '销售金额(元)',
-          dataIndex: 'zf_number',
-          needTotal: true
-        }
+          dataIndex: 'order_total',
+        },
+        {
+          title: '总优惠金额',
+          dataIndex: 'count_discount',
+        },
+        {
+          title: '实际金额(元)',
+          dataIndex: 'actually_paid',
+        },
+        {
+          title: '油品销售量升数',
+          dataIndex: 'order_liter',
+        },
+        {
+          title: '油品名称',
+          dataIndex: 'oils_name',
+        },
+        {
+          title: '枪号id',
+          dataIndex: 'oils_gunId',
+        },
+        {
+          title: '枪号名称',
+          dataIndex: 'oils_gunName',
+        },
+        {
+          title: '油品单价',
+          dataIndex: 'oils_money',
+        },
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        return getOrderList(deleteNullAttr(this.form))
+        let _params = {
+          page:1,
+          size:10
+        }
+        return getSelldetailList(deleteNullAttr(this.form,_params))
           .then(res => {
+            console.log(res.data.data)
             return {
-              data: res.data, // 列表数组
-              pageNo: this.form.page,  // 当前页码
-              pageSize:  this.form.limit,  // 每页页数
-              totalCount: res.countPage, // 列表总条数
-              totalPage: res.pageSize // 列表总页数
+              data: res.data.data, // 列表数组
+              pageNo: parameter.pageNo,  // 当前页码
+              pageSize:  parameter.pageSize,  // 每页页数
+              totalCount: res.data.total, // 列表总条数
+              totalPage: res.data.last_page // 列表总页数
             }
           })
       },
@@ -275,7 +200,8 @@ export default {
     }
   },
   created () {
-    // this.tableOption()
+    this.loadGunList()
+    this.loadOilList()
   },
   methods: {
     moment,
@@ -289,62 +215,32 @@ export default {
     onChangeTableOption(){
       
     },
-    toSearch(){
-      getOrderList(deleteNullAttr(this.form)).then(res=>{
-        console.log(res)
+    loadGunList () {
+      getGunList().then(res => {
+        this.gunList = res.data
       })
     },
-    handleSetOk(e) {
-      this.setConfirmLoading = true;
-      setTimeout(() => {
-        this.setVisible = false;
-        this.setConfirmLoading = false;
-      }, 2000);
+    loadOilList () {
+      getOilSetList().then(res => {
+        this.oilList = res.data.data
+      })
     },
-    handleSetCancel(e) {
-      this.setVisible = false;
-    },
-    advanceSearchChange(){
-      this.searchType == "高级搜索" ? this.searchType="点击收起" :　this.searchType="高级搜索" 
-    },
-    disabledDate(current) {
-      return current && current < moment().endOf('day');
-    },
-    disabledRangeTime(_, type) {
-      if (type === 'start') {
-        return {
-          disabledHours: () => this.range(0, 60).splice(4, 20),
-          disabledMinutes: () => this.range(30, 60),
-          disabledSeconds: () => [55, 56],
-        };
+    toSearch(){
+      if(this.form.time_type != 5){
+        this.form.star_time = '';
+        this.form.end_time = '';
       }
-      return {
-        disabledHours: () => this.range(0, 60).splice(20, 4),
-        disabledMinutes: () => this.range(0, 31),
-        disabledSeconds: () => [55, 56],
-      };
-    },
-    onChange(value){
-      value.target.value == 5 ? this.diyDate = true : this.diyDate = false
-    },
-    showEditTag (type) {
-      this.$refs['EditTag'].show(type)
-    },
-    tableOption () {
-      if (!this.optionAlertShow) {
-        this.options = {
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange
-          }
+      if(this.form.time_type == 5){
+        if(isEmpty(this.form.start_time)||isEmpty(this.form.end_time)){
+          this.$message.error("自定义时间不能为空");
+          return;
         }
-        this.optionAlertShow = true
-      } else {
-        this.options = {
-          rowSelection: null
-        }
-        this.optionAlertShow = false
       }
+      this.$refs.table.refresh()
+    },
+    timeChange (value, dateString) {
+      this.form.start_time = moment(this.diyTime[0]._d).format('YYYY-MM-DD')
+      this.form.end_time = moment(this.diyTime[1]._d).format('YYYY-MM-DD')
     },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
