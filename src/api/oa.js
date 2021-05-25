@@ -30,3 +30,12 @@ export function getSelldetailList(data) {
     data
   })
 }
+// 获取汇总统计
+
+export function getClassOrderList(data) {
+  return PhpRequest({
+    url: '/order/getclassorder',
+    method: 'post',
+    data
+  })
+}

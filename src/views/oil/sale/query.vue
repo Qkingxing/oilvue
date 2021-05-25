@@ -129,11 +129,36 @@ export default {
         },
         {
           title: '订单状态',
-          dataIndex: 'order_status'
+          dataIndex: 'order_status',
+          customRender: function (text) {
+            if (text == 1) {
+              return '交易成功'
+            } else if (text == 2) {
+              return '待支付'
+            } else if (text == 3) {
+              return '支付失败'
+            }
+          }
         },
         {
           title: '订单支付方式',
-          dataIndex: 'order_type',
+          customRender: function (text) {
+            if (text.order_type == 118) {
+              return '支付宝（商户被扫）'
+            } else if (text.order_type == 108) {
+              return '微信（商户主扫）'
+            } else if (text.order_type == 109) {
+              return '微信（小程序）'
+            } else if (text.order_type == 117) {
+              return '支付宝（商户主扫）'
+            } else if (text.order_type == 9) {
+              return '现金支付'
+            } else if (text.order_type == 10) {
+              return '银行卡支付'
+            } else if (text.order_type == 5) {
+              return '加油卡支付'
+            }
+          }
         },
         {
           title: '销售金额(元)',
