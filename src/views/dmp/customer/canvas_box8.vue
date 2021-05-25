@@ -1,5 +1,4 @@
 <template>
-
     <div id="canvas_box1" style="width:100%" ref="canvas_box17"></div>
 
   
@@ -57,7 +56,7 @@ export default {
       chart.axis('temperature', {
         label: {
           formatter: (val) => {
-            return val + ' °C'
+            return val + '个'
           },
         },
       })

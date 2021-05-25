@@ -16,7 +16,9 @@
           </div>
           <div class="price_info">
             <span class="price">{{ list.points_issued_number }}</span>
-            <span class="unit">人</span>
+            <span v-if="list.points_issued_name == '积分发放值' || list.points_issued_name == '积分消耗' ||  list.points_issued_name=='过期积分'" class="unit">分</span>
+             <span v-if="list.points_issued_name == '累计发放积分值' || list.points_issued_name == '累计有效积分' ||  list.points_issued_name=='累计积分消耗' ||list.points_issued_name=='累计过期积分' " class="unit">十万分</span>
+             <span v-if="list.points_issued_name=='有效积分人数'">人</span>
           </div>
           <div class="trend_info">
             <span>较上一周期</span>
@@ -57,12 +59,12 @@
         </a-popover>
       </div>
     </div>
-    <div class="trend-box" v-if="a == 1">
+    <div class="trend-box" v-if="a">
       <div class="canvas-boxs">
         <canvas_box8 :lineChart1='lineChart1' v-if='show'></canvas_box8>
       </div>
     </div>
-    <div class="trend-box" v-if="a == 2">
+    <div class="trend-box" v-if="!a">
       <div class="canvas-boxs">
         <canvas_box9 :lineChart2='lineChart2' v-if='show'></canvas_box9>
       </div>
@@ -83,7 +85,7 @@ export default {
       lineChart1:{},
       lineChart2:{},
       show:false,
-      a:1
+      a:true
     }
   },
    created(){
@@ -120,7 +122,7 @@ export default {
            })
        },
        bba(){
-         this.a = 2
+         this.a = !this.a
        }
    }
 

@@ -26,12 +26,22 @@ export default {
       this.biao()
     },
     methods:{
-      biao(){
-        return carinfo({time_type:1}).then(res =>{
+      biao(index,dateString){
+           if(index == 5){
+          let weekStarting_time = dateString[0]
+          let weekEnd_time = dateString[1]
+           return carinfo({time_type:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
+            this.arrBiao = res.data
+            console.log(this.arrBiao)
+            this.show = true
+          })
+        }
+        return carinfo({time_type:index?index:1}).then(res =>{
           this.arrBiao = res.data
           console.log(this.arrBiao)
           this.show = true
         })
+        
       }
     }
 }

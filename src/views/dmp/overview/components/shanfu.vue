@@ -15,20 +15,20 @@
       </div>
     </div>
     <div v-if="dateKey == '1'">
-      <times  :nums="nums" :index='dateKey' :lists="lists"></times>
+      <times :nums="nums" :index="dateKey" :lists="lists"></times>
     </div>
     <div class="time" v-if="dateKey == '2'">
-      <times1  :nums="nums" :index='dateKey' :lists="lists" ></times1>
+      <times1 :nums="nums" :index="dateKey" :lists="lists"></times1>
     </div>
 
     <div v-if="dateKey == '3'">
-      <times2  :nums="nums" :index='dateKey' :lists="lists" ></times2>
+      <times2 :nums="nums" :index="dateKey" :lists="lists"></times2>
     </div>
     <div v-if="dateKey == '4'">
-      <times3  :nums="nums" :index='dateKey' :lists="lists" ></times3>
+      <times3 :nums="nums" :index="dateKey" :lists="lists"></times3>
     </div>
     <div v-if="dateKey == '5'">
-      <times4  :nums="nums" :time='time'  :index='dateKey' :lists="lists" ></times4>
+      <times4 :nums="nums" :time="time" :index="dateKey" :lists="lists"></times4>
     </div>
   </div>
 </template>
@@ -42,7 +42,8 @@ import times3 from '../times3'
 import times4 from '../times4'
 import NumberCard from '../components/numberCard'
 import LineCharts from '../components/LineCharts'
-import {analysiss1} from '@/api/data'
+import { analysiss1 } from '@/api/data'
+import { dashboard } from '@/api/data'
 export default {
   props: ['lists'],
   name: 'Dashboard',
@@ -72,55 +73,142 @@ export default {
       noTitleKey: 'quanbu',
       dateKey: '1',
       show: false,
-      nums:{},
-      lists1:[],
-      lineChart1:{},
-      oilsMoney:{},
-      oilsNumber:{},
-      paysMoney:{},
-      paysNumber:{},
-      time:[]
+      nums: {},
+      lists1: [],
+      lineChart1: {},
+      oilsMoney: {},
+      oilsNumber: {},
+      paysMoney: {},
+      paysNumber: {},
+      time: [],
     }
   },
 
   mounted() {},
   created() {
-     this.analysis()
+    this.analysis()
   },
   methods: {
-   
-     analysis(index){
-       if(index){
-           let weekStarting = index[0]
-           let weekEnd_time = index[1]
-           return analysiss1({time_status:5,weekStarting:weekStarting,weekEnd_time:weekEnd_time}).then(res=>{
+    analysis(index) {
+      if (index) {
+        let weekStarting = index[0]
+        let weekEnd_time = index[1]
+        return analysiss1({ time_status: 5, weekStarting: weekStarting, weekEnd_time: weekEnd_time }).then((res) => {
           this.lineChart1 = res.data.lineChart1
           this.oilsMoney = res.data.oilsMoney
           this.oilsNumber = res.data.oilsNumber
           this.paysMoney = res.data.paysMoney
           this.paysNumber = res.data.paysNumber
-          this.lists1.push(this.oilsMoney,this.oilsNumber,this.paysMoney,this.paysNumber)
-         this.show = true
+          this.lists1.push(this.oilsMoney, this.oilsNumber, this.paysMoney, this.paysNumber)
+          this.show = true
         })
         return
-       }
-        return analysiss1({time_status:1}).then(res=>{
-          this.lineChart1 = res.data.lineChart1
-          this.oilsMoney = res.data.oilsMoney
-          this.oilsNumber = res.data.oilsNumber
-          this.paysMoney = res.data.paysMoney
-          this.paysNumber = res.data.paysNumber
-          this.lists1.push(this.oilsMoney,this.oilsNumber,this.paysMoney,this.paysNumber)
-         this.show = true
+      }
+      return analysiss1({ time_status: 1 }).then((res) => {
+        this.lineChart1 = res.data.lineChart1
+        this.oilsMoney = res.data.oilsMoney
+        this.oilsNumber = res.data.oilsNumber
+        this.paysMoney = res.data.paysMoney
+        this.paysNumber = res.data.paysNumber
+        this.lists1.push(this.oilsMoney, this.oilsNumber, this.paysMoney, this.paysNumber)
+        this.show = true
+      })
+    },
+    setDatas(index, type, dateString) {
+      if ((index, type, dateString)) {
+        let weekEnd_time = dateString[0]
+        let weekStarting = dateString[1]
+        return dashboard({ time_type: index, type: type, weekEnd_time: weekEnd_time, weekStarting: weekStarting }).then(
+          (res) => {
+            var json = {
+              销售总收入: '今天截止此时的销售总收入',
+              实际销售收入: '今天截止此时的实际销售收入',
+              油品销售收入: '今天截止此时的油品销售收入',
+              闪付销售收入: '今天截止此时的闪付销售收入',
+              加油卡充值收入: '今天截止此时的加油卡充值收入',
+              便利店销售收入: '今天截止此时的便利店销售收入',
+              便利店积分收入: '今天截止此时的便利店积分收入',
+              订单总数: '今天截止此时的订单总数',
+              油品订单数: '今天截止此时的油品订单数',
+              闪付订单数: '今天截止此时的闪付订单数',
+              加油卡充值订单数: '今天截止此时的加油卡充值订单数',
+              便利店订单数: '今天截止此时的便利店订单数',
+              '总加油量（升）': '今天截止此时的总加油量（升）',
+              营销成本: '今天截止此时的营销成本',
+              客单价: '今天截止此时的客单价',
+            }
+            this.lists = res.data.map((e, index) => {
+              let object = e
+              for (const key in object) {
+                if (key != 'orderName' && key != 'comparedName' && key != 'Compared') {
+                  object.number = object[key]
+                  break
+                }
+              }
+              // 在 lists 对象里面添加 json对象值
+              e['value'] = json[object['orderName']]
+              return object
+            })
+          }
+        )
+      }
+      return dashboard({ time_type: index, type: type }).then((res) => {
+        var json = {
+          销售总收入: '今天截止此时的销售总收入',
+          实际销售收入: '今天截止此时的实际销售收入',
+          油品销售收入: '今天截止此时的油品销售收入',
+          闪付销售收入: '今天截止此时的闪付销售收入',
+          加油卡充值收入: '今天截止此时的加油卡充值收入',
+          便利店销售收入: '今天截止此时的便利店销售收入',
+          便利店积分收入: '今天截止此时的便利店积分收入',
+          订单总数: '今天截止此时的订单总数',
+          油品订单数: '今天截止此时的油品订单数',
+          闪付订单数: '今天截止此时的闪付订单数',
+          加油卡充值订单数: '今天截止此时的加油卡充值订单数',
+          便利店订单数: '今天截止此时的便利店订单数',
+          '总加油量（升）': '今天截止此时的总加油量（升）',
+          营销成本: '今天截止此时的营销成本',
+          客单价: '今天截止此时的客单价',
+        }
+        this.lists = res.data.map((e, index) => {
+          let object = e
+          for (const key in object) {
+            if (key != 'orderName' && key != 'comparedName' && key != 'Compared') {
+              object.number = object[key]
+              break
+            }
+          }
+          // 在 lists 对象里面添加 json对象值
+          e['value'] = json[object['orderName']]
+          return object
         })
+      })
+    },
+    changeDate(key) {
+      this.dateKey = key
+      if (key == '1') {
+        this.setDatas(1, sessionStorage.getItem('type'))
+      }
+      if (key == '2') {
+        this.setDatas(2, sessionStorage.getItem('type'))
+      }
+      if (key == '3') {
+        this.setDatas(3, sessionStorage.getItem('type'))
+      }
+      if (key == '4') {
+        this.setDatas(4, sessionStorage.getItem('type'))
+      }
+
+      sessionStorage.setItem('key', key)
     },
     onChange(date, dateString) {
       this.setData(dateString, 1)
       this.analysis(dateString)
+      this.setDatas(5, sessionStorage.getItem('key'), dateString)
     },
 
     setData(index, time) {
-        this.time = index
+      this.time = index
     },
     income(index) {
       if (index == 1) {
@@ -136,11 +224,11 @@ export default {
         return
       }
     },
-    changeDate(key) {
-      this.dateKey = key
-      console.log(key,'哈哈哈')
-      sessionStorage.setItem('key',key)
-    },
+    // changeDate(key) {
+    //   this.dateKey = key
+    //   console.log(key, '哈哈哈')
+    //   sessionStorage.setItem('key', key)
+    // },
   },
 }
 </script>
@@ -163,7 +251,7 @@ export default {
     border-radius: 4px;
 
     &:hover {
-      color: #7C7EE2;
+      color: #7c7ee2;
       transition: all 0.5s;
     }
 

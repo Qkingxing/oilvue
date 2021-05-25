@@ -99,8 +99,8 @@ export function carinfo(data){
 // 客户积分 
 
 export function statistics(data){
-    return JavaRequest({
-        url:'/data/get_points_statistics',
+    return PhpRequest({
+        url:'/set/customerIntegralup',
         method:'post',
         data
     })

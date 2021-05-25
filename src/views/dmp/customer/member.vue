@@ -25,12 +25,26 @@ export default {
     this.members()
   },
   methods:{
-    members(){
-      return member({time_status:'1'}).then(res =>{
-        this.arrs = res.data
+    members(index){
+        //  if(index == 5){
+        //   let weekStarting_time = dateString[0]
+        //   let weekEnd_time = dateString[1]
+        //    return member({time_type:5,weekStarting_time:weekStarting_time,weekEnd_time:weekEnd_time}).then(res =>{
+        //     this.arrBiao = res.data
+        //     console.log(this.arrBiao)
+        //     this.show = true
+        //   })
+        // }
+        return member({time_status:index?index:1}).then(res =>{
+            this.arrs = res.data
         console.log(this.arrs)
         this.show = true
-      })
+        })
+    //   return member({time_status:'1'}).then(res =>{
+    //     this.arrs = res.data
+    //     console.log(this.arrs)
+    //     this.show = true
+    //   })
     }
   }
 }

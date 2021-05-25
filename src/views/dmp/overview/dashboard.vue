@@ -11,7 +11,7 @@
         </a-card>
 
         <div>
-          <component :lists="lists" :is="view"></component>
+          <component ref="all" :lists="lists" :is="view"></component>
         </div>
       </a-card>
     </a-layout-content>
@@ -126,24 +126,32 @@ export default {
     onTabChange(key, type) {
       if (key == 'quanbu') {
           this.setData()
+          
         this.view = 'all'
-        
         sessionStorage.setItem('key',1)
+        sessionStorage.setItem('type','')
+
       } else if (key == 'youpin') {
+
         this.view = 'oils'
         this.setData(1)
-        
         sessionStorage.setItem('key',1)
+         sessionStorage.setItem('type',1)
+
       } else if (key == 'shanfu') {
         this.view = 'shanfu'
         this.setData(3)
         sessionStorage.setItem('key',1)
+         sessionStorage.setItem('type',2)
+
       } else if (key == 'tuanyou') {
         this.view = 'tuanyou'
       } else if (key == 'bianlidian') {
+          
         this.view = 'bianlidian'
         this.setData(2)
         sessionStorage.setItem('key',1)
+         sessionStorage.setItem('type',3)
       } else {
         this.view = 'all'
       }

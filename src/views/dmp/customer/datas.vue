@@ -97,24 +97,13 @@ export default {
         },
         {
           key: 'tab3',
-          tab: '7天',
+          tab: '本周',
         },
         {
           key: 'tab4',
-          tab: '30天',
+          tab: '本月',
         },
-        {
-          key: 'tab5',
-          tab: '日',
-        },
-        {
-          key: 'tab6',
-          tab: '周',
-        },
-        {
-          key: 'tab7',
-          tab: '月',
-        },
+        
       ],
       key: 'tab1',
       style: { width: '200px' },
@@ -122,8 +111,22 @@ export default {
   },
   methods: {
     onTabChange(key, type) {
-      console.log(key, type)
+    
       this[type] = key
+      if(this[type] == 'tab1'){
+          
+           this.$parent.members(1)
+      }
+      if(this[type] == 'tab2'){
+          console.log(this.$parent)
+          this.$parent.members(2)
+      }
+      if(this[type] == 'tab3'){
+          this.$parent.members(3)
+      }
+      if(this[type] == 'tab4'){
+          this.$parent.members(3)
+      }
     },
   },
 }
@@ -153,7 +156,7 @@ export default {
   .dev {
     position: relative;
     top: -38px;
-    left: 352px;
+    left: 359px;
     height: 0;
     margin-left: 7px;
     font-size: 12px;
@@ -164,7 +167,7 @@ export default {
     position: relative;
     height: 0;
     top: -38px;
-    left: 253px;
+    left: 264px;
     margin-left: 7px;
     font-size: 12px;
     color: #cbcbcb;

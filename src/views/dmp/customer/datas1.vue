@@ -1,111 +1,317 @@
 <template>
-  <div class="shijian">
-    <a-card
-      style="width: 100%"
-      :tab-list="tabList"
-      :active-tab-key="key"
-      loading
-      @tabChange="(key) => onTabChange(key, 'key')"
-    >
-      <span slot="customRender" slot-scope="item">
-        {{ item.key }}
-      </span>
-    </a-card>
-    <div class="dev1">
-      <i class="more_info anticon anticon-question-circle">
-        <a-popover overlayClassName="note">
-          <template slot="content">
-            <div class="" style="width: 200px">
-              <p>往前7天（不包含今日）</p>
+
+
+  <div class="times">
+    <div style=" display: flex;">
+      <div class="searchs" style="margin-top: 15px">
+        <div
+          class="search-lis"
+          :key="item.key"
+          v-for="item in dates"
+          :class="`${item.key == dateKey ? 'actives' : ''}`"
+          @click="changeDate(item.key)"
+        >
+          {{ item.name }}
+        </div>
+      </div>
+      <div class="shijian" v-if="show1">
+        <a-range-picker @change="onChange" />
+      </div>
+    </div>
+
+    <div v-if="dateKey == 'jintian'">
+        <div class="headr_char">
+            <div class="chart_treema_box">
+            <span class="span">认证类型占比</span>
+            <canvas_box2 :arrBiao='arrBiao'></canvas_box2>
             </div>
-          </template>
-          <span class="anticon">
-            <a-icon type="question-circle" />
-          </span>
-        </a-popover>
-      </i>
-    </div>
-    <div class="dev">
-      <i class="more_info anticon anticon-question-circle">
-        <a-popover overlayClassName="note">
-          <template slot="content">
-            <div class="" style="width: 200px">
-              <p>往前30天（不包含今日）</p>
+            <div class="chart_line_box">
+            <span class="span">新增认证人数折线图</span>
+            <canvas_box3 :arrBiao='arrBiao'></canvas_box3>
             </div>
-          </template>
-          <span class="anticon">
-            <a-icon type="question-circle" />
-          </span>
-        </a-popover>
-      </i>
+        </div>
+        <div class="head_title">
+            <div class="title_top_size">消费人数趋势</div>
+            <div class="xiaofei">
+                <a-popover placement="bottom">
+                    <template slot="content">
+                    <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+                        
+                        <span @click="pie" style="cursor: pointer">消费金额趋势</span>
+                    </div>
+                    </template>
+
+                    <!-- <a-button >切换</a-button> -->
+                </a-popover>
+            </div>
+        </div>
+        <div class="draw_chart_line_center" v-if="a">
+            <canvas_box4 :arrBiao='arrBiao'></canvas_box4>
+        </div>
+         <div class="draw_chart_line_center" v-if="!a">
+            <canvas_box4 :arrBiao='arrBiao'></canvas_box4>
+        </div>
+        <div class="head_title">
+            <div class="title_top_size">
+            <div class="">
+                车辆认证整体数据
+                <i class="more_info anticon anticon-question-circle">
+                <a-popover title="会员人数" overlayClassName="note">
+                    <template slot="content">
+                    <div class="" style="width: 200px">
+                        <p>查询时间内的累计会员人数（没有去除查询时间内会员等级失效的人数）</p>
+                    </div>
+                    </template>
+                    <span class="anticon">
+                    <a-icon type="question-circle" />
+                    </span>
+                </a-popover>
+                </i>
+            </div>
+            <!-- <a-button>导出数据</a-button> -->
+            </div>
+        </div>
+        <div class="page-content">
+            <a-table style="margin-top: 8px" :columns="columns" :data-source="[]" />
+        </div>
     </div>
 
-    <div
-      v-if="
-        key === 'tab1' ||
-        key === 'tab2' ||
-        key === 'tab3' ||
-        key === 'tab4' ||
-        key === 'tab5' ||
-        key === 'tab6' ||
-        key === 'tab7'
-      "
-    >
-      <div class="headr_char">
-        <div class="chart_treema_box">
-          <span class="span">认证类型占比</span>
-           <canvas_box2 :arrBiao='arrBiao'></canvas_box2>
-        </div>
-        <div class="chart_line_box">
-          <span class="span">新增认证人数折线图</span>
-          <canvas_box3 :arrBiao='arrBiao'></canvas_box3>
-        </div>
-      </div>
-      <div class="head_title">
-        <div class="title_top_size">消费人数趋势</div>
-        <div class="xiaofei">
-          <a-popover placement="bottom">
-            <template slot="content">
-              <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
-                
-                <span style="cursor: pointer">消费金额趋势</span>
-              </div>
-            </template>
 
-            <a-button>切换</a-button>
-          </a-popover>
+
+ 
+
+
+
+
+
+
+
+
+
+    <div v-if="dateKey == 'zuotian'">
+       <div class="headr_char">
+            <div class="chart_treema_box">
+            <span class="span">认证类型占比</span>
+            <canvas_box2 :arrBiao='arrBiao'></canvas_box2>
+            </div>
+            <div class="chart_line_box">
+            <span class="span">新增认证人数折线图</span>
+            <canvas_box3 :arrBiao='arrBiao'></canvas_box3>
+            </div>
         </div>
-      </div>
-      <div class="draw_chart_line_center">
-           <canvas_box4 :arrBiao='arrBiao'></canvas_box4>
-      </div>
-      <div class="head_title">
-        <div class="title_top_size">
-          <div class="">
-            车辆认证整体数据
-            <i class="more_info anticon anticon-question-circle">
-              <a-popover title="会员人数" overlayClassName="note">
-                <template slot="content">
-                  <div class="" style="width: 200px">
-                    <p>查询时间内的累计会员人数（没有去除查询时间内会员等级失效的人数）</p>
-                  </div>
-                </template>
-                <span class="anticon">
-                  <a-icon type="question-circle" />
-                </span>
-              </a-popover>
-            </i>
-          </div>
-          <a-button>导出数据</a-button>
+        <div class="head_title">
+            <div class="title_top_size">消费人数趋势</div>
+            <div class="xiaofei">
+                <a-popover placement="bottom">
+                    <template slot="content">
+                    <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+                        
+                        <span style="cursor: pointer">消费金额趋势</span>
+                    </div>
+                    </template>
+
+                    <!-- <a-button @click="pie">切换</a-button> -->
+                </a-popover>
+            </div>
         </div>
-      </div>
-      <div class="page-content">
-        <a-table style="margin-top: 8px" :columns="columns" :data-source="[]" />
-      </div>
+        <div class="draw_chart_line_center" v-if="a">
+            <canvas_box4 :arrBiao='arrBiao'></canvas_box4>
+        </div>
+        <div class="draw_chart_line_center" v-if="!a">
+            <canvas_box4 :arrBiao='arrBiao'></canvas_box4>
+        </div>
+        <div class="head_title">
+            <div class="title_top_size">
+            <div class="">
+                车辆认证整体数据
+                <i class="more_info anticon anticon-question-circle">
+                <a-popover title="会员人数" overlayClassName="note">
+                    <template slot="content">
+                    <div class="" style="width: 200px">
+                        <p>查询时间内的累计会员人数（没有去除查询时间内会员等级失效的人数）</p>
+                    </div>
+                    </template>
+                    <span class="anticon">
+                    <a-icon type="question-circle" />
+                    </span>
+                </a-popover>
+                </i>
+            </div>
+            <!-- <a-button>导出数据</a-button> -->
+            </div>
+        </div>
+        <div class="page-content">
+            <a-table style="margin-top: 8px" :columns="columns" :data-source="[]" />
+        </div>
     </div>
+    <div v-if="dateKey == 'benzhou'">
+        <div class="headr_char">
+            <div class="chart_treema_box">
+            <span class="span">认证类型占比</span>
+            <canvas_box2 :arrBiao='arrBiao'></canvas_box2>
+            </div>
+            <div class="chart_line_box">
+            <span class="span">新增认证人数折线图</span>
+            <canvas_box3 :arrBiao='arrBiao'></canvas_box3>
+            </div>
+        </div>
+        <div class="head_title">
+            <div class="title_top_size">消费人数趋势</div>
+            <div class="xiaofei">
+                <a-popover placement="bottom">
+                    <template slot="content">
+                    <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+                        
+                        <span @click="pie" style="cursor: pointer">消费金额趋势</span>
+                    </div>
+                    </template>
 
-    <div></div>
+                    <!-- <a-button>切换</a-button> -->
+                </a-popover>
+            </div>
+        </div>
+        <div class="draw_chart_line_center">
+            <canvas_box4 :arrBiao='arrBiao'></canvas_box4>
+        </div>
+        <div class="head_title">
+            <div class="title_top_size">
+            <div class="">
+                车辆认证整体数据
+                <i class="more_info anticon anticon-question-circle">
+                <a-popover title="会员人数" overlayClassName="note">
+                    <template slot="content">
+                    <div class="" style="width: 200px">
+                        <p>查询时间内的累计会员人数（没有去除查询时间内会员等级失效的人数）</p>
+                    </div>
+                    </template>
+                    <span class="anticon">
+                    <a-icon type="question-circle" />
+                    </span>
+                </a-popover>
+                </i>
+            </div>
+            <!-- <a-button>导出数据</a-button> -->
+            </div>
+        </div>
+        <div class="page-content">
+            <a-table style="margin-top: 8px" :columns="columns" :data-source="[]" />
+        </div>
+    </div>
+    <div v-if="dateKey == 'benyue'">
+        <div class="headr_char">
+            <div class="chart_treema_box">
+            <span class="span">认证类型占比</span>
+            <canvas_box2 :arrBiao='arrBiao'></canvas_box2>
+            </div>
+            <div class="chart_line_box">
+            <span class="span">新增认证人数折线图</span>
+            <canvas_box3 :arrBiao='arrBiao'></canvas_box3>
+            </div>
+        </div>
+        <div class="head_title">
+            <div class="title_top_size">消费人数趋势</div>
+            <div class="xiaofei">
+                <a-popover placement="bottom">
+                    <template slot="content">
+                    <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+                        
+                        <span @click="pie" style="cursor: pointer">消费金额趋势</span>
+                    </div>
+                    </template>
+
+                    <!-- <a-button>切换</a-button> -->
+                </a-popover>
+            </div>
+        </div>
+        <div class="draw_chart_line_center">
+            <canvas_box4 :arrBiao='arrBiao'></canvas_box4>
+        </div>
+        <div class="head_title">
+            <div class="title_top_size">
+            <div class="">
+                车辆认证整体数据
+                <i class="more_info anticon anticon-question-circle">
+                <a-popover title="会员人数" overlayClassName="note">
+                    <template slot="content">
+                    <div class="" style="width: 200px">
+                        <p>查询时间内的累计会员人数（没有去除查询时间内会员等级失效的人数）</p>
+                    </div>
+                    </template>
+                    <span class="anticon">
+                    <a-icon type="question-circle" />
+                    </span>
+                </a-popover>
+                </i>
+            </div>
+            <a-button>导出数据</a-button>
+            </div>
+        </div>
+        <div class="page-content">
+            <a-table style="margin-top: 8px" :columns="columns" :data-source="[]" />
+        </div>
+    </div>
+    <div v-if="dateKey == 'zidingyi'">
+       <div class="headr_char">
+            <div class="chart_treema_box">
+            <span class="span">认证类型占比</span>
+            <canvas_box2 :arrBiao='arrBiao'></canvas_box2>
+            </div>
+            <div class="chart_line_box">
+            <span class="span">新增认证人数折线图</span>
+            <canvas_box3 :arrBiao='arrBiao'></canvas_box3>
+            </div>
+        </div>
+        <div class="head_title">
+            <div class="title_top_size">消费人数趋势</div>
+            <div class="xiaofei">
+                <a-popover placement="bottom">
+                    <template slot="content">
+                    <div class="text" style="display: flex; flex-direction: column; text-align: center; margin-top: 0">
+                        
+                        <span @click="pie" style="cursor: pointer">消费金额趋势</span>
+                    </div>
+                    </template>
+
+                    <!-- <a-button>切换</a-button> -->
+                </a-popover>
+            </div>
+        </div>
+        <div class="draw_chart_line_center">
+            <canvas_box4 :arrBiao='arrBiao'></canvas_box4>
+        </div>
+        <div class="head_title">
+            <div class="title_top_size">
+            <div class="">
+                车辆认证整体数据
+                <i class="more_info anticon anticon-question-circle">
+                <a-popover title="会员人数" overlayClassName="note">
+                    <template slot="content">
+                    <div class="" style="width: 200px">
+                        <p>查询时间内的累计会员人数（没有去除查询时间内会员等级失效的人数）</p>
+                    </div>
+                    </template>
+                    <span class="anticon">
+                    <a-icon type="question-circle" />
+                    </span>
+                </a-popover>
+                </i>
+            </div>
+            <!-- <a-button>导出数据</a-button> -->
+            </div>
+        </div>
+        <div class="page-content">
+            <a-table style="margin-top: 8px" :columns="columns" :data-source="[]" />
+        </div> 
+    </div>
   </div>
+
+
+
+ 
+
+
+
+   
 </template>
 
 <script>
@@ -117,39 +323,19 @@ export default {
   components:{canvas_box2,canvas_box3,canvas_box4},
   data() {
     return {
-      tabList: [
-        {
-          key: 'tab1',
-          tab: '今日',
-          scopedSlots: { tab: 'customRender' },
-        },
-        {
-          key: 'tab2',
-          tab: '昨日',
-        },
-        {
-          key: 'tab3',
-          tab: '7天',
-        },
-        {
-          key: 'tab4',
-          tab: '30天',
-        },
-        {
-          key: 'tab5',
-          tab: '日',
-        },
-        {
-          key: 'tab6',
-          tab: '周',
-        },
-        {
-          key: 'tab7',
-          tab: '月',
-        },
+        a:true,
+        dateKey: 'jintian',
+        index:1,
+        dateString:[],
+        show1:false,
+        dates: [
+        { key: 'jintian', name: '今日' },
+        { key: 'zuotian', name: '本周' },
+        { key: 'benzhou', name: '本月' },
+        { key: 'benyue', name: '上月' },
+        { key: 'zidingyi', name: '自定义' },
+        
       ],
-      key: 'tab1',
-      style: { width: '200px' },
       columns: [
         {
           title: '日期',
@@ -205,17 +391,52 @@ export default {
     }
   },
   methods: {
-    onTabChange(key, type) {
-      console.log(key, type)
-      this[type] = key
+    changeDate(key) {
+       if(key == 'jintian'){
+		   this.show1 = false
+           this.index = 1
+		   this.$parent.biao(1)
+           
+       }
+       if(key == 'zuotian'){
+	    this.show1 = false
+        this.index = 2
+         this.$parent.biao(2)
+       
+       }
+        if(key == 'benzhou'){
+		this.show1 = false
+        this.index = 3
+        this.$parent.biao(3)
+       }
+        if(key == 'benyue'){
+		this.show1 = false
+        this.index = 4
+         this.$parent.biao(4)
+        
+       }
+	   if(key == 'zidingyi'){
+		   this.show1 = true
+           this.index = 5
+	   }
+      this.dateKey = key
     },
-    income() {},
+      onChange(date, dateString) {
+
+        this.$parent.biao(5,dateString)
+      
+    },
+    pie(){
+        this.a = !this.a
+    }
   },
 }
 </script>
 
 <style lang='scss' scoped>
-  .ant-btn {
+
+.times {
+    .ant-btn {
     border: 1px solid transparent; //自定义边框
     outline: none; //消除默认点击蓝色边框效果
     color: #7C7EE2;
@@ -237,7 +458,51 @@ export default {
       cursor: pointer;
     }
   }
-.shijian {
+  .shijian {
+ 
+    .ant-calendar-picker {
+      width: 240px;
+      padding-top: 15px;
+      padding-left: 10px;
+      .ant-input {
+        display: block;
+        height: 40px;
+      }
+    }
+  }
+}
+
+.searchs {
+  width: 300px;
+  height: 40px;
+  border: 1px solid #eaeaf4;
+  display: flex;
+  align-items: center;
+
+  .search-lis {
+    width: 100px;
+    border-right: 1px solid #eaeaf4;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #040a46;
+    font-size: 16px;
+    cursor: pointer;
+
+    &:hover {
+      color: #7C7EE2;
+    }
+
+    &.actives {
+      //   width: ;100px
+      width: 100px;
+      color: #3c85ff;
+      border: 1px solid;
+      background: #ecf3ff;
+    }
+   
+  }
+}
   .ant-card {
     border-top: none;
     border-right: none;
@@ -367,5 +632,10 @@ export default {
       border: none;
     }
   }
-}
+
+ 
+
+
+
+
 </style>

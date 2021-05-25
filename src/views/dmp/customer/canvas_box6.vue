@@ -65,7 +65,7 @@ export default {
       chart.axis('temperature', {
         label: {
           formatter: (val) => {
-            return val + ' °C'
+            return val + '个'
           },
         },
       })

@@ -43,6 +43,7 @@ import times4 from '../times4'
 import NumberCard from '../components/numberCard'
 import LineCharts from '../components/LineCharts'
 import {analysiss1} from '@/api/data'
+import { dashboard } from '@/api/data'
 export default {
   props: ['lists'],
   name: 'Dashboard',
@@ -114,9 +115,85 @@ export default {
          this.show = true
         })
     },
+      setDatas(index,type,dateString) {
+   
+            if(index,type,dateString){
+             let weekEnd_time = dateString[0]
+            let weekStarting = dateString[1]
+            return dashboard({ time_type: index, type: type, weekEnd_time:weekEnd_time,weekStarting:weekStarting}).then((res) => {
+            var json = {
+                销售总收入: '今天截止此时的销售总收入',
+                实际销售收入: '今天截止此时的实际销售收入',
+                油品销售收入: '今天截止此时的油品销售收入',
+                闪付销售收入: '今天截止此时的闪付销售收入',
+                加油卡充值收入: '今天截止此时的加油卡充值收入',
+                便利店销售收入: '今天截止此时的便利店销售收入',
+                便利店积分收入: '今天截止此时的便利店积分收入',
+                订单总数: '今天截止此时的订单总数',
+                油品订单数: '今天截止此时的油品订单数',
+                闪付订单数: '今天截止此时的闪付订单数',
+                加油卡充值订单数: '今天截止此时的加油卡充值订单数',
+                便利店订单数: '今天截止此时的便利店订单数',
+                '总加油量（升）': '今天截止此时的总加油量（升）',
+                营销成本: '今天截止此时的营销成本',
+                客单价: '今天截止此时的客单价',
+            }
+            this.lists = res.data.map((e, index) => {
+                let object = e
+                for (const key in object) {
+                if (key != 'orderName' && key != 'comparedName' && key != 'Compared') {
+                    object.number = object[key]
+                    break
+                }
+                }
+                // 在 lists 对象里面添加 json对象值
+                e['value'] = json[object['orderName']]
+                return object
+            })
+            })
+            }
+             return dashboard({ time_type: index, type: type }).then((res) => {
+            var json = {
+                销售总收入: '今天截止此时的销售总收入',
+                实际销售收入: '今天截止此时的实际销售收入',
+                油品销售收入: '今天截止此时的油品销售收入',
+                闪付销售收入: '今天截止此时的闪付销售收入',
+                加油卡充值收入: '今天截止此时的加油卡充值收入',
+                便利店销售收入: '今天截止此时的便利店销售收入',
+                便利店积分收入: '今天截止此时的便利店积分收入',
+                订单总数: '今天截止此时的订单总数',
+                油品订单数: '今天截止此时的油品订单数',
+                闪付订单数: '今天截止此时的闪付订单数',
+                加油卡充值订单数: '今天截止此时的加油卡充值订单数',
+                便利店订单数: '今天截止此时的便利店订单数',
+                '总加油量（升）': '今天截止此时的总加油量（升）',
+                营销成本: '今天截止此时的营销成本',
+                客单价: '今天截止此时的客单价',
+            }
+            this.lists = res.data.map((e, index) => {
+                let object = e
+                for (const key in object) {
+                if (key != 'orderName' && key != 'comparedName' && key != 'Compared') {
+                    object.number = object[key]
+                    break
+                }
+                }
+                // 在 lists 对象里面添加 json对象值
+                e['value'] = json[object['orderName']]
+                return object
+            })
+            })
+       
+      
+        
+        
+       
+
+    },
     onChange(date, dateString) {
       this.setData(dateString, 1)
-      this.analysis(dateString)
+      
+      this.setDatas(5,sessionStorage.getItem('key'),dateString)
     },
 
     setData(index, time) {
@@ -138,6 +215,19 @@ export default {
     },
     changeDate(key) {
       this.dateKey = key
+       if (key == '1') {
+        this.setDatas(1,sessionStorage.getItem('type'))
+      }
+      if (key == '2') {
+   this.setDatas(2,sessionStorage.getItem('type'))
+      }
+      if (key == '3') {
+this.setDatas(3,sessionStorage.getItem('type'))
+      }
+      if (key == '4') {
+       this.setDatas(4,sessionStorage.getItem('type'))
+      }
+
       console.log(key,'哈哈哈')
       sessionStorage.setItem('key',key)
     },
