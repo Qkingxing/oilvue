@@ -5,29 +5,34 @@
       v-if="!$route.query.activityId"
       :style="{ padding: '0 24px 24px 24px', background: '#fff', minHeight: '600px', position: 'relative' }">
 
-      <a-tabs default-active-key="1">
-        <a-tab-pane key="1" tab="进行中">
+      <a-tabs v-model="tabActive">
+        <a-tab-pane :key="1" tab="进行中">
           <ActiveTable 
+            v-if="tabActive==1"
             ref="ActiveTable"
             :status="1" />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="审批中">
+        <a-tab-pane :key="2" tab="审批中">
           <ActiveTable 
+            v-if="tabActive==2"
             ref="ActiveTable"
             :status="2" />
         </a-tab-pane>
-        <a-tab-pane key="3" tab="待开始">
+        <a-tab-pane :key="3" tab="待开始">
           <ActiveTable 
+            v-if="tabActive==3"
             ref="ActiveTable"
             :status="3" />
         </a-tab-pane>
-        <a-tab-pane key="4" tab="被取消">
+        <a-tab-pane :key="4" tab="被取消">
           <ActiveTable 
+            v-if="tabActive==4"
             ref="ActiveTable"
             :status="4" />
         </a-tab-pane>
-        <a-tab-pane key="5" tab="已结束">
+        <a-tab-pane :key="5" tab="已结束">
           <ActiveTable 
+            v-if="tabActive==5"
             ref="ActiveTable"
             :status="5" />
         </a-tab-pane>
@@ -52,7 +57,7 @@ export default {
   },
   data () {
     return {
-
+      tabActive: 1,
 
     }
   },

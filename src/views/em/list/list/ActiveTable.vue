@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <div class="filterContentContainer">
       <div class="screen">
         <!-- <a-range-picker show-time></a-range-picker> -->
@@ -106,6 +106,7 @@ export default {
   },
   data(){
     return {
+      loading: false,
       activeType,
       activity_name: '',
       // 表头
@@ -147,6 +148,7 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
+        this.loading = true
         // console.log('loadData.parameter', parameter)
         let params = {
           page: parameter.pageNo, // 页码
@@ -157,6 +159,7 @@ export default {
         }
         return getActivitlist(Object.assign(params)).then(res => {
           // console.log(res.data.list)
+          this.loading = false
           return {
             data: res.data.list, // 列表数组
             pageNo: parameter.pageNo,  // 当前页码
