@@ -268,22 +268,9 @@
           return;
         }
         addGoods(this.form).then(res=>{
-          if(type=="up"){
-            // let _param={
-            //   id:item.id,
-            //   state:item.state==1?2:1
-            // }
-            // modifyGoodsState().then(res=>{
-            //   this.$message.success("上架成功")
-            // })
-          }else{
-            this.$message.success("添加商品成功")
-            // this.$emit("addOver");
-          }
+          this.$message.success("添加商品成功")
+          this.$emit("addOver");
         })
-      },
-      createAndUp(){
-        this.createGoods('up')
       },
       reBack(){
         this.$emit("reBack");

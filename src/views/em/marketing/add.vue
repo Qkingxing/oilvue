@@ -173,6 +173,7 @@
             :label-col="formItemLayout.labelCol"
             :wrapper-col="formItemLayout.wrapperCol"
             label="使用门槛"
+            v-if="volume_type == 1"
           >
             <span>消费</span>
             <a-select
@@ -383,7 +384,7 @@ export default {
       // 这两个参数值antd自带的参数
     },
     disabledDate (current) {
-      return current && current < moment().endOf('day')
+      return current && current <= moment().endOf('day').subtract(1, 'days')
     },
     disabledRangeTime (_, type) {
       if (type === 'start') {
@@ -491,7 +492,7 @@ export default {
       }
       this.post_obj.coupons_limit = this.coupons_limit.length == 1 ? this.coupons_limit[0] : 3
       // this.post_obj.limit_time = this.limit_time
-      if (this.oilChooseList.length == 0) {
+      if (this.volume_type == 1 && this.oilChooseList.length == 0) {
         this.$message.error('请选择门槛油品');
         return
       }
