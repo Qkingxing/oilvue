@@ -60,29 +60,45 @@
                 <a-alert v-if="form.threshold_err" type="error" message="请输入大于等于0的金额，支持两位小数" banner />
               </div>
             </div>
-            <div class="setting-item">
+
+            <div class="setting-item" style="height: auto; align-items: flex-start;">
               <div class="setting-title">成长值累积规则</div>
               <div class="setting-content" >
-                <div class="growth-rule flex items-center" :class="{'error':form.cumulative_err}">
+                <div 
+                  class="growth-rule flex items-center" 
+                  :class="{'error':item.cumulative_err}"
+                  v-for="(item,index) in form.rules_oils_id" :key="index">
+
                   <el-select 
                     multiple 
                     collapse-tags 
-                    v-model="form.rules_oils_id"
-                    @change="selectAlloil"
+                    v-model="item.oil_id"
+                    @change="(val)=>selectAlloil(val,index)"
                     placeholder="请选择油品类型" 
                     style="width: 220px;margin-right: 10px;">
-                    <el-option v-for="(oilItem, oilIndex) in oilList" :key="oilIndex" :label="oilItem.oils_name" :value="oilItem.id"></el-option>
+                    <el-option 
+                      v-for="(oilItem, oilIndex) in oilList" :key="oilIndex" 
+                      :label="oilItem.oils_name" :value="oilItem.id"
+                      :disabled="disabledRule(index,oilItem,oilIndex)"></el-option>
                   </el-select>
                   <span>每消费1元，累积</span>
+
                   <a-input-number 
-                    v-model="form.cumulative" 
-                    @blur="checkItem('cumulative')" 
+                    v-model="item.cumulative" 
+                    @blur="checkRuleItem(index)" 
                     placeholder="整数" :min="1" :precision="0"/>
                   <span>个成长值</span>
-                  <a-alert v-if="form.cumulative_err" type="error" message="请输入大于0的整数" banner />
+
+                  <a-icon v-show="item.cumulative>0&&item.oil_id.length&&index==form.rules_oils_id.length-1" @click="addRuleItem" type="plus-circle" style="color: rgb(221, 221, 221); font-size: 22px; cursor: pointer; margin-left: 10px;"/>
+
+                  <a-icon v-show="form.rules_oils_id.length>1" @click="delRuleItem(index)" type="delete" style="color: rgb(221, 221, 221); font-size: 22px; cursor: pointer; margin-left: 10px;"/>
+
+                  <a-alert v-if="item.cumulative_err" type="error" message="请输入大于0的整数" banner />
+                  <a-alert v-if="item.cumulative_err2" type="error" message="请选择油品" banner />
                 </div>
               </div>
             </div>
+
             <div class="setting-item">
               <div class="setting-title">成长值扣减周期</div>
               <div class="setting-content flex items-center" :class="{'error':form.deductions_deductions_err}">
@@ -93,6 +109,16 @@
                 <span>天</span>
                 <div class="tips">用户每隔一段时间扣取一定量的成长值，并以当前成长值重新定级</div>
                 <a-alert v-if="form.deductions_deductions_err" type="error" message="请输入大于0的整数" banner />
+              </div>
+            </div>
+
+            <div class="setting-item" style="margin-top:10px;">
+              <div class="setting-title">优惠计算方式</div>
+              <div class="setting-content flex items-center">
+                <a-radio-group v-model="form.cumulative">
+                  <a-radio :value="1">每升</a-radio>
+                  <a-radio :value="2">每满1整升</a-radio>
+                </a-radio-group>
               </div>
             </div>
           </div>
@@ -170,25 +196,48 @@
                 <div class="block-content-item flex" style="height: auto;">
                   <div class="content-item-left" style="line-height: 60px;">等级优惠</div>
                   <div class="content-item-right" style="display: block;">
-                    <div class="discount flex items-center">
+
+                    <div 
+                      class="discount flex items-center"
+                      v-for="(ruleItem,ruleIndex) in item.oils_id" :key="ruleIndex">
+
                       <span>消费</span>
+
                       <el-select 
                         multiple 
                         collapse-tags 
-                        v-model="item.oils_id"
-                        @change="(val)=>selectAllOilRule(val,index)"
+                        v-model="ruleItem.oil_id"
+                        @change="(val)=>selectAllOilRule(val,index,ruleIndex)"
                         placeholder="请选择油品类型" 
                         style="width: 180px;margin: 0px 10px;">
-                        <el-option v-for="(oilItem, oilIndex) in oilList" :key="oilIndex" :label="oilItem.oils_name" :value="oilItem.id"></el-option>
+
+                        <el-option 
+                          v-for="(oilItem, oilIndex) in oilList" :key="oilIndex" 
+                          :label="oilItem.oils_name" :value="oilItem.id"
+                          :disabled="disabledLevelRule(index,ruleIndex,oilItem,oilIndex)"></el-option>
+
                       </el-select>
-                      <span>每升优惠</span>
+
+                      <span>{{form.cumulative==1?'每升':'每满1整升'}}优惠</span>
+
                       <a-input-number 
-                        v-model="item.preferential" 
-                        @blur="checkItem('preferential',index)"
+                        v-model="ruleItem.preferential" 
+                        @blur="checkLevelRuleItem(index,ruleIndex)"
                         placeholder="整数" :min="0" :precision="2" :step="0.01" style="width: 90px; margin: 0px 10px;"/>
+                      
                       <span>元</span>
-                      <a-alert v-if="item.preferential_err" type="error" message="请输入优惠金额" banner />
+
+                      <a-icon v-show="ruleItem.preferential>0&&ruleItem.oil_id.length&&ruleIndex==item.oils_id.length-1" @click="addLevelRule(index)" type="plus-circle" style="color: rgb(221, 221, 221); font-size: 22px; cursor: pointer; margin-left: 10px;"/>
+
+                      <a-icon v-show="item.oils_id.length>1" @click="delLevelRule(index,ruleIndex)" type="delete" style="color: rgb(221, 221, 221); font-size: 22px; cursor: pointer; margin-left: 10px;"/>
+
+
+                      <a-alert v-if="ruleItem.err" type="error" message="请输入优惠金额" banner />
+                      <a-alert v-if="ruleItem.err2" type="error" message="请选择油品" banner />
+                    
+                    
                     </div>
+
                   </div>
                 </div>
               </div>
@@ -240,9 +289,18 @@ export default {
         star_time: moment(new Date()).add(1,'days').startOf('day').format('YYYY-MM-DD'), // 生效时间 年月日 不要时分秒！
         zf_type: [], // 逗号分隔支付方式
         threshold: null, //成长值累积门槛 订单实付金额大于 元时，才计算成长值请输入大于等于0的金额，支持两位小数
-        rules_oils_id: [], // 成长值累积规则存储字符串油品id,号分割
-        cumulative: null, // 累计成长值
+        rules_oils_id: [ // 成长值累积规则存储字符串油品id,号分割
+          {
+            oil_id: [], // 油品集合
+            oldChooseData: [],
+            cumulative: null, // 累计成长值
+            cumulative_err: false,
+            cumulative_err2: false,
+          }
+        ], 
+        // cumulative: null, // 累计成长值// 废弃
         deductions_deductions: null, // 周期
+        cumulative: 1, //1是每升2是满一升
         levelList:[
           {
             level: 1, // 等级
@@ -251,9 +309,17 @@ export default {
             growth_start: 0, // 所需成长值至起头
             growth_end: null, // 所需成长值至结尾
             deductions: null, // 周期扣减值
-            oils_id: [], // 油品id存储多个字符串以,分割
+            oils_id: [
+              {
+                oil_id: [], // 油品集合
+                oldChooseData: [],
+                preferential: null, //// 每升优惠
+                err: false,
+                err2: false,
+              }
+            ], // 油品id存储多个字符串以,分割
             oldChooseData: [],
-            preferential: null, // 每升优惠
+            // preferential: null, // 每升优惠 // 废弃
             // effect: 1,// 1生效中，2待生效，3停用状态
           }
         ]
@@ -302,6 +368,8 @@ export default {
 
       if (this.pageType==='edit') {
         console.log(this.itemData)
+
+        return
         let form = _.cloneDeep(this.itemData)
 
         form.date = form.star_time
@@ -334,10 +402,105 @@ export default {
       }
 
     },
+    // 禁用油品，等级内的小规则
+    disabledLevelRule(index,ruleIndex,oilItem,oilIndex){
+      let item = this.form.levelList[index]
+
+      // 如果规则条数大于1.禁用全选
+      if (item.oils_id.length>1&&oilItem.oils_name=='全选') {
+        return true
+      }
+      // 禁用选中过的油品
+      // 筛选出，除本条外的其他规则
+      let otherArr = item.oils_id.filter((e,i)=>{
+        return i !== ruleIndex
+      }).map(e=>{
+        return e.oil_id
+      })
+      let oliArr = []
+      // 合并其他规则油品id
+      otherArr.forEach(e=>{
+        oliArr = oliArr.concat(e)
+      })
+
+      // console.log(oliArr)
+      // 如果重复，禁用
+      if (oliArr.includes(oilItem.id)) {
+        return true
+      }
+
+      return false
+    },
+     // 删除等级内的小规则
+    delLevelRule(index,ruleIndex){
+      if (this.form.levelList[index].oils_id.length==1) {
+        return
+      }
+      this.form.levelList[index].oils_id.splice(ruleIndex,1)
+    },
+    // 增加等级内的小规则
+    addLevelRule(index){
+      let obj = {
+        oil_id: [], // 油品集合
+        oldChooseData: [],
+        preferential: null, //// 每升优惠
+        err: false,
+        err2: false,
+      }
+      this.form.levelList[index].oils_id.push(obj)
+    },
+    // 禁用油品下拉选项
+    disabledRule(index,oilItem,oilIndex){
+      // console.log(oilItem)
+      // 如果规则条数大于1.禁用全选
+      if (this.form.rules_oils_id.length>1&&oilItem.oils_name=='全选') {
+        return true
+      }
+      // 禁用选中过的油品
+      // 筛选出，除本条外的其他规则
+      let otherArr = this.form.rules_oils_id.filter((e,i)=>{
+        return i !== index
+      }).map(e=>{
+        return e.oil_id
+      })
+      let oliArr = []
+      // 合并其他规则油品id
+      otherArr.forEach(e=>{
+        oliArr = oliArr.concat(e)
+      })
+
+      // console.log(oliArr)
+      // 如果重复，禁用
+      if (oliArr.includes(oilItem.id)) {
+        return true
+      }
+
+      return false
+    },
+    // 删除一条成长规则
+    delRuleItem(index){
+      if(this.form.rules_oils_id.length==1){
+        return
+      }
+      this.form.rules_oils_id.splice(index,1)
+    },
+    // 增加一条成长值规则
+    addRuleItem(){
+      let obj = {
+        oil_id: [], // 油品集合
+        oldChooseData: [],
+        cumulative: null, // 累计成长值
+        cumulative_err: false,
+        cumulative_err2: false,
+      }
+      this.form.rules_oils_id.push(obj)
+    },
     save(){
       let that = this
       // console.log(this.form)
       this.checkForm().then((total_data)=>{
+
+        // console.log(total_data)
         
         // 新增
         if (this.pageType==='add') {
@@ -394,18 +557,24 @@ export default {
         if (this.checkItem('threshold')) {
           isError = true
         }
-        // 油品
-        let rules_oils_id = form.rules_oils_id.filter(e=>{
-          return e!=='ALL_SELECT'
+        
+        
+        form.rules_oils_id.forEach((e,index)=>{
+          // 油品
+          let oil_id = e.oil_id.filter(e=>{
+            return e!=='ALL_SELECT'
+          })
+          if (!oil_id.length) {
+            isError = true
+          }
+          e.oil_id = oil_id
+
+          // 成长值
+          if (this.checkRuleItem(index)) {
+            isError = true
+          }
         })
-        if (!rules_oils_id.length) {
-          isError = true
-        }
-        rules_oils_id = rules_oils_id.join(',')
-        // 成长值
-        if (this.checkItem('cumulative')) {
-          isError = true
-        }
+
         // 成长周期
         if (this.checkItem('deductions_deductions')) {
           isError = true
@@ -427,31 +596,40 @@ export default {
           if (this.checkItem('deductions',index)) {
             isError = true
           }
-          // 油品
-          let oils_id = e.oils_id.filter(e=>{
-            return e!=='ALL_SELECT'
-          })
-          if (!oils_id.length) {
-            isError = true
-          }
-          oils_id = oils_id.join(',')
-          // 优惠金额
-          if (this.checkItem('preferential',index)) {
-            isError = true
-          }
+          
+          e.oils_id.forEach((ruleItem,ruleIndex)=>{
+            // console.log(ruleItem)
+            // 油品
+            let oil_id = ruleItem.oil_id.filter(ele=>{
+              return ele!=='ALL_SELECT'
+            })
+            if (!oil_id.length) {
+              isError = true
+            }
+            ruleItem.oil_id = oil_id
 
+            // 优惠金额
+            if (this.checkLevelRuleItem(index,ruleIndex)) {
+              isError = true
+            }
+          })
+          
           let obj = {
-            ...e,
             star_time: form.star_time,
-            oils_id,
             zf_type: form.zf_type,
             threshold: form.threshold,
-            rules_oils_id,
-            cumulative: form.cumulative,
+            rules_oils_id: form.rules_oils_id,
             deductions_deductions: form.deductions_deductions,
+            cumulative: form.cumulative,
+            ...e,
           }
+          
+          // console.log(obj)
+
           total_data.push(obj)
         })
+
+        // console.log(total_data)
 
         if (isError) {
           this.$message.error(erroeText)
@@ -460,6 +638,50 @@ export default {
           resolve(total_data)
         }
       })
+    },
+    // 校验等级内，小规则，成长值（单条）
+    checkLevelRuleItem(index,ruleIndex){
+      let isErr = false
+      let item = this.form.levelList[index].oils_id[ruleIndex]
+      // console.log(item)
+      if (!item.preferential) {
+        isErr = true
+        item.err = true
+      }else{
+        isErr = false
+        item.err = false
+      }
+
+      if (item.oil_id.length) {
+        isErr = false
+        item.err2 = false
+      }else{
+        isErr = true
+        item.err2 = true
+      }
+      return isErr
+    },  
+    // 校验成长值累计规则(单条)
+    checkRuleItem(index){
+      let isErr = false
+      let item = this.form.rules_oils_id[index]
+      // console.log(item)
+      if (!item.cumulative) {
+        isErr = true
+        item.cumulative_err = true
+      }else{
+        isErr = false
+        item.cumulative_err = false
+      }
+
+      if (item.oil_id.length) {
+        isErr = false
+        item.cumulative_err2 = false
+      }else{
+        isErr = true
+        item.cumulative_err2 = true
+      }
+      return isErr
     },
     // 校验单条
     checkItem(key,index){
@@ -523,9 +745,17 @@ export default {
         growth_start: null, // 所需成长值至起头
         growth_end: null, // 所需成长值至结尾
         deductions: null, // 周期扣减值
-        oils_id: [], // 油品id存储多个字符串以,分割
+        oils_id: [
+          {
+            oil_id: [], // 油品集合
+            oldChooseData: [],
+            preferential: null, //// 每升优惠
+            err: false,
+            err2: false,
+          }
+        ], // 油品id存储多个字符串以,分割
         oldChooseData: [],
-        preferential: null, // 每升优惠
+        // preferential: null, // 每升优惠
         // effect: 1,// 1生效中，2待生效，3停用状态
       }
 
@@ -541,21 +771,22 @@ export default {
       
     },
     // 全选油站
-    selectAlloil (val) {
+    selectAlloil (val,index) {
+      const item = this.form.rules_oils_id[index]
       const allValues = this.oilList.map(item => {
         return item.id;
       });
       // 用来储存上一次选择的值，可进行对比
-      const oldVal = this.oldChooseData.length > 0 ? this.oldChooseData : [];
+      const oldVal = item.oldChooseData.length > 0 ? item.oldChooseData : [];
  
       // 若选择全部
       if (val.includes('ALL_SELECT')) {
-        this.form.rules_oils_id = allValues;
+        item.oil_id = allValues;
       }
       // console.log(oldVal)
       // 取消全部选中， 上次有， 当前没有， 表示取消全选
       if (oldVal.includes('ALL_SELECT') && !val.includes('ALL_SELECT')) {
-        this.form.rules_oils_id = [];
+        item.oil_id = [];
       }
  
       // 点击非全部选中，需要排除全部选中 以及 当前点击的选项
@@ -563,35 +794,38 @@ export default {
       if (oldVal.includes('ALL_SELECT') && val.includes('ALL_SELECT')) {
         const index = val.indexOf('ALL_SELECT');
         val.splice(index, 1); // 排除全选选项
-        this.form.rules_oils_id = val;
+        item.oil_id = val;
       }
  
       // 全选未选，但是其他选项都全部选上了，则全选选上
       if (!oldVal.includes('ALL_SELECT') && !val.includes('ALL_SELECT')) {
         if (val.length === allValues.length - 1) {
-          this.form.rules_oils_id = ['ALL_SELECT'].concat(val);
+          item.oil_id = ['ALL_SELECT'].concat(val);
         }
       }
 
       // 储存当前选择的最后结果 作为下次的老数据
-      this.oldChooseData = this.form.rules_oils_id;
+      item.oldChooseData = item.oil_id;
+      this.checkRuleItem(index)
     },
     // 全选油站
-    selectAllOilRule (val, index) {
+    selectAllOilRule(val,index,ruleIndex) {
+      let item = this.form.levelList[index].oils_id[ruleIndex]
+
       const allValues = this.oilList.map(item => {
         return item.id;
       });
       // 用来储存上一次选择的值，可进行对比
-      const oldVal = this.form.levelList[index].oldChooseData.length > 0 ? this.form.levelList[index].oldChooseData : [];
+      const oldVal = item.oldChooseData.length > 0 ? item.oldChooseData : [];
  
       // 若选择全部
       if (val.includes('ALL_SELECT')) {
-        this.form.levelList[index].oils_id = allValues;
+        item.oil_id = allValues;
       }
       // console.log(oldVal)
       // 取消全部选中， 上次有， 当前没有， 表示取消全选
       if (oldVal.includes('ALL_SELECT') && !val.includes('ALL_SELECT')) {
-        this.form.levelList[index].oils_id = [];
+        item.oil_id = [];
       }
  
       // 点击非全部选中，需要排除全部选中 以及 当前点击的选项
@@ -599,18 +833,20 @@ export default {
       if (oldVal.includes('ALL_SELECT') && val.includes('ALL_SELECT')) {
         const index = val.indexOf('ALL_SELECT');
         val.splice(index, 1); // 排除全选选项
-        this.form.levelList[index].oils_id = val;
+        item.oil_id = val;
       }
  
       // 全选未选，但是其他选项都全部选上了，则全选选上
       if (!oldVal.includes('ALL_SELECT') && !val.includes('ALL_SELECT')) {
         if (val.length === allValues.length - 1) {
-          this.form.levelList[index].oils_id = ['ALL_SELECT'].concat(val);
+          item.oil_id = ['ALL_SELECT'].concat(val);
         }
       }
 
       // 储存当前选择的最后结果 作为下次的老数据
-      this.form.levelList[index].oldChooseData = this.form.levelList[index].oils_id;
+      item.oldChooseData = item.oil_id;
+
+      this.checkLevelRuleItem(index,ruleIndex)
     },
    // 禁止选择今天之前的时间
     disabledDate(current) {
