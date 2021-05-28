@@ -284,7 +284,7 @@ export default {
     setSiteDefault(){
       let that=this
       api.setSiteDefault({
-        site_id:1
+        site_id:this.userInfo.site_id
       })
         .then(res => {
          if(!res.data){
