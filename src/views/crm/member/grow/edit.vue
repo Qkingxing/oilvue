@@ -372,7 +372,7 @@ export default {
         // return
         let form = _.cloneDeep(this.itemData)
 
-        form.date = form.star_time
+        form.date = moment(form.star_time).startOf('day')
 
         let { zf_type, rules_oils_id } = form
         let { deductions_deductions } = form.dataList[0]
