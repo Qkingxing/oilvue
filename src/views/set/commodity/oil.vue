@@ -78,7 +78,7 @@
             <div class="flex25">
               <div class="item-wrap" v-for="(item,index) in yqForm.gunList" :key="index">
                 <div class="ipt-wrap">
-                 <a-input-number v-model="item.gun_name"   :min="1" :max="255" />
+                 <a-input v-model="item.gun_name"    />
                
                 </div>
                 <div class="add-btn">
