@@ -50,7 +50,7 @@
               <a-radio :value="3"> 集团账号 </a-radio>
             </a-radio-group>
           </a-form-item> -->
-          <a-form-item label="负责集团">
+          <a-form-item label="负责站点">
             <a-select label-in-value :default-value="{ keys: '请选择站点' }" style="width: 200px" @change="handleChange">
               <a-select-option v-for="(name, index) in sitelistdata" :key="index"> {{ name.site_name }} </a-select-option>
             </a-select>
@@ -99,7 +99,7 @@
       </div>
       <div v-if="show == 3" style="width: 400px; margin-left: 50px">
         <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-          <a-form-item label="负责集团">
+          <a-form-item label="负责站点">
             <a-select v-model="record.site_id" style="width: 200px" @change="handleChange">
               <a-select-option v-for="(name, index) in sitelistdata" :key="index" :value="name.id"> {{ name.site_name }} </a-select-option>
             </a-select>
@@ -109,7 +109,7 @@
               v-model="record.role_id"
               style="width: 200px"
             >
-              <a-select-option v-for="(name, index) in names" :key="name.id"  :value="name.id"> {{ name.role_name }} </a-select-option>
+              <a-select-option v-for="(name) in names" :key="name.id"  :value="name.id"> {{ name.role_name }} </a-select-option>
             </a-select>
           </a-form-item>
         </a-form>
