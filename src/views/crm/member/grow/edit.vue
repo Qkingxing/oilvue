@@ -367,9 +367,9 @@ export default {
       })
 
       if (this.pageType==='edit') {
-        console.log(this.itemData)
+        // console.log(this.itemData)
 
-        return
+        // return
         let form = _.cloneDeep(this.itemData)
 
         form.date = form.star_time
@@ -380,9 +380,7 @@ export default {
         zf_type = zf_type.split(',').map(Number)
         form.zf_type = zf_type
 
-        rules_oils_id = rules_oils_id.map(e=>{
-          return e.id
-        })
+        // rules_oils_id = rules_oils_id.map(Number)
         form.rules_oils_id = rules_oils_id
         form.deductions_deductions = deductions_deductions
 
@@ -390,9 +388,7 @@ export default {
 
         form.levelList.forEach((e,i)=>{
           e.oldChooseData = []
-          e.oils_id = e.oils_list.map((e2)=>{
-            return e2.id
-          })
+          e.oils_id = e.oils_list
         })
         
 

@@ -41,9 +41,9 @@
               <div class="setting-item">
                 <div class="setting-title">成长值累积规则</div>
                 <div class="setting-content">
-                  <div style="line-height: 1em; padding-top: 16px;">
-                    {{oilText(rule.rules_oils_id)}}
-                    ，每消费1元获得{{rule.cumulative}}个成长值</div>
+                  <div style="line-height: 1em; padding-top: 16px;" v-for="(item,index) in rule.rules_oils_id" :key="index">
+                    {{oilText(item.oil_id)}}
+                    ，每消费1元获得{{item.cumulative}}个成长值</div>
                 </div>
               </div>
             </div>
@@ -78,7 +78,7 @@
                         :key="index"
                         keepwidth="true" 
                         style="text-align: left; line-height: 2em;">
-                        {{item.oils_name}} 每升优惠{{row.preferential}}元
+                        {{oilText(item.oil_id)}} {{rule.cumulative==1?'每升':'每满1整升'}}优惠{{row.preferential}}元
                       </div>
                     </template>
                   </div>
@@ -123,9 +123,9 @@
                   <div class="setting-item">
                     <div class="setting-title">成长值累积规则</div>
                     <div class="setting-content">
-                      <div style="line-height: 1em; padding-top: 16px;">
-                        {{oilText(rule.rules_oils_id)}}
-                        ，每消费1元获得{{rule.cumulative}}个成长值</div>
+                      <div style="line-height: 1em; padding-top: 16px;" v-for="(item,index) in rule.rules_oils_id" :key="index">
+                        {{oilText(item.oil_id)}}
+                        ，每消费1元获得{{item.cumulative}}个成长值</div>
                     </div>
                   </div>
                 </div>
@@ -161,7 +161,7 @@
                             :key="index"
                             keepwidth="true" 
                             style="text-align: left; line-height: 2em;">
-                            {{item.oils_name}} 每升优惠{{row.preferential}}元
+                            {{oilText(item.oil_id)}} {{rule.cumulative==1?'每升':'每满1整升'}}优惠{{row.preferential}}元
                           </div>
                         </template>
                       </div>
@@ -206,9 +206,9 @@
                   <div class="setting-item">
                     <div class="setting-title">成长值累积规则</div>
                     <div class="setting-content">
-                      <div style="line-height: 1em; padding-top: 16px;">
-                        {{oilText(rule2.rules_oils_id)}}
-                        ，每消费1元获得{{rule2.cumulative}}个成长值</div>
+                      <div style="line-height: 1em; padding-top: 16px;" v-for="(item,index) in rule2.rules_oils_id" :key="index">
+                        {{oilText(item.oil_id)}}
+                        ，每消费1元获得{{item.cumulative}}个成长值</div>
                     </div>
                   </div>
                 </div>
@@ -244,7 +244,7 @@
                             :key="index"
                             keepwidth="true" 
                             style="text-align: left; line-height: 2em;">
-                            {{item.oils_name}} 每升优惠{{row.preferential}}元
+                            {{oilText(item.oil_id)}} {{rule2.cumulative==1?'每升':'每满1整升'}}优惠{{row.preferential}}元
                           </div>
                         </template>
                       </div>
@@ -285,6 +285,7 @@ import { mapGetters } from 'vuex'
 import _ from 'lodash'
 import { getPayList } from '@/api/base'
 import { queryMemberSpalevel,stopMemberSpalevel,delMemberSpalevel } from '@/api/crm'
+import { getGroupolilist } from '@/api/oil'
 
 export default {
   name: 'Grow',
@@ -351,6 +352,7 @@ export default {
       loading: false,
       itemData:null,
       payList:[],
+      oilList: [],
       
     }
   },
@@ -382,6 +384,10 @@ export default {
           this.data2 = res.data[1].dataList
         }
       }
+      let oilRes = await getGroupolilist()
+      // console.log(oilRes.data)
+      this.oilList = oilRes.data
+
       this.loading = false
     },
     // 打开使用推荐
@@ -422,10 +428,14 @@ export default {
     },
     // 油品名称
     oilText(oils){
-      let arr =  _.values(oils)
+      // console.log(this.oilList)
+      let arr = this.oilList.filter(e=>{
+        return oils.includes(e.id)
+      })
+
       let str = arr.map(e=>{return e.oils_name}).join('、')
       // console.log(str)
-      if (this.rule.oil_totalcount===arr.length) {
+      if (this.oilList.length===arr.length) {
         return '油品不限'
       }
       if (arr.length) {
