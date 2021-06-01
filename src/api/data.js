@@ -51,8 +51,8 @@ export function download(data){
 // 数据 统计客户 -概览
 
 export function customer(data){
-    return JavaRequest({
-        url:'/data/get_customer_overview',
+    return PhpRequest({
+        url:'/set/customerStatisticsUp',
         method:'post',
         data
     })

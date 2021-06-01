@@ -9,9 +9,6 @@
 			  <div class="dateTabForSquareContainer">
 				  <shujian :lists='lists' v-if="show"></shujian>
 			  </div>
-			  <!-- <div class="content">
-				  <biao2 :lists='lists' :index='index' :dateString='dateString' v-if="show"></biao2>
-			  </div> -->
 		  </div>
       </div>
   </div>

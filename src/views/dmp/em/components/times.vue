@@ -120,7 +120,7 @@ export default {
 .times {
   .shijian {
     .ant-calendar-picker {
-      width: 240px;
+      width: 360px;
       padding-top: 15px;
       padding-left: 10px;
       .ant-input {

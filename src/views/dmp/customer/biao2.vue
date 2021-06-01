@@ -12,26 +12,26 @@
       <div class="overflow_box" v-for="(list, index) in lists" :key="index">
         <div class="overflow_li">
           <div class="title">
-            <span>{{ list.points_issued_name }}</span>
+            <span>{{ list.name }}</span>
           </div>
           <div class="price_info">
-            <span class="price">{{ list.points_issued_number }}</span>
-            <span v-if="list.points_issued_name == '积分发放值' || list.points_issued_name == '积分消耗' ||  list.points_issued_name=='过期积分'" class="unit">分</span>
-             <span v-if="list.points_issued_name == '累计发放积分值' || list.points_issued_name == '累计有效积分' ||  list.points_issued_name=='累计积分消耗' ||list.points_issued_name=='累计过期积分' " class="unit">十万分</span>
-             <span v-if="list.points_issued_name=='有效积分人数'">人</span>
+            <span class="price">{{ list.value }}</span>
+            <span >{{list.unit}}</span>
+           
           </div>
           <div class="trend_info">
-            <span>较上一周期</span>
-            <span class="percente percent-up">{{ list.day_before | num }}</span>
-            <i class="trend">
-              <a-icon type="arrow-down" />
-            </i>
+            <span>{{list.compared_name}}</span>
+            <span class="percente percent-up"> 降{{ list.compared | num }}% </span>
+           <i class="trend">
+              <a-icon v-show="list.compared < 0"  type="arrow-down"/>
+              <a-icon v-show="list.compared >= 0" :style="{ color: 'red' }" type="arrow-up"/>
+        </i> 
           </div>
           <i class="more_info anticon anticon-question-circle">
-            <a-popover title="消费客户" overlayClassName="note">
+            <a-popover :title="list.name" overlayClassName="note">
               <template slot="content">
                 <div class="" style="width: 200px">
-                  <p>统计时间内，已消费人数合计</p>
+                  <p>{{list.info_content}}</p>
                 </div>
               </template>
               <span class="anticon">
@@ -95,15 +95,12 @@ export default {
    },
    filters:{
        num(val){
-           if(val == 'NaN' || val == 'Infinity'){
-               return  val = 0
-           }
-           return val
+           return Math.abs(val) 
        }
    },
    methods:{
-       biaos(index){
-           if(index == 5){
+       biaos(index,dateString){
+           if(index,dateString){
                
                let weekStarting_time = dateString[0]
               let weekEnd_time = dateString[1]

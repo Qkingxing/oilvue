@@ -5,37 +5,40 @@
                 <span>券使用统计</span>
                 <div class="sheet_a1" >
                     <div class="box" v-for="(list,index) in lists" :key="index">
-                        <p class="text1">{{list.consumer_customers_name}}</p>
+                        <p class="text1">{{list.name}}</p>
                         <div class="con-article">
                             <span class="text2">
                                  <countTo
                                 class="value"
                                 :startVal="0"
-                                :endVal="list.consumer_customers_number"
+                                :endVal="list.value"
                                 :duration="3000"
                                 ></countTo>
                             </span>
-                            <div class="con-art-unit">张</div>
+                           <div class="con-art-unit">{{list.unit}}</div>
                         </div>
-                    <div class="con-footer">
+                    <div class="con-footer" v-if="list.compared_name">
                         <div class="con-foo-caption">
-                            较前一天
+                          {{list.compared_name}}
                         </div>
                         
                         <div class="con-foo-percentage">
                              <countTo
                             class="value"
                             :startVal="0"
-                            :endVal="list.day_before | before"
+                            :endVal="list.compared | before"
                             :duration="3000"
                             ></countTo>
                             %
                             
                         </div>
-                        
+                         <i class="trend">
+                            <a-icon v-show="list.compared < 0"  type="arrow-down"/>
+                            <a-icon v-show="list.compared >= 0" :style="{ color: 'red' }" type="arrow-up"/>
+                         </i> 
                     </div>
                     </div>
-                    
+                   
                 </div>
             </div>
             <div class="sheet_b">
@@ -55,13 +58,13 @@
         
         <div class="sheets_b">
             <div class="sheet_b1">
-                {{cake1.name}}
+                <!-- {{cake1.name}} -->
             </div>
             <div class="sheet_b2">
                 <biao2 :cake1='cake1'></biao2>
             </div>
         </div>
-       
+        
     </div>
 </template>
 
@@ -71,7 +74,7 @@ import biao2 from './biao2'
 // import biao3 from './biao3'
 export default {
     components:{biao1,biao2},
-   props:['keys','lists','lineChart1','cake1','lineChart2','arr'],
+    props:['keys','lists','lineChart1','cake1','lineChart2','arr'],
     data(){
         return{
            
@@ -82,10 +85,7 @@ export default {
     },
     filters:{
         before(value){
-            if(value == 'Infinity' || value == 'NaN'){
-                return value=0
-            }
-            return value
+            return Math.abs(value)
         }
     }
 }
@@ -120,6 +120,11 @@ export default {
                             .con-footer{
                                     display: flex;
                                     align-items: center;
+                                    .trend{
+                                        position: relative;
+                                        top:-9px;
+                                        left: 29px;
+                                    }
                                     .con-foo-percentage{
                                         font-size: 12px;
                                         font-weight: 400;

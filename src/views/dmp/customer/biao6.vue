@@ -12,24 +12,26 @@
       <div class="overflow_box" v-for="(list, index) in lists" :key="index">
         <div class="overflow_li">
           <div class="title">
-            <span>{{ list.points_issued_name }}</span>
+            <span>{{ list.name }}</span>
           </div>
           <div class="price_info">
-            <span class="price">{{ list.points_issued_number }}</span>
-            <span class="unit">人</span>
+            <span class="price">{{ list.value }}</span>
+            <span >{{list.unit}}</span>
+           
           </div>
           <div class="trend_info">
-            <span>较上一周期</span>
-            <span class="percente percent-up">{{ list.day_before | num }}</span>
-            <i class="trend">
-              <a-icon type="arrow-down" />
-            </i>
+            <span>{{list.compared_name}}</span>
+            <span class="percente percent-up"> 降{{ list.compared | num }}% </span>
+           <i class="trend">
+              <a-icon v-show="list.compared < 0"  type="arrow-down"/>
+              <a-icon v-show="list.compared >= 0" :style="{ color: 'red' }" type="arrow-up"/>
+        </i> 
           </div>
           <i class="more_info anticon anticon-question-circle">
-            <a-popover title="消费客户" overlayClassName="note">
+            <a-popover :title="list.name" overlayClassName="note">
               <template slot="content">
                 <div class="" style="width: 200px">
-                  <p>统计时间内，已消费人数合计</p>
+                  <p>{{list.info_content}}</p>
                 </div>
               </template>
               <span class="anticon">
@@ -57,12 +59,12 @@
         </a-popover>
       </div>
     </div>
-    <div class="trend-box" v-if="a == 1">
+    <div class="trend-box" v-if="a">
       <div class="canvas-boxs">
         <canvas_box8 :lineChart1='lineChart1' v-if='show'></canvas_box8>
       </div>
     </div>
-    <div class="trend-box" v-if="a == 2">
+    <div class="trend-box" v-if="!a">
       <div class="canvas-boxs">
         <canvas_box9 :lineChart2='lineChart2' v-if='show'></canvas_box9>
       </div>
@@ -83,25 +85,22 @@ export default {
       lineChart1:{},
       lineChart2:{},
       show:false,
-      a:1
+      a:true
     }
   },
    created(){
-       if(this.index){
-           this.biaos(this.index)
-       }
+      if(this.index){
+          this.biaos(this.index)
+      }
    },
    filters:{
        num(val){
-           if(val == 'NaN' || val == 'Infinity'){
-               return  val = 0
-           }
-           return val
+           return Math.abs(val) 
        }
    },
    methods:{
        biaos(index,dateString){
-           if(index == 5 && dateString){
+           if(index,dateString){
                
                let weekStarting_time = dateString[0]
               let weekEnd_time = dateString[1]
@@ -120,7 +119,7 @@ export default {
            })
        },
        bba(){
-         this.a = 2
+         this.a = !this.a
        }
    }
 

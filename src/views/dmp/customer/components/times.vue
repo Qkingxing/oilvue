@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="shijian" v-if="show1">
-        <a-range-picker  @change="onChange" />
+        <a-range-picker  format="YYYY-MM-DD HH:mm:ss" @change="onChange" />
       </div>
     </div>
 
@@ -120,7 +120,7 @@ export default {
 .times {
   .shijian {
     .ant-calendar-picker {
-      width: 240px;
+      width: 360px;
       padding-top: 15px;
       padding-left: 10px;
       .ant-input {
