@@ -4,25 +4,24 @@
       <div class="overflow_box" v-for="(list, index) in arrs" :key="index">
         <div class="overflow_li">
           <div class="title">
-            <span>{{list.name}}</span>
+            <span>{{list.number_members_name}}</span>
           </div>
           <div class="price_info">
-            <span class="price">{{list.value}}</span>
-            <span class="unit">{{list.unit}}</span>
+            <span class="price">{{list.number_members_number}}</span>
+            <span class="unit">人</span>
           </div>
           <div class="trend_info">
-            <span>{{list.value}}</span>
-            <span class="percente percent-up">{{list.compared|before}}</span>
-           <i class="trend">
-              <a-icon v-show="list.compared < 0"  type="arrow-down"/>
-              <a-icon v-show="list.compared >= 0" :style="{ color: 'red' }" type="arrow-up"/>
-            </i> 
+            <span>较上一周期</span>
+            <span class="percente percent-up">{{list.day_before|before}}</span>
+            <i class="trend">
+              <a-icon type="arrow-down" />
+            </i>
           </div>
           <i class="more_info anticon anticon-question-circle">
-            <a-popover :title="list.name" overlayClassName="note">
+            <a-popover title="消费客户" overlayClassName="note">
               <template slot="content">
                 <div class="" style="width: 200px">
-                  <p>{{list.info_content}}</p>
+                  <p>统计时间内，已消费人数合计</p>
                 </div>
               </template>
               <span class="anticon">

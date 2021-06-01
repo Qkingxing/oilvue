@@ -134,7 +134,7 @@ export default {
             }
              let weekEnd_time = dateString[0]
             let weekStarting = dateString[1]
-            return dashboard({ time_type: index, type:type, weekEnd_time:weekEnd_time,weekStarting:weekStarting}).then((res) => {
+            return dashboard({ time_type: index, type:type, weekEnd_time:weekStarting,weekStarting:weekEnd_time}).then((res) => {
                 this.lists = res.data
                 })
             }

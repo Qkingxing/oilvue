@@ -27,11 +27,6 @@
       </a-col>
       <a-col :span="20" v-if="line == 2">
         <LineCharts v-if="show" :lineChart1='lineChart1'></LineCharts>
-        22
-      </a-col>
-      <a-col :span="20" v-if="line == 3">
-        <LineCharts v-if="show" :lineChart1='lineChart1'></LineCharts>
-        33
       </a-col>
     </a-row>
 
