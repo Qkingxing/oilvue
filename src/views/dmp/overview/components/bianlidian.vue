@@ -144,7 +144,7 @@ export default {
     onChange(date, dateString) {
       this.setData(dateString, 1)
       this.analysis(dateString)
-      this.setDatas(5,dateString)
+      this.setDatas(5,sessionStorage.getItem('type'),dateString)
     },
 
     setData(index, time) {

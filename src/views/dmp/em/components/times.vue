@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="shijian" v-if="show1">
-        <a-range-picker  @change="onChange" />
+        <a-range-picker format="YYYY-MM-DD HH:mm:ss"  @change="onChange" />
       </div>
     </div>
 
@@ -54,9 +54,9 @@ export default {
       lineChart2:[],
       dates: [
         { key: 'jintian', name: '今日' },
-        { key: 'zuotian', name: '本周' },
-        { key: 'benzhou', name: '本月' },
-        { key: 'benyue', name: '上月' },
+        { key: 'zuotian', name: '昨日' },
+        { key: 'benzhou', name: '本周' },
+        { key: 'benyue', name: '本月' },
 		{ key: 'zidingyi', name: '自定义' },
       ],
     }

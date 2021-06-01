@@ -11,13 +11,21 @@
             ></countTo>
         <span class="unte">{{list.unit}}</span>
       </div>
-      <div class="info">
+      <div class="info" v-if="list.compared_name">
           <span>{{list.compared_name}}</span>   
           <span>降{{list.compared | str}}%</span>
           <i class="trend">
               <a-icon v-show="list.compared < 0"  type="arrow-down"/>
               <a-icon v-show="list.compared >= 0" :style="{ color: 'red' }" type="arrow-up"/>
         </i> 
+    </div>
+      <div class="info" v-else>
+          <!-- <span>{{list.compared_name}}</span>   
+          <span>降{{list.compared | str}}%</span>
+          <i class="trend">
+              <a-icon v-show="list.compared < 0"  type="arrow-down"/>
+              <a-icon v-show="list.compared >= 0" :style="{ color: 'red' }" type="arrow-up"/>
+        </i>  -->
     </div>
       
       <i class="more_info anticon anticon-question-circle">

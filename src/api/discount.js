@@ -3,8 +3,8 @@ import PhpRequest from '@/utils/PhpRequest'
 
 
 export function discount(data){
-    return JavaRequest({
-        url:'/data/get_coupon_static',
+    return PhpRequest({
+        url:'/set/couponsStatisticsUp',
         method: 'post',
         data
     })

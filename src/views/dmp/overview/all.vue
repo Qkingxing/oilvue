@@ -117,7 +117,7 @@ export default {
     onChange(date, dateString) {
       this.setData(dateString, 1)
       this.analysis(dateString)
-      this.setDatas(5,dateString)
+      this.setDatas(5,sessionStorage.getItem('type'),dateString)
       //    this.$parent.setData(5,dateString)
     },
 
@@ -125,16 +125,16 @@ export default {
       this.time = index
     },
     setDatas(index,type,dateString) {
-            if(type){
-                let type = type
-            }else{
-                type = ''
+           console.log(index,type,dateString)
+            if(index,type,dateString){
+                 if(type){
+                    let type = type
+                }else{
+                    type = ''
             }
-            if(index,dateString){
              let weekEnd_time = dateString[0]
             let weekStarting = dateString[1]
             return dashboard({ time_type: index, type:type, weekEnd_time:weekEnd_time,weekStarting:weekStarting}).then((res) => {
-            
                 this.lists = res.data
                 })
             }
@@ -173,7 +173,7 @@ export default {
    this.setDatas(2,sessionStorage.getItem('type'))
       }
       if (key == '3') {
-this.setDatas(3,sessionStorage.getItem('type'))
+    this.setDatas(3,sessionStorage.getItem('type'))
       }
       if (key == '4') {
        this.setDatas(4,sessionStorage.getItem('type'))

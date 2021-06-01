@@ -5,33 +5,37 @@
                 <span>券使用统计</span>
                 <div class="sheet_a1" >
                     <div class="box" v-for="(list,index) in lists" :key="index">
-                        <p class="text1">{{list.coupons_name}}</p>
+                        <p class="text1">{{list.name}}</p>
                         <div class="con-article">
                             <span class="text2">
                                  <countTo
                                 class="value"
                                 :startVal="0"
-                                :endVal="list.coupons_Number"
+                                :endVal="list.value"
                                 :duration="3000"
                                 ></countTo>
                             </span>
-                            <div class="con-art-unit">张</div>
+                            <div class="con-art-unit">{{list.unit}}</div>
                         </div>
                     <div class="con-footer">
                         <div class="con-foo-caption">
-                            较前一天
+                           {{list.compared_name}}
                         </div>
                         
                         <div class="con-foo-percentage">
                              <countTo
                             class="value"
                             :startVal="0"
-                            :endVal="list.day_before | before"
+                            :endVal="list.compared | before"
                             :duration="3000"
                             ></countTo>
                             %
                             
                         </div>
+                        <i class="trend">
+                            <a-icon v-show="list.compared < 0"  type="arrow-down"/>
+                            <a-icon v-show="list.compared >= 0" :style="{ color: 'red' }" type="arrow-up"/>
+                        </i> 
                         
                     </div>
                     </div>
@@ -152,10 +156,7 @@ export default {
     },
     filters:{
         before(value){
-            if(value == 'Infinity' || value == 'NaN'){
-                return value=0
-            }
-            return value
+            return Math.abs(value)
         }
     }
 }
@@ -190,6 +191,11 @@ export default {
                             .con-footer{
                                     display: flex;
                                     align-items: center;
+                                    .trend{
+                                        position: relative;
+                                        top:-9px;
+                                        left: 29px;
+                                    }
                                     .con-foo-percentage{
                                         font-size: 12px;
                                         font-weight: 400;
