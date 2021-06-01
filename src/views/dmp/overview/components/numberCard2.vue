@@ -1,29 +1,30 @@
 <template>
   <div class="number-card">
     <div class="item" >
-      <span>{{list.orderName}}</span>
+       <span>{{list.name}}</span>
       <div class="money">
          <countTo
               class="value"
               :startVal="0"
-              :endVal="Number(list.number)"
+              :endVal="Number(list.value)"
               :duration="3000"
             ></countTo>
-        <span class="unte">元</span>
+          <span class="unte">{{list.unit}}</span>
       </div>
       <div class="info">
-          <span>{{zhou}}</span>   
-          <span>降{{list.Compared | str}}%</span>
+          <span>{{list.compared_name}}</span>   
+           <span>降{{list.compared | str}}%</span>
           <i class="trend">
-              <a-icon type="arrow-down"/>
+               <a-icon v-show="list.compared < 0"  type="arrow-down"/>
+              <a-icon v-show="list.compared >= 0" :style="{ color: 'red' }" type="arrow-up"/>
         </i> 
     </div>
       
       <i class="more_info anticon anticon-question-circle">
-            <a-popover title="消费客户" overlayClassName="note">
+            <a-popover :title="list.name" overlayClassName="note">
               <template slot="content">
                 <div class="" style="width: 200px">
-                  <p>统计时间内，已消费人数合计</p>
+                  <p>{{list.info_content}}</p>
                 </div>
               </template>
               <span class="anticon">
@@ -56,25 +57,22 @@ export default {
   },
   methods: {
     mapDate(){
-     if(sessionStorage.getItem('key') == '1'||sessionStorage.getItem('key') == '2'){
+    //  if(sessionStorage.getItem('key') == '1'||sessionStorage.getItem('key') == '2'){
          
-         this.zhou = '周同比'
-     }else if(sessionStorage.getItem('key') == '3'){
+    //      this.zhou = '周同比'
+    //  }else if(sessionStorage.getItem('key') == '3'){
          
-         this.zhou = '周环比'
-     }else if(sessionStorage.getItem('key') == '4'){
+    //      this.zhou = '周环比'
+    //  }else if(sessionStorage.getItem('key') == '4'){
          
-         this.zhou = '月环比'
-     }
+    //      this.zhou = '月环比'
+    //  }
     }
   },
   filters:{
-      str(Compared){
-         if(Compared == 'NaN'){
-            return Compared = 0
-         }
-         return Compared
-      }
+     str(Compared){
+         return Math.abs(Compared) 
+      },
   }
 }
 </script>

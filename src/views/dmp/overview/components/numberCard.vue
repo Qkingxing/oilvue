@@ -1,33 +1,30 @@
 <template>
   <div class="number-card">
     <div class="item" >
-      <span>{{list.orderName}}</span>
+      <span>{{list.name}}</span>
       <div class="money">
          <countTo
               class="value"
               :startVal="0"
-              :endVal="Number(list.number)"
+              :endVal="Number(list.value)"
               :duration="3000"
             ></countTo>
-        <span v-if="list.orderName=='便利店销售收入'" class="unte">分</span>
-        <span v-else-if="list.orderName == '闪付订单数' ||list.orderName == '油品订单数' " class="unte">笔</span>
-         <span v-else-if="list.orderName == '客单价'" class="unte">元/笔</span>
-          <span v-else-if="list.orderName == '总加油量（升）'" class="unte">升</span>
-          <span v-else class="unte">元</span>
+        <span class="unte">{{list.unit}}</span>
       </div>
       <div class="info">
-          <span>{{zhou}}</span>   
-          <span>降{{list.Compared | str | str1}}%</span>
+          <span>{{list.compared_name}}</span>   
+          <span>降{{list.compared | str}}%</span>
           <i class="trend">
-              <a-icon type="arrow-down"/>
+              <a-icon v-show="list.compared < 0"  type="arrow-down"/>
+              <a-icon v-show="list.compared >= 0" :style="{ color: 'red' }" type="arrow-up"/>
         </i> 
     </div>
       
       <i class="more_info anticon anticon-question-circle">
-            <a-popover title="消费客户" overlayClassName="note">
+            <a-popover :title="list.name" overlayClassName="note">
               <template slot="content">
                 <div class="" style="width: 200px">
-                  <p>{{list.value}}</p>
+                  <p>{{list.info_content}}</p>
                 </div>
               </template>
               <span class="anticon">
@@ -53,46 +50,37 @@ export default {
     }
   },
   created(){
-      
-   setTimeout(()=>{
-         this.mapDate()
-   },100)
-//     console.log(this.list)
+    console.log(this.list)
+    setTimeout(()=>{
+            this.mapDate()
+    },100)
 
   },
   methods: {
     mapDate(){
-        if(sessionStorage.getItem('key')){
-            if(sessionStorage.getItem('key') == '1'||sessionStorage.getItem('key') == '2'){
+        // if(sessionStorage.getItem('key')){
+        //     if(sessionStorage.getItem('key') == '1'||sessionStorage.getItem('key') == '2'){
          
-                this.zhou = '周同比'
-            }else if(sessionStorage.getItem('key') == '3'){
+        //         this.zhou = '周同比'
+        //     }else if(sessionStorage.getItem('key') == '3'){
                 
-                this.zhou = '周环比'
-            }else if(sessionStorage.getItem('key') == '4'){
+        //         this.zhou = '周环比'
+        //     }else if(sessionStorage.getItem('key') == '4'){
                 
-                this.zhou = '月环比'
-            }else{
-                this.zhou = '周同比'
-            }
-        }else{
-            this.zhou = '周同比'
-        }
+        //         this.zhou = '月环比'
+        //     }else{
+        //         this.zhou = '周同比'
+        //     }
+        // }else{
+        //     this.zhou = '周同比'
+        // }
     }
   },
   filters:{
       str(Compared){
-         if(Compared == 'NaN'){
-            return Compared = 0
-         }
-         return Compared
+         return Math.abs(Compared) 
       },
-      str1(value){
-          if(value == 'Infinity'){
-              return value = 0
-          }
-          return value
-      }
+     
   }
 }
 </script>

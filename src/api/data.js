@@ -3,8 +3,8 @@ import PhpRequest from '@/utils/PhpRequest'
 
 // 整体看板
 export function dashboard(data){
-    return JavaRequest({
-        url:'/data/getBoard',
+    return PhpRequest({
+        url:"/set/allinfoup",
         method: 'post',
         data
     })
